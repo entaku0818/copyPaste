@@ -6,12 +6,19 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct copyPasteApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(
+                store: Store(
+                    initialState: ClipboardHistoryFeature.State()
+                ) {
+                    ClipboardHistoryFeature()
+                }
+            )
         }
     }
 }

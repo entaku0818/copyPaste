@@ -1,24 +1,26 @@
-//
-//  ContentView.swift
-//  copyPaste
-//
-//  Created by 遠藤拓弥 on 2025/05/02.
-//
-
 import SwiftUI
+import ComposableArchitecture
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+public struct ContentView: View {
+    let store: StoreOf<ClipboardHistoryFeature>
+    
+    public init(store: StoreOf<ClipboardHistoryFeature>) {
+        self.store = store
+    }
+    
+    public var body: some View {
+        NavigationStack {
+            ClipboardHistoryView(store: store)
         }
-        .padding()
     }
 }
 
 #Preview {
-    ContentView()
-}
+    ContentView(
+        store: Store(
+            initialState: ClipboardHistoryFeature.State()
+        ) {
+            ClipboardHistoryFeature()
+        }
+    )
+} 
