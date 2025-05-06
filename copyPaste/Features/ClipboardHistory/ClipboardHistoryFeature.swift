@@ -9,6 +9,7 @@ struct ClipboardHistoryFeature {
         var items: [ClipboardItem] = []
         let maxItems: Int = 100
         var isMonitoring: Bool = false
+        var lastChangeCount: Int = UIPasteboard.general.changeCount
     }
     
     enum Action {
@@ -18,7 +19,8 @@ struct ClipboardHistoryFeature {
         case pasteItem(ClipboardItem)
         case startMonitoring
         case stopMonitoring
-        case clipboardChanged
+        case checkClipboard
+        case onAppear
     }
     
     @Dependency(\.continuousClock) var clock
@@ -49,13 +51,12 @@ struct ClipboardHistoryFeature {
             case .startMonitoring:
                 guard !state.isMonitoring else { return .none }
                 state.isMonitoring = true
+                PiPManager.shared.startPiP()
                 
                 return .run { send in
-                    let notificationCenter = NotificationCenter.default
-                    let pasteboardChangedNotification = UIPasteboard.changedNotification
-                    
-                    for await _ in notificationCenter.notifications(named: pasteboardChangedNotification) {
-                        await send(.clipboardChanged)
+                    // 1秒ごとにクリップボードをチェック
+                    for await _ in clock.timer(interval: .seconds(1)) {
+                        await send(.checkClipboard)
                     }
                 }
                 .cancellable(id: CancelID.monitoring)
@@ -63,9 +64,22 @@ struct ClipboardHistoryFeature {
             case .stopMonitoring:
                 guard state.isMonitoring else { return .none }
                 state.isMonitoring = false
+                PiPManager.shared.stopPiP()
                 return .cancel(id: CancelID.monitoring)
                 
-            case .clipboardChanged:
+            case .checkClipboard:
+                let currentChangeCount = UIPasteboard.general.changeCount
+                guard currentChangeCount != state.lastChangeCount,
+                      let content = UIPasteboard.general.string else {
+                    return .none
+                }
+                
+                state.lastChangeCount = currentChangeCount
+                let item = ClipboardItem(content: content)
+                return .send(.addItem(item))
+                
+            case .onAppear:
+                // 画面表示時に現在のクリップボードの内容を取得
                 guard let content = UIPasteboard.general.string else { return .none }
                 let item = ClipboardItem(content: content)
                 return .send(.addItem(item))

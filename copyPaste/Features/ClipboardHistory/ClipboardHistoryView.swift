@@ -39,5 +39,8 @@ struct ClipboardHistoryView: View {
         .task {
             store.send(.startMonitoring)
         }
+        .onAppear {
+            store.send(.onAppear)
+        }
     }
 } 
