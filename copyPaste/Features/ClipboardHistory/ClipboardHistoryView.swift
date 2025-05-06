@@ -25,9 +25,19 @@ struct ClipboardHistoryView: View {
         }
         .navigationTitle("Clipboard History")
         .toolbar {
-            Button("Clear All") {
-                store.send(.clearAll)
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(store.isMonitoring ? "Stop Monitoring" : "Start Monitoring") {
+                    store.send(store.isMonitoring ? .stopMonitoring : .startMonitoring)
+                }
+                .tint(store.isMonitoring ? .red : .blue)
+                
+                Button("Clear All") {
+                    store.send(.clearAll)
+                }
             }
+        }
+        .task {
+            store.send(.startMonitoring)
         }
     }
 } 
