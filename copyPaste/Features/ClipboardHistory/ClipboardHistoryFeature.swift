@@ -10,6 +10,7 @@ struct ClipboardHistoryFeature {
         let maxItems: Int = 100
         var isMonitoring: Bool = false
         var lastChangeCount: Int = UIPasteboard.general.changeCount
+        var isAppActive: Bool = true
     }
     
     enum Action {
@@ -21,6 +22,8 @@ struct ClipboardHistoryFeature {
         case stopMonitoring
         case checkClipboard
         case onAppear
+        case appDidBecomeActive
+        case appDidEnterBackground
     }
     
     @Dependency(\.continuousClock) var clock
@@ -54,6 +57,27 @@ struct ClipboardHistoryFeature {
                 PiPManager.shared.startPiP()
                 
                 return .run { send in
+                    // アプリの状態変化を監視
+                    NotificationCenter.default.addObserver(
+                        forName: UIApplication.didBecomeActiveNotification,
+                        object: nil,
+                        queue: .main
+                    ) { _ in
+                        Task {
+                            await send(.appDidBecomeActive)
+                        }
+                    }
+                    
+                    NotificationCenter.default.addObserver(
+                        forName: UIApplication.didEnterBackgroundNotification,
+                        object: nil,
+                        queue: .main
+                    ) { _ in
+                        Task {
+                            await send(.appDidEnterBackground)
+                        }
+                    }
+                    
                     // 1秒ごとにクリップボードをチェック
                     for await _ in clock.timer(interval: .seconds(1)) {
                         await send(.checkClipboard)
@@ -68,17 +92,31 @@ struct ClipboardHistoryFeature {
                 return .cancel(id: CancelID.monitoring)
                 
             case .checkClipboard:
-                let currentChangeCount = UIPasteboard.general.changeCount
-                guard currentChangeCount != state.lastChangeCount else {
-                    return .none
-                }
+                // アプリがアクティブでない場合はスキップ
+                guard state.isAppActive else { return .none }
                 
-                state.lastChangeCount = currentChangeCount
-                // 直接クリップボードの内容を取得
-                if let content = UIPasteboard.general.string {
-                    let item = ClipboardItem(content: content)
-                    return .send(.addItem(item))
+                do {
+                    let currentChangeCount = UIPasteboard.general.changeCount
+                    guard currentChangeCount != state.lastChangeCount else {
+                        return .none
+                    }
+                    
+                    state.lastChangeCount = currentChangeCount
+                    if let content = UIPasteboard.general.string {
+                        let item = ClipboardItem(content: content)
+                        return .send(.addItem(item))
+                    }
+                } catch {
+                    print("Clipboard access error: \(error.localizedDescription)")
                 }
+                return .none
+                
+            case .appDidBecomeActive:
+                state.isAppActive = true
+                return .none
+                
+            case .appDidEnterBackground:
+                state.isAppActive = false
                 return .none
                 
             case .onAppear:
