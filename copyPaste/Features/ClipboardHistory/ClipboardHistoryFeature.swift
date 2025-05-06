@@ -69,14 +69,17 @@ struct ClipboardHistoryFeature {
                 
             case .checkClipboard:
                 let currentChangeCount = UIPasteboard.general.changeCount
-                guard currentChangeCount != state.lastChangeCount,
-                      let content = UIPasteboard.general.string else {
+                guard currentChangeCount != state.lastChangeCount else {
                     return .none
                 }
                 
                 state.lastChangeCount = currentChangeCount
-                let item = ClipboardItem(content: content)
-                return .send(.addItem(item))
+                // 直接クリップボードの内容を取得
+                if let content = UIPasteboard.general.string {
+                    let item = ClipboardItem(content: content)
+                    return .send(.addItem(item))
+                }
+                return .none
                 
             case .onAppear:
                 // 画面表示時に現在のクリップボードの内容を取得

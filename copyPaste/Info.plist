@@ -13,5 +13,12 @@
 	</array>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
+	<key>NSPasteboardUsageDescription</key>
+	<string>クリップボードの履歴を保存するためにクリップボードへのアクセスが必要です。</string>
+	<key>UIPasteboardAcceptablePasteboardTypes</key>
+	<array>
+		<string>public.text</string>
+		<string>public.image</string>
+	</array>
 </dict>
 </plist>
