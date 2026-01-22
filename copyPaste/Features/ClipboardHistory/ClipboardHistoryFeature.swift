@@ -1,6 +1,7 @@
 import Foundation
 import ComposableArchitecture
 import UIKit
+import OSLog
 
 @Reducer
 struct ClipboardHistoryFeature {
@@ -11,8 +12,11 @@ struct ClipboardHistoryFeature {
         var isMonitoring: Bool = false
         var lastChangeCount: Int = UIPasteboard.general.changeCount
         var isAppActive: Bool = true
+        var isPiPActive: Bool = false
+        var showPermissionAlert: Bool = false
+        var hasRequestedPermission: Bool = UserDefaults.standard.bool(forKey: "hasRequestedClipboardPermission")
     }
-    
+
     enum Action {
         case addItem(ClipboardItem)
         case removeItems(IndexSet)
@@ -24,10 +28,15 @@ struct ClipboardHistoryFeature {
         case onAppear
         case appDidBecomeActive
         case appDidEnterBackground
+        case requestClipboardPermission
+        case dismissPermissionAlert
+        case pipStateChanged(Bool)
     }
-    
+
     @Dependency(\.continuousClock) var clock
     private enum CancelID { case monitoring }
+
+    private static let logger = Logger(subsystem: "com.copyPaste", category: "Clipboard")
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -52,35 +61,36 @@ struct ClipboardHistoryFeature {
                 return .none
                 
             case .startMonitoring:
-                guard !state.isMonitoring else { return .none }
+                guard !state.isMonitoring else {
+                    Self.logger.warning("Already monitoring")
+                    return .none
+                }
+                Self.logger.info("Starting clipboard monitoring...")
                 state.isMonitoring = true
-                PiPManager.shared.startPiP()
-                
+                // PiPは手動で起動する
+                // PiPManager.shared.startPiP()
+
                 return .run { send in
-                    // アプリの状態変化を監視
-                    NotificationCenter.default.addObserver(
-                        forName: UIApplication.didBecomeActiveNotification,
-                        object: nil,
-                        queue: .main
-                    ) { _ in
-                        Task {
-                            await send(.appDidBecomeActive)
+                    await withTaskGroup(of: Void.self) { group in
+                        // アプリの状態変化を監視
+                        group.addTask {
+                            for await _ in NotificationCenter.default.notifications(named: UIApplication.didBecomeActiveNotification) {
+                                await send(.appDidBecomeActive)
+                            }
                         }
-                    }
-                    
-                    NotificationCenter.default.addObserver(
-                        forName: UIApplication.didEnterBackgroundNotification,
-                        object: nil,
-                        queue: .main
-                    ) { _ in
-                        Task {
-                            await send(.appDidEnterBackground)
+
+                        group.addTask {
+                            for await _ in NotificationCenter.default.notifications(named: UIApplication.didEnterBackgroundNotification) {
+                                await send(.appDidEnterBackground)
+                            }
                         }
-                    }
-                    
-                    // 1秒ごとにクリップボードをチェック
-                    for await _ in clock.timer(interval: .seconds(1)) {
-                        await send(.checkClipboard)
+
+                        // 1秒ごとにクリップボードをチェック
+                        group.addTask {
+                            for await _ in clock.timer(interval: .seconds(1)) {
+                                await send(.checkClipboard)
+                            }
+                        }
                     }
                 }
                 .cancellable(id: CancelID.monitoring)
@@ -92,22 +102,36 @@ struct ClipboardHistoryFeature {
                 return .cancel(id: CancelID.monitoring)
                 
             case .checkClipboard:
-                // アプリがアクティブでない場合はスキップ
-                guard state.isAppActive else { return .none }
-                
-                do {
-                    let currentChangeCount = UIPasteboard.general.changeCount
-                    guard currentChangeCount != state.lastChangeCount else {
-                        return .none
+                // PiPモード中はバックグラウンドでもチェックを試みる
+                // 通常モードではアプリがアクティブな時のみチェック
+                guard state.isAppActive || state.isPiPActive else {
+                    Self.logger.debug("Skipping clipboard check - app not active and PiP not active")
+                    return .none
+                }
+
+                let currentChangeCount = UIPasteboard.general.changeCount
+                let lastChangeCount = state.lastChangeCount
+                guard currentChangeCount != lastChangeCount else {
+                    return .none
+                }
+
+                Self.logger.info("Change detected! Count: \(currentChangeCount) (was: \(lastChangeCount))")
+                state.lastChangeCount = currentChangeCount
+
+                // iOS 16以降では、クリップボードへのアクセス時に確認ダイアログが表示される
+                // アクセスが拒否された場合はnilが返される
+                if let content = UIPasteboard.general.string {
+                    let preview = String(content.prefix(50))
+                    Self.logger.info("Got content: \(preview)...")
+                    let item = ClipboardItem(content: content)
+                    return .send(.addItem(item))
+                } else {
+                    // iOS 16+: hasStringsでアクセス可否を確認
+                    if UIPasteboard.general.hasStrings {
+                        Self.logger.warning("Clipboard has strings but access denied")
+                    } else {
+                        Self.logger.debug("No string content in clipboard")
                     }
-                    
-                    state.lastChangeCount = currentChangeCount
-                    if let content = UIPasteboard.general.string {
-                        let item = ClipboardItem(content: content)
-                        return .send(.addItem(item))
-                    }
-                } catch {
-                    print("Clipboard access error: \(error.localizedDescription)")
                 }
                 return .none
                 
@@ -120,10 +144,37 @@ struct ClipboardHistoryFeature {
                 return .none
                 
             case .onAppear:
+                // 初回起動時にクリップボードアクセスの説明を表示
+                if !state.hasRequestedPermission {
+                    state.showPermissionAlert = true
+                    return .none
+                }
+
                 // 画面表示時に現在のクリップボードの内容を取得
                 guard let content = UIPasteboard.general.string else { return .none }
                 let item = ClipboardItem(content: content)
                 return .send(.addItem(item))
+
+            case .requestClipboardPermission:
+                state.showPermissionAlert = false
+                state.hasRequestedPermission = true
+                UserDefaults.standard.set(true, forKey: "hasRequestedClipboardPermission")
+
+                // クリップボードアクセスを試みて、システムの確認ダイアログを表示
+                if let content = UIPasteboard.general.string {
+                    let item = ClipboardItem(content: content)
+                    return .send(.addItem(item))
+                }
+                return .none
+
+            case .dismissPermissionAlert:
+                state.showPermissionAlert = false
+                return .none
+
+            case let .pipStateChanged(isActive):
+                Self.logger.info("PiP state changed: \(isActive)")
+                state.isPiPActive = isActive
+                return .none
             }
         }
     }

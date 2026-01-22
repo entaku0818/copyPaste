@@ -4,12 +4,7 @@
 <dict>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
-		<string>processing</string>
-	</array>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>com.copyPaste.clipboardMonitoring</string>
+		<string>audio</string>
 	</array>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
