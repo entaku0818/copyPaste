@@ -83,6 +83,31 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         self.url = url
     }
 
+    // 完全なイニシャライザ（ストレージからの復元用）
+    init(
+        id: UUID,
+        timestamp: Date,
+        type: ClipboardItemType,
+        textContent: String? = nil,
+        imageData: Data? = nil,
+        imageThumbnailData: Data? = nil,
+        url: URL? = nil,
+        fileName: String? = nil,
+        fileSize: Int64? = nil,
+        fileURL: URL? = nil
+    ) {
+        self.id = id
+        self.timestamp = timestamp
+        self.type = type
+        self.textContent = textContent
+        self.imageData = imageData
+        self.imageThumbnailData = imageThumbnailData
+        self.url = url
+        self.fileName = fileName
+        self.fileSize = fileSize
+        self.fileURL = fileURL
+    }
+
     // Codableの実装
     enum CodingKeys: String, CodingKey {
         case id, timestamp, type

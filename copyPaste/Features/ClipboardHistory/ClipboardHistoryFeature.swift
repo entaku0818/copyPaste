@@ -34,6 +34,9 @@ struct ClipboardHistoryFeature {
         case pipStateChanged(Bool)
         case showImagePreview(ClipboardItem)
         case dismissImagePreview
+        case loadItems
+        case itemsLoaded([ClipboardItem])
+        case saveItems
     }
 
     @Dependency(\.continuousClock) var clock
@@ -59,17 +62,27 @@ struct ClipboardHistoryFeature {
             case let .addItem(item):
                 state.items.insert(item, at: 0)
                 if state.items.count > state.maxItems {
-                    state.items.removeLast()
+                    let removed = state.items.removeLast()
+                    // 削除されたアイテムのファイルも削除
+                    try? ClipboardStorageManager.shared.deleteItem(removed)
                 }
-                return .none
-                
+                return .send(.saveItems)
+
             case let .removeItems(indexSet):
+                // 削除されるアイテムのファイルも削除
+                for index in indexSet {
+                    if index < state.items.count {
+                        try? ClipboardStorageManager.shared.deleteItem(state.items[index])
+                    }
+                }
                 state.items.remove(atOffsets: indexSet)
-                return .none
-                
+                return .send(.saveItems)
+
             case .clearAll:
+                // すべてのファイルを削除
+                try? ClipboardStorageManager.shared.clearAll()
                 state.items.removeAll()
-                return .none
+                return .send(.saveItems)
                 
             case .pasteItem:
                 // Paste functionality will be implemented later
@@ -175,16 +188,8 @@ struct ClipboardHistoryFeature {
                 return .none
                 
             case .onAppear:
-                // 初回起動時にクリップボードアクセスの説明を表示
-                if !state.hasRequestedPermission {
-                    state.showPermissionAlert = true
-                    return .none
-                }
-
-                // 画面表示時に現在のクリップボードの内容を取得
-                guard let content = UIPasteboard.general.string else { return .none }
-                let item = ClipboardItem(content: content)
-                return .send(.addItem(item))
+                // 保存されたアイテムを読み込む
+                return .send(.loadItems)
 
             case .requestClipboardPermission:
                 state.showPermissionAlert = false
@@ -214,6 +219,38 @@ struct ClipboardHistoryFeature {
             case .dismissImagePreview:
                 state.selectedImageItem = nil
                 return .none
+
+            case .loadItems:
+                return .run { send in
+                    do {
+                        let items = try await ClipboardStorageManager.shared.load()
+                        await send(.itemsLoaded(items))
+                    } catch {
+                        Self.logger.error("Failed to load items: \(error.localizedDescription)")
+                        await send(.itemsLoaded([]))
+                    }
+                }
+
+            case let .itemsLoaded(items):
+                state.items = items
+                Self.logger.info("Loaded \(items.count) items from storage")
+
+                // 初回起動時にクリップボードアクセスの説明を表示
+                if !state.hasRequestedPermission {
+                    state.showPermissionAlert = true
+                }
+
+                return .none
+
+            case .saveItems:
+                let items = state.items
+                return .run { _ in
+                    do {
+                        try await ClipboardStorageManager.shared.save(items: items)
+                    } catch {
+                        Self.logger.error("Failed to save items: \(error.localizedDescription)")
+                    }
+                }
             }
         }
     }
