@@ -19,6 +19,12 @@
   - スワイプで削除
   - 一括削除機能
 
+- ✅ **複数フォーマット対応**
+  - テキスト
+  - 画像（サムネイル表示・プレビュー機能付き）
+  - URL（ホスト名表示）
+  - ファイル（準備中）
+
 - ✅ **TCA（The Composable Architecture）による実装**
   - テスタブルで保守性の高いコード
   - 状態管理の明確化
@@ -33,7 +39,6 @@
 - [ ] 共有エクステンション
 - [ ] 今日ウィジェット
 - [ ] ショートカット/Siri対応
-- [ ] 画像のサポート
 - [ ] Spotlight検索対応
 - [ ] カスタムスニペット機能
 
@@ -91,7 +96,9 @@ copyPaste/
 │   ├── ClipboardHistory/      # クリップボード履歴機能
 │   │   ├── ClipboardHistoryFeature.swift  # TCA Reducer
 │   │   ├── ClipboardHistoryView.swift     # UI
-│   │   └── ClipboardItem.swift            # データモデル
+│   │   ├── ClipboardItem.swift            # データモデル
+│   │   ├── ClipboardItemRow.swift         # リスト行コンポーネント
+│   │   └── ImagePreviewView.swift         # 画像プレビュー
 │   ├── VideoPlayerView.swift  # PiP用ビデオプレイヤー
 │   └── PiPManager.swift        # PiP管理（レガシー、使用していない）
 ├── Resources/
@@ -124,6 +131,7 @@ The Composable Architectureを使用することで：
 - [使い方ガイド](docs/HELP.md)
 - [Issue: クリップボード履歴管理](docs/issues/001-clipboard-history.md)
 - [Issue: バックグラウンド監視](docs/issues/002-background-monitoring.md)
+- [Issue: 画像・ファイルサポート](docs/issues/006-image-support.md)
 
 ## 🤝 コントリビューション
 
