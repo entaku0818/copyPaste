@@ -54,16 +54,13 @@ struct VideoPlayerView: UIViewControllerRepresentable {
 
         context.coordinator.logger.info("AVPlayerViewController setup complete")
 
-        // 自動再生とPiP起動
+        // 自動再生
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             player.play()
             context.coordinator.logger.info("Video playback started")
 
-            // さらに少し待ってから自動でPiPを起動
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                context.coordinator.logger.info("Auto-starting PiP...")
-                controller.startPictureInPicture()
-            }
+            // iOS 18+: canStartPictureInPictureAutomaticallyFromInline で自動的にPiPが開始される
+            context.coordinator.logger.info("Waiting for automatic PiP start...")
         }
 
         return controller
