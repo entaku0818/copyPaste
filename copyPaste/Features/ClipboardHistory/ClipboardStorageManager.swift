@@ -185,8 +185,8 @@ class ClipboardStorageManager {
     func checkStorageLimit() async throws {
         let totalSize = try getTotalStorageSize()
 
-        if totalSize > maxStorageSize {
-            logger.warning("Storage limit exceeded: \(totalSize) bytes (limit: \(maxStorageSize) bytes)")
+        if totalSize > self.maxStorageSize {
+            logger.warning("Storage limit exceeded: \(totalSize) bytes (limit: \(self.maxStorageSize) bytes)")
             // TODO: 古いアイテムを自動削除
         }
     }
