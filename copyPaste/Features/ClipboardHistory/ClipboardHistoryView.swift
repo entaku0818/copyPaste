@@ -46,17 +46,14 @@ struct ClipboardHistoryView: View {
             }
 
             ForEach(store.items) { item in
-                VStack(alignment: .leading) {
-                    Text(item.content)
-                        .lineLimit(2)
-                    Text(item.timestamp, style: .relative)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    store.send(.pasteItem(item))
-                }
+                ClipboardItemRow(item: item)
+                    .onTapGesture {
+                        if item.type == .image {
+                            store.send(.showImagePreview(item))
+                        } else {
+                            store.send(.pasteItem(item))
+                        }
+                    }
             }
             .onDelete { indexSet in
                 store.send(.removeItems(indexSet))
@@ -111,6 +108,16 @@ struct ClipboardHistoryView: View {
 
             PiPモードを使用することで、バックグラウンドでも監視を継続できます。
             """)
+        }
+        .sheet(
+            isPresented: Binding(
+                get: { store.selectedImageItem != nil },
+                set: { if !$0 { store.send(.dismissImagePreview) } }
+            )
+        ) {
+            if let imageItem = store.selectedImageItem {
+                ImagePreviewView(item: imageItem)
+            }
         }
     }
 } 

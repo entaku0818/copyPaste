@@ -15,6 +15,7 @@ struct ClipboardHistoryFeature {
         var isPiPActive: Bool = false
         var showPermissionAlert: Bool = false
         var hasRequestedPermission: Bool = UserDefaults.standard.bool(forKey: "hasRequestedClipboardPermission")
+        var selectedImageItem: ClipboardItem?
     }
 
     enum Action {
@@ -31,12 +32,26 @@ struct ClipboardHistoryFeature {
         case requestClipboardPermission
         case dismissPermissionAlert
         case pipStateChanged(Bool)
+        case showImagePreview(ClipboardItem)
+        case dismissImagePreview
     }
 
     @Dependency(\.continuousClock) var clock
     private enum CancelID { case monitoring }
 
     private static let logger = Logger(subsystem: "com.copyPaste", category: "Clipboard")
+
+    // 画像からClipboardItemを作成（サムネイル付き）
+    private static func createImageItem(from image: UIImage) async -> ClipboardItem {
+        // サムネイル生成（200x200）
+        let thumbnailSize = CGSize(width: 200, height: 200)
+        let thumbnail = await image.byPreparingThumbnail(ofSize: thumbnailSize)
+
+        return ClipboardItem(
+            image: image,
+            thumbnail: thumbnail
+        )
+    }
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -118,21 +133,37 @@ struct ClipboardHistoryFeature {
                 Self.logger.info("Change detected! Count: \(currentChangeCount) (was: \(lastChangeCount))")
                 state.lastChangeCount = currentChangeCount
 
-                // iOS 16以降では、クリップボードへのアクセス時に確認ダイアログが表示される
-                // アクセスが拒否された場合はnilが返される
-                if let content = UIPasteboard.general.string {
-                    let preview = String(content.prefix(50))
-                    Self.logger.info("Got content: \(preview)...")
-                    let item = ClipboardItem(content: content)
-                    return .send(.addItem(item))
-                } else {
-                    // iOS 16+: hasStringsでアクセス可否を確認
-                    if UIPasteboard.general.hasStrings {
-                        Self.logger.warning("Clipboard has strings but access denied")
-                    } else {
-                        Self.logger.debug("No string content in clipboard")
+                // 画像をチェック（優先度：高）
+                if let image = UIPasteboard.general.image {
+                    Self.logger.info("Got image from clipboard")
+                    return .run { send in
+                        let item = await Self.createImageItem(from: image)
+                        await send(.addItem(item))
                     }
                 }
+
+                // URLをチェック
+                if let url = UIPasteboard.general.url {
+                    Self.logger.info("Got URL: \(url.absoluteString)")
+                    let item = ClipboardItem(url: url)
+                    return .send(.addItem(item))
+                }
+
+                // テキストをチェック
+                if let content = UIPasteboard.general.string {
+                    let preview = String(content.prefix(50))
+                    Self.logger.info("Got text content: \(preview)...")
+                    let item = ClipboardItem(content: content)
+                    return .send(.addItem(item))
+                }
+
+                // iOS 16+: hasStringsでアクセス可否を確認
+                if UIPasteboard.general.hasStrings {
+                    Self.logger.warning("Clipboard has strings but access denied")
+                } else {
+                    Self.logger.debug("No content in clipboard")
+                }
+
                 return .none
                 
             case .appDidBecomeActive:
@@ -174,6 +205,14 @@ struct ClipboardHistoryFeature {
             case let .pipStateChanged(isActive):
                 Self.logger.info("PiP state changed: \(isActive)")
                 state.isPiPActive = isActive
+                return .none
+
+            case let .showImagePreview(item):
+                state.selectedImageItem = item
+                return .none
+
+            case .dismissImagePreview:
+                state.selectedImageItem = nil
                 return .none
             }
         }
