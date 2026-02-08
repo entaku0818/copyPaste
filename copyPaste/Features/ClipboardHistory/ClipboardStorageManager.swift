@@ -13,9 +13,16 @@ class ClipboardStorageManager {
     private let maxStorageSize: Int64 = 100 * 1024 * 1024 // 100MB
 
     private init() {
-        // Documentsディレクトリ内にClipboardHistoryフォルダを作成
-        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        baseDirectory = documentsDirectory.appendingPathComponent("ClipboardHistory", isDirectory: true)
+        // App Groupコンテナを使用（メインアプリとキーボード拡張で共有）
+        if let containerURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: SharedConstants.appGroupID) {
+            baseDirectory = containerURL.appendingPathComponent(SharedConstants.storageDirectoryName, isDirectory: true)
+            logger.info("Using App Group container: \(self.baseDirectory.path)")
+        } else {
+            // フォールバック: App Groupが設定されていない場合はDocumentsディレクトリを使用
+            let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            baseDirectory = documentsDirectory.appendingPathComponent(SharedConstants.storageDirectoryName, isDirectory: true)
+            logger.warning("App Group not configured, using Documents directory")
+        }
 
         // ディレクトリが存在しない場合は作成
         if !fileManager.fileExists(atPath: baseDirectory.path) {

@@ -7,10 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		613FED6D2F2901E400AE78D8 /* ClipboardKeyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		61BB48C62DCA33D800EFE195 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 61BB48C52DCA33D800EFE195 /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		613FED6B2F2901E400AE78D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 61B4C3812DC4A60F00E59DE3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 613FED652F2901E400AE78D8;
+			remoteInfo = ClipboardKeyboard;
+		};
 		61B4C3972DC4A61100E59DE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 61B4C3812DC4A60F00E59DE3 /* Project object */;
@@ -27,13 +35,35 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		613FED6E2F2901E400AE78D8 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				613FED6D2F2901E400AE78D8 /* ClipboardKeyboard.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClipboardKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B4C3892DC4A60F00E59DE3 /* copyPaste.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = copyPaste.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B4C3962DC4A61100E59DE3 /* copyPasteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = copyPasteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = copyPasteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		613FED722F2901E400AE78D8 /* Exceptions for "ClipboardKeyboard" folder in "ClipboardKeyboard" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 613FED652F2901E400AE78D8 /* ClipboardKeyboard */;
+		};
 		61BB48CE2DCA3ED700EFE195 /* Exceptions for "copyPaste" folder in "copyPaste" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -44,6 +74,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		613FED672F2901E400AE78D8 /* ClipboardKeyboard */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				613FED722F2901E400AE78D8 /* Exceptions for "ClipboardKeyboard" folder in "ClipboardKeyboard" target */,
+			);
+			path = ClipboardKeyboard;
+			sourceTree = "<group>";
+		};
 		61B4C38B2DC4A60F00E59DE3 /* copyPaste */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -65,6 +103,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		613FED632F2901E400AE78D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61B4C3862DC4A60F00E59DE3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -96,6 +141,7 @@
 				61B4C38B2DC4A60F00E59DE3 /* copyPaste */,
 				61B4C3992DC4A61100E59DE3 /* copyPasteTests */,
 				61B4C3A32DC4A61100E59DE3 /* copyPasteUITests */,
+				613FED672F2901E400AE78D8 /* ClipboardKeyboard */,
 				61B4C38A2DC4A60F00E59DE3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -106,6 +152,7 @@
 				61B4C3892DC4A60F00E59DE3 /* copyPaste.app */,
 				61B4C3962DC4A61100E59DE3 /* copyPasteTests.xctest */,
 				61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */,
+				613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,6 +160,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		613FED652F2901E400AE78D8 /* ClipboardKeyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 613FED712F2901E400AE78D8 /* Build configuration list for PBXNativeTarget "ClipboardKeyboard" */;
+			buildPhases = (
+				613FED622F2901E400AE78D8 /* Sources */,
+				613FED632F2901E400AE78D8 /* Frameworks */,
+				613FED642F2901E400AE78D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				613FED672F2901E400AE78D8 /* ClipboardKeyboard */,
+			);
+			name = ClipboardKeyboard;
+			packageProductDependencies = (
+			);
+			productName = ClipboardKeyboard;
+			productReference = 613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		61B4C3882DC4A60F00E59DE3 /* copyPaste */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61B4C3AA2DC4A61100E59DE3 /* Build configuration list for PBXNativeTarget "copyPaste" */;
@@ -120,10 +189,12 @@
 				61B4C3852DC4A60F00E59DE3 /* Sources */,
 				61B4C3862DC4A60F00E59DE3 /* Frameworks */,
 				61B4C3872DC4A60F00E59DE3 /* Resources */,
+				613FED6E2F2901E400AE78D8 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				613FED6C2F2901E400AE78D8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				61B4C38B2DC4A60F00E59DE3 /* copyPaste */,
@@ -189,9 +260,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					613FED652F2901E400AE78D8 = {
+						CreatedOnToolsVersion = 26.1;
+					};
 					61B4C3882DC4A60F00E59DE3 = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -225,11 +299,19 @@
 				61B4C3882DC4A60F00E59DE3 /* copyPaste */,
 				61B4C3952DC4A61100E59DE3 /* copyPasteTests */,
 				61B4C39F2DC4A61100E59DE3 /* copyPasteUITests */,
+				613FED652F2901E400AE78D8 /* ClipboardKeyboard */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		613FED642F2901E400AE78D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61B4C3872DC4A60F00E59DE3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -254,6 +336,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		613FED622F2901E400AE78D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61B4C3852DC4A60F00E59DE3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -278,6 +367,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		613FED6C2F2901E400AE78D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 613FED652F2901E400AE78D8 /* ClipboardKeyboard */;
+			targetProxy = 613FED6B2F2901E400AE78D8 /* PBXContainerItemProxy */;
+		};
 		61B4C3982DC4A61100E59DE3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 61B4C3882DC4A60F00E59DE3 /* copyPaste */;
@@ -291,6 +385,66 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		613FED6F2F2901E400AE78D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ClipboardKeyboard/ClipboardKeyboard.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4YZQY4C47E;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClipboardKeyboard/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClipboardKeyboard;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.copyPaste.ClipboardKeyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		613FED702F2901E400AE78D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ClipboardKeyboard/ClipboardKeyboard.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4YZQY4C47E;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClipboardKeyboard/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClipboardKeyboard;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.copyPaste.ClipboardKeyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		61B4C3A82DC4A61100E59DE3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -417,18 +571,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = copyPaste/copyPaste.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = copyPaste/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -447,18 +603,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = copyPaste/copyPaste.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = copyPaste/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -547,6 +705,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		613FED712F2901E400AE78D8 /* Build configuration list for PBXNativeTarget "ClipboardKeyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				613FED6F2F2901E400AE78D8 /* Debug */,
+				613FED702F2901E400AE78D8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		61B4C3842DC4A60F00E59DE3 /* Build configuration list for PBXProject "copyPaste" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
