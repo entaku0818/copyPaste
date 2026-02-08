@@ -64,6 +64,15 @@
 			);
 			target = 613FED652F2901E400AE78D8 /* ClipboardKeyboard */;
 		};
+		61AE521A2F38DB6A0052F115 /* Exceptions for "copyPaste" folder in "ClipboardKeyboard" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Features/ClipboardHistory/ClipboardItem.swift,
+				Features/ClipboardHistory/ClipboardStorageManager.swift,
+				Features/ClipboardHistory/SharedConstants.swift,
+			);
+			target = 613FED652F2901E400AE78D8 /* ClipboardKeyboard */;
+		};
 		61BB48CE2DCA3ED700EFE195 /* Exceptions for "copyPaste" folder in "copyPaste" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -86,6 +95,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				61BB48CE2DCA3ED700EFE195 /* Exceptions for "copyPaste" folder in "copyPaste" target */,
+				61AE521A2F38DB6A0052F115 /* Exceptions for "copyPaste" folder in "ClipboardKeyboard" target */,
 			);
 			path = copyPaste;
 			sourceTree = "<group>";

@@ -251,17 +251,27 @@ struct ClipboardItemCard: View {
 
 // プレビュー用のモックプロキシ
 class PreviewTextDocumentProxy: NSObject, UITextDocumentProxy {
+    var hasText: Bool
+
     var documentContextBeforeInput: String?
     var documentContextAfterInput: String?
     var selectedText: String?
     var documentInputMode: UITextInputMode?
     var documentIdentifier: UUID = UUID()
 
+    override init() {
+        self.hasText = false
+        super.init()
+    }
+
     func adjustTextPosition(byCharacterOffset offset: Int) {}
     func setMarkedText(_ markedText: String, selectedRange: NSRange) {}
     func unmarkText() {}
     func insertText(_ text: String) {
         print("Inserted: \(text)")
+        hasText = true
     }
-    func deleteBackward() {}
+    func deleteBackward() {
+        hasText = false
+    }
 }
