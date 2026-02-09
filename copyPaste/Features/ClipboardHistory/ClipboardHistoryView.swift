@@ -62,6 +62,12 @@ struct ClipboardHistoryView: View {
         .navigationTitle("Clipboard History")
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
+                #if DEBUG
+                NavigationLink(destination: ScreenshotPreviewView()) {
+                    Image(systemName: "camera.fill")
+                }
+                #endif
+
                 // 監視状態の表示
                 HStack(spacing: 4) {
                     Circle()
