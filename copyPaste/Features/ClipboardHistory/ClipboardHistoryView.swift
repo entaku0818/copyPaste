@@ -3,6 +3,7 @@ import ComposableArchitecture
 
 struct ClipboardHistoryView: View {
     let store: StoreOf<ClipboardHistoryFeature>
+    @State private var showSettings = false
 
     var body: some View {
         List {
@@ -61,6 +62,12 @@ struct ClipboardHistoryView: View {
         }
         .navigationTitle("Clipboard History")
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { showSettings = true }) {
+                    Image(systemName: "gearshape.fill")
+                }
+            }
+
             ToolbarItemGroup(placement: .primaryAction) {
                 #if DEBUG
                 NavigationLink(destination: ScreenshotPreviewView()) {
@@ -82,10 +89,6 @@ struct ClipboardHistoryView: View {
                     store.send(store.isMonitoring ? .stopMonitoring : .startMonitoring)
                 }
                 .tint(store.isMonitoring ? .red : .blue)
-
-                Button("Clear") {
-                    store.send(.clearAll)
-                }
             }
         }
         .onAppear {
@@ -124,6 +127,9 @@ struct ClipboardHistoryView: View {
             if let imageItem = store.selectedImageItem {
                 ImagePreviewView(item: imageItem)
             }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
         }
     }
 } 
