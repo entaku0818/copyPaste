@@ -43,24 +43,6 @@ struct SettingsView: View {
                         .font(.caption)
                 }
                 #endif
-
-                // その他セクション
-                Section {
-                    Link(destination: URL(string: "https://github.com/entaku0818/copyPaste")!) {
-                        HStack {
-                            Image(systemName: "link")
-                                .foregroundColor(.blue)
-                                .frame(width: 30)
-                            Text("GitHub")
-                            Spacer()
-                            Image(systemName: "arrow.up.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                } header: {
-                    Text("リンク")
-                }
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
