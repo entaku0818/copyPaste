@@ -12,7 +12,7 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
     let id: UUID
     let timestamp: Date
     let type: ClipboardItemType
-    var isFavorite: Bool
+    var isFavorite: Bool = false
 
     // テキスト
     var textContent: String?
