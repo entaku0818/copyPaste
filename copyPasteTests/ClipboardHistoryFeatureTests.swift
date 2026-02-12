@@ -162,4 +162,84 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.send(.toggleFavorite(item2))
         // No state change expected
     }
+
+    // MARK: - Search Functionality Tests
+
+    func testUpdateSearchText() async {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.updateSearchText("test")) {
+            $0.searchText = "test"
+        }
+    }
+
+    func testFilteredItems_emptySearch_returnsAllItems() {
+        let item1 = ClipboardItem(content: "Hello")
+        let item2 = ClipboardItem(content: "World")
+
+        var state = ClipboardHistoryFeature.State(items: [item1, item2])
+        state.searchText = ""
+
+        XCTAssertEqual(state.filteredItems.count, 2)
+    }
+
+    func testFilteredItems_textSearch() {
+        let item1 = ClipboardItem(content: "Hello World")
+        let item2 = ClipboardItem(content: "Goodbye Moon")
+        let item3 = ClipboardItem(content: "Hello Moon")
+
+        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3])
+        state.searchText = "hello"
+
+        XCTAssertEqual(state.filteredItems.count, 2)
+        XCTAssertTrue(state.filteredItems.contains(where: { $0.id == item1.id }))
+        XCTAssertTrue(state.filteredItems.contains(where: { $0.id == item3.id }))
+    }
+
+    func testFilteredItems_urlSearch() {
+        let item1 = ClipboardItem(url: URL(string: "https://www.apple.com")!)
+        let item2 = ClipboardItem(url: URL(string: "https://www.google.com")!)
+        let item3 = ClipboardItem(content: "apple juice")
+
+        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3])
+        state.searchText = "apple"
+
+        XCTAssertEqual(state.filteredItems.count, 2)
+        XCTAssertTrue(state.filteredItems.contains(where: { $0.id == item1.id }))
+        XCTAssertTrue(state.filteredItems.contains(where: { $0.id == item3.id }))
+    }
+
+    func testFilteredItems_caseInsensitive() {
+        let item1 = ClipboardItem(content: "HELLO WORLD")
+        let item2 = ClipboardItem(content: "goodbye")
+
+        var state = ClipboardHistoryFeature.State(items: [item1, item2])
+        state.searchText = "hello"
+
+        XCTAssertEqual(state.filteredItems.count, 1)
+        XCTAssertEqual(state.filteredItems.first?.id, item1.id)
+    }
+
+    func testFilteredItems_noMatch() {
+        let item1 = ClipboardItem(content: "Hello")
+        let item2 = ClipboardItem(content: "World")
+
+        var state = ClipboardHistoryFeature.State(items: [item1, item2])
+        state.searchText = "xyz"
+
+        XCTAssertEqual(state.filteredItems.count, 0)
+    }
+
+    func testFilteredItems_partialMatch() {
+        let item1 = ClipboardItem(content: "Hello World")
+        let item2 = ClipboardItem(content: "World Hello")
+        let item3 = ClipboardItem(content: "Goodbye")
+
+        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3])
+        state.searchText = "wor"
+
+        XCTAssertEqual(state.filteredItems.count, 2)
+    }
 }
