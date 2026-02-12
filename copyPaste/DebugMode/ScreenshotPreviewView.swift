@@ -88,6 +88,12 @@ struct FullscreenScreenshotView: View {
             MockKeyboardPreviewView(language: language)
         case .pipMonitoring:
             MockPiPMonitoringView(language: language)
+        case .settings:
+            MockSettingsView(language: language)
+        case .imagePreview:
+            MockImagePreviewView(language: language)
+        case .keyboardSetup:
+            MockKeyboardSetupView(language: language)
         }
     }
 }
@@ -141,13 +147,6 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
-    var clearButton: String {
-        switch self {
-        case .english: return "Clear"
-        case .japanese: return "クリア"
-        }
-    }
-
     var backgroundMonitoring: String {
         switch self {
         case .english: return "Background Monitoring"
@@ -197,19 +196,132 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
+    var settings: String {
+        switch self {
+        case .english: return "Settings"
+        case .japanese: return "設定"
+        }
+    }
+
+    var appInfo: String {
+        switch self {
+        case .english: return "App Info"
+        case .japanese: return "アプリ情報"
+        }
+    }
+
+    var version: String {
+        switch self {
+        case .english: return "Version"
+        case .japanese: return "バージョン"
+        }
+    }
+
+    var build: String {
+        switch self {
+        case .english: return "Build"
+        case .japanese: return "ビルド"
+        }
+    }
+
+    var debug: String {
+        switch self {
+        case .english: return "Debug"
+        case .japanese: return "デバッグ"
+        }
+    }
+
+    var screenshotPreview: String {
+        switch self {
+        case .english: return "Screenshot Preview"
+        case .japanese: return "スクリーンショットプレビュー"
+        }
+    }
+
+    var imagePreviewTitle: String {
+        switch self {
+        case .english: return "Image Preview"
+        case .japanese: return "画像プレビュー"
+        }
+    }
+
+    var keyboardSetupTitle: String {
+        switch self {
+        case .english: return "Setup Keyboard"
+        case .japanese: return "キーボード設定"
+        }
+    }
+
+    var keyboardSetupStep1: String {
+        switch self {
+        case .english: return "1. Open Settings"
+        case .japanese: return "1. 設定を開く"
+        }
+    }
+
+    var keyboardSetupStep2: String {
+        switch self {
+        case .english: return "2. Go to General > Keyboard"
+        case .japanese: return "2. 一般 > キーボードへ移動"
+        }
+    }
+
+    var keyboardSetupStep3: String {
+        switch self {
+        case .english: return "3. Add New Keyboard"
+        case .japanese: return "3. 新しいキーボードを追加"
+        }
+    }
+
+    var keyboardSetupStep4: String {
+        switch self {
+        case .english: return "4. Enable Full Access"
+        case .japanese: return "4. フルアクセスを許可"
+        }
+    }
+
+    var done: String {
+        switch self {
+        case .english: return "Done"
+        case .japanese: return "完了"
+        }
+    }
+
     func sampleText(_ index: Int) -> String {
         switch self {
         case .english:
-            return ["Hello World", "https://example.com", "Sample text for testing", "Important note", "Quick memo"][index % 5]
+            return [
+                "Hello World! This is a sample text for clipboard testing.",
+                "https://www.apple.com",
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                "Important: Meeting at 3 PM tomorrow",
+                "Quick note: Buy groceries",
+                "Sample email: user@example.com",
+                "Phone: +1 (555) 123-4567",
+                "Code snippet: func test() { print(\"Hello\") }",
+                "https://github.com/entaku0818/copyPaste",
+                "Remember to call back later"
+            ][index % 10]
         case .japanese:
-            return ["こんにちは世界", "https://example.com", "テスト用のサンプルテキスト", "重要なメモ", "クイックメモ"][index % 5]
+            return [
+                "こんにちは世界！これはクリップボードテスト用のサンプルテキストです。",
+                "https://www.apple.com/jp/",
+                "吾輩は猫である。名前はまだ無い。",
+                "重要：明日の午後3時にミーティング",
+                "メモ：買い物に行く",
+                "メール例：user@example.com",
+                "電話：090-1234-5678",
+                "コード例：func test() { print(\"こんにちは\") }",
+                "https://github.com/entaku0818/copyPaste",
+                "後で電話をかけ直すこと"
+            ][index % 10]
         }
     }
 
     func sampleTime(_ index: Int) -> String {
-        let times = ["1 min ago", "5 min ago", "10 min ago", "30 min ago", "1 hour ago"]
-        let timesJa = ["1分前", "5分前", "10分前", "30分前", "1時間前"]
-        return self == .english ? times[index % 5] : timesJa[index % 5]
+        let times = ["1 min ago", "5 min ago", "10 min ago", "30 min ago", "1 hour ago", "2 hours ago", "3 hours ago", "5 hours ago", "1 day ago", "2 days ago"]
+        let timesJa = ["1分前", "5分前", "10分前", "30分前", "1時間前", "2時間前", "3時間前", "5時間前", "1日前", "2日前"]
+        return self == .english ? times[index % 10] : timesJa[index % 10]
     }
 }
 
@@ -218,6 +330,9 @@ enum ScreenshotScreen: String, CaseIterable {
     case clipboardHistory
     case keyboardPreview
     case pipMonitoring
+    case settings
+    case imagePreview
+    case keyboardSetup
 }
 
 // MARK: - Mock Views
@@ -229,14 +344,25 @@ struct MockClipboardHistoryView: View {
             List {
                 Section {
                     VStack(spacing: 12) {
-                        // Mock video player
+                        // Mock video player with gradient
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.black)
+                            .fill(
+                                LinearGradient(
+                                    colors: [.blue.opacity(0.8), .purple.opacity(0.8)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
                             .frame(height: 100)
                             .overlay(
-                                Image(systemName: "play.fill")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
+                                VStack {
+                                    Image(systemName: "play.circle.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundColor(.white)
+                                    Text("PiP Video")
+                                        .font(.caption)
+                                        .foregroundColor(.white.opacity(0.9))
+                                }
                             )
 
                         // PiP status
@@ -268,13 +394,19 @@ struct MockClipboardHistoryView: View {
                         .font(.caption2)
                 }
 
-                // Sample clipboard items
-                ForEach(0..<5) { index in
+                // Sample clipboard items - 10 items for better showcase
+                ForEach(0..<10) { index in
                     HStack(spacing: 12) {
-                        Image(systemName: index == 1 ? "link" : "doc.text")
-                            .font(.title2)
-                            .foregroundColor(index == 1 ? .green : .blue)
-                            .frame(width: 40)
+                        // Icon based on type
+                        ZStack {
+                            Circle()
+                                .fill(iconColor(for: index).opacity(0.2))
+                                .frame(width: 40, height: 40)
+
+                            Image(systemName: iconName(for: index))
+                                .font(.system(size: 18))
+                                .foregroundColor(iconColor(for: index))
+                        }
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text(language.sampleText(index))
@@ -287,12 +419,25 @@ struct MockClipboardHistoryView: View {
                         }
 
                         Spacer()
+
+                        // Size indicator for some items
+                        if index % 3 == 0 {
+                            Text("\(Int.random(in: 10...999)) KB")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
                     }
                     .padding(.vertical, 4)
                 }
             }
             .navigationTitle(language.appTitle)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {}) {
+                        Image(systemName: "gearshape.fill")
+                    }
+                }
+
                 ToolbarItemGroup(placement: .primaryAction) {
                     HStack(spacing: 4) {
                         Circle()
@@ -305,11 +450,19 @@ struct MockClipboardHistoryView: View {
 
                     Button(language.stopButton) {}
                         .tint(.red)
-
-                    Button(language.clearButton) {}
                 }
             }
         }
+    }
+
+    private func iconName(for index: Int) -> String {
+        let icons = ["doc.text", "link", "photo", "doc.text", "link", "envelope", "phone", "doc.plaintext", "link", "note.text"]
+        return icons[index % icons.count]
+    }
+
+    private func iconColor(for index: Int) -> Color {
+        let colors: [Color] = [.blue, .green, .orange, .blue, .green, .purple, .pink, .blue, .green, .cyan]
+        return colors[index % colors.count]
     }
 }
 
@@ -318,13 +471,18 @@ struct MockKeyboardPreviewView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // App header
-            HStack {
-                Text(language.keyboardExtension)
-                    .font(.largeTitle)
+            // Mock text input area
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Notes")
+                    .font(.title)
                     .fontWeight(.bold)
+
+                Text("Sample text from clipboard...")
+                    .foregroundColor(.secondary)
+
                 Spacer()
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .background(Color(UIColor.systemBackground))
 
@@ -332,14 +490,21 @@ struct MockKeyboardPreviewView: View {
 
             // Mock keyboard
             VStack(spacing: 0) {
-                // Clipboard history area
+                // Clipboard history area with better visuals
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
-                        ForEach(0..<5) { index in
-                            VStack(alignment: .leading, spacing: 4) {
+                        ForEach(0..<8) { index in
+                            VStack(alignment: .leading, spacing: 6) {
                                 HStack {
-                                    Image(systemName: index == 1 ? "link" : "doc.text")
-                                        .foregroundColor(index == 1 ? .green : .blue)
+                                    ZStack {
+                                        Circle()
+                                            .fill(iconColor(for: index).opacity(0.2))
+                                            .frame(width: 24, height: 24)
+
+                                        Image(systemName: iconName(for: index))
+                                            .font(.system(size: 12))
+                                            .foregroundColor(iconColor(for: index))
+                                    }
                                     Spacer()
                                 }
 
@@ -347,32 +512,51 @@ struct MockKeyboardPreviewView: View {
                                     .lineLimit(2)
                                     .font(.caption)
                                     .foregroundColor(.primary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .padding(8)
                             .frame(width: 120, height: 80)
                             .background(Color(UIColor.systemBackground))
                             .cornerRadius(8)
-                            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+                            .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
                         }
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
                 }
                 .frame(height: 100)
-                .background(Color(UIColor.secondarySystemBackground))
+                .background(
+                    LinearGradient(
+                        colors: [Color(UIColor.secondarySystemBackground), Color(UIColor.tertiarySystemBackground)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
 
-                // Keyboard controls
-                HStack {
+                // Keyboard controls with better styling
+                HStack(spacing: 16) {
+                    Button(action: {}) {
+                        Image(systemName: "line.3.horizontal")
+                            .font(.system(size: 20))
+                            .foregroundColor(.primary)
+                            .frame(width: 44, height: 44)
+                            .background(Color(UIColor.secondarySystemBackground))
+                            .cornerRadius(8)
+                    }
+
                     Spacer()
+
                     Button(action: {}) {
                         Image(systemName: "globe")
                             .font(.system(size: 24))
                             .foregroundColor(.primary)
                             .frame(width: 44, height: 44)
                     }
+
                     Spacer().frame(width: 20)
                 }
-                .padding(.vertical, 8)
+                .padding(.horizontal)
+                .padding(.vertical, 12)
                 .background(Color(UIColor.systemBackground))
             }
 
@@ -383,16 +567,306 @@ struct MockKeyboardPreviewView: View {
                 .padding()
         }
     }
+
+    private func iconName(for index: Int) -> String {
+        let icons = ["doc.text", "link", "photo", "doc.text", "link", "envelope", "phone", "doc.plaintext"]
+        return icons[index % icons.count]
+    }
+
+    private func iconColor(for index: Int) -> Color {
+        let colors: [Color] = [.blue, .green, .orange, .blue, .green, .purple, .pink, .blue]
+        return colors[index % colors.count]
+    }
 }
 
 struct MockPiPMonitoringView: View {
     let language: AppLanguage
 
     var body: some View {
-        VStack(spacing: 20) {
+        ZStack {
+            // Gradient background
+            LinearGradient(
+                colors: [
+                    Color.blue.opacity(0.3),
+                    Color.purple.opacity(0.3),
+                    Color.pink.opacity(0.2)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            VStack(spacing: 30) {
+                Spacer()
+
+                // Animated PiP icon
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 140, height: 140)
+                        .shadow(color: .blue.opacity(0.4), radius: 20, x: 0, y: 10)
+
+                    Image(systemName: "pip.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.white)
+                }
+
+                VStack(spacing: 12) {
+                    Text(language.backgroundMonitoring)
+                        .font(.title)
+                        .fontWeight(.bold)
+
+                    Text(language.pipDescription)
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                }
+
+                // Animated status indicator
+                HStack(spacing: 12) {
+                    Circle()
+                        .fill(Color.green)
+                        .frame(width: 12, height: 12)
+
+                    Text(language.monitoringInBackground)
+                        .font(.headline)
+                        .foregroundColor(.green)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+                .background(Color.green.opacity(0.15))
+                .cornerRadius(30)
+
+                // Features list
+                VStack(alignment: .leading, spacing: 16) {
+                    FeatureRow(icon: "eye.fill", text: language == .english ? "Always monitoring" : "常時監視", color: .blue)
+                    FeatureRow(icon: "lock.shield.fill", text: language == .english ? "Secure storage" : "安全なストレージ", color: .green)
+                    FeatureRow(icon: "bolt.fill", text: language == .english ? "Quick access" : "素早いアクセス", color: .orange)
+                }
+                .padding(.horizontal, 40)
+
+                Spacer()
+            }
+            .padding()
+        }
+    }
+}
+
+struct MockSettingsView: View {
+    let language: AppLanguage
+
+    var body: some View {
+        NavigationStack {
+            List {
+                // App Info Section
+                Section {
+                    HStack {
+                        Text(language.version)
+                        Spacer()
+                        Text("1.0.0")
+                            .foregroundColor(.secondary)
+                    }
+
+                    HStack {
+                        Text(language.build)
+                        Spacer()
+                        Text("100")
+                            .foregroundColor(.secondary)
+                    }
+                } header: {
+                    Text(language.appInfo)
+                }
+
+                // Debug Section
+                Section {
+                    HStack {
+                        Image(systemName: "camera.fill")
+                            .foregroundColor(.blue)
+                            .frame(width: 30)
+                        Text(language.screenshotPreview)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                } header: {
+                    Text(language.debug)
+                } footer: {
+                    Text(language == .english ? "Preview App Store screenshots" : "App Store用のスクリーンショットをプレビューできます")
+                        .font(.caption)
+                }
+            }
+            .navigationTitle(language.settings)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(language.done) {}
+                }
+            }
+        }
+    }
+}
+
+struct MockImagePreviewView: View {
+    let language: AppLanguage
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color.black.ignoresSafeArea()
+
+                VStack(spacing: 20) {
+                    Spacer()
+
+                    // Mock image with gradient
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(
+                            LinearGradient(
+                                colors: [.blue, .purple, .pink],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 300, height: 400)
+                        .overlay(
+                            VStack {
+                                Image(systemName: "photo.fill")
+                                    .font(.system(size: 80))
+                                    .foregroundColor(.white.opacity(0.8))
+                                Text(language == .english ? "Sample Image" : "サンプル画像")
+                                    .font(.title3)
+                                    .foregroundColor(.white.opacity(0.8))
+                            }
+                        )
+                        .shadow(color: .white.opacity(0.2), radius: 20, x: 0, y: 10)
+
+                    // Image info
+                    VStack(spacing: 8) {
+                        Text(language == .english ? "Photo.jpg" : "写真.jpg")
+                            .font(.headline)
+                            .foregroundColor(.white)
+
+                        HStack(spacing: 16) {
+                            Text("1920 × 1080")
+                            Text("•")
+                            Text("2.4 MB")
+                            Text("•")
+                            Text("5 " + (language == .english ? "min ago" : "分前"))
+                        }
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.7))
+                    }
+
+                    Spacer()
+                }
+            }
+            .navigationTitle(language.imagePreviewTitle)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {}) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct MockKeyboardSetupView: View {
+    let language: AppLanguage
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            VStack(spacing: 16) {
+                Image(systemName: "keyboard.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.blue)
+
+                Text(language.keyboardSetupTitle)
+                    .font(.title)
+                    .fontWeight(.bold)
+
+                Text(language.keyboardDescription)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 30)
+            }
+            .padding(.top, 60)
+            .padding(.bottom, 40)
+
+            // Steps
+            VStack(alignment: .leading, spacing: 24) {
+                SetupStepRow(number: 1, text: language.keyboardSetupStep1, icon: "gearshape.fill")
+                SetupStepRow(number: 2, text: language.keyboardSetupStep2, icon: "keyboard")
+                SetupStepRow(number: 3, text: language.keyboardSetupStep3, icon: "plus.circle.fill")
+                SetupStepRow(number: 4, text: language.keyboardSetupStep4, icon: "checkmark.shield.fill")
+            }
+            .padding(.horizontal, 30)
+
             Spacer()
 
-            // Large PiP icon
+            // Bottom button
+            Button(action: {}) {
+                Text(language == .english ? "Open Settings" : "設定を開く")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal, 30)
+            .padding(.bottom, 40)
+        }
+        .background(Color(UIColor.systemBackground))
+    }
+}
+
+// MARK: - Helper Views
+struct FeatureRow: View {
+    let icon: String
+    let text: String
+    let color: Color
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(color)
+                .frame(width: 32, height: 32)
+                .background(color.opacity(0.2))
+                .cornerRadius(8)
+
+            Text(text)
+                .font(.body)
+        }
+    }
+}
+
+struct SetupStepRow: View {
+    let number: Int
+    let text: String
+    let icon: String
+
+    var body: some View {
+        HStack(spacing: 16) {
             ZStack {
                 Circle()
                     .fill(
@@ -402,41 +876,30 @@ struct MockPiPMonitoringView: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .frame(width: 120, height: 120)
+                    .frame(width: 50, height: 50)
 
-                Image(systemName: "pip.fill")
-                    .font(.system(size: 50))
+                Text("\(number)")
+                    .font(.title2)
+                    .fontWeight(.bold)
                     .foregroundColor(.white)
             }
 
-            Text(language.backgroundMonitoring)
-                .font(.title)
-                .fontWeight(.bold)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(text)
+                    .font(.body)
+                    .fontWeight(.medium)
 
-            Text(language.pipDescription)
-                .font(.body)
+                HStack(spacing: 6) {
+                    Image(systemName: icon)
+                        .font(.caption)
+                    Text(icon.replacingOccurrences(of: ".fill", with: "").replacingOccurrences(of: ".", with: " "))
+                        .font(.caption)
+                }
                 .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
-
-            // Status indicator
-            HStack {
-                Circle()
-                    .fill(Color.green)
-                    .frame(width: 12, height: 12)
-
-                Text(language.monitoringInBackground)
-                    .font(.headline)
-                    .foregroundColor(.green)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
-            .background(Color.green.opacity(0.1))
-            .cornerRadius(25)
 
             Spacer()
         }
-        .padding()
     }
 }
 
