@@ -23,6 +23,7 @@ struct ClipboardHistoryFeature {
         case removeItems(IndexSet)
         case clearAll
         case pasteItem(ClipboardItem)
+        case toggleFavorite(ClipboardItem)
         case startMonitoring
         case stopMonitoring
         case checkClipboard
@@ -87,7 +88,23 @@ struct ClipboardHistoryFeature {
             case .pasteItem:
                 // Paste functionality will be implemented later
                 return .none
-                
+
+            case let .toggleFavorite(item):
+                if let index = state.items.firstIndex(where: { $0.id == item.id }) {
+                    state.items[index].isFavorite.toggle()
+                    // お気に入りの状態が変わったらソート
+                    state.items.sort { lhs, rhs in
+                        // お気に入りを先頭に
+                        if lhs.isFavorite != rhs.isFavorite {
+                            return lhs.isFavorite
+                        }
+                        // 同じお気に入り状態なら日時でソート
+                        return lhs.timestamp > rhs.timestamp
+                    }
+                    return .send(.saveItems)
+                }
+                return .none
+
             case .startMonitoring:
                 guard !state.isMonitoring else {
                     Self.logger.warning("Already monitoring")
@@ -232,7 +249,13 @@ struct ClipboardHistoryFeature {
                 }
 
             case let .itemsLoaded(items):
-                state.items = items
+                // お気に入りを先頭に、その後は日時順にソート
+                state.items = items.sorted { lhs, rhs in
+                    if lhs.isFavorite != rhs.isFavorite {
+                        return lhs.isFavorite
+                    }
+                    return lhs.timestamp > rhs.timestamp
+                }
                 Self.logger.info("Loaded \(items.count) items from storage")
 
                 // 初回起動時にクリップボードアクセスの説明を表示
