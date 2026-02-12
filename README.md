@@ -1,7 +1,5 @@
 # copyPaste
 
-📋 [Yoink](https://apps.apple.com/jp/app/yoink-improved-drag-and-drop/id1260915283)風のクリップボード履歴管理iOSアプリ
-
 バックグラウンドでもクリップボードを監視し、コピーした内容を自動的に保存します。Picture-in-Picture（PiP）モードを活用することで、iOS 16以降の制限を回避しています。
 
 ## ✨ 主な機能
