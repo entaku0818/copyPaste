@@ -683,25 +683,6 @@ struct MockSettingsView: View {
                 } header: {
                     Text(language.appInfo)
                 }
-
-                // Debug Section
-                Section {
-                    HStack {
-                        Image(systemName: "camera.fill")
-                            .foregroundColor(.blue)
-                            .frame(width: 30)
-                        Text(language.screenshotPreview)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                } header: {
-                    Text(language.debug)
-                } footer: {
-                    Text(language == .english ? "Preview App Store screenshots" : "App Store用のスクリーンショットをプレビューできます")
-                        .font(.caption)
-                }
             }
             .navigationTitle(language.settings)
             .navigationBarTitleDisplayMode(.inline)
