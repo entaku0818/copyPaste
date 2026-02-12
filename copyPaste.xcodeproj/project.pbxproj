@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		613FED6D2F2901E400AE78D8 /* ClipboardKeyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		61BB48C62DCA33D800EFE195 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 61BB48C52DCA33D800EFE195 /* ComposableArchitecture */; };
+		61CC3DBF2F3E271600B6F559 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CC3DBE2F3E271600B6F559 /* WidgetKit.framework */; };
+		61CC3DC12F3E271600B6F559 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CC3DC02F3E271600B6F559 /* SwiftUI.framework */; };
+		61CC3DD22F3E271700B6F559 /* ClipboardWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +36,13 @@
 			remoteGlobalIDString = 61B4C3882DC4A60F00E59DE3;
 			remoteInfo = copyPaste;
 		};
+		61CC3DD02F3E271700B6F559 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 61B4C3812DC4A60F00E59DE3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 61CC3DBB2F3E271600B6F559;
+			remoteInfo = ClipboardWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +53,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				613FED6D2F2901E400AE78D8 /* ClipboardKeyboard.appex in Embed Foundation Extensions */,
+				61CC3DD22F3E271700B6F559 /* ClipboardWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,6 +65,9 @@
 		61B4C3892DC4A60F00E59DE3 /* copyPaste.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = copyPaste.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B4C3962DC4A61100E59DE3 /* copyPasteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = copyPasteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = copyPasteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClipboardWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		61CC3DBE2F3E271600B6F559 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		61CC3DC02F3E271600B6F559 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -79,6 +93,13 @@
 				Info.plist,
 			);
 			target = 61B4C3882DC4A60F00E59DE3 /* copyPaste */;
+		};
+		61CC3DD62F3E271700B6F559 /* Exceptions for "ClipboardWidget" folder in "ClipboardWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 61CC3DBB2F3E271600B6F559 /* ClipboardWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -108,6 +129,14 @@
 		61B4C3A32DC4A61100E59DE3 /* copyPasteUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = copyPasteUITests;
+			sourceTree = "<group>";
+		};
+		61CC3DC22F3E271600B6F559 /* ClipboardWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				61CC3DD62F3E271700B6F559 /* Exceptions for "ClipboardWidget" folder in "ClipboardWidgetExtension" target */,
+			);
+			path = ClipboardWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -142,6 +171,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		61CC3DB92F3E271600B6F559 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61CC3DC12F3E271600B6F559 /* SwiftUI.framework in Frameworks */,
+				61CC3DBF2F3E271600B6F559 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -152,6 +190,8 @@
 				61B4C3992DC4A61100E59DE3 /* copyPasteTests */,
 				61B4C3A32DC4A61100E59DE3 /* copyPasteUITests */,
 				613FED672F2901E400AE78D8 /* ClipboardKeyboard */,
+				61CC3DC22F3E271600B6F559 /* ClipboardWidget */,
+				61CC3DBD2F3E271600B6F559 /* Frameworks */,
 				61B4C38A2DC4A60F00E59DE3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -163,8 +203,18 @@
 				61B4C3962DC4A61100E59DE3 /* copyPasteTests.xctest */,
 				61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */,
 				613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */,
+				61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		61CC3DBD2F3E271600B6F559 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				61CC3DBE2F3E271600B6F559 /* WidgetKit.framework */,
+				61CC3DC02F3E271600B6F559 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,6 +255,7 @@
 			);
 			dependencies = (
 				613FED6C2F2901E400AE78D8 /* PBXTargetDependency */,
+				61CC3DD12F3E271700B6F559 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				61B4C38B2DC4A60F00E59DE3 /* copyPaste */,
@@ -263,6 +314,28 @@
 			productReference = 61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		61CC3DBB2F3E271600B6F559 /* ClipboardWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61CC3DD32F3E271700B6F559 /* Build configuration list for PBXNativeTarget "ClipboardWidgetExtension" */;
+			buildPhases = (
+				61CC3DB82F3E271600B6F559 /* Sources */,
+				61CC3DB92F3E271600B6F559 /* Frameworks */,
+				61CC3DBA2F3E271600B6F559 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				61CC3DC22F3E271600B6F559 /* ClipboardWidget */,
+			);
+			name = ClipboardWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = ClipboardWidgetExtension;
+			productReference = 61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -287,6 +360,9 @@
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = 61B4C3882DC4A60F00E59DE3;
 					};
+					61CC3DBB2F3E271600B6F559 = {
+						CreatedOnToolsVersion = 26.1;
+					};
 				};
 			};
 			buildConfigurationList = 61B4C3842DC4A60F00E59DE3 /* Build configuration list for PBXProject "copyPaste" */;
@@ -310,6 +386,7 @@
 				61B4C3952DC4A61100E59DE3 /* copyPasteTests */,
 				61B4C39F2DC4A61100E59DE3 /* copyPasteUITests */,
 				613FED652F2901E400AE78D8 /* ClipboardKeyboard */,
+				61CC3DBB2F3E271600B6F559 /* ClipboardWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -337,6 +414,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		61B4C39E2DC4A61100E59DE3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61CC3DBA2F3E271600B6F559 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -374,6 +458,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		61CC3DB82F3E271600B6F559 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -391,6 +482,11 @@
 			isa = PBXTargetDependency;
 			target = 61B4C3882DC4A60F00E59DE3 /* copyPaste */;
 			targetProxy = 61B4C3A12DC4A61100E59DE3 /* PBXContainerItemProxy */;
+		};
+		61CC3DD12F3E271700B6F559 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 61CC3DBB2F3E271600B6F559 /* ClipboardWidgetExtension */;
+			targetProxy = 61CC3DD02F3E271700B6F559 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -712,6 +808,68 @@
 			};
 			name = Release;
 		};
+		61CC3DD42F3E271700B6F559 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4YZQY4C47E;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClipboardWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClipboardWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.copyPaste.ClipboardWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		61CC3DD52F3E271700B6F559 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4YZQY4C47E;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClipboardWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClipboardWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.copyPaste.ClipboardWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -756,6 +914,15 @@
 			buildConfigurations = (
 				61B4C3B12DC4A61100E59DE3 /* Debug */,
 				61B4C3B22DC4A61100E59DE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61CC3DD32F3E271700B6F559 /* Build configuration list for PBXNativeTarget "ClipboardWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61CC3DD42F3E271700B6F559 /* Debug */,
+				61CC3DD52F3E271700B6F559 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
