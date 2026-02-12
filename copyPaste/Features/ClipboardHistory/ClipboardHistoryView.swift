@@ -7,6 +7,23 @@ struct ClipboardHistoryView: View {
 
     var body: some View {
         List {
+            // 検索結果の件数表示
+            if !store.searchText.isEmpty {
+                Section {
+                    HStack {
+                        Text("\(store.filteredItems.count)件の結果")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Button("クリア") {
+                            store.send(.updateSearchText(""))
+                        }
+                        .font(.caption)
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+
             Section {
                 VStack(spacing: 12) {
                     VideoPlayerView { isActive in
@@ -46,7 +63,7 @@ struct ClipboardHistoryView: View {
                     .font(.caption2)
             }
 
-            ForEach(store.items) { item in
+            ForEach(store.filteredItems) { item in
                 ClipboardItemRow(item: item)
                     .onTapGesture {
                         if item.type == .image {
@@ -78,6 +95,14 @@ struct ClipboardHistoryView: View {
             }
         }
         .navigationTitle("Clipboard History")
+        .searchable(
+            text: Binding(
+                get: { store.searchText },
+                set: { store.send(.updateSearchText($0)) }
+            ),
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Search clipboard history..."
+        )
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { showSettings = true }) {
