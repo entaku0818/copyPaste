@@ -12,6 +12,7 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
     let id: UUID
     let timestamp: Date
     let type: ClipboardItemType
+    var isFavorite: Bool
 
     // テキスト
     var textContent: String?
@@ -59,28 +60,31 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
     }
 
     // テキスト用の便利なイニシャライザ（後方互換性）
-    init(id: UUID = UUID(), content: String, timestamp: Date = Date()) {
+    init(id: UUID = UUID(), content: String, timestamp: Date = Date(), isFavorite: Bool = false) {
         self.id = id
         self.timestamp = timestamp
         self.type = .text
         self.textContent = content
+        self.isFavorite = isFavorite
     }
 
     // 画像用イニシャライザ
-    init(id: UUID = UUID(), image: UIImage, thumbnail: UIImage? = nil, timestamp: Date = Date()) {
+    init(id: UUID = UUID(), image: UIImage, thumbnail: UIImage? = nil, timestamp: Date = Date(), isFavorite: Bool = false) {
         self.id = id
         self.timestamp = timestamp
         self.type = .image
         self.imageData = image.pngData()
         self.imageThumbnailData = thumbnail?.pngData()
+        self.isFavorite = isFavorite
     }
 
     // URL用イニシャライザ
-    init(id: UUID = UUID(), url: URL, timestamp: Date = Date()) {
+    init(id: UUID = UUID(), url: URL, timestamp: Date = Date(), isFavorite: Bool = false) {
         self.id = id
         self.timestamp = timestamp
         self.type = .url
         self.url = url
+        self.isFavorite = isFavorite
     }
 
     // 完全なイニシャライザ（ストレージからの復元用）
@@ -88,6 +92,7 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         id: UUID,
         timestamp: Date,
         type: ClipboardItemType,
+        isFavorite: Bool = false,
         textContent: String? = nil,
         imageData: Data? = nil,
         imageThumbnailData: Data? = nil,
@@ -99,6 +104,7 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         self.id = id
         self.timestamp = timestamp
         self.type = type
+        self.isFavorite = isFavorite
         self.textContent = textContent
         self.imageData = imageData
         self.imageThumbnailData = imageThumbnailData
