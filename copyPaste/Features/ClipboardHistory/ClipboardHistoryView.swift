@@ -55,9 +55,26 @@ struct ClipboardHistoryView: View {
                             store.send(.pasteItem(item))
                         }
                     }
-            }
-            .onDelete { indexSet in
-                store.send(.removeItems(indexSet))
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        Button {
+                            store.send(.toggleFavorite(item))
+                        } label: {
+                            Label(
+                                item.isFavorite ? "Unfavorite" : "Favorite",
+                                systemImage: item.isFavorite ? "star.slash" : "star.fill"
+                            )
+                        }
+                        .tint(item.isFavorite ? .gray : .yellow)
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button(role: .destructive) {
+                            if let index = store.items.firstIndex(where: { $0.id == item.id }) {
+                                store.send(.removeItems(IndexSet(integer: index)))
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
             }
         }
         .navigationTitle("Clipboard History")
