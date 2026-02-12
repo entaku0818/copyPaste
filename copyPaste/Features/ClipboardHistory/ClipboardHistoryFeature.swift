@@ -16,6 +16,28 @@ struct ClipboardHistoryFeature {
         var showPermissionAlert: Bool = false
         var hasRequestedPermission: Bool = UserDefaults.standard.bool(forKey: "hasRequestedClipboardPermission")
         var selectedImageItem: ClipboardItem?
+        var searchText: String = ""
+
+        // 検索結果のフィルタリング
+        var filteredItems: [ClipboardItem] {
+            if searchText.isEmpty {
+                return items
+            }
+
+            return items.filter { item in
+                switch item.type {
+                case .text:
+                    return item.textContent?.localizedCaseInsensitiveContains(searchText) ?? false
+                case .url:
+                    return item.url?.absoluteString.localizedCaseInsensitiveContains(searchText) ?? false
+                case .file:
+                    return item.fileName?.localizedCaseInsensitiveContains(searchText) ?? false
+                case .image:
+                    // 画像は検索対象外（または将来的にOCRで対応）
+                    return false
+                }
+            }
+        }
     }
 
     enum Action {
@@ -24,6 +46,7 @@ struct ClipboardHistoryFeature {
         case clearAll
         case pasteItem(ClipboardItem)
         case toggleFavorite(ClipboardItem)
+        case updateSearchText(String)
         case startMonitoring
         case stopMonitoring
         case checkClipboard
@@ -103,6 +126,10 @@ struct ClipboardHistoryFeature {
                     }
                     return .send(.saveItems)
                 }
+                return .none
+
+            case let .updateSearchText(text):
+                state.searchText = text
                 return .none
 
             case .startMonitoring:
