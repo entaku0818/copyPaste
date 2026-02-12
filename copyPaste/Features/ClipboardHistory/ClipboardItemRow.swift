@@ -11,7 +11,15 @@ struct ClipboardItemRow: View {
 
             // コンテンツ
             VStack(alignment: .leading, spacing: 4) {
-                itemContent
+                HStack(spacing: 6) {
+                    itemContent
+
+                    if item.isFavorite {
+                        Image(systemName: "star.fill")
+                            .font(.caption)
+                            .foregroundColor(.yellow)
+                    }
+                }
 
                 HStack(spacing: 4) {
                     Text(item.timestamp, style: .relative)
