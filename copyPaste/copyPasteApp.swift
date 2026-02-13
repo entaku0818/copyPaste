@@ -10,6 +10,11 @@ import ComposableArchitecture
 
 @main
 struct copyPasteApp: App {
+    init() {
+        // RevenueCatの初期化
+        RevenueCatManager.shared.configure()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView(

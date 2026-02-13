@@ -7,6 +7,43 @@ struct ClipboardHistoryView: View {
 
     var body: some View {
         List {
+            // Pro状態と履歴件数の表示
+            Section {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("履歴: \(store.items.count)件")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        if !store.isProUser {
+                            Text("無料版: 最大20件")
+                                .font(.caption2)
+                                .foregroundColor(.orange)
+                        }
+                    }
+
+                    Spacer()
+
+                    if !store.isProUser {
+                        Button("Proにアップグレード") {
+                            store.send(.showPaywall)
+                        }
+                        .font(.caption)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            LinearGradient(
+                                colors: [.blue, .purple],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                        .foregroundColor(.white)
+                        .cornerRadius(6)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+
             // 検索結果の件数表示
             if !store.searchText.isEmpty {
                 Section {
@@ -101,12 +138,37 @@ struct ClipboardHistoryView: View {
                 set: { store.send(.updateSearchText($0)) }
             ),
             placement: .navigationBarDrawer(displayMode: .always),
-            prompt: "Search clipboard history..."
+            prompt: store.isProUser ? "Search clipboard history..." : "Search (Pro)"
         )
+        .disabled(!store.isProUser) // 無料版では検索バーを無効化
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { showSettings = true }) {
                     Image(systemName: "gearshape.fill")
+                }
+            }
+
+            ToolbarItem(placement: .principal) {
+                if !store.isProUser {
+                    Button(action: { store.send(.showPaywall) }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "crown.fill")
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.yellow, .orange],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                            Text("Pro")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.yellow.opacity(0.2))
+                        .cornerRadius(8)
+                    }
                 }
             }
 
@@ -166,6 +228,14 @@ struct ClipboardHistoryView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView()
+        }
+        .sheet(
+            isPresented: Binding(
+                get: { store.showPaywall },
+                set: { if !$0 { store.send(.dismissPaywall) } }
+            )
+        ) {
+            PaywallView()
         }
     }
 } 

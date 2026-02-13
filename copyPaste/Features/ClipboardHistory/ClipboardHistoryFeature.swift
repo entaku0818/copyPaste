@@ -17,9 +17,21 @@ struct ClipboardHistoryFeature {
         var hasRequestedPermission: Bool = UserDefaults.standard.bool(forKey: "hasRequestedClipboardPermission")
         var selectedImageItem: ClipboardItem?
         var searchText: String = ""
+        var showPaywall: Bool = false
+        var isProUser: Bool = false
 
-        // 検索結果のフィルタリング
+        // 履歴件数制限（無料版: 20件、Pro: 無制限）
+        var maxHistoryCount: Int {
+            return isProUser ? Int.max : 20
+        }
+
+        // 検索結果のフィルタリング（Pro機能）
         var filteredItems: [ClipboardItem] {
+            // 無料版では検索を使えない - すべてのアイテムを返す
+            guard isProUser else {
+                return items
+            }
+
             if searchText.isEmpty {
                 return items
             }
@@ -61,6 +73,9 @@ struct ClipboardHistoryFeature {
         case loadItems
         case itemsLoaded([ClipboardItem])
         case saveItems
+        case showPaywall
+        case dismissPaywall
+        case updateProStatus
     }
 
     @Dependency(\.continuousClock) var clock
@@ -85,7 +100,9 @@ struct ClipboardHistoryFeature {
             switch action {
             case let .addItem(item):
                 state.items.insert(item, at: 0)
-                if state.items.count > state.maxItems {
+                // 履歴件数制限を適用（無料版: 20件、Pro: 100件）
+                let limit = min(state.maxHistoryCount, state.maxItems)
+                if state.items.count > limit {
                     let removed = state.items.removeLast()
                     // 削除されたアイテムのファイルも削除
                     try? ClipboardStorageManager.shared.deleteItem(removed)
@@ -113,6 +130,11 @@ struct ClipboardHistoryFeature {
                 return .none
 
             case let .toggleFavorite(item):
+                // Pro機能チェック
+                guard state.isProUser else {
+                    return .send(.showPaywall)
+                }
+
                 if let index = state.items.firstIndex(where: { $0.id == item.id }) {
                     state.items[index].isFavorite.toggle()
                     // お気に入りの状態が変わったらソート
@@ -129,6 +151,10 @@ struct ClipboardHistoryFeature {
                 return .none
 
             case let .updateSearchText(text):
+                // Pro機能チェック - 検索テキストが入力された時のみチェック
+                guard text.isEmpty || state.isProUser else {
+                    return .send(.showPaywall)
+                }
                 state.searchText = text
                 return .none
 
@@ -232,8 +258,11 @@ struct ClipboardHistoryFeature {
                 return .none
                 
             case .onAppear:
-                // 保存されたアイテムを読み込む
-                return .send(.loadItems)
+                // Pro状態を更新してから、保存されたアイテムを読み込む
+                return .merge(
+                    .send(.updateProStatus),
+                    .send(.loadItems)
+                )
 
             case .requestClipboardPermission:
                 state.showPermissionAlert = false
@@ -301,6 +330,20 @@ struct ClipboardHistoryFeature {
                         Self.logger.error("Failed to save items: \(error.localizedDescription)")
                     }
                 }
+
+            case .showPaywall:
+                state.showPaywall = true
+                return .none
+
+            case .dismissPaywall:
+                state.showPaywall = false
+                // Paywallを閉じた後、Pro状態を更新
+                return .send(.updateProStatus)
+
+            case .updateProStatus:
+                state.isProUser = RevenueCatManager.shared.hasProAccess()
+                Self.logger.info("Pro status updated: \(state.isProUser)")
+                return .none
             }
         }
     }
