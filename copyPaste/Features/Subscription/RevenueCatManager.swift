@@ -41,7 +41,12 @@ final class RevenueCatManager: ObservableObject {
         do {
             let info = try await Purchases.shared.customerInfo()
             self.customerInfo = info
-            self.isProUser = info.entitlements[proEntitlementID]?.isActive == true
+            let newProStatus = info.entitlements[proEntitlementID]?.isActive == true
+            self.isProUser = newProStatus
+
+            // Pro状態をApp Group UserDefaultsに保存（ウィジェット・キーボード用）
+            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+
             logger.info("Customer info fetched. Pro status: \(self.isProUser)")
         } catch {
             logger.error("Failed to fetch customer info: \(error.localizedDescription)")
@@ -65,7 +70,12 @@ final class RevenueCatManager: ObservableObject {
             let result = try await Purchases.shared.purchase(package: package)
             let info = result.customerInfo
             self.customerInfo = info
-            self.isProUser = info.entitlements[proEntitlementID]?.isActive == true
+            let newProStatus = info.entitlements[proEntitlementID]?.isActive == true
+            self.isProUser = newProStatus
+
+            // Pro状態をApp Group UserDefaultsに保存
+            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+
             logger.info("Purchase successful. Pro status: \(self.isProUser)")
             return info
         } catch {
@@ -79,7 +89,12 @@ final class RevenueCatManager: ObservableObject {
         do {
             let info = try await Purchases.shared.restorePurchases()
             self.customerInfo = info
-            self.isProUser = info.entitlements[proEntitlementID]?.isActive == true
+            let newProStatus = info.entitlements[proEntitlementID]?.isActive == true
+            self.isProUser = newProStatus
+
+            // Pro状態をApp Group UserDefaultsに保存
+            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+
             logger.info("Purchases restored. Pro status: \(self.isProUser)")
             return info
         } catch {
@@ -104,7 +119,12 @@ extension RevenueCatManager: PurchasesDelegate {
     func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
         Task { @MainActor in
             self.customerInfo = customerInfo
-            self.isProUser = customerInfo.entitlements[proEntitlementID]?.isActive == true
+            let newProStatus = customerInfo.entitlements[proEntitlementID]?.isActive == true
+            self.isProUser = newProStatus
+
+            // Pro状態をApp Group UserDefaultsに保存
+            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+
             logger.info("Customer info updated. Pro status: \(self.isProUser)")
         }
     }

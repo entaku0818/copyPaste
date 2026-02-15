@@ -65,18 +65,26 @@ struct ClipboardKeyboardView: View {
 
     @State private var clipboardItems: [ClipboardItem] = []
     @State private var isLoading = true
+    @State private var isProUser = false
 
     var body: some View {
         VStack(spacing: 0) {
             // クリップボード履歴表示エリア
-            clipboardHistorySection
+            if isProUser {
+                clipboardHistorySection
+            } else {
+                proPlaceholderSection
+            }
 
             // キーボード切り替えボタン
             keyboardControlsSection
         }
         .background(Color(UIColor.systemBackground))
         .task {
-            await loadClipboardHistory()
+            checkProStatus()
+            if isProUser {
+                await loadClipboardHistory()
+            }
         }
     }
 
@@ -126,7 +134,44 @@ struct ClipboardKeyboardView: View {
         .background(Color(UIColor.systemBackground))
     }
 
+    // MARK: - Pro Placeholder Section
+
+    private var proPlaceholderSection: some View {
+        HStack {
+            Spacer()
+
+            VStack(spacing: 8) {
+                Image(systemName: "crown.fill")
+                    .font(.title)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.yellow, .orange],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+
+                Text("Pro機能")
+                    .font(.caption)
+                    .fontWeight(.bold)
+
+                Text("キーボードはPro版限定です")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            Spacer()
+        }
+        .frame(height: 100)
+        .background(Color(UIColor.secondarySystemBackground))
+    }
+
     // MARK: - Helper Methods
+
+    private func checkProStatus() {
+        isProUser = SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
+    }
 
     private func loadClipboardHistory() async {
         do {

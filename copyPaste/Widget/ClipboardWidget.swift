@@ -4,20 +4,23 @@ import SwiftUI
 // MARK: - Timeline Provider
 struct ClipboardWidgetProvider: TimelineProvider {
     func placeholder(in context: Context) -> ClipboardWidgetEntry {
-        ClipboardWidgetEntry(date: Date(), items: sampleItems())
+        ClipboardWidgetEntry(date: Date(), items: sampleItems(), isProUser: true)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (ClipboardWidgetEntry) -> Void) {
-        let entry = ClipboardWidgetEntry(date: Date(), items: sampleItems())
+        let isProUser = SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
+        let entry = ClipboardWidgetEntry(date: Date(), items: sampleItems(), isProUser: isProUser)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ClipboardWidgetEntry>) -> Void) {
         Task {
+            let isProUser = SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
+
             do {
                 // Load clipboard items from shared storage
                 let items = try await ClipboardStorageManager.shared.load()
-                let entry = ClipboardWidgetEntry(date: Date(), items: Array(items.prefix(10)))
+                let entry = ClipboardWidgetEntry(date: Date(), items: Array(items.prefix(10)), isProUser: isProUser)
 
                 // Update every 5 minutes
                 let nextUpdate = Calendar.current.date(byAdding: .minute, value: 5, to: Date())!
@@ -25,7 +28,7 @@ struct ClipboardWidgetProvider: TimelineProvider {
                 completion(timeline)
             } catch {
                 // Fallback to sample data
-                let entry = ClipboardWidgetEntry(date: Date(), items: [])
+                let entry = ClipboardWidgetEntry(date: Date(), items: [], isProUser: isProUser)
                 let timeline = Timeline(entries: [entry], policy: .never)
                 completion(timeline)
             }
@@ -45,6 +48,7 @@ struct ClipboardWidgetProvider: TimelineProvider {
 struct ClipboardWidgetEntry: TimelineEntry {
     let date: Date
     let items: [ClipboardItem]
+    let isProUser: Bool
 }
 
 // MARK: - Widget Views
@@ -71,6 +75,16 @@ struct SmallWidgetView: View {
     let entry: ClipboardWidgetEntry
 
     var body: some View {
+        if entry.isProUser {
+            // Pro版: 通常のウィジェット表示
+            proContent
+        } else {
+            // 無料版: Proプレースホルダー
+            proPlaceholder
+        }
+    }
+
+    private var proContent: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Image(systemName: "doc.on.clipboard")
@@ -109,6 +123,31 @@ struct SmallWidgetView: View {
             Spacer()
         }
         .padding()
+    }
+
+    private var proPlaceholder: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "crown.fill")
+                .font(.title)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.yellow, .orange],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            Text("Pro機能")
+                .font(.caption)
+                .fontWeight(.bold)
+
+            Text("ウィジェットはPro版限定です")
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func itemIcon(for item: ClipboardItem) -> some View {
@@ -150,6 +189,16 @@ struct MediumWidgetView: View {
     let entry: ClipboardWidgetEntry
 
     var body: some View {
+        if entry.isProUser {
+            // Pro版: 通常のウィジェット表示
+            proContent
+        } else {
+            // 無料版: Proプレースホルダー
+            proPlaceholder
+        }
+    }
+
+    private var proContent: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Image(systemName: "doc.on.clipboard")
@@ -196,6 +245,33 @@ struct MediumWidgetView: View {
         .padding()
     }
 
+    private var proPlaceholder: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "crown.fill")
+                .font(.largeTitle)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.yellow, .orange],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            VStack(spacing: 4) {
+                Text("Pro機能")
+                    .font(.headline)
+                    .fontWeight(.bold)
+
+                Text("ウィジェットはPro版限定です")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
     private func itemIcon(for item: ClipboardItem) -> some View {
         Group {
             switch item.type {
@@ -235,6 +311,16 @@ struct LargeWidgetView: View {
     let entry: ClipboardWidgetEntry
 
     var body: some View {
+        if entry.isProUser {
+            // Pro版: 通常のウィジェット表示
+            proContent
+        } else {
+            // 無料版: Proプレースホルダー
+            proPlaceholder
+        }
+    }
+
+    private var proContent: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Image(systemName: "doc.on.clipboard")
@@ -350,6 +436,37 @@ struct LargeWidgetView: View {
             return item.fileName ?? "File"
         }
     }
+
+    private var proPlaceholder: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "crown.fill")
+                .font(.system(size: 50))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.yellow, .orange],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            VStack(spacing: 8) {
+                Text("Pro機能")
+                    .font(.title3)
+                    .fontWeight(.bold)
+
+                Text("ウィジェットはPro版限定です")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+
+                Text("アプリでアップグレード")
+                    .font(.caption2)
+                    .foregroundColor(.blue)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
 
 // MARK: - Widget Configuration
@@ -375,7 +492,7 @@ struct ClipboardWidget: Widget {
         ClipboardItem(content: "Hello World", isFavorite: true),
         ClipboardItem(url: URL(string: "https://www.apple.com")!),
         ClipboardItem(content: "Sample text")
-    ])
+    ], isProUser: true)
 }
 
 #Preview(as: .systemMedium) {
@@ -385,7 +502,7 @@ struct ClipboardWidget: Widget {
         ClipboardItem(content: "Hello World", isFavorite: true),
         ClipboardItem(url: URL(string: "https://www.apple.com")!),
         ClipboardItem(content: "Sample text")
-    ])
+    ], isProUser: true)
 }
 
 #Preview(as: .systemLarge) {
@@ -398,5 +515,5 @@ struct ClipboardWidget: Widget {
         ClipboardItem(content: "Another item"),
         ClipboardItem(url: URL(string: "https://www.google.com")!),
         ClipboardItem(content: "Last item")
-    ])
+    ], isProUser: true)
 }
