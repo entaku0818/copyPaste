@@ -646,9 +646,9 @@ struct MockPiPMonitoringView: View {
 
                 // Features list
                 VStack(alignment: .leading, spacing: 16) {
-                    FeatureRow(icon: "eye.fill", text: language == .english ? "Always monitoring" : "常時監視", color: .blue)
-                    FeatureRow(icon: "lock.shield.fill", text: language == .english ? "Secure storage" : "安全なストレージ", color: .green)
-                    FeatureRow(icon: "bolt.fill", text: language == .english ? "Quick access" : "素早いアクセス", color: .orange)
+                    ScreenshotFeatureRow(icon: "eye.fill", text: language == .english ? "Always monitoring" : "常時監視", color: .blue)
+                    ScreenshotFeatureRow(icon: "lock.shield.fill", text: language == .english ? "Secure storage" : "安全なストレージ", color: .green)
+                    ScreenshotFeatureRow(icon: "bolt.fill", text: language == .english ? "Quick access" : "素早いアクセス", color: .orange)
                 }
                 .padding(.horizontal, 40)
 
@@ -821,7 +821,7 @@ struct MockKeyboardSetupView: View {
 }
 
 // MARK: - Helper Views
-struct FeatureRow: View {
+struct ScreenshotFeatureRow: View {
     let icon: String
     let text: String
     let color: Color
