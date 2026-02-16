@@ -6,7 +6,7 @@ private let logger = Logger(subsystem: "com.entaku.copyPaste", category: "Revenu
 
 /// RevenueCatを使ったサブスクリプション管理
 @MainActor
-final class RevenueCatManager: ObservableObject {
+final class RevenueCatManager: NSObject, ObservableObject {
     static let shared = RevenueCatManager()
 
     @Published private(set) var customerInfo: CustomerInfo?
@@ -16,7 +16,9 @@ final class RevenueCatManager: ObservableObject {
     // Entitlement ID（App Store Connectで設定するEntitlement ID）
     private let proEntitlementID = "pro"
 
-    private init() {}
+    private override init() {
+        super.init()
+    }
 
     /// RevenueCatの初期化
     func configure() {
@@ -103,23 +105,24 @@ final class RevenueCatManager: ObservableObject {
         }
     }
 
-    /// Pro機能にアクセス可能かチェック
-    func hasProAccess() -> Bool {
-        return isProUser
+    /// Pro機能にアクセス可能かチェック（nonisolated - UserDefaultsから読み取り）
+    nonisolated func hasProAccess() -> Bool {
+        return SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
     }
 
-    /// 無料版の履歴件数制限
-    var maxHistoryCount: Int {
-        return isProUser ? Int.max : 20
+    /// 無料版の履歴件数制限（nonisolated - UserDefaultsから読み取り）
+    nonisolated var maxHistoryCount: Int {
+        let isPro = SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
+        return isPro ? Int.max : 20
     }
 }
 
 // MARK: - PurchasesDelegate
 extension RevenueCatManager: PurchasesDelegate {
-    func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
+    nonisolated func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
         Task { @MainActor in
             self.customerInfo = customerInfo
-            let newProStatus = customerInfo.entitlements[proEntitlementID]?.isActive == true
+            let newProStatus = customerInfo.entitlements[self.proEntitlementID]?.isActive == true
             self.isProUser = newProStatus
 
             // Pro状態をApp Group UserDefaultsに保存

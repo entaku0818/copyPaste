@@ -341,8 +341,9 @@ struct ClipboardHistoryFeature {
                 return .send(.updateProStatus)
 
             case .updateProStatus:
-                state.isProUser = RevenueCatManager.shared.hasProAccess()
-                Self.logger.info("Pro status updated: \(state.isProUser)")
+                let newProStatus = RevenueCatManager.shared.hasProAccess()
+                state.isProUser = newProStatus
+                Self.logger.info("Pro status updated: \(newProStatus)")
                 return .none
             }
         }

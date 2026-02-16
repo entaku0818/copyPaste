@@ -12,6 +12,7 @@
 		61CC3DBF2F3E271600B6F559 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CC3DBE2F3E271600B6F559 /* WidgetKit.framework */; };
 		61CC3DC12F3E271600B6F559 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CC3DC02F3E271600B6F559 /* SwiftUI.framework */; };
 		61CC3DD22F3E271700B6F559 /* ClipboardWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		61CC3DDE2F42178000B6F559 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 61CC3DDD2F42178000B6F559 /* RevenueCat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -153,6 +154,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61CC3DDE2F42178000B6F559 /* RevenueCat in Frameworks */,
 				61BB48C62DCA33D800EFE195 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,6 +265,7 @@
 			name = copyPaste;
 			packageProductDependencies = (
 				61BB48C52DCA33D800EFE195 /* ComposableArchitecture */,
+				61CC3DDD2F42178000B6F559 /* RevenueCat */,
 			);
 			productName = copyPaste;
 			productReference = 61B4C3892DC4A60F00E59DE3 /* copyPaste.app */;
@@ -376,6 +379,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				61BB48C42DCA33D800EFE195 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				61CC3DDC2F42178000B6F559 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 61B4C38A2DC4A60F00E59DE3 /* Products */;
@@ -938,6 +942,14 @@
 				minimumVersion = 1.21.0;
 			};
 		};
+		61CC3DDC2F42178000B6F559 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.59.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -945,6 +957,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 61BB48C42DCA33D800EFE195 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		61CC3DDD2F42178000B6F559 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61CC3DDC2F42178000B6F559 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
