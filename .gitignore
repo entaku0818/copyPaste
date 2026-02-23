@@ -90,4 +90,8 @@ fastlane/test_output
 iOSInjectionProject/
 
 # macOS
-.DS_Store 
+.DS_Store .env
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
