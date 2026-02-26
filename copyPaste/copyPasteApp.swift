@@ -13,6 +13,8 @@ struct copyPasteApp: App {
     init() {
         // RevenueCatの初期化
         RevenueCatManager.shared.configure()
+        // AdMobの初期化
+        AdManager.shared.configure()
     }
 
     var body: some Scene {

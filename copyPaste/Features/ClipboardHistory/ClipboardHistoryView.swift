@@ -237,5 +237,12 @@ struct ClipboardHistoryView: View {
         ) {
             PaywallView()
         }
+        .safeAreaInset(edge: .bottom) {
+            // 無料版のみバナー広告を表示
+            if !store.isProUser {
+                BannerAdView()
+                    .frame(height: 50)
+            }
+        }
     }
 } 
