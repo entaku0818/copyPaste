@@ -90,7 +90,12 @@ fastlane/test_output
 iOSInjectionProject/
 
 # macOS
-.DS_Store .env
+.DS_Store
+.env
+
+# xcconfig (contains sensitive keys)
+copyPaste/Config/Debug.xcconfig
+copyPaste/Config/Release.xcconfig
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
