@@ -11,7 +11,7 @@ final class AdManager {
     #if DEBUG
     static let bannerAdUnitID = "ca-app-pub-3940256099942544/2934735716" // テスト用
     #else
-    static let bannerAdUnitID = "YOUR_BANNER_AD_UNIT_ID" // 本番用
+    static let bannerAdUnitID = "ca-app-pub-3484697221349891/3980413779"
     #endif
 
     private init() {}

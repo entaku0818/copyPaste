@@ -10,7 +10,7 @@ final class InterstitialAdManager: NSObject, ObservableObject {
     #if DEBUG
     private let adUnitID = "ca-app-pub-3940256099942544/4411468910" // テスト用
     #else
-    private let adUnitID = "YOUR_INTERSTITIAL_AD_UNIT_ID" // 本番用
+    private let adUnitID = "ca-app-pub-3484697221349891/3980413779"
     #endif
 
     private var interstitial: InterstitialAd?
