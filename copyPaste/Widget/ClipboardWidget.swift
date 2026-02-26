@@ -203,7 +203,7 @@ struct MediumWidgetView: View {
             HStack {
                 Image(systemName: "doc.on.clipboard")
                     .foregroundColor(.blue)
-                Text("Clipboard History")
+                Text("ClipKit")
                     .font(.headline)
                 Spacer()
                 Text("\(entry.items.count)")
@@ -325,7 +325,7 @@ struct LargeWidgetView: View {
             HStack {
                 Image(systemName: "doc.on.clipboard")
                     .foregroundColor(.blue)
-                Text("Clipboard History")
+                Text("ClipKit")
                     .font(.headline)
                 Spacer()
                 Text("\(entry.items.count)")
@@ -478,8 +478,8 @@ struct ClipboardWidget: Widget {
             ClipboardWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("Clipboard History")
-        .description("View your recent clipboard history.")
+        .configurationDisplayName("ClipKit")
+        .description("クリップボードの履歴をすぐ確認。")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

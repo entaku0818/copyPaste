@@ -27,7 +27,7 @@ struct PaywallView: View {
                                 )
                             )
 
-                        Text("Clipboard Pro")
+                        Text("ClipKit Pro")
                             .font(.largeTitle)
                             .fontWeight(.bold)
 

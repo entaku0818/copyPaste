@@ -1,1 +1,1 @@
-Clipboard Pro - クリップボード履歴
+ClipKit - クリップボード履歴管理

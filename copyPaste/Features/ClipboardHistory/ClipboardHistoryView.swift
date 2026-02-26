@@ -131,7 +131,7 @@ struct ClipboardHistoryView: View {
                     }
             }
         }
-        .navigationTitle("Clipboard History")
+        .navigationTitle("ClipKit")
         .searchable(
             text: Binding(
                 get: { store.searchText },
