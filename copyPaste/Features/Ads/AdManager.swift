@@ -6,17 +6,19 @@ import GoogleMobileAds
 final class AdManager {
     static let shared = AdManager()
 
-    // TODO: AdMob DashboardからAd Unit IDを取得して設定
-    // テスト用IDはデバッグ時のみ使用
-    #if DEBUG
-    static let bannerAdUnitID = "ca-app-pub-3940256099942544/2934735716" // テスト用
-    #else
-    static let bannerAdUnitID = "ca-app-pub-3484697221349891/3980413779"
-    #endif
+    /// バナー広告のAd Unit ID（Info.plist経由でxcconfigから取得）
+    static var bannerAdUnitID: String {
+        Bundle.main.infoDictionary?["BANNER_AD_UNIT_ID"] as? String ?? ""
+    }
+
+    /// インタースティシャル広告のAd Unit ID
+    static var interstitialAdUnitID: String {
+        Bundle.main.infoDictionary?["INTERSTITIAL_AD_UNIT_ID"] as? String ?? ""
+    }
 
     private init() {}
 
-    /// AdMobの初期化（AppDelegate or App.initで呼ぶ）
+    /// AdMobの初期化
     func configure() {
         MobileAds.shared.start()
     }

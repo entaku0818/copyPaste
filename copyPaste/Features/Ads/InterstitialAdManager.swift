@@ -7,11 +7,9 @@ import UIKit
 final class InterstitialAdManager: NSObject, ObservableObject {
     static let shared = InterstitialAdManager()
 
-    #if DEBUG
-    private let adUnitID = "ca-app-pub-3940256099942544/4411468910" // テスト用
-    #else
-    private let adUnitID = "ca-app-pub-3484697221349891/5072810653"
-    #endif
+    private var adUnitID: String {
+        AdManager.interstitialAdUnitID
+    }
 
     private var interstitial: InterstitialAd?
     private var pasteCount = 0

@@ -5,7 +5,11 @@
 	<key>CFBundleDisplayName</key>
 	<string>ClipKit</string>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3484697221349891~5053968083</string>
+	<string>$(ADMOB_APP_ID)</string>
+	<key>BANNER_AD_UNIT_ID</key>
+	<string>$(BANNER_AD_UNIT_ID)</string>
+	<key>INTERSTITIAL_AD_UNIT_ID</key>
+	<string>$(INTERSTITIAL_AD_UNIT_ID)</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
