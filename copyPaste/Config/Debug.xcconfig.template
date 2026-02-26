@@ -1,0 +1,8 @@
+// Debug Configuration
+// コピーして Debug.xcconfig にリネームしてください
+// cp Debug.xcconfig.template Debug.xcconfig
+
+// AdMob (テスト用ID - そのまま使用可)
+ADMOB_APP_ID = ca-app-pub-3940256099942544~1458002511
+BANNER_AD_UNIT_ID = ca-app-pub-3940256099942544/2934735716
+INTERSTITIAL_AD_UNIT_ID = ca-app-pub-3940256099942544/4411468910

@@ -1,0 +1,8 @@
+// Release Configuration
+// コピーして Release.xcconfig にリネームしてください
+// cp Release.xcconfig.template Release.xcconfig
+
+// AdMob (本番用IDを設定してください)
+ADMOB_APP_ID = YOUR_ADMOB_APP_ID
+BANNER_AD_UNIT_ID = YOUR_BANNER_AD_UNIT_ID
+INTERSTITIAL_AD_UNIT_ID = YOUR_INTERSTITIAL_AD_UNIT_ID
