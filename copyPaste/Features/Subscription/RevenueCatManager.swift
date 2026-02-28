@@ -24,7 +24,7 @@ final class RevenueCatManager: NSObject, ObservableObject {
     func configure() {
         // TODO: RevenueCat DashboardからAPI Keyを取得して設定
         // Purchases.logLevel = .debug // デバッグ時のみ
-        Purchases.configure(withAPIKey: "test_DdFjuDlhKxOClUfkNaVmsNxNJTx")
+        Purchases.configure(withAPIKey: "appl_qEbMiTwZchIzFzsqHgQlUeqhvIK")
 
         // CustomerInfoの変更を監視
         Purchases.shared.delegate = self
