@@ -96,6 +96,9 @@ iOSInjectionProject/
 # Playwright MCP (screenshots, logs, downloaded keys)
 .playwright-mcp/
 
+# Firebase
+.firebase/
+
 # xcconfig (contains sensitive keys)
 copyPaste/Config/Debug.xcconfig
 copyPaste/Config/Release.xcconfig
