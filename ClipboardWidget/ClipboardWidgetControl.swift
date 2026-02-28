@@ -10,7 +10,7 @@ import SwiftUI
 import WidgetKit
 
 struct ClipboardWidgetControl: ControlWidget {
-    static let kind: String = "com.entaku.copyPaste.ClipboardWidget"
+    static let kind: String = "com.entaku.clipkit.ClipboardWidget"
 
     var body: some ControlWidgetConfiguration {
         AppIntentControlConfiguration(

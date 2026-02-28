@@ -2,7 +2,7 @@ import Foundation
 import RevenueCat
 import os.log
 
-private let logger = Logger(subsystem: "com.entaku.copyPaste", category: "RevenueCat")
+private let logger = Logger(subsystem: "com.entaku.clipkit", category: "RevenueCat")
 
 /// RevenueCatを使ったサブスクリプション管理
 @MainActor
@@ -24,7 +24,7 @@ final class RevenueCatManager: NSObject, ObservableObject {
     func configure() {
         // TODO: RevenueCat DashboardからAPI Keyを取得して設定
         // Purchases.logLevel = .debug // デバッグ時のみ
-        Purchases.configure(withAPIKey: "YOUR_REVENUECAT_API_KEY")
+        Purchases.configure(withAPIKey: "test_DdFjuDlhKxOClUfkNaVmsNxNJTx")
 
         // CustomerInfoの変更を監視
         Purchases.shared.delegate = self

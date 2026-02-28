@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.entaku.copyPaste</string>
+		<string>group.com.entaku.clipkit</string>
 	</array>
 </dict>
 </plist>

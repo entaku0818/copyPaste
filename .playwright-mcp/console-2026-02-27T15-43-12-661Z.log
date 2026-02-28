@@ -1,0 +1,2 @@
+[    1454ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://app.revenuecat.com/internal/v1/rc_capital/onboarding/status:0
+[    3343ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://realtime.cloud.gist.build/api/v3/sse?userToken=UkMxN05obmxOckdC&siteId=528ad426a6face79dd2d&sessionId=d35c5d42-1463-4236-b3bd-bc465def3366:0

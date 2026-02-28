@@ -4,7 +4,7 @@ import Foundation
 enum SharedConstants {
     /// App Group ID
     /// Xcodeの Signing & Capabilities でこのIDを追加してください
-    static let appGroupID = "group.com.entaku.copyPaste"
+    static let appGroupID = "group.com.entaku.clipkit"
 
     /// 共有ストレージのベースディレクトリ名
     static let storageDirectoryName = "ClipboardHistory"
