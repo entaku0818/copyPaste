@@ -93,6 +93,9 @@ iOSInjectionProject/
 .DS_Store
 .env
 
+# Playwright MCP (screenshots, logs, downloaded keys)
+.playwright-mcp/
+
 # xcconfig (contains sensitive keys)
 copyPaste/Config/Debug.xcconfig
 copyPaste/Config/Release.xcconfig

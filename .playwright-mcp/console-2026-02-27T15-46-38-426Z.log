@@ -1,2 +1,0 @@
-[    1301ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://app.revenuecat.com/internal/v1/rc_capital/onboarding/status:0
-[   12170ms] [ERROR] Failed to load resource: the server responded with a status of 429 () @ https://o105822.ingest.us.sentry.io/api/1317425/envelope/?sentry_version=7&sentry_key=3a63564adecb4b27b1eeccd8f113ea10&sentry_client=sentry.javascript.react%2F10.39.0:0

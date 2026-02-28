@@ -1,9 +1,0 @@
-[    1669ms] [ERROR] Access to font at 'https://appleid.cdn-apple.com/appleauth/static/bin/cb3432457731/dist/assets/shared-icons.woff' from origin 'https://idmsa.apple.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://idmsa.apple.com/appleauth/auth/signin?widgetKey=e0b80c3bf78523bfe80974d320935bfa30add02e1bff88ec2166c6bd5a706c42&skVersion=7&iframeId=auth-v6u1at6p-03th-2dl0-woip-s6qjrbl3&authVersion=latest:0
-[    1669ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://appleid.cdn-apple.com/appleauth/static/bin/cb3432457731/dist/assets/shared-icons.woff:0
-[  835728ms] [WARNING] tb-alertbox--warn ng-isolate-scope is not valid @ https://appstoreconnect.apple.com/static/vendors.1768505445909.js:0
-[  835728ms] [WARNING] tb-alertbox--alert ng-isolate-scope is not valid @ https://appstoreconnect.apple.com/static/vendors.1768505445909.js:0
-[  836983ms] [WARNING] document.domain mutation is ignored because the surrounding agent cluster is origin-keyed. @ https://appstoreconnect.apple.com/access/static/js/container.164f36716e564833.js:1
-[  836986ms] [WARNING] [maison] No route found https://appstoreconnect.apple.com/access/integrations/api/subs @ https://appstoreconnect.apple.com/access/static/js/container.164f36716e564833.js:1
-[  836998ms] [WARNING] Metrics config: No config provided via delegate or fetched via init(), using default/cached config values. @ https://appstoreconnect.apple.com/access/static/js/694.81535de161180022.js:0
-[  837260ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ https://appstoreconnect.apple.com/access/integrations/api/subs:0
-[  838812ms] [WARNING] An array is needed to render meta tags @ https://appstoreconnect.apple.com/access/static/js/container.164f36716e564833.js:1
