@@ -662,36 +662,129 @@ struct MockPiPMonitoringView: View {
 struct MockSettingsView: View {
     let language: AppLanguage
 
-    var body: some View {
-        NavigationStack {
-            List {
-                // App Info Section
-                Section {
-                    HStack {
-                        Text(language.version)
-                        Spacer()
-                        Text("1.0.0")
-                            .foregroundColor(.secondary)
-                    }
+    private var proTitle: String { language == .english ? "ClipKit Pro" : "ClipKit Pro" }
+    private var proSubtitle: String { language == .english ? "Unlock all features" : "すべての機能を解放" }
+    private var freeLabel: String { language == .english ? "Free" : "無料版" }
+    private var proLabel: String { language == .english ? "Pro" : "Pro版" }
+    private var monthlyLabel: String { language == .english ? "Monthly ¥250/mo" : "月額 ¥250/月" }
+    private var yearlyLabel: String { language == .english ? "Yearly ¥2,400/yr" : "年額 ¥2,400/年" }
+    private var trialLabel: String { language == .english ? "7-day free trial" : "7日間無料トライアル" }
+    private var startTrialLabel: String { language == .english ? "Start Free Trial" : "無料トライアル開始" }
+    private var restoreLabel: String { language == .english ? "Restore Purchases" : "購入を復元" }
 
-                    HStack {
-                        Text(language.build)
-                        Spacer()
-                        Text("100")
-                            .foregroundColor(.secondary)
+    private var features: [(String, String, String)] {
+        language == .english ? [
+            ("doc.on.clipboard.fill",  "Unlimited History",      "Save up to 100 items"),
+            ("magnifyingglass",         "Advanced Search",        "Find anything instantly"),
+            ("star.fill",               "Favorites & Pins",       "Pin important clips"),
+            ("square.grid.2x2.fill",    "Home Screen Widgets",    "3 widget sizes"),
+            ("keyboard.fill",           "Custom Keyboard",        "Access from any app"),
+        ] : [
+            ("doc.on.clipboard.fill",  "無制限の履歴",            "最大100件保存"),
+            ("magnifyingglass",         "高度な検索",              "瞬時に見つける"),
+            ("star.fill",               "お気に入り・ピン",        "重要なクリップを固定"),
+            ("square.grid.2x2.fill",    "ホーム画面ウィジェット",  "3サイズ対応"),
+            ("keyboard.fill",           "カスタムキーボード",      "どのアプリからでも"),
+        ]
+    }
+
+    var body: some View {
+        ZStack {
+            LinearGradient(colors: [Color(uiColor: .systemBackground), Color.blue.opacity(0.05)],
+                           startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: 28) {
+                    // Header
+                    VStack(spacing: 8) {
+                        ZStack {
+                            Circle()
+                                .fill(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                .frame(width: 80, height: 80)
+                            Image(systemName: "crown.fill")
+                                .font(.system(size: 36))
+                                .foregroundColor(.white)
+                        }
+                        Text(proTitle)
+                            .font(.largeTitle).bold()
+                        Text(proSubtitle)
+                            .font(.subheadline).foregroundColor(.secondary)
                     }
-                } header: {
-                    Text(language.appInfo)
-                }
-            }
-            .navigationTitle(language.settings)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(language.done) {}
+                    .padding(.top, 40)
+
+                    // Feature list
+                    VStack(spacing: 0) {
+                        ForEach(features, id: \.0) { icon, title, sub in
+                            HStack(spacing: 14) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.blue.opacity(0.15))
+                                        .frame(width: 40, height: 40)
+                                    Image(systemName: icon)
+                                        .foregroundColor(.blue)
+                                }
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(title).font(.body).bold()
+                                    Text(sub).font(.caption).foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            if icon != features.last?.0 {
+                                Divider().padding(.leading, 74)
+                            }
+                        }
+                    }
+                    .background(Color(uiColor: .secondarySystemBackground))
+                    .cornerRadius(16)
+                    .padding(.horizontal, 20)
+
+                    // Plan picker
+                    VStack(spacing: 12) {
+                        planButton(title: yearlyLabel, badge: trialLabel, highlighted: true)
+                        planButton(title: monthlyLabel, badge: nil, highlighted: false)
+                    }
+                    .padding(.horizontal, 20)
+
+                    // CTA
+                    Button(action: {}) {
+                        Text(startTrialLabel)
+                            .font(.headline).foregroundColor(.white)
+                            .frame(maxWidth: .infinity).padding()
+                            .background(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing))
+                            .cornerRadius(14)
+                    }
+                    .padding(.horizontal, 20)
+
+                    Button(restoreLabel) {}
+                        .font(.caption).foregroundColor(.secondary)
+                        .padding(.bottom, 20)
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func planButton(title: String, badge: String?, highlighted: Bool) -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).font(.body).bold()
+                if let badge = badge {
+                    Text(badge).font(.caption).foregroundColor(.green)
+                }
+            }
+            Spacer()
+            if highlighted {
+                Image(systemName: "checkmark.circle.fill").foregroundColor(.blue)
+            }
+        }
+        .padding()
+        .background(highlighted ? Color.blue.opacity(0.1) : Color(uiColor: .secondarySystemBackground))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(highlighted ? Color.blue : Color.clear, lineWidth: 2))
+        .cornerRadius(12)
     }
 }
 
@@ -865,19 +958,9 @@ struct SetupStepRow: View {
                     .foregroundColor(.white)
             }
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(text)
-                    .font(.body)
-                    .fontWeight(.medium)
-
-                HStack(spacing: 6) {
-                    Image(systemName: icon)
-                        .font(.caption)
-                    Text(icon.replacingOccurrences(of: ".fill", with: "").replacingOccurrences(of: ".", with: " "))
-                        .font(.caption)
-                }
-                .foregroundColor(.secondary)
-            }
+            Text(text)
+                .font(.body)
+                .fontWeight(.medium)
 
             Spacer()
         }

@@ -19,6 +19,23 @@ struct copyPasteApp: App {
 
     var body: some Scene {
         WindowGroup {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("--screenshots") {
+                let args = ProcessInfo.processInfo.arguments
+                let screenIndex = args.firstIndex(of: "--screen").flatMap { Int(args[$0 + 1]) } ?? 0
+                let screens = ScreenshotScreen.allCases
+                let screen = screens[min(screenIndex, screens.count - 1)]
+                screenshotView(for: screen, language: .japanese)
+            } else {
+                ContentView(
+                    store: Store(
+                        initialState: ClipboardHistoryFeature.State()
+                    ) {
+                        ClipboardHistoryFeature()
+                    }
+                )
+            }
+            #else
             ContentView(
                 store: Store(
                     initialState: ClipboardHistoryFeature.State()
@@ -26,6 +43,21 @@ struct copyPasteApp: App {
                     ClipboardHistoryFeature()
                 }
             )
+            #endif
         }
     }
+
+    #if DEBUG
+    @ViewBuilder
+    private func screenshotView(for screen: ScreenshotScreen, language: AppLanguage) -> some View {
+        switch screen {
+        case .clipboardHistory: MockClipboardHistoryView(language: language)
+        case .keyboardPreview:  MockKeyboardPreviewView(language: language)
+        case .pipMonitoring:    MockPiPMonitoringView(language: language)
+        case .settings:         MockSettingsView(language: language)
+        case .imagePreview:     MockImagePreviewView(language: language)
+        case .keyboardSetup:    MockKeyboardSetupView(language: language)
+        }
+    }
+    #endif
 }
