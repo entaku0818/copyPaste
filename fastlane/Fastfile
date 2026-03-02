@@ -32,6 +32,8 @@ platform :ios do
       submit_for_review: true,
       automatic_release: false,
       force: true,
+      skip_binary_upload: true,
+      precheck_include_in_app_purchases: false,
       metadata_path: "fastlane/metadata",
       screenshots_path: "fastlane/screenshots"
     )
