@@ -1,10 +1,16 @@
 {
   "hosting": {
-    "public": "docs",
+    "public": "lp",
+    "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      { "source": "/privacy-policy", "destination": "/privacy-policy.html" },
+      { "source": "/terms", "destination": "/terms.html" },
+      { "source": "/contact", "destination": "/contact.html" }
     ]
   }
 }

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClipKit - クリップボード管理アプリ</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: #fff;
+        }
+        header {
+            text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            color: white;
+        }
+        header h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 12px; }
+        header p { font-size: 1.1rem; opacity: 0.9; max-width: 500px; margin: 0 auto 32px; }
+        .app-store-btn {
+            display: inline-block;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .features {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .features h2 { font-size: 1.8rem; margin-bottom: 32px; text-align: center; }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+        .feature-card {
+            background: #f5f5f7;
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .feature-card .icon { font-size: 2rem; margin-bottom: 12px; }
+        .feature-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+        .feature-card p { font-size: 0.9rem; color: #555; line-height: 1.6; }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #e5e5ea;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        footer a { color: #007AFF; text-decoration: none; margin: 0 12px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ClipKit</h1>
+        <p>バックグラウンドでもクリップボードを自動監視。コピーした内容をいつでも素早くアクセス。</p>
+        <a class="app-store-btn" href="https://apps.apple.com/jp/app/clipkit/id6759832862">App Store からダウンロード</a>
+    </header>
+
+    <section class="features">
+        <h2>主な機能</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="icon">📋</div>
+                <h3>クリップボード自動監視</h3>
+                <p>PiP技術でバックグラウンドでも監視継続。コピーしたテキスト・画像・URLを自動保存。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🔍</div>
+                <h3>履歴検索（Pro）</h3>
+                <p>過去のコピー履歴をキーワードで素早く検索。大切な内容を瞬時に呼び出せます。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">☁️</div>
+                <h3>iCloud同期</h3>
+                <p>同じApple IDのデバイス間で履歴を自動同期。iPhoneでコピーしてiPadで貼り付け。</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">⌨️</div>
+                <h3>カスタムキーボード（Pro）</h3>
+                <p>どのアプリからでも履歴にアクセス。キーボードから直接ペーストできます。</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <a href="privacy-policy.html">プライバシーポリシー</a>
+        <a href="terms.html">利用規約</a>
+        <a href="contact.html">お問い合わせ</a>
+        <p style="margin-top: 16px">© 2024 Takuya Endo</p>
+    </footer>
+</body>
+</html>
