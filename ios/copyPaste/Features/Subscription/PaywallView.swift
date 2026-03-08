@@ -148,11 +148,18 @@ struct PaywallView: View {
                     .disabled(isRestoring || isPurchasing)
                     .padding(.horizontal)
 
-                    // 注意事項
+                    // 注意事項・リンク
                     VStack(spacing: 8) {
                         Text("• 7日間の無料トライアル")
                         Text("• いつでもキャンセル可能")
                         Text("• 自動更新されます")
+
+                        HStack(spacing: 16) {
+                            Link("利用規約", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                            Text("·")
+                            Link("プライバシーポリシー", destination: URL(string: "https://clipkit-entaku.web.app/privacy-policy.html")!)
+                        }
+                        .padding(.top, 4)
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -179,6 +186,12 @@ struct PaywallView: View {
         .task {
             if selectedPackage == nil,
                let package = revenueCat.offerings?.current?.availablePackages.first {
+                selectedPackage = package
+            }
+        }
+        .onChange(of: revenueCat.offerings) { _, newOfferings in
+            if selectedPackage == nil,
+               let package = newOfferings?.current?.availablePackages.first {
                 selectedPackage = package
             }
         }
