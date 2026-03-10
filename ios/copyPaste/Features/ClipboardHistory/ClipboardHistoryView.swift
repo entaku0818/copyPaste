@@ -3,48 +3,11 @@ import ComposableArchitecture
 
 struct ClipboardHistoryView: View {
     let store: StoreOf<ClipboardHistoryFeature>
-    @State private var showSettings = false
+    @State private var selectedItem: ClipboardItem?
 
     var body: some View {
         List {
-            // Pro状態と履歴件数の表示
-            Section {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("履歴: \(store.items.count)件")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        if !store.isProUser {
-                            Text("無料版: 最大20件")
-                                .font(.caption2)
-                                .foregroundColor(.orange)
-                        }
-                    }
-
-                    Spacer()
-
-                    if !store.isProUser {
-                        Button("Proにアップグレード") {
-                            store.send(.showPaywall)
-                        }
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            LinearGradient(
-                                colors: [.blue, .purple],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .foregroundColor(.white)
-                        .cornerRadius(6)
-                    }
-                }
-                .padding(.vertical, 4)
-            }
-
-            // 検索結果の件数表示
+            // 検索結果件数
             if !store.searchText.isEmpty {
                 Section {
                     HStack {
@@ -67,7 +30,7 @@ struct ClipboardHistoryView: View {
                         if item.type == .image {
                             store.send(.showImagePreview(item))
                         } else {
-                            store.send(.pasteItem(item))
+                            selectedItem = item
                         }
                     }
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -75,7 +38,7 @@ struct ClipboardHistoryView: View {
                             store.send(.toggleFavorite(item))
                         } label: {
                             Label(
-                                item.isFavorite ? "Unfavorite" : "Favorite",
+                                item.isFavorite ? "お気に入り解除" : "お気に入り",
                                 systemImage: item.isFavorite ? "star.slash" : "star.fill"
                             )
                         }
@@ -87,33 +50,20 @@ struct ClipboardHistoryView: View {
                                 store.send(.removeItems(IndexSet(integer: index)))
                             }
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label("削除", systemImage: "trash")
                         }
                     }
             }
-        }
-        .navigationTitle("ClipKit")
-        .searchable(
-            text: Binding(
-                get: { store.searchText },
-                set: { store.send(.updateSearchText($0)) }
-            ),
-            placement: .navigationBarDrawer(displayMode: .always),
-            prompt: store.isProUser ? "Search clipboard history..." : "Search (Pro)"
-        )
-        .disabled(!store.isProUser) // 無料版では検索バーを無効化
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { showSettings = true }) {
-                    Image(systemName: "gearshape.fill")
-                }
-            }
 
-            ToolbarItem(placement: .principal) {
-                if !store.isProUser {
-                    Button(action: { store.send(.showPaywall) }) {
-                        HStack(spacing: 4) {
+            // 無料版: Pro誘導バナー
+            if !store.isProUser {
+                Section {
+                    Button {
+                        store.send(.showPaywall)
+                    } label: {
+                        HStack(spacing: 12) {
                             Image(systemName: "crown.fill")
+                                .font(.title2)
                                 .foregroundStyle(
                                     LinearGradient(
                                         colors: [.yellow, .orange],
@@ -121,21 +71,47 @@ struct ClipboardHistoryView: View {
                                         endPoint: .bottomTrailing
                                     )
                                 )
-                            Text("Pro")
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("ClipKit Proにアップグレード")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                Text("3日以上前の履歴も検索・閲覧できます")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
                                 .font(.caption)
-                                .fontWeight(.semibold)
+                                .foregroundColor(.secondary)
                         }
-                        .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.yellow.opacity(0.2))
-                        .cornerRadius(8)
                     }
                 }
             }
-
         }
+        .navigationTitle("履歴")
+        .searchable(
+            text: Binding(
+                get: { store.searchText },
+                set: { store.send(.updateSearchText($0)) }
+            ),
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "履歴を検索..."
+        )
         .onAppear {
             store.send(.onAppear)
+        }
+        .sheet(item: $selectedItem) { item in
+            ClipboardItemDetailView(
+                item: item,
+                onCopy: {
+                    store.send(.copyItem(item))
+                    selectedItem = nil
+                },
+                onToggleFavorite: {
+                    store.send(.toggleFavorite(item))
+                }
+            )
         }
         .sheet(
             isPresented: Binding(
@@ -147,9 +123,6 @@ struct ClipboardHistoryView: View {
                 ImagePreviewView(item: imageItem)
             }
         }
-        .sheet(isPresented: $showSettings) {
-            SettingsView()
-        }
         .sheet(
             isPresented: Binding(
                 get: { store.showPaywall },
@@ -159,11 +132,109 @@ struct ClipboardHistoryView: View {
             PaywallView()
         }
         .safeAreaInset(edge: .bottom) {
-            // 無料版のみバナー広告を表示
             if !store.isProUser {
                 BannerAdView()
                     .frame(height: 50)
             }
         }
     }
-} 
+}
+
+// MARK: - Item Detail View
+
+struct ClipboardItemDetailView: View {
+    let item: ClipboardItem
+    let onCopy: () -> Void
+    let onToggleFavorite: () -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var copied = false
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    // コンテンツ本文
+                    Group {
+                        switch item.type {
+                        case .text:
+                            Text(item.textContent ?? "")
+                                .font(.body)
+                                .textSelection(.enabled)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                        case .url:
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(item.url?.absoluteString ?? "")
+                                    .font(.body)
+                                    .textSelection(.enabled)
+                                    .foregroundColor(.blue)
+                            }
+
+                        case .image:
+                            if let thumbnail = item.thumbnail {
+                                Image(uiImage: thumbnail)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(8)
+                            }
+
+                        case .file:
+                            Text(item.fileName ?? "ファイル")
+                                .font(.body)
+                        }
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(12)
+
+                    // メタ情報
+                    HStack {
+                        Image(systemName: typeIcon)
+                            .foregroundColor(.secondary)
+                        Text(item.timestamp.formatted(.dateTime.year().month().day().hour().minute().locale(Locale(identifier: "ja_JP"))))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("詳細")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("閉じる") { dismiss() }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack {
+                        Button {
+                            onToggleFavorite()
+                        } label: {
+                            Image(systemName: item.isFavorite ? "star.fill" : "star")
+                                .foregroundColor(item.isFavorite ? .yellow : .gray)
+                        }
+                        Button {
+                            onCopy()
+                            copied = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                copied = false
+                            }
+                        } label: {
+                            Label(copied ? "コピー済み" : "コピー",
+                                  systemImage: copied ? "checkmark" : "doc.on.doc")
+                        }
+                        .tint(copied ? .green : .blue)
+                    }
+                }
+            }
+        }
+    }
+
+    private var typeIcon: String {
+        switch item.type {
+        case .text: return "doc.text"
+        case .url: return "link"
+        case .image: return "photo"
+        case .file: return "doc"
+        }
+    }
+}

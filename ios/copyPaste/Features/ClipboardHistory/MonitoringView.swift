@@ -14,26 +14,14 @@ struct MonitoringView: View {
                     .frame(height: 100)
                     .cornerRadius(8)
 
-                    // PiP状態の表示
                     HStack {
                         Circle()
-                            .fill(store.isPiPActive ? Color.green : Color.gray)
-                            .frame(width: 10, height: 10)
-
-                        Text(store.isPiPActive ? "PiPモード: アクティブ" : "PiPモード: 停止中")
+                            .fill(store.isPiPActive ? Color.green : Color.blue)
+                            .frame(width: 8, height: 8)
+                        Text(store.isPiPActive ? "バックグラウンドで監視中" : "監視中")
                             .font(.caption)
-                            .foregroundColor(store.isPiPActive ? .green : .secondary)
-
+                            .foregroundColor(store.isPiPActive ? .green : .blue)
                         Spacer()
-
-                        if store.isPiPActive {
-                            Text("バックグラウンドで監視中")
-                                .font(.caption2)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.green.opacity(0.2))
-                                .cornerRadius(4)
-                        }
                     }
                     .padding(.horizontal, 4)
                 }
@@ -41,7 +29,7 @@ struct MonitoringView: View {
             } header: {
                 Text("バックグラウンド監視")
             } footer: {
-                Text("ビデオをPiPモードにすると、他のアプリを使用中もクリップボードを監視できます。")
+                Text("このアプリを起動した状態でバックグラウンドにすると、他のアプリを使用中もクリップボードを監視できます。")
                     .font(.caption2)
             }
 
@@ -90,8 +78,6 @@ struct MonitoringView: View {
             このアプリはクリップボードの履歴を保存するため、クリップボードへのアクセスが必要です。
 
             iOS 16以降では、初回アクセス時にシステムの確認が表示されます。「許可」を選択してください。
-
-            PiPモードを使用することで、バックグラウンドでも監視を継続できます。
             """)
         }
     }

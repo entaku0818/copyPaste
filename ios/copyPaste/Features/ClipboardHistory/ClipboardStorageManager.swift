@@ -8,6 +8,7 @@ class ClipboardStorageManager {
     private let fileManager = FileManager.default
     private let baseDirectory: URL
     private let metadataFileName = "items.json"
+    private let trashFileName = "trash.json"
 
     // ストレージ制限
     private let maxStorageSize: Int64 = 100 * 1024 * 1024 // 100MB
@@ -144,6 +145,84 @@ class ClipboardStorageManager {
         return items
     }
 
+    // MARK: - Trash
+
+    func saveTrash(items: [ClipboardItem]) async throws {
+        var itemsToSave: [ClipboardItemMetadata] = []
+        for item in items {
+            var metadata = ClipboardItemMetadata(
+                id: item.id,
+                timestamp: item.timestamp,
+                type: item.type,
+                textContent: item.textContent,
+                url: item.url,
+                fileName: item.fileName,
+                fileSize: item.fileSize,
+                fileURL: item.fileURL,
+                deletedAt: item.deletedAt
+            )
+            if let imageData = item.imageData {
+                let imageFileName = "\(item.id.uuidString)_image.dat"
+                let imageURL = baseDirectory.appendingPathComponent(imageFileName)
+                try imageData.write(to: imageURL)
+                metadata.imageFileName = imageFileName
+            }
+            if let thumbnailData = item.imageThumbnailData {
+                let thumbnailFileName = "\(item.id.uuidString)_thumbnail.dat"
+                let thumbnailURL = baseDirectory.appendingPathComponent(thumbnailFileName)
+                try thumbnailData.write(to: thumbnailURL)
+                metadata.thumbnailFileName = thumbnailFileName
+            }
+            itemsToSave.append(metadata)
+        }
+        let trashURL = baseDirectory.appendingPathComponent(trashFileName)
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let data = try encoder.encode(itemsToSave)
+        try data.write(to: trashURL)
+    }
+
+    func loadTrash() async throws -> [ClipboardItem] {
+        let trashURL = baseDirectory.appendingPathComponent(trashFileName)
+        guard fileManager.fileExists(atPath: trashURL.path) else { return [] }
+        let data = try Data(contentsOf: trashURL)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let metadataList = try decoder.decode([ClipboardItemMetadata].self, from: data)
+        var items: [ClipboardItem] = []
+        for metadata in metadataList {
+            var imageData: Data?
+            var thumbnailData: Data?
+            if let imageFileName = metadata.imageFileName {
+                let imageURL = baseDirectory.appendingPathComponent(imageFileName)
+                if fileManager.fileExists(atPath: imageURL.path) {
+                    imageData = try? Data(contentsOf: imageURL)
+                }
+            }
+            if let thumbnailFileName = metadata.thumbnailFileName {
+                let thumbnailURL = baseDirectory.appendingPathComponent(thumbnailFileName)
+                if fileManager.fileExists(atPath: thumbnailURL.path) {
+                    thumbnailData = try? Data(contentsOf: thumbnailURL)
+                }
+            }
+            var item = ClipboardItem(
+                id: metadata.id,
+                timestamp: metadata.timestamp,
+                type: metadata.type,
+                textContent: metadata.textContent,
+                imageData: imageData,
+                imageThumbnailData: thumbnailData,
+                url: metadata.url,
+                fileName: metadata.fileName,
+                fileSize: metadata.fileSize,
+                fileURL: metadata.fileURL
+            )
+            item.deletedAt = metadata.deletedAt
+            items.append(item)
+        }
+        return items
+    }
+
     // MARK: - Delete
 
     func deleteItem(_ item: ClipboardItem) throws {
@@ -213,4 +292,17 @@ private struct ClipboardItemMetadata: Codable {
     var fileName: String?
     var fileSize: Int64?
     var fileURL: URL?
+    var deletedAt: Date?
+
+    init(id: UUID, timestamp: Date, type: ClipboardItemType, textContent: String? = nil, url: URL? = nil, fileName: String? = nil, fileSize: Int64? = nil, fileURL: URL? = nil, deletedAt: Date? = nil) {
+        self.id = id
+        self.timestamp = timestamp
+        self.type = type
+        self.textContent = textContent
+        self.url = url
+        self.fileName = fileName
+        self.fileSize = fileSize
+        self.fileURL = fileURL
+        self.deletedAt = deletedAt
+    }
 }

@@ -19,24 +19,28 @@ struct ClipboardHistoryFeature {
         var searchText: String = ""
         var showPaywall: Bool = false
         var isProUser: Bool = false
+        var trashedItems: [ClipboardItem] = []
 
-        // 履歴件数制限（無料版: 20件、Pro: 無制限）
+        // 履歴件数制限（Pro: 無制限）
         var maxHistoryCount: Int {
-            return isProUser ? Int.max : 20
+            return Int.max
         }
 
-        // 検索結果のフィルタリング（Pro機能）
+        // 無料版で表示できる履歴の起点（3日前以降）
+        var freeHistoryStartDate: Date {
+            Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date()
+        }
+
+        // 検索結果のフィルタリング
         var filteredItems: [ClipboardItem] {
-            // 無料版では検索を使えない - すべてのアイテムを返す
-            guard isProUser else {
-                return items
-            }
+            // 無料版は直近3日のみ
+            let baseItems = isProUser ? items : items.filter { $0.timestamp >= freeHistoryStartDate }
 
             if searchText.isEmpty {
-                return items
+                return baseItems
             }
 
-            return items.filter { item in
+            return baseItems.filter { item in
                 switch item.type {
                 case .text:
                     return item.textContent?.localizedCaseInsensitiveContains(searchText) ?? false
@@ -45,7 +49,6 @@ struct ClipboardHistoryFeature {
                 case .file:
                     return item.fileName?.localizedCaseInsensitiveContains(searchText) ?? false
                 case .image:
-                    // 画像は検索対象外（または将来的にOCRで対応）
                     return false
                 }
             }
@@ -57,6 +60,7 @@ struct ClipboardHistoryFeature {
         case removeItems(IndexSet)
         case clearAll
         case pasteItem(ClipboardItem)
+        case copyItem(ClipboardItem)
         case toggleFavorite(ClipboardItem)
         case updateSearchText(String)
         case startMonitoring
@@ -76,6 +80,12 @@ struct ClipboardHistoryFeature {
         case showPaywall
         case dismissPaywall
         case updateProStatus
+        case loadTrash
+        case trashLoaded([ClipboardItem])
+        case saveTrash
+        case restoreItem(ClipboardItem)
+        case permanentlyDeleteItem(ClipboardItem)
+        case emptyTrash
     }
 
     @Dependency(\.continuousClock) var clock
@@ -110,29 +120,91 @@ struct ClipboardHistoryFeature {
                 return .send(.saveItems)
 
             case let .removeItems(indexSet):
-                // 削除されるアイテムのファイルも削除
-                for index in indexSet {
-                    if index < state.items.count {
-                        try? ClipboardStorageManager.shared.deleteItem(state.items[index])
+                if state.isProUser {
+                    // Proユーザー: ゴミ箱へ移動
+                    for index in indexSet {
+                        if index < state.items.count {
+                            var trashed = state.items[index]
+                            trashed.deletedAt = Date()
+                            state.trashedItems.insert(trashed, at: 0)
+                        }
                     }
+                    state.items.remove(atOffsets: indexSet)
+                    return .merge(.send(.saveItems), .send(.saveTrash))
+                } else {
+                    for index in indexSet {
+                        if index < state.items.count {
+                            try? ClipboardStorageManager.shared.deleteItem(state.items[index])
+                        }
+                    }
+                    state.items.remove(atOffsets: indexSet)
+                    return .send(.saveItems)
                 }
-                state.items.remove(atOffsets: indexSet)
-                return .send(.saveItems)
 
             case .clearAll:
-                // すべてのファイルを削除
-                try? ClipboardStorageManager.shared.clearAll()
-                state.items.removeAll()
-                return .send(.saveItems)
+                if state.isProUser {
+                    // Proユーザー: すべてゴミ箱へ移動
+                    let now = Date()
+                    let newTrashed = state.items.map { item -> ClipboardItem in
+                        var t = item; t.deletedAt = now; return t
+                    }
+                    state.trashedItems.insert(contentsOf: newTrashed, at: 0)
+                    state.items.removeAll()
+                    return .merge(.send(.saveItems), .send(.saveTrash))
+                } else {
+                    try? ClipboardStorageManager.shared.clearAll()
+                    state.items.removeAll()
+                    return .send(.saveItems)
+                }
                 
-            case .pasteItem:
-                // Paste functionality will be implemented later
+            case let .copyItem(item):
+                // クリップボードにセットし、履歴の先頭に移動
+                switch item.type {
+                case .text:
+                    UIPasteboard.general.string = item.textContent
+                case .url:
+                    UIPasteboard.general.url = item.url
+                case .image:
+                    if let image = item.thumbnail {
+                        UIPasteboard.general.image = image
+                    }
+                case .file:
+                    break
+                }
+                state.lastChangeCount = UIPasteboard.general.changeCount
+                // 履歴の先頭に移動（タイムスタンプ更新）
+                if let index = state.items.firstIndex(where: { $0.id == item.id }) {
+                    var updated = state.items[index]
+                    updated.timestamp = Date()
+                    state.items.remove(at: index)
+                    state.items.insert(updated, at: 0)
+                }
+                return .send(.saveItems)
+
+            case let .pasteItem(item):
+                switch item.type {
+                case .text:
+                    UIPasteboard.general.string = item.textContent
+                case .url:
+                    UIPasteboard.general.url = item.url
+                case .image:
+                    if let image = item.thumbnail {
+                        UIPasteboard.general.image = image
+                    }
+                case .file:
+                    break
+                }
                 return .none
 
             case let .toggleFavorite(item):
-                // Pro機能チェック
-                guard state.isProUser else {
-                    return .send(.showPaywall)
+                // 無料ユーザーはお気に入り10件まで
+                if !state.isProUser {
+                    let currentFavoriteCount = state.items.filter { $0.isFavorite }.count
+                    let isCurrentlyFavorite = state.items.first(where: { $0.id == item.id })?.isFavorite ?? false
+                    // 解除は常に可能。追加は10件未満のときのみ
+                    if !isCurrentlyFavorite && currentFavoriteCount >= 10 {
+                        return .send(.showPaywall)
+                    }
                 }
 
                 if let index = state.items.firstIndex(where: { $0.id == item.id }) {
@@ -151,10 +223,6 @@ struct ClipboardHistoryFeature {
                 return .none
 
             case let .updateSearchText(text):
-                // Pro機能チェック - 検索テキストが入力された時のみチェック
-                guard text.isEmpty || state.isProUser else {
-                    return .send(.showPaywall)
-                }
                 state.searchText = text
                 return .none
 
@@ -219,6 +287,14 @@ struct ClipboardHistoryFeature {
                 // 画像をチェック（優先度：高）
                 if let image = UIPasteboard.general.image {
                     Self.logger.info("Got image from clipboard")
+                    // 直前の画像と同じサイズなら重複とみなしてスキップ
+                    if let lastItem = state.items.first,
+                       lastItem.type == .image,
+                       let lastThumb = lastItem.thumbnail,
+                       lastThumb.size == image.size {
+                        Self.logger.debug("Skipping duplicate image")
+                        return .none
+                    }
                     return .run { send in
                         let item = await Self.createImageItem(from: image)
                         await send(.addItem(item))
@@ -228,6 +304,13 @@ struct ClipboardHistoryFeature {
                 // URLをチェック
                 if let url = UIPasteboard.general.url {
                     Self.logger.info("Got URL: \(url.absoluteString)")
+                    // 直前と同じURLならスキップ
+                    if let lastItem = state.items.first,
+                       lastItem.type == .url,
+                       lastItem.url == url {
+                        Self.logger.debug("Skipping duplicate URL")
+                        return .none
+                    }
                     let item = ClipboardItem(url: url)
                     return .send(.addItem(item))
                 }
@@ -236,6 +319,13 @@ struct ClipboardHistoryFeature {
                 if let content = UIPasteboard.general.string {
                     let preview = String(content.prefix(50))
                     Self.logger.info("Got text content: \(preview)...")
+                    // 直前と同じテキストならスキップ
+                    if let lastItem = state.items.first,
+                       lastItem.type == .text,
+                       lastItem.textContent == content {
+                        Self.logger.debug("Skipping duplicate text")
+                        return .none
+                    }
                     let item = ClipboardItem(content: content)
                     return .send(.addItem(item))
                 }
@@ -261,7 +351,8 @@ struct ClipboardHistoryFeature {
                 // Pro状態を更新してから、保存されたアイテムを読み込む
                 return .merge(
                     .send(.updateProStatus),
-                    .send(.loadItems)
+                    .send(.loadItems),
+                    .send(.loadTrash)
                 )
 
             case .requestClipboardPermission:
@@ -345,6 +436,47 @@ struct ClipboardHistoryFeature {
                 state.isProUser = newProStatus
                 Self.logger.info("Pro status updated: \(newProStatus)")
                 return .none
+
+            case .loadTrash:
+                return .run { send in
+                    let items = (try? await ClipboardStorageManager.shared.loadTrash()) ?? []
+                    // 30日以上経過したアイテムを除外
+                    let threshold = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
+                    let valid = items.filter { ($0.deletedAt ?? Date()) >= threshold }
+                    await send(.trashLoaded(valid))
+                }
+
+            case let .trashLoaded(items):
+                state.trashedItems = items.sorted { ($0.deletedAt ?? Date()) > ($1.deletedAt ?? Date()) }
+                return .none
+
+            case .saveTrash:
+                let items = state.trashedItems
+                return .run { _ in
+                    try? await ClipboardStorageManager.shared.saveTrash(items: items)
+                }
+
+            case let .restoreItem(item):
+                if let index = state.trashedItems.firstIndex(where: { $0.id == item.id }) {
+                    var restored = state.trashedItems[index]
+                    restored.deletedAt = nil
+                    restored.timestamp = Date()
+                    state.trashedItems.remove(at: index)
+                    state.items.insert(restored, at: 0)
+                }
+                return .merge(.send(.saveItems), .send(.saveTrash))
+
+            case let .permanentlyDeleteItem(item):
+                state.trashedItems.removeAll { $0.id == item.id }
+                try? ClipboardStorageManager.shared.deleteItem(item)
+                return .send(.saveTrash)
+
+            case .emptyTrash:
+                for item in state.trashedItems {
+                    try? ClipboardStorageManager.shared.deleteItem(item)
+                }
+                state.trashedItems.removeAll()
+                return .send(.saveTrash)
             }
         }
     }

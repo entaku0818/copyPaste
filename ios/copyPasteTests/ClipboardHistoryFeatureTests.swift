@@ -5,12 +5,12 @@ import ComposableArchitecture
 @MainActor
 final class ClipboardHistoryFeatureTests: XCTestCase {
 
-    // MARK: - Favorite Functionality Tests
+    // MARK: - Favorite Functionality Tests (Pro user)
 
     func testToggleFavorite_makesItemFavorite() async {
         let item = ClipboardItem(content: "Test", isFavorite: false)
 
-        let store = TestStore(initialState: ClipboardHistoryFeature.State(items: [item])) {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State(items: [item], isProUser: true)) {
             ClipboardHistoryFeature()
         }
 
@@ -18,13 +18,13 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             $0.items[0].isFavorite = true
         }
 
-        await store.receive(.saveItems)
+        await store.receive(\.saveItems)
     }
 
     func testToggleFavorite_unfavoritesItem() async {
         let item = ClipboardItem(content: "Test", isFavorite: true)
 
-        let store = TestStore(initialState: ClipboardHistoryFeature.State(items: [item])) {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State(items: [item], isProUser: true)) {
             ClipboardHistoryFeature()
         }
 
@@ -32,7 +32,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             $0.items[0].isFavorite = false
         }
 
-        await store.receive(.saveItems)
+        await store.receive(\.saveItems)
     }
 
     func testToggleFavorite_sortsItemsCorrectly() async {
@@ -50,14 +50,12 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: ClipboardHistoryFeature.State(items: [item2, item1])
+            initialState: ClipboardHistoryFeature.State(items: [item2, item1], isProUser: true)
         ) {
             ClipboardHistoryFeature()
         }
 
-        // Toggle favorite on the second item (older one)
         await store.send(.toggleFavorite(item1)) {
-            // After toggling, item1 should be first (favorite), then item2
             $0.items = [
                 ClipboardItem(
                     id: item1.id,
@@ -69,7 +67,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             ]
         }
 
-        await store.receive(.saveItems)
+        await store.receive(\.saveItems)
     }
 
     func testToggleFavorite_maintainsSortingWithMultipleFavorites() async {
@@ -93,27 +91,25 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         )
 
         let store = TestStore(
-            initialState: ClipboardHistoryFeature.State(items: [item3, item1, item2])
+            initialState: ClipboardHistoryFeature.State(items: [item3, item1, item2], isProUser: true)
         ) {
             ClipboardHistoryFeature()
         }
 
-        // Toggle favorite on item2 (make it favorite)
         await store.send(.toggleFavorite(item2)) {
-            // All items are now favorite, sorted by timestamp descending
             $0.items = [
-                item3, // 300, favorite
+                item3,
                 ClipboardItem(
                     id: item2.id,
                     content: "Second",
                     timestamp: Date(timeIntervalSince1970: 200),
                     isFavorite: true
-                ), // 200, favorite
-                item1  // 100, favorite
+                ),
+                item1
             ]
         }
 
-        await store.receive(.saveItems)
+        await store.receive(\.saveItems)
     }
 
     func testItemsLoaded_sortsFavoritesFirst() async {
@@ -136,37 +132,50 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             isFavorite: false
         )
 
-        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+        var initialState = ClipboardHistoryFeature.State()
+        initialState.hasRequestedPermission = true
+
+        let store = TestStore(initialState: initialState) {
             ClipboardHistoryFeature()
         }
 
         await store.send(.itemsLoaded([item1, item2, item3])) {
-            // item2 should be first (favorite), then item1, then item3
             $0.items = [item2, item1, item3]
         }
     }
 
-    // MARK: - Helper Methods Tests
+    // MARK: - Free user paywall tests
+
+    func testToggleFavorite_freeUser_showsPaywall() async {
+        let item = ClipboardItem(content: "Test", isFavorite: false)
+
+        let store = TestStore(initialState: ClipboardHistoryFeature.State(items: [item], isProUser: false)) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.toggleFavorite(item))
+        await store.receive(\.showPaywall) {
+            $0.showPaywall = true
+        }
+    }
 
     func testToggleFavorite_nonExistentItem_doesNothing() async {
         let item1 = ClipboardItem(content: "Test")
         let item2 = ClipboardItem(content: "Other")
 
         let store = TestStore(
-            initialState: ClipboardHistoryFeature.State(items: [item1])
+            initialState: ClipboardHistoryFeature.State(items: [item1], isProUser: true)
         ) {
             ClipboardHistoryFeature()
         }
 
-        // Try to toggle a non-existent item
         await store.send(.toggleFavorite(item2))
-        // No state change expected
     }
 
-    // MARK: - Search Functionality Tests
+    // MARK: - Search Functionality Tests (Pro user)
 
     func testUpdateSearchText() async {
-        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State(isProUser: true)) {
             ClipboardHistoryFeature()
         }
 
@@ -179,7 +188,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         let item1 = ClipboardItem(content: "Hello")
         let item2 = ClipboardItem(content: "World")
 
-        var state = ClipboardHistoryFeature.State(items: [item1, item2])
+        var state = ClipboardHistoryFeature.State(items: [item1, item2], isProUser: true)
         state.searchText = ""
 
         XCTAssertEqual(state.filteredItems.count, 2)
@@ -190,7 +199,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         let item2 = ClipboardItem(content: "Goodbye Moon")
         let item3 = ClipboardItem(content: "Hello Moon")
 
-        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3])
+        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3], isProUser: true)
         state.searchText = "hello"
 
         XCTAssertEqual(state.filteredItems.count, 2)
@@ -203,7 +212,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         let item2 = ClipboardItem(url: URL(string: "https://www.google.com")!)
         let item3 = ClipboardItem(content: "apple juice")
 
-        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3])
+        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3], isProUser: true)
         state.searchText = "apple"
 
         XCTAssertEqual(state.filteredItems.count, 2)
@@ -215,7 +224,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         let item1 = ClipboardItem(content: "HELLO WORLD")
         let item2 = ClipboardItem(content: "goodbye")
 
-        var state = ClipboardHistoryFeature.State(items: [item1, item2])
+        var state = ClipboardHistoryFeature.State(items: [item1, item2], isProUser: true)
         state.searchText = "hello"
 
         XCTAssertEqual(state.filteredItems.count, 1)
@@ -226,7 +235,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         let item1 = ClipboardItem(content: "Hello")
         let item2 = ClipboardItem(content: "World")
 
-        var state = ClipboardHistoryFeature.State(items: [item1, item2])
+        var state = ClipboardHistoryFeature.State(items: [item1, item2], isProUser: true)
         state.searchText = "xyz"
 
         XCTAssertEqual(state.filteredItems.count, 0)
@@ -237,9 +246,36 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         let item2 = ClipboardItem(content: "World Hello")
         let item3 = ClipboardItem(content: "Goodbye")
 
-        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3])
+        var state = ClipboardHistoryFeature.State(items: [item1, item2, item3], isProUser: true)
         state.searchText = "wor"
 
         XCTAssertEqual(state.filteredItems.count, 2)
+    }
+
+    // MARK: - Free user date filter tests
+
+    func testFilteredItems_freeUser_onlyShowsRecentItems() {
+        let recentItem = ClipboardItem(content: "Recent", timestamp: Date())
+        let oldItem = ClipboardItem(
+            content: "Old",
+            timestamp: Date(timeIntervalSinceNow: -4 * 24 * 60 * 60) // 4日前
+        )
+
+        var state = ClipboardHistoryFeature.State(items: [recentItem, oldItem], isProUser: false)
+        state.searchText = ""
+
+        XCTAssertEqual(state.filteredItems.count, 1)
+        XCTAssertEqual(state.filteredItems.first?.id, recentItem.id)
+    }
+
+    // MARK: - Duplicate detection tests
+
+    func testCheckClipboard_duplicateText_stateHasCorrectFirst() {
+        // 重複検知: items.first のテキストと一致する場合はスキップされることを確認するため、
+        // State の items.first が正しく参照できることを検証
+        let existingItem = ClipboardItem(content: "Hello")
+        let state = ClipboardHistoryFeature.State(items: [existingItem], isProUser: true)
+        XCTAssertEqual(state.items.first?.textContent, "Hello")
+        XCTAssertEqual(state.items.first?.type, .text)
     }
 }

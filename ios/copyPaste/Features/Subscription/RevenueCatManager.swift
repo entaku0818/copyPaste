@@ -110,10 +110,9 @@ final class RevenueCatManager: NSObject, ObservableObject {
         return SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
     }
 
-    /// 無料版の履歴件数制限（nonisolated - UserDefaultsから読み取り）
+    /// 履歴件数制限（Pro: 無制限）
     nonisolated var maxHistoryCount: Int {
-        let isPro = SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
-        return isPro ? Int.max : 20
+        return Int.max
     }
 }
 

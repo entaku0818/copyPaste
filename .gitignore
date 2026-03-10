@@ -111,3 +111,5 @@ fastlane/AuthKey_*.p8
 # Firebase config (secrets)
 lp/.env
 lp/firebase-config.js
+.playwright-cli/
+ios/.playwright-cli/

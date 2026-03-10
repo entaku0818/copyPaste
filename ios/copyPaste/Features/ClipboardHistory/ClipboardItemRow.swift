@@ -22,7 +22,7 @@ struct ClipboardItemRow: View {
                 }
 
                 HStack(spacing: 4) {
-                    Text(item.timestamp, style: .relative)
+                    Text(timestampText(item.timestamp))
                         .font(.caption)
                         .foregroundColor(.secondary)
 
@@ -42,6 +42,19 @@ struct ClipboardItemRow: View {
             Spacer()
         }
         .contentShape(Rectangle())
+    }
+
+    private func timestampText(_ date: Date) -> String {
+        let weekAgo = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date()) ?? Date()
+        if date < weekAgo {
+            return date.formatted(.dateTime.year().month().day().locale(Locale(identifier: "ja_JP")))
+        } else {
+            let components = Calendar.current.dateComponents([.minute, .hour, .day], from: date, to: Date())
+            if let day = components.day, day > 0 { return "\(day)日前" }
+            if let hour = components.hour, hour > 0 { return "\(hour)時間前" }
+            if let minute = components.minute, minute > 0 { return "\(minute)分前" }
+            return "たった今"
+        }
     }
 
     @ViewBuilder

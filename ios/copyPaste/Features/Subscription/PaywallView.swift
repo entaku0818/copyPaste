@@ -10,6 +10,7 @@ struct PaywallView: View {
     @State private var isRestoring = false
     @State private var errorMessage: String?
     @State private var showError = false
+    @State private var showSuccess = false
 
     var body: some View {
         NavigationStack {
@@ -40,17 +41,10 @@ struct PaywallView: View {
                     // 機能リスト
                     VStack(alignment: .leading, spacing: 16) {
                         FeatureRow(
-                            icon: "infinity",
-                            title: "無制限履歴",
-                            description: "20件の制限なし",
+                            icon: "calendar",
+                            title: "3ヶ月履歴",
+                            description: "過去3ヶ月分の履歴を保存・閲覧",
                             color: .blue
-                        )
-
-                        FeatureRow(
-                            icon: "magnifyingglass",
-                            title: "高度な検索",
-                            description: "すべての履歴を瞬時に検索",
-                            color: .purple
                         )
 
                         FeatureRow(
@@ -74,17 +68,13 @@ struct PaywallView: View {
                             color: .orange
                         )
 
-                        FeatureRow(
-                            icon: "wand.and.stars",
-                            title: "テキスト変換",
-                            description: "大文字・小文字・スネークケース等",
-                            color: .pink
-                        )
                     }
                     .padding(.horizontal)
 
                     // プラン選択
                     if let offering = revenueCat.offerings?.current {
+                        let monthlyPrice = offering.availablePackages
+                            .first(where: { $0.packageType == .monthly })?.storeProduct.price
                         VStack(spacing: 12) {
                             ForEach(offering.availablePackages) { package in
                                 PackageButton(
@@ -92,7 +82,8 @@ struct PaywallView: View {
                                     isSelected: selectedPackage?.identifier == package.identifier,
                                     onTap: {
                                         selectedPackage = package
-                                    }
+                                    },
+                                    discountLabel: discountLabel(for: package, monthlyPrice: monthlyPrice)
                                 )
                             }
                         }
@@ -155,7 +146,7 @@ struct PaywallView: View {
                         Text("• 自動更新されます")
 
                         HStack(spacing: 16) {
-                            Link("利用規約", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                            Link("利用規約", destination: URL(string: "https://clipkit-entaku.web.app/terms.html")!)
                             Text("·")
                             Link("プライバシーポリシー", destination: URL(string: "https://clipkit-entaku.web.app/privacy-policy.html")!)
                         }
@@ -182,8 +173,18 @@ struct PaywallView: View {
             } message: {
                 Text(errorMessage ?? "不明なエラーが発生しました")
             }
+            .alert("購入完了", isPresented: $showSuccess) {
+                Button("OK") {
+                    dismiss()
+                }
+            } message: {
+                Text("ClipKit Proへようこそ！\nすべての機能が使えるようになりました。")
+            }
         }
         .task {
+            if revenueCat.offerings == nil {
+                await revenueCat.fetchOfferings()
+            }
             if selectedPackage == nil,
                let package = revenueCat.offerings?.current?.availablePackages.first {
                 selectedPackage = package
@@ -197,6 +198,14 @@ struct PaywallView: View {
         }
     }
 
+    private func discountLabel(for package: Package, monthlyPrice: Decimal?) -> String? {
+        guard package.packageType == .annual, let monthly = monthlyPrice, monthly > 0 else { return nil }
+        let annualMonthly = package.storeProduct.price / 12
+        let discount = Int(((monthly - annualMonthly) / monthly * 100) as NSDecimalNumber)
+        guard discount > 0 else { return nil }
+        return "\(discount)%お得"
+    }
+
     private func purchasePackage() async {
         guard let package = selectedPackage else { return }
 
@@ -205,7 +214,7 @@ struct PaywallView: View {
 
         do {
             _ = try await revenueCat.purchase(package: package)
-            dismiss()
+            showSuccess = true
         } catch {
             errorMessage = error.localizedDescription
             showError = true
@@ -272,6 +281,7 @@ struct PackageButton: View {
     let package: Package
     let isSelected: Bool
     let onTap: () -> Void
+    var discountLabel: String? = nil
 
     var body: some View {
         Button(action: onTap) {
@@ -281,8 +291,8 @@ struct PackageButton: View {
                         Text(packageTitle)
                             .font(.headline)
 
-                        if package.packageType == .annual {
-                            Text("20%お得")
+                        if let label = discountLabel {
+                            Text(label)
                                 .font(.caption)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
@@ -297,8 +307,9 @@ struct PackageButton: View {
                         .font(.title2)
                         .fontWeight(.bold)
 
-                    if package.packageType == .annual {
-                        Text("月額換算 ¥200")
+                    if package.packageType == .annual,
+                       let monthlyPrice = monthlyEquivalentPrice {
+                        Text("月額換算 \(monthlyPrice)")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -328,6 +339,14 @@ struct PackageButton: View {
         default:
             return package.storeProduct.localizedTitle
         }
+    }
+
+    private var monthlyEquivalentPrice: String? {
+        let product = package.storeProduct
+        let rawMonthly = product.price / 12 as NSDecimalNumber
+        let rounded = NSDecimalNumber(value: rawMonthly.doubleValue.rounded())
+        guard let price = product.priceFormatter?.string(from: rounded) else { return nil }
+        return "約\(price)"
     }
 }
 

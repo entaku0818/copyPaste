@@ -10,11 +10,23 @@ import ComposableArchitecture
 
 @main
 struct copyPasteApp: App {
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+
     init() {
         // RevenueCatの初期化
         RevenueCatManager.shared.configure()
         // AdMobの初期化
         AdManager.shared.configure()
+    }
+
+    private var mainView: some View {
+        ContentView(
+            store: Store(
+                initialState: ClipboardHistoryFeature.State()
+            ) {
+                ClipboardHistoryFeature()
+            }
+        )
     }
 
     var body: some Scene {
@@ -26,23 +38,21 @@ struct copyPasteApp: App {
                 let screens = ScreenshotScreen.allCases
                 let screen = screens[min(screenIndex, screens.count - 1)]
                 screenshotView(for: screen, language: .japanese)
+            } else if hasCompletedOnboarding {
+                mainView
             } else {
-                ContentView(
-                    store: Store(
-                        initialState: ClipboardHistoryFeature.State()
-                    ) {
-                        ClipboardHistoryFeature()
-                    }
-                )
+                OnboardingView {
+                    hasCompletedOnboarding = true
+                }
             }
             #else
-            ContentView(
-                store: Store(
-                    initialState: ClipboardHistoryFeature.State()
-                ) {
-                    ClipboardHistoryFeature()
+            if hasCompletedOnboarding {
+                mainView
+            } else {
+                OnboardingView {
+                    hasCompletedOnboarding = true
                 }
-            )
+            }
             #endif
         }
     }

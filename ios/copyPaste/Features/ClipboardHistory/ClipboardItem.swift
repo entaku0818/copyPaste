@@ -10,9 +10,10 @@ enum ClipboardItemType: String, Codable {
 
 struct ClipboardItem: Identifiable, Codable, Equatable {
     let id: UUID
-    let timestamp: Date
+    var timestamp: Date
     let type: ClipboardItemType
     var isFavorite: Bool = false
+    var deletedAt: Date? = nil
 
     // テキスト
     var textContent: String?
