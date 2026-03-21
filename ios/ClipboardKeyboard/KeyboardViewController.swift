@@ -204,6 +204,11 @@ class KeyboardViewController: UIInputViewController {
         vStack.addArrangedSubview(iconImageView)
         vStack.addArrangedSubview(textLabel)
 
+        // サブビューのタッチをボタンに透過させる
+        vStack.isUserInteractionEnabled = false
+        iconImageView.isUserInteractionEnabled = false
+        textLabel.isUserInteractionEnabled = false
+
         card.addTarget(self, action: #selector(cardTouchDown(_:)), for: .touchDown)
         card.addTarget(self, action: #selector(cardTapped(_:)), for: .touchUpInside)
         card.addTarget(self, action: #selector(cardCancelled(_:)), for: [.touchUpOutside, .touchCancel])
