@@ -27,7 +27,17 @@ class KeyboardViewController: UIInputViewController {
                 self?.advanceToNextInputMode()
             },
             openURL: { [weak self] url in
-                self?.extensionContext?.open(url, completionHandler: nil)
+                guard let self else { return }
+                // キーボードExtensionではUIApplication.sharedが使用不可のためレスポンダーチェーンを使用
+                let selector = NSSelectorFromString("openURL:")
+                var responder: UIResponder? = self
+                while let r = responder {
+                    if r.responds(to: selector) {
+                        r.perform(selector, with: url)
+                        break
+                    }
+                    responder = r.next
+                }
             }
         )
 
