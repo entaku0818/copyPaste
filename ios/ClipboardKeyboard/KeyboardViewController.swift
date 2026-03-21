@@ -25,6 +25,9 @@ class KeyboardViewController: UIInputViewController {
             textDocumentProxy: self.textDocumentProxy,
             switchToNextKeyboard: { [weak self] in
                 self?.advanceToNextInputMode()
+            },
+            openURL: { [weak self] url in
+                self?.extensionContext?.open(url, completionHandler: nil)
             }
         )
 
@@ -73,6 +76,7 @@ class KeyboardViewController: UIInputViewController {
 struct ClipboardKeyboardView: View {
     let textDocumentProxy: UITextDocumentProxy
     let switchToNextKeyboard: () -> Void
+    let openURL: (URL) -> Void
 
     @State private var clipboardItems: [ClipboardItem] = []
     @State private var isLoading = true
@@ -151,34 +155,93 @@ struct ClipboardKeyboardView: View {
     // MARK: - Pro Placeholder Section
 
     private var proPlaceholderSection: some View {
-        HStack {
-            Spacer()
+        VStack(spacing: 0) {
+            // モッククリップボードカード（ぼかしオーバーレイ付き）
+            ZStack {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ProMockCard(icon: "doc.text", color: .blue, text: "会議は14時から変更になりました")
+                        ProMockCard(icon: "link", color: .green, text: "https://example.com/article")
+                        ProMockCard(icon: "doc.text", color: .blue, text: "メモ: 牛乳・卵・パン")
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                }
+                .frame(height: 96)
+                .allowsHitTesting(false)
 
-            VStack(spacing: 8) {
-                Image(systemName: "crown.fill")
-                    .font(.title)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.yellow, .orange],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                // ロックオーバーレイ
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                VStack(spacing: 4) {
+                    Image(systemName: "crown.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(
+                            LinearGradient(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing)
                         )
-                    )
-
-                Text("Pro機能")
-                    .font(.caption)
-                    .fontWeight(.bold)
-
-                Text("キーボードはPro版限定です")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                    Text("ClipKit Proでキーボードから即ペースト")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 16)
             }
+            .frame(height: 96)
+            .background(Color(UIColor.secondarySystemBackground))
 
-            Spacer()
+            // アップグレードボタン
+            Button {
+                if let url = URL(string: "clipkit://subscription") {
+                    openURL(url)
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "crown.fill")
+                        .font(.caption)
+                        .foregroundStyle(.white)
+                    Text("Proにアップグレード")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(
+                    LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
+                )
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(Color(UIColor.systemBackground))
         }
-        .frame(height: 100)
-        .background(Color(UIColor.secondarySystemBackground))
+    }
+
+    // MARK: - Pro Mock Card (for placeholder display)
+
+    private struct ProMockCard: View {
+        let icon: String
+        let color: Color
+        let text: String
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 14))
+                    .foregroundStyle(color)
+                Text(text)
+                    .lineLimit(2)
+                    .font(.caption)
+                    .foregroundStyle(.primary)
+            }
+            .padding(8)
+            .frame(width: 110, height: 72)
+            .background(Color(UIColor.systemBackground))
+            .cornerRadius(8)
+            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
+        }
     }
 
     // MARK: - Helper Methods
@@ -306,7 +369,8 @@ struct ClipboardItemCard: View {
 #Preview {
     ClipboardKeyboardView(
         textDocumentProxy: PreviewTextDocumentProxy(),
-        switchToNextKeyboard: {}
+        switchToNextKeyboard: {},
+        openURL: { _ in }
     )
     .frame(height: 300)
 }

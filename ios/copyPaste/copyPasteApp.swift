@@ -12,6 +12,12 @@ import ComposableArchitecture
 struct copyPasteApp: App {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
+    private let store = Store(
+        initialState: ClipboardHistoryFeature.State()
+    ) {
+        ClipboardHistoryFeature()
+    }
+
     init() {
         // RevenueCatの初期化
         RevenueCatManager.shared.configure()
@@ -20,13 +26,7 @@ struct copyPasteApp: App {
     }
 
     private var mainView: some View {
-        ContentView(
-            store: Store(
-                initialState: ClipboardHistoryFeature.State()
-            ) {
-                ClipboardHistoryFeature()
-            }
-        )
+        ContentView(store: store)
     }
 
     var body: some Scene {
@@ -40,6 +40,11 @@ struct copyPasteApp: App {
                 screenshotView(for: screen, language: .japanese)
             } else if hasCompletedOnboarding {
                 mainView
+                    .onOpenURL { url in
+                        if url.scheme == "clipkit", url.host == "subscription" {
+                            store.send(.showPaywall)
+                        }
+                    }
             } else {
                 OnboardingView {
                     hasCompletedOnboarding = true
@@ -48,6 +53,12 @@ struct copyPasteApp: App {
             #else
             if hasCompletedOnboarding {
                 mainView
+                    .onOpenURL { url in
+                        // clipkit://subscription → Paywall表示（キーボード拡張からの遷移）
+                        if url.scheme == "clipkit", url.host == "subscription" {
+                            store.send(.showPaywall)
+                        }
+                    }
             } else {
                 OnboardingView {
                     hasCompletedOnboarding = true

@@ -23,6 +23,17 @@
 	</array>
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.entaku.clipkit</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>clipkit</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSPasteboardUsageDescription</key>
 	<string>クリップボードの履歴を保存するためにクリップボードへのアクセスが必要です。</string>
 	<key>UIPasteboardAcceptablePasteboardTypes</key>
