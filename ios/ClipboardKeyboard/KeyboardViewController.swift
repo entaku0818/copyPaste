@@ -204,30 +204,61 @@ class KeyboardViewController: UIInputViewController {
         vStack.addArrangedSubview(iconImageView)
         vStack.addArrangedSubview(textLabel)
 
-        card.addTarget(self, action: #selector(cardTapped(_:)), for: .touchDown)
+        card.addTarget(self, action: #selector(cardTouchDown(_:)), for: .touchDown)
+        card.addTarget(self, action: #selector(cardTapped(_:)), for: .touchUpInside)
+        card.addTarget(self, action: #selector(cardCancelled(_:)), for: [.touchUpOutside, .touchCancel])
         card.accessibilityIdentifier = item.id.uuidString
         return card
     }
 
+    private var isPasting = false
+
+    // タッチ開始: ローディング表示 + 他カード無効化
+    @objc private func cardTouchDown(_ sender: UIButton) {
+        guard !isPasting else { return }
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        setAllCardsEnabled(false)
+        showCardLoading(sender)
+    }
+
+    // 指を離した: 貼り付け実行
     @objc private func cardTapped(_ sender: UIButton) {
+        hideCardLoading(sender)
+        setAllCardsEnabled(true)
         guard let idStr = sender.accessibilityIdentifier,
               let uuid = UUID(uuidString: idStr),
               let item = clipboardItems.first(where: { $0.id == uuid }) else { return }
-
-        // 触覚フィードバック
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-
-        // カードを一瞬ハイライト
-        UIView.animate(withDuration: 0.08, animations: {
-            sender.alpha = 0.4
-        }) { _ in
-            UIView.animate(withDuration: 0.12) {
-                sender.alpha = 1.0
-            }
-        }
-
         insertItem(item)
         KeyboardLogger.log(.paste, "\(item.type)")
+    }
+
+    // キャンセル: ローディング解除 + 有効化
+    @objc private func cardCancelled(_ sender: UIButton) {
+        hideCardLoading(sender)
+        setAllCardsEnabled(true)
+    }
+
+    private func setAllCardsEnabled(_ enabled: Bool) {
+        isPasting = !enabled
+        stackView.arrangedSubviews.forEach { $0.isUserInteractionEnabled = enabled }
+    }
+
+    private func showCardLoading(_ button: UIButton) {
+        button.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.15)
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.tag = 9999
+        spinner.startAnimating()
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(spinner)
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+        ])
+    }
+
+    private func hideCardLoading(_ button: UIButton) {
+        button.backgroundColor = UIColor.systemBackground
+        button.viewWithTag(9999)?.removeFromSuperview()
     }
 
     // MARK: - Free: Proプレースホルダー
