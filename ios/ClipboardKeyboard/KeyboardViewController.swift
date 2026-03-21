@@ -12,6 +12,8 @@ import SwiftUI
 class KeyboardViewController: UIInputViewController {
 
     private var hostingController: UIHostingController<ClipboardKeyboardView>?
+    private var heightConstraint: NSLayoutConstraint?
+    private var layoutCallCount = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,17 +48,28 @@ class KeyboardViewController: UIInputViewController {
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        // キーボードの高さを設定（履歴表示分を追加）
-        let heightConstraint = NSLayoutConstraint(
-            item: view!,
+        layoutCallCount += 1
+        KeyboardLogger.log(
+            .loadDone,
+            "viewWillLayoutSubviews \(layoutCallCount)回目, 制約数: \(view.constraints.count)件"
+        )
+
+        // 既存の heightConstraint があれば削除してから再追加（制約の積み重なりを防ぐ）
+        guard let v = view else { return }
+        if let existing = heightConstraint {
+            v.removeConstraint(existing)
+        }
+        let constraint = NSLayoutConstraint(
+            item: v,
             attribute: .height,
             relatedBy: .equal,
             toItem: nil,
             attribute: .notAnAttribute,
             multiplier: 1.0,
-            constant: 300 // 履歴表示エリア + キーボード本体
+            constant: 300
         )
-        view.addConstraint(heightConstraint)
+        v.addConstraint(constraint)
+        heightConstraint = constraint
     }
 }
 
