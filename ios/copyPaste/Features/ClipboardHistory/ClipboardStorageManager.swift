@@ -49,6 +49,7 @@ class ClipboardStorageManager {
                 id: item.id,
                 timestamp: item.timestamp,
                 type: item.type,
+                isFavorite: item.isFavorite,
                 textContent: item.textContent,
                 url: item.url,
                 fileName: item.fileName,
@@ -129,6 +130,7 @@ class ClipboardStorageManager {
                 id: metadata.id,
                 timestamp: metadata.timestamp,
                 type: metadata.type,
+                isFavorite: metadata.isFavorite,
                 textContent: metadata.textContent,
                 imageData: imageData,
                 imageThumbnailData: thumbnailData,
@@ -284,6 +286,7 @@ private struct ClipboardItemMetadata: Codable {
     let id: UUID
     let timestamp: Date
     let type: ClipboardItemType
+    var isFavorite: Bool
 
     var textContent: String?
     var imageFileName: String?
@@ -294,15 +297,33 @@ private struct ClipboardItemMetadata: Codable {
     var fileURL: URL?
     var deletedAt: Date?
 
-    init(id: UUID, timestamp: Date, type: ClipboardItemType, textContent: String? = nil, url: URL? = nil, fileName: String? = nil, fileSize: Int64? = nil, fileURL: URL? = nil, deletedAt: Date? = nil) {
+    init(id: UUID, timestamp: Date, type: ClipboardItemType, isFavorite: Bool = false, textContent: String? = nil, url: URL? = nil, fileName: String? = nil, fileSize: Int64? = nil, fileURL: URL? = nil, deletedAt: Date? = nil) {
         self.id = id
         self.timestamp = timestamp
         self.type = type
+        self.isFavorite = isFavorite
         self.textContent = textContent
         self.url = url
         self.fileName = fileName
         self.fileSize = fileSize
         self.fileURL = fileURL
         self.deletedAt = deletedAt
+    }
+
+    // 既存データ（isFavoriteキーなし）との後方互換性
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        timestamp = try c.decode(Date.self, forKey: .timestamp)
+        type = try c.decode(ClipboardItemType.self, forKey: .type)
+        isFavorite = try c.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
+        textContent = try c.decodeIfPresent(String.self, forKey: .textContent)
+        imageFileName = try c.decodeIfPresent(String.self, forKey: .imageFileName)
+        thumbnailFileName = try c.decodeIfPresent(String.self, forKey: .thumbnailFileName)
+        url = try c.decodeIfPresent(URL.self, forKey: .url)
+        fileName = try c.decodeIfPresent(String.self, forKey: .fileName)
+        fileSize = try c.decodeIfPresent(Int64.self, forKey: .fileSize)
+        fileURL = try c.decodeIfPresent(URL.self, forKey: .fileURL)
+        deletedAt = try c.decodeIfPresent(Date.self, forKey: .deletedAt)
     }
 }
