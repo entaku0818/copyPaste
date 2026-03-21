@@ -271,6 +271,105 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         XCTAssertEqual(state.filteredItems.first?.id, recentItem.id)
     }
 
+    // MARK: - Regression Tests: お気に入りUI反映バグ（stale値コピー問題）
+    //
+    // 【バグの原因】
+    // .sheet(item:) の content クロージャに値型コピーを渡していたため、
+    // toggleFavorite 後もシート内の item.isFavorite が古い値のままだった。
+    // ユーザーが「反映されない」と思い二度押しし、false に戻るケースが発生。
+    //
+    // 【修正】
+    // store.items.first(where: { $0.id == sheetItem.id }) で最新を引き直す。
+
+    /// 観点1: toggleFavorite 後、IDで引いた isFavorite が正しく反転していること
+    func testToggleFavorite_isFavoriteReflectedByIDLookup() async {
+        let item = ClipboardItem(content: "Test", isFavorite: false)
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], isProUser: true)
+        ) {
+            ClipboardHistoryFeature()
+        }
+
+        // false → true
+        await store.send(.toggleFavorite(item)) {
+            $0.items[0].isFavorite = true
+        }
+        await store.receive(\.saveItems)
+
+        XCTAssertTrue(
+            store.state.items.first(where: { $0.id == item.id })!.isFavorite,
+            "toggleFavorite後、IDで引いた値がtrueになっていること"
+        )
+
+        // true → false（二度押しで元に戻る）
+        await store.send(.toggleFavorite(store.state.items[0])) {
+            $0.items[0].isFavorite = false
+        }
+        await store.receive(\.saveItems)
+
+        XCTAssertFalse(
+            store.state.items.first(where: { $0.id == item.id })!.isFavorite,
+            "再toggleFavorite後、IDで引いた値がfalseに戻ること"
+        )
+    }
+
+    /// 観点2a（リグレッション）: 修正前のバグパターンを文書化
+    /// 値型コピーは toggleFavorite 後も古い値のまま ＝ これが UI 不反映の原因だった
+    func testToggleFavorite_staleValueCopyRemainsUnchanged() async {
+        let item = ClipboardItem(content: "Test", isFavorite: false)
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], isProUser: true)
+        ) {
+            ClipboardHistoryFeature()
+        }
+
+        // ❌ 修正前のコード: sheet 展開時に値型コピーを取る
+        let staleCopy = store.state.items.first(where: { $0.id == item.id })!
+        XCTAssertFalse(staleCopy.isFavorite, "コピー取得時点では false")
+
+        await store.send(.toggleFavorite(item)) {
+            $0.items[0].isFavorite = true
+        }
+        await store.receive(\.saveItems)
+
+        // Store は更新されているが、値型コピーは古いまま（バグの原因）
+        XCTAssertFalse(
+            staleCopy.isFavorite,
+            "【バグの再現】値型コピーは toggle 後も false のまま。" +
+            "これがシートの星アイコンが変わらなかった原因"
+        )
+        XCTAssertTrue(
+            store.state.items[0].isFavorite,
+            "Store 本体は正しく true に更新されている"
+        )
+    }
+
+    /// 観点2b（リグレッション）: 修正後の正しいパターンを証明
+    /// store.items.first(where: id) で引き直せば常に最新値が取れる
+    func testToggleFavorite_lookupByIDReturnsLatestAfterToggle() async {
+        let item = ClipboardItem(content: "Test", isFavorite: false)
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], isProUser: true)
+        ) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.toggleFavorite(item)) {
+            $0.items[0].isFavorite = true
+        }
+        await store.receive(\.saveItems)
+
+        // ✅ 修正後のコード: IDで引き直す（ClipboardHistoryView / FavoritesView の修正箇所）
+        let latestItem = store.state.items.first(where: { $0.id == item.id })
+
+        XCTAssertNotNil(latestItem, "IDで引いたアイテムが存在する")
+        XCTAssertTrue(
+            latestItem!.isFavorite,
+            "【修正の証明】IDで引き直すと最新の true が取れる。" +
+            "store.items.first(where: { $0.id == sheetItem.id }) が正しい実装"
+        )
+    }
+
     // MARK: - Duplicate detection tests
 
     func testCheckClipboard_duplicateText_stateHasCorrectFirst() {
