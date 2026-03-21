@@ -8,6 +8,8 @@ struct PaywallView: View {
     @State private var selectedPackage: Package?
     @State private var isPurchasing = false
     @State private var isRestoring = false
+    @State private var isLoadingOfferings = false
+    @State private var offeringsLoadFailed = false
     @State private var errorMessage: String?
     @State private var showError = false
     @State private var showSuccess = false
@@ -88,6 +90,19 @@ struct PaywallView: View {
                             }
                         }
                         .padding(.horizontal)
+                    } else if isLoadingOfferings {
+                        ProgressView("プランを読み込み中...")
+                            .padding()
+                    } else if offeringsLoadFailed {
+                        VStack(spacing: 12) {
+                            Text("プランの読み込みに失敗しました")
+                                .foregroundColor(.secondary)
+                            Button("再試行") {
+                                Task { await loadOfferings() }
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                        .padding()
                     }
 
                     // 購入ボタン
@@ -109,13 +124,14 @@ struct PaywallView: View {
                         .frame(height: 50)
                         .background(
                             LinearGradient(
-                                colors: [.blue, .purple],
+                                colors: selectedPackage != nil ? [.blue, .purple] : [.gray, .gray],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
                         .foregroundColor(.white)
                         .cornerRadius(12)
+                        .contentShape(Rectangle())
                     }
                     .disabled(selectedPackage == nil || isPurchasing)
                     .padding(.horizontal)
@@ -141,9 +157,14 @@ struct PaywallView: View {
 
                     // 注意事項・リンク
                     VStack(spacing: 8) {
-                        Text("• 7日間の無料トライアル")
+                        if let trialText = selectedPackageTrialText {
+                            Text("• \(trialText)の無料トライアル")
+                        }
+                        if let periodText = selectedPackagePeriodText {
+                            Text("• \(periodText)ごとに自動更新")
+                        }
                         Text("• いつでもキャンセル可能")
-                        Text("• 自動更新されます")
+                        Text("• Apple IDアカウントに課金されます")
 
                         HStack(spacing: 16) {
                             Link("利用規約", destination: URL(string: "https://clipkit-entaku.web.app/terms.html")!)
@@ -181,20 +202,62 @@ struct PaywallView: View {
                 Text("ClipKit Proへようこそ！\nすべての機能が使えるようになりました。")
             }
         }
+        .presentationDetents([.large])
         .task {
-            if revenueCat.offerings == nil {
-                await revenueCat.fetchOfferings()
-            }
-            if selectedPackage == nil,
-               let package = revenueCat.offerings?.current?.availablePackages.first {
-                selectedPackage = package
-            }
+            await loadOfferings()
         }
         .onChange(of: revenueCat.offerings) { _, newOfferings in
             if selectedPackage == nil,
                let package = newOfferings?.current?.availablePackages.first {
                 selectedPackage = package
             }
+        }
+    }
+
+    private var selectedPackageTrialText: String? {
+        guard let intro = selectedPackage?.storeProduct.introductoryDiscount,
+              intro.paymentMode == .freeTrial else { return nil }
+        let p = intro.subscriptionPeriod
+        switch p.unit {
+        case .day: return "\(p.value)日間"
+        case .week: return "\(p.value)週間"
+        case .month: return "\(p.value)ヶ月間"
+        case .year: return "\(p.value)年間"
+        @unknown default: return nil
+        }
+    }
+
+    private var selectedPackagePeriodText: String? {
+        guard let period = selectedPackage?.storeProduct.subscriptionPeriod else { return nil }
+        switch (period.unit, period.value) {
+        case (.month, 1): return "1ヶ月"
+        case (.year, 1): return "1年"
+        default:
+            switch period.unit {
+            case .day: return "\(period.value)日"
+            case .week: return "\(period.value)週"
+            case .month: return "\(period.value)ヶ月"
+            case .year: return "\(period.value)年"
+            @unknown default: return nil
+            }
+        }
+    }
+
+    private func loadOfferings() async {
+        if let current = revenueCat.offerings?.current {
+            if selectedPackage == nil {
+                selectedPackage = current.availablePackages.first
+            }
+            return
+        }
+        isLoadingOfferings = true
+        offeringsLoadFailed = false
+        await revenueCat.fetchOfferings()
+        isLoadingOfferings = false
+        if let package = revenueCat.offerings?.current?.availablePackages.first {
+            selectedPackage = package
+        } else {
+            offeringsLoadFailed = true
         }
     }
 
@@ -307,6 +370,17 @@ struct PackageButton: View {
                         .font(.title2)
                         .fontWeight(.bold)
 
+                    Text(subscriptionPeriodText)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    if let trial = introductoryOfferText {
+                        Text(trial)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.green)
+                    }
+
                     if package.packageType == .annual,
                        let monthlyPrice = monthlyEquivalentPrice {
                         Text("月額換算 \(monthlyPrice)")
@@ -338,6 +412,35 @@ struct PackageButton: View {
             return "年間プラン"
         default:
             return package.storeProduct.localizedTitle
+        }
+    }
+
+    private var subscriptionPeriodText: String {
+        guard let period = package.storeProduct.subscriptionPeriod else { return "" }
+        switch (period.unit, period.value) {
+        case (.month, 1): return "1ヶ月ごとに自動更新"
+        case (.year, 1): return "1年ごとに自動更新"
+        default:
+            switch period.unit {
+            case .day: return "\(period.value)日ごとに自動更新"
+            case .week: return "\(period.value)週ごとに自動更新"
+            case .month: return "\(period.value)ヶ月ごとに自動更新"
+            case .year: return "\(period.value)年ごとに自動更新"
+            @unknown default: return ""
+            }
+        }
+    }
+
+    private var introductoryOfferText: String? {
+        guard let intro = package.storeProduct.introductoryDiscount,
+              intro.paymentMode == .freeTrial else { return nil }
+        let p = intro.subscriptionPeriod
+        switch p.unit {
+        case .day: return "\(p.value)日間無料トライアル"
+        case .week: return "\(p.value)週間無料トライアル"
+        case .month: return "\(p.value)ヶ月間無料トライアル"
+        case .year: return "\(p.value)年間無料トライアル"
+        @unknown default: return "無料トライアル付き"
         }
     }
 
