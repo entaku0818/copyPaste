@@ -80,15 +80,15 @@ struct FavoritesView: View {
         .onAppear {
             store.send(.updateProStatus)
         }
-        .sheet(item: $selectedItem) { item in
+        .sheet(item: $selectedItem) { sheetItem in
             ClipboardItemDetailView(
-                item: item,
+                item: store.items.first(where: { $0.id == sheetItem.id }) ?? sheetItem,
                 onCopy: {
-                    store.send(.copyItem(item))
+                    store.send(.copyItem(sheetItem))
                     selectedItem = nil
                 },
                 onToggleFavorite: {
-                    store.send(.toggleFavorite(item))
+                    store.send(.toggleFavorite(sheetItem))
                 }
             )
         }

@@ -101,15 +101,17 @@ struct ClipboardHistoryView: View {
         .onAppear {
             store.send(.onAppear)
         }
-        .sheet(item: $selectedItem) { item in
+        .sheet(item: $selectedItem) { sheetItem in
+            // store.items から最新の item を取得してDetail に渡す
+            // （let item のままだと toggleFavorite 後に isFavorite が更新されない）
             ClipboardItemDetailView(
-                item: item,
+                item: store.items.first(where: { $0.id == sheetItem.id }) ?? sheetItem,
                 onCopy: {
-                    store.send(.copyItem(item))
+                    store.send(.copyItem(sheetItem))
                     selectedItem = nil
                 },
                 onToggleFavorite: {
-                    store.send(.toggleFavorite(item))
+                    store.send(.toggleFavorite(sheetItem))
                 }
             )
         }

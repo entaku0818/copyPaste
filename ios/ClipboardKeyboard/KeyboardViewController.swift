@@ -15,7 +15,8 @@ class KeyboardViewController: UIInputViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        KeyboardLogger.log(.launch, "viewDidLoad")
+        // Extension 起動を最初に記録（これが出ない場合はExtensionが起動していない）
+        KeyboardLogger.log(.launch, "KeyboardViewController.viewDidLoad - Extension起動成功")
 
         // SwiftUIビューをホスティング
         let keyboardView = ClipboardKeyboardView(
