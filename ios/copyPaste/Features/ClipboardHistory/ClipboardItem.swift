@@ -117,7 +117,7 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
 
     // Codableの実装
     enum CodingKeys: String, CodingKey {
-        case id, timestamp, type
+        case id, timestamp, type, isFavorite
         case textContent, imageData, imageThumbnailData
         case url, fileName, fileSize, fileURL
     }

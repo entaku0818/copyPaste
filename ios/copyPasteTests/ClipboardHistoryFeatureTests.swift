@@ -147,13 +147,16 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
     // MARK: - Free user paywall tests
 
     func testToggleFavorite_freeUser_showsPaywall() async {
-        let item = ClipboardItem(content: "Test", isFavorite: false)
+        // フリーユーザーは10件まで追加可能、11件目でPaywall表示
+        let favorites = (0..<10).map { ClipboardItem(content: "Favorite \($0)", isFavorite: true) }
+        let newItem = ClipboardItem(content: "New Item", isFavorite: false)
+        let allItems = favorites + [newItem]
 
-        let store = TestStore(initialState: ClipboardHistoryFeature.State(items: [item], isProUser: false)) {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State(items: allItems, isProUser: false)) {
             ClipboardHistoryFeature()
         }
 
-        await store.send(.toggleFavorite(item))
+        await store.send(.toggleFavorite(newItem))
         await store.receive(\.showPaywall) {
             $0.showPaywall = true
         }

@@ -67,6 +67,8 @@ struct copyPasteApp: App {
         case .settings:         MockSettingsView(language: language)
         case .imagePreview:     MockImagePreviewView(language: language)
         case .keyboardSetup:    MockKeyboardSetupView(language: language)
+        case .favorites:        MockFavoritesView(language: language)
+        case .widget:           MockWidgetView(language: language)
         }
     }
     #endif

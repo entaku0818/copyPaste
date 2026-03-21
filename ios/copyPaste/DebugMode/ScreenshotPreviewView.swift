@@ -94,6 +94,10 @@ struct FullscreenScreenshotView: View {
             MockImagePreviewView(language: language)
         case .keyboardSetup:
             MockKeyboardSetupView(language: language)
+        case .favorites:
+            MockFavoritesView(language: language)
+        case .widget:
+            MockWidgetView(language: language)
         }
     }
 }
@@ -333,6 +337,8 @@ enum ScreenshotScreen: String, CaseIterable {
     case settings
     case imagePreview
     case keyboardSetup
+    case favorites
+    case widget
 }
 
 // MARK: - Mock Views
@@ -910,6 +916,173 @@ struct MockKeyboardSetupView: View {
             .padding(.bottom, 40)
         }
         .background(Color(UIColor.systemBackground))
+    }
+}
+
+struct MockFavoritesView: View {
+    let language: AppLanguage
+
+    private var title: String { language == .english ? "Favorites" : "お気に入り" }
+    private var emptyMessage: String { language == .english ? "No favorites yet" : "お気に入りはまだありません" }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                ForEach(0..<5) { index in
+                    HStack(spacing: 12) {
+                        ZStack {
+                            Circle()
+                                .fill(iconColor(for: index).opacity(0.2))
+                                .frame(width: 40, height: 40)
+                            Image(systemName: iconName(for: index))
+                                .font(.system(size: 18))
+                                .foregroundColor(iconColor(for: index))
+                        }
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(language.sampleText(index))
+                                .font(.body)
+                                .lineLimit(2)
+                            Text(language.sampleTime(index))
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                            .font(.system(size: 16))
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+            .navigationTitle(title)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {}) {
+                        Image(systemName: "gearshape.fill")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {}) {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                    }
+                }
+            }
+        }
+    }
+
+    private func iconName(for index: Int) -> String {
+        let icons = ["doc.text", "link", "photo", "doc.text", "link"]
+        return icons[index % icons.count]
+    }
+
+    private func iconColor(for index: Int) -> Color {
+        let colors: [Color] = [.blue, .green, .orange, .blue, .green]
+        return colors[index % colors.count]
+    }
+}
+
+struct MockWidgetView: View {
+    let language: AppLanguage
+
+    private var title: String { language == .english ? "Widget Preview" : "ウィジェットプレビュー" }
+    private var recentLabel: String { language == .english ? "Recent Clips" : "最近のクリップ" }
+    private var tapToCopyLabel: String { language == .english ? "Tap to copy" : "タップしてコピー" }
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [Color(UIColor.systemBackground), Color.blue.opacity(0.05)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+
+            VStack(spacing: 32) {
+                VStack(spacing: 8) {
+                    Image(systemName: "square.grid.2x2.fill")
+                        .font(.system(size: 44))
+                        .foregroundColor(.blue)
+                    Text(title)
+                        .font(.title2).bold()
+                }
+                .padding(.top, 40)
+
+                // Small widget
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(language == .english ? "Small" : "小")
+                        .font(.caption).foregroundColor(.secondary)
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(
+                            LinearGradient(colors: [.blue.opacity(0.15), .purple.opacity(0.1)],
+                                           startPoint: .topLeading, endPoint: .bottomTrailing)
+                        )
+                        .frame(width: 160, height: 160)
+                        .overlay(
+                            VStack(alignment: .leading, spacing: 6) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "doc.on.clipboard.fill")
+                                        .foregroundColor(.blue)
+                                        .font(.caption)
+                                    Text("ClipKit")
+                                        .font(.caption2).bold().foregroundColor(.blue)
+                                }
+                                Spacer()
+                                Text(language.sampleText(0))
+                                    .font(.caption2)
+                                    .lineLimit(3)
+                                    .foregroundColor(.primary)
+                                Text(tapToCopyLabel)
+                                    .font(.system(size: 9))
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(12)
+                        )
+                }
+
+                // Medium widget
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(language == .english ? "Medium" : "中")
+                        .font(.caption).foregroundColor(.secondary)
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(
+                            LinearGradient(colors: [.blue.opacity(0.15), .purple.opacity(0.1)],
+                                           startPoint: .topLeading, endPoint: .bottomTrailing)
+                        )
+                        .frame(width: 340, height: 160)
+                        .overlay(
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "doc.on.clipboard.fill")
+                                        .foregroundColor(.blue)
+                                        .font(.caption)
+                                    Text(recentLabel)
+                                        .font(.caption).bold().foregroundColor(.blue)
+                                }
+                                ForEach(0..<3) { i in
+                                    HStack(spacing: 8) {
+                                        Image(systemName: i == 1 ? "link" : "doc.text")
+                                            .font(.system(size: 11))
+                                            .foregroundColor(.secondary)
+                                        Text(language.sampleText(i))
+                                            .font(.system(size: 11))
+                                            .lineLimit(1)
+                                            .foregroundColor(.primary)
+                                    }
+                                }
+                            }
+                            .padding(14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        )
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+        }
     }
 }
 
