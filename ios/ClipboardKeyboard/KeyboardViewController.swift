@@ -6,271 +6,307 @@
 //
 
 import UIKit
-import SwiftUI
 
 /// クリップボード履歴を表示するカスタムキーボード
 class KeyboardViewController: UIInputViewController {
 
-    private var hostingController: UIHostingController<ClipboardKeyboardView>?
-    private var heightConstraint: NSLayoutConstraint?
-    private var layoutCallCount = 0
+    // MARK: - UI Parts
+
+    private let contentView = UIView()
+    private let scrollView = UIScrollView()
+    private let stackView = UIStackView()
+    private let controlBar = UIView()
+    private let nextKeyboardButton = UIButton(type: .system)
+
+    // MARK: - State
+
+    private var clipboardItems: [ClipboardItem] = []
+    private var isProUser = false
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Extension 起動を最初に記録（これが出ない場合はExtensionが起動していない）
         KeyboardLogger.log(.launch, "KeyboardViewController.viewDidLoad - Extension起動成功")
 
-        // SwiftUIビューをホスティング
-        let keyboardView = ClipboardKeyboardView(
-            textDocumentProxy: self.textDocumentProxy,
-            switchToNextKeyboard: { [weak self] in
-                self?.advanceToNextInputMode()
-            },
-            openURL: { [weak self] url in
-                guard let self else { return }
-                // キーボードExtensionではUIApplication.sharedが使用不可のためレスポンダーチェーンを使用
-                let selector = NSSelectorFromString("openURL:")
-                var responder: UIResponder? = self
-                while let r = responder {
-                    if r.responds(to: selector) {
-                        r.perform(selector, with: url)
-                        break
-                    }
-                    responder = r.next
-                }
-            }
-        )
+        checkProStatus()
+        setupUI()
 
-        let hostingController = UIHostingController(rootView: keyboardView)
-        hostingController.view.backgroundColor = .clear
-
-        addChild(hostingController)
-        view.addSubview(hostingController.view)
-        hostingController.didMove(toParent: self)
-
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-
-        self.hostingController = hostingController
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        layoutCallCount += 1
-
-        // 既存の heightConstraint があれば削除してから再追加（制約の積み重なりを防ぐ）
-        guard let v = view else { return }
-        if let existing = heightConstraint {
-            v.removeConstraint(existing)
-        }
-        let constraint = NSLayoutConstraint(
-            item: v,
-            attribute: .height,
-            relatedBy: .equal,
-            toItem: nil,
-            attribute: .notAnAttribute,
-            multiplier: 1.0,
-            constant: 300
-        )
-        v.addConstraint(constraint)
-        heightConstraint = constraint
-    }
-}
-
-/// キーボードのSwiftUIビュー
-struct ClipboardKeyboardView: View {
-    let textDocumentProxy: UITextDocumentProxy
-    let switchToNextKeyboard: () -> Void
-    let openURL: (URL) -> Void
-
-    @State private var clipboardItems: [ClipboardItem] = []
-    @State private var isLoading = true
-    @State private var isProUser = false
-
-    var body: some View {
-        VStack(spacing: 0) {
-            // クリップボード履歴表示エリア
-            if isProUser {
-                clipboardHistorySection
-            } else {
-                proPlaceholderSection
-            }
-
-            // キーボード切り替えボタン
-            keyboardControlsSection
-        }
-        .background(Color(UIColor.systemBackground))
-        .task {
-            KeyboardLogger.log(.launch, "ClipboardKeyboardView表示")
-            checkProStatus()
-            if isProUser {
-                await loadClipboardHistory()
-            } else {
-                isLoading = false
-            }
+        if isProUser {
+            loadClipboardHistory()
         }
     }
 
-    // MARK: - クリップボード履歴セクション
-
-    private var clipboardHistorySection: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                if isLoading {
-                    ProgressView()
-                        .frame(width: 100, height: 80)
-                } else if clipboardItems.isEmpty {
-                    Text("履歴なし")
-                        .foregroundStyle(.secondary)
-                        .frame(width: 150, height: 80)
-                } else {
-                    ForEach(clipboardItems.prefix(10)) { item in
-                        ClipboardItemCard(item: item) {
-                            insertItem(item)
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-        }
-        .frame(height: 100)
-        .background(Color(UIColor.secondarySystemBackground))
-    }
-
-    // MARK: - キーボードコントロールセクション
-
-    private var keyboardControlsSection: some View {
-        HStack {
-            Spacer()
-
-            Button(action: switchToNextKeyboard) {
-                Image(systemName: "globe")
-                    .font(.system(size: 24))
-                    .foregroundStyle(.primary)
-                    .frame(width: 44, height: 44)
-            }
-
-            Spacer().frame(width: 20)
-        }
-        .padding(.vertical, 8)
-        .background(Color(UIColor.systemBackground))
-    }
-
-    // MARK: - Pro Placeholder Section
-
-    private var proPlaceholderSection: some View {
-        VStack(spacing: 0) {
-            // モッククリップボードカード（ぼかしオーバーレイ付き）
-            ZStack {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
-                        ProMockCard(icon: "doc.text", color: .blue, text: "会議は14時から変更になりました")
-                        ProMockCard(icon: "link", color: .green, text: "https://example.com/article")
-                        ProMockCard(icon: "doc.text", color: .blue, text: "メモ: 牛乳・卵・パン")
-                    }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                }
-                .frame(height: 96)
-                .allowsHitTesting(false)
-
-                // ロックオーバーレイ
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-                VStack(spacing: 4) {
-                    Image(systemName: "crown.fill")
-                        .font(.system(size: 18))
-                        .foregroundStyle(
-                            LinearGradient(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing)
-                        )
-                    Text("ClipKit Proでキーボードから即ペースト")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.primary)
-                        .multilineTextAlignment(.center)
-                }
-                .padding(.horizontal, 16)
-            }
-            .frame(height: 96)
-            .background(Color(UIColor.secondarySystemBackground))
-
-            // アップグレードボタン
-            Button {
-                if let url = URL(string: "clipkit://subscription") {
-                    openURL(url)
-                }
-            } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "crown.fill")
-                        .font(.caption)
-                        .foregroundStyle(.white)
-                    Text("Proにアップグレード")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(
-                    LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
-                )
-                .cornerRadius(8)
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(Color(UIColor.systemBackground))
-        }
-    }
-
-    // MARK: - Pro Mock Card (for placeholder display)
-
-    private struct ProMockCard: View {
-        let icon: String
-        let color: Color
-        let text: String
-
-        var body: some View {
-            VStack(alignment: .leading, spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 14))
-                    .foregroundStyle(color)
-                Text(text)
-                    .lineLimit(2)
-                    .font(.caption)
-                    .foregroundStyle(.primary)
-            }
-            .padding(8)
-            .frame(width: 110, height: 72)
-            .background(Color(UIColor.systemBackground))
-            .cornerRadius(8)
-            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
-        }
-    }
-
-    // MARK: - Helper Methods
+    // MARK: - Pro Status
 
     private func checkProStatus() {
         isProUser = SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
         KeyboardLogger.log(.proCheck, "isProUser=\(isProUser)")
     }
 
-    private func loadClipboardHistory() async {
-        do {
-            let items = try await ClipboardStorageManager.shared.load()
-            clipboardItems = items
-            isLoading = false
-        } catch {
-            isLoading = false
-            KeyboardLogger.log(.error, "履歴読込失敗: \(error.localizedDescription)")
+    // MARK: - UI Setup
+
+    private func setupUI() {
+        view.backgroundColor = UIColor.systemBackground
+
+        setupControlBar()
+        setupContentArea()
+    }
+
+    private func setupControlBar() {
+        controlBar.backgroundColor = UIColor.systemBackground
+        controlBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controlBar)
+
+        NSLayoutConstraint.activate([
+            controlBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            controlBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            controlBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            controlBar.heightAnchor.constraint(equalToConstant: 44),
+        ])
+
+        // 地球儀ボタンは複数キーボードがある時のみ表示
+        if needsInputModeSwitchKey {
+            nextKeyboardButton.setImage(UIImage(systemName: "globe"), for: .normal)
+            nextKeyboardButton.tintColor = .label
+            nextKeyboardButton.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
+            nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
+            controlBar.addSubview(nextKeyboardButton)
+
+            NSLayoutConstraint.activate([
+                nextKeyboardButton.trailingAnchor.constraint(equalTo: controlBar.trailingAnchor, constant: -16),
+                nextKeyboardButton.centerYAnchor.constraint(equalTo: controlBar.centerYAnchor),
+                nextKeyboardButton.widthAnchor.constraint(equalToConstant: 44),
+                nextKeyboardButton.heightAnchor.constraint(equalToConstant: 44),
+            ])
         }
     }
+
+    private func setupContentArea() {
+        if isProUser {
+            setupHistoryView()
+        } else {
+            setupProPlaceholder()
+        }
+    }
+
+    // MARK: - Pro: 履歴ビュー
+
+    private func setupHistoryView() {
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.backgroundColor = UIColor.secondarySystemBackground
+        view.addSubview(scrollView)
+
+        stackView.axis = .horizontal
+        stackView.spacing = 12
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: controlBar.topAnchor),
+            scrollView.heightAnchor.constraint(equalToConstant: 100),
+
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -10),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 12),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -12),
+            stackView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, constant: -20),
+        ])
+
+        // ロード中プレースホルダー
+        let loadingIndicator = UIActivityIndicatorView(style: .medium)
+        loadingIndicator.startAnimating()
+        stackView.addArrangedSubview(loadingIndicator)
+    }
+
+    private func refreshHistoryCards() {
+        // 既存のカードを削除
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        if clipboardItems.isEmpty {
+            let label = UILabel()
+            label.text = "履歴なし"
+            label.textColor = .secondaryLabel
+            label.font = .systemFont(ofSize: 14)
+            stackView.addArrangedSubview(label)
+        } else {
+            for item in clipboardItems.prefix(10) {
+                let card = makeHistoryCard(item)
+                stackView.addArrangedSubview(card)
+            }
+        }
+    }
+
+    private func makeHistoryCard(_ item: ClipboardItem) -> UIView {
+        let card = UIButton(type: .system)
+        card.backgroundColor = UIColor.systemBackground
+        card.layer.cornerRadius = 8
+        card.layer.shadowColor = UIColor.black.cgColor
+        card.layer.shadowOpacity = 0.1
+        card.layer.shadowRadius = 2
+        card.layer.shadowOffset = CGSize(width: 0, height: 1)
+        card.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            card.widthAnchor.constraint(equalToConstant: 120),
+            card.heightAnchor.constraint(equalToConstant: 80),
+        ])
+
+        let vStack = UIStackView()
+        vStack.axis = .vertical
+        vStack.spacing = 4
+        vStack.alignment = .leading
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(vStack)
+        NSLayoutConstraint.activate([
+            vStack.topAnchor.constraint(equalTo: card.topAnchor, constant: 8),
+            vStack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 8),
+            vStack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -8),
+        ])
+
+        let iconImageView = UIImageView()
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            iconImageView.widthAnchor.constraint(equalToConstant: 16),
+            iconImageView.heightAnchor.constraint(equalToConstant: 16),
+        ])
+
+        let textLabel = UILabel()
+        textLabel.font = .systemFont(ofSize: 11)
+        textLabel.textColor = .label
+        textLabel.numberOfLines = 2
+        textLabel.lineBreakMode = .byTruncatingTail
+
+        switch item.type {
+        case .text:
+            iconImageView.image = UIImage(systemName: "doc.text")
+            iconImageView.tintColor = .systemBlue
+            textLabel.text = item.textContent ?? ""
+        case .url:
+            iconImageView.image = UIImage(systemName: "link")
+            iconImageView.tintColor = .systemGreen
+            textLabel.text = item.url?.host ?? item.url?.absoluteString ?? ""
+        case .image:
+            iconImageView.image = UIImage(systemName: "photo")
+            iconImageView.tintColor = .systemOrange
+            textLabel.text = "画像"
+        case .file:
+            iconImageView.image = UIImage(systemName: "doc")
+            iconImageView.tintColor = .systemPurple
+            textLabel.text = item.fileName ?? "ファイル"
+        }
+
+        vStack.addArrangedSubview(iconImageView)
+        vStack.addArrangedSubview(textLabel)
+
+        card.addTarget(self, action: #selector(cardTapped(_:)), for: .touchUpInside)
+        card.accessibilityIdentifier = item.id.uuidString
+        return card
+    }
+
+    @objc private func cardTapped(_ sender: UIButton) {
+        guard let idStr = sender.accessibilityIdentifier,
+              let uuid = UUID(uuidString: idStr),
+              let item = clipboardItems.first(where: { $0.id == uuid }) else { return }
+        insertItem(item)
+        KeyboardLogger.log(.paste, "カードタップ: \(item.type)")
+    }
+
+    // MARK: - Free: Proプレースホルダー
+
+    private func setupProPlaceholder() {
+        let container = UIView()
+        container.backgroundColor = UIColor.secondarySystemBackground
+        container.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(container)
+
+        NSLayoutConstraint.activate([
+            container.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            container.bottomAnchor.constraint(equalTo: controlBar.topAnchor),
+            container.heightAnchor.constraint(equalToConstant: 100),
+        ])
+
+        // クラウンアイコン
+        let crownImageView = UIImageView(image: UIImage(systemName: "crown.fill"))
+        crownImageView.tintColor = .systemYellow
+        crownImageView.contentMode = .scaleAspectFit
+        crownImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        // メッセージ
+        let messageLabel = UILabel()
+        messageLabel.text = "ClipKit Proでキーボードから即ペースト"
+        messageLabel.font = .systemFont(ofSize: 12, weight: .semibold)
+        messageLabel.textColor = .label
+        messageLabel.textAlignment = .center
+        messageLabel.numberOfLines = 2
+        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        // アップグレードボタン
+        let upgradeButton = UIButton(type: .system)
+        upgradeButton.setTitle("Proにアップグレード", for: .normal)
+        upgradeButton.setTitleColor(.white, for: .normal)
+        upgradeButton.titleLabel?.font = .systemFont(ofSize: 13, weight: .semibold)
+        upgradeButton.backgroundColor = .systemBlue
+        upgradeButton.layer.cornerRadius = 8
+        upgradeButton.translatesAutoresizingMaskIntoConstraints = false
+        upgradeButton.addTarget(self, action: #selector(upgradeButtonTapped), for: .touchUpInside)
+
+        container.addSubview(crownImageView)
+        container.addSubview(messageLabel)
+        container.addSubview(upgradeButton)
+
+        NSLayoutConstraint.activate([
+            crownImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
+            crownImageView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            crownImageView.widthAnchor.constraint(equalToConstant: 22),
+            crownImageView.heightAnchor.constraint(equalToConstant: 22),
+
+            messageLabel.topAnchor.constraint(equalTo: crownImageView.bottomAnchor, constant: 4),
+            messageLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+            messageLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
+
+            upgradeButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 6),
+            upgradeButton.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            upgradeButton.widthAnchor.constraint(equalToConstant: 180),
+            upgradeButton.heightAnchor.constraint(equalToConstant: 28),
+        ])
+    }
+
+    @objc private func upgradeButtonTapped() {
+        guard let url = URL(string: "clipkit://subscription") else { return }
+        let selector = NSSelectorFromString("openURL:")
+        var responder: UIResponder? = self
+        while let r = responder {
+            if r.responds(to: selector) {
+                r.perform(selector, with: url)
+                break
+            }
+            responder = r.next
+        }
+    }
+
+    // MARK: - Clipboard History Load
+
+    private func loadClipboardHistory() {
+        Task {
+            do {
+                let items = try await ClipboardStorageManager.shared.load()
+                await MainActor.run {
+                    self.clipboardItems = items
+                    self.refreshHistoryCards()
+                }
+            } catch {
+                KeyboardLogger.log(.error, "履歴読込失敗: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    // MARK: - Insert
 
     private func insertItem(_ item: ClipboardItem) {
         switch item.type {
@@ -285,7 +321,6 @@ struct ClipboardKeyboardView: View {
                 textDocumentProxy.insertText(url.absoluteString)
             }
         case .image:
-            // 画像は直接挿入できないため、何もしない
             break
         case .file:
             if let fileName = item.fileName {
@@ -293,121 +328,5 @@ struct ClipboardKeyboardView: View {
                 textDocumentProxy.insertText(fileName)
             }
         }
-    }
-}
-
-/// クリップボードアイテムのカード表示
-struct ClipboardItemCard: View {
-    let item: ClipboardItem
-    let onTap: () -> Void
-
-    var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 4) {
-                // アイテムタイプアイコン
-                HStack {
-                    itemIcon
-                    Spacer()
-                }
-
-                // コンテンツプレビュー
-                contentPreview
-                    .lineLimit(2)
-                    .font(.caption)
-                    .foregroundStyle(.primary)
-            }
-            .padding(8)
-            .frame(width: 120, height: 80)
-            .background(Color(UIColor.systemBackground))
-            .cornerRadius(8)
-            .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var itemIcon: some View {
-        Group {
-            switch item.type {
-            case .text:
-                Image(systemName: "doc.text")
-                    .foregroundStyle(.blue)
-            case .url:
-                Image(systemName: "link")
-                    .foregroundStyle(.green)
-            case .image:
-                if let thumbnail = item.thumbnail {
-                    Image(uiImage: thumbnail)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 24, height: 24)
-                        .clipShape(RoundedRectangle(cornerRadius: 4))
-                } else {
-                    Image(systemName: "photo")
-                        .foregroundStyle(.orange)
-                }
-            case .file:
-                Image(systemName: "doc")
-                    .foregroundStyle(.purple)
-            }
-        }
-        .font(.system(size: 16))
-    }
-
-    private var contentPreview: some View {
-        Group {
-            switch item.type {
-            case .text:
-                Text(item.textContent ?? "")
-            case .url:
-                if let url = item.url {
-                    Text(url.host ?? url.absoluteString)
-                } else {
-                    Text("")
-                }
-            case .image:
-                Text("画像")
-                    .foregroundStyle(.secondary)
-            case .file:
-                Text(item.fileName ?? "ファイル")
-            }
-        }
-    }
-}
-
-// MARK: - Preview
-
-#Preview {
-    ClipboardKeyboardView(
-        textDocumentProxy: PreviewTextDocumentProxy(),
-        switchToNextKeyboard: {},
-        openURL: { _ in }
-    )
-    .frame(height: 300)
-}
-
-// プレビュー用のモックプロキシ
-class PreviewTextDocumentProxy: NSObject, UITextDocumentProxy {
-    var hasText: Bool
-
-    var documentContextBeforeInput: String?
-    var documentContextAfterInput: String?
-    var selectedText: String?
-    var documentInputMode: UITextInputMode?
-    var documentIdentifier: UUID = UUID()
-
-    override init() {
-        self.hasText = false
-        super.init()
-    }
-
-    func adjustTextPosition(byCharacterOffset offset: Int) {}
-    func setMarkedText(_ markedText: String, selectedRange: NSRange) {}
-    func unmarkText() {}
-    func insertText(_ text: String) {
-        print("Inserted: \(text)")
-        hasText = true
-    }
-    func deleteBackward() {
-        hasText = false
     }
 }
