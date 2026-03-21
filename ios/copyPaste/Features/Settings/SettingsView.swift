@@ -89,10 +89,18 @@ struct SettingsView: View {
                             Text("スクリーンショットプレビュー")
                         }
                     }
+                    NavigationLink(destination: KeyboardLogView()) {
+                        HStack {
+                            Image(systemName: "keyboard")
+                                .foregroundColor(.purple)
+                                .frame(width: 30)
+                            Text("キーボードログ")
+                        }
+                    }
                 } header: {
                     Text("デバッグ")
                 } footer: {
-                    Text("App Store用のスクリーンショットをプレビューできます")
+                    Text("キーボードログはApp Groups経由でリアルタイム収集されます")
                         .font(.caption)
                 }
                 #endif

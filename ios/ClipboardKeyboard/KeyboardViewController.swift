@@ -15,6 +15,7 @@ class KeyboardViewController: UIInputViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        KeyboardLogger.log(.launch, "viewDidLoad")
 
         // SwiftUIビューをホスティング
         let keyboardView = ClipboardKeyboardView(
@@ -81,9 +82,13 @@ struct ClipboardKeyboardView: View {
         }
         .background(Color(UIColor.systemBackground))
         .task {
+            KeyboardLogger.log(.launch, "ClipboardKeyboardView表示")
             checkProStatus()
             if isProUser {
                 await loadClipboardHistory()
+            } else {
+                isLoading = false
+                KeyboardLogger.log(.proCheck, "非Proユーザー - 履歴読込スキップ")
             }
         }
     }
@@ -171,16 +176,19 @@ struct ClipboardKeyboardView: View {
 
     private func checkProStatus() {
         isProUser = SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
+        KeyboardLogger.log(.proCheck, "isProUser=\(isProUser)")
     }
 
     private func loadClipboardHistory() async {
+        KeyboardLogger.log(.loadStart)
         do {
             let items = try await ClipboardStorageManager.shared.load()
             clipboardItems = items
             isLoading = false
+            KeyboardLogger.log(.loadDone, "\(items.count)件")
         } catch {
-            print("Failed to load clipboard history: \(error)")
             isLoading = false
+            KeyboardLogger.log(.error, "履歴読込失敗: \(error.localizedDescription)")
         }
     }
 
@@ -188,18 +196,20 @@ struct ClipboardKeyboardView: View {
         switch item.type {
         case .text:
             if let text = item.textContent {
+                KeyboardLogger.log(.paste, "text(\(text.prefix(30)))")
                 textDocumentProxy.insertText(text)
             }
         case .url:
             if let url = item.url {
+                KeyboardLogger.log(.paste, "url(\(url.host ?? url.absoluteString))")
                 textDocumentProxy.insertText(url.absoluteString)
             }
         case .image:
             // 画像は直接挿入できないため、何もしない
-            // または、画像のファイル名や説明を挿入することもできる
             break
         case .file:
             if let fileName = item.fileName {
+                KeyboardLogger.log(.paste, "file(\(fileName))")
                 textDocumentProxy.insertText(fileName)
             }
         }
