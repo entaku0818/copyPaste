@@ -13,6 +13,7 @@ platform :ios do
 
     build_app(
       scheme: "copyPaste",
+      project: "ios/copyPaste.xcodeproj",
       export_method: "app-store"
     )
 
