@@ -5,8 +5,6 @@ struct KeyboardLogger {
     enum EventType: String {
         case launch     = "🚀 起動"
         case proCheck   = "🔐 Pro確認"
-        case loadStart  = "📂 履歴読込開始"
-        case loadDone   = "✅ 履歴読込完了"
         case clipSelect = "📋 クリップ選択"
         case paste      = "✏️ ペースト"
         case error      = "❌ エラー"

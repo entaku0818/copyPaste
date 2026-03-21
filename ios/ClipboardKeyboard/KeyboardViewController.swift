@@ -49,10 +49,6 @@ class KeyboardViewController: UIInputViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         layoutCallCount += 1
-        KeyboardLogger.log(
-            .loadDone,
-            "viewWillLayoutSubviews \(layoutCallCount)回目, 制約数: \(view.constraints.count)件"
-        )
 
         // 既存の heightConstraint があれば削除してから再追加（制約の積み重なりを防ぐ）
         guard let v = view else { return }
@@ -102,7 +98,6 @@ struct ClipboardKeyboardView: View {
                 await loadClipboardHistory()
             } else {
                 isLoading = false
-                KeyboardLogger.log(.proCheck, "非Proユーザー - 履歴読込スキップ")
             }
         }
     }
@@ -194,12 +189,10 @@ struct ClipboardKeyboardView: View {
     }
 
     private func loadClipboardHistory() async {
-        KeyboardLogger.log(.loadStart)
         do {
             let items = try await ClipboardStorageManager.shared.load()
             clipboardItems = items
             isLoading = false
-            KeyboardLogger.log(.loadDone, "\(items.count)件")
         } catch {
             isLoading = false
             KeyboardLogger.log(.error, "履歴読込失敗: \(error.localizedDescription)")

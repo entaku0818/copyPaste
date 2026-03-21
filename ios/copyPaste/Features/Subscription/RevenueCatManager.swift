@@ -47,7 +47,7 @@ final class RevenueCatManager: NSObject, ObservableObject {
             self.isProUser = newProStatus
 
             // Pro状態をApp Group UserDefaultsに保存（ウィジェット・キーボード用）
-            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+            saveProStatusToAppGroup(newProStatus)
 
             logger.info("Customer info fetched. Pro status: \(self.isProUser)")
         } catch {
@@ -76,7 +76,7 @@ final class RevenueCatManager: NSObject, ObservableObject {
             self.isProUser = newProStatus
 
             // Pro状態をApp Group UserDefaultsに保存
-            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+            saveProStatusToAppGroup(newProStatus)
 
             logger.info("Purchase successful. Pro status: \(self.isProUser)")
             return info
@@ -95,7 +95,7 @@ final class RevenueCatManager: NSObject, ObservableObject {
             self.isProUser = newProStatus
 
             // Pro状態をApp Group UserDefaultsに保存
-            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+            saveProStatusToAppGroup(newProStatus)
 
             logger.info("Purchases restored. Pro status: \(self.isProUser)")
             return info
@@ -103,6 +103,18 @@ final class RevenueCatManager: NSObject, ObservableObject {
             logger.error("Restore failed: \(error.localizedDescription)")
             throw error
         }
+    }
+
+    /// Pro状態をApp Group UserDefaultsに書き込む
+    /// synchronize()でディスクへの即時フラッシュを保証（キーボード拡張がcfprefsdをバイパスして直接読むため必要）
+    private func saveProStatusToAppGroup(_ status: Bool) {
+        guard let defaults = SharedConstants.sharedDefaults else {
+            logger.error("App Group UserDefaults unavailable - sharedDefaults is nil")
+            return
+        }
+        defaults.set(status, forKey: SharedConstants.proStatusKey)
+        defaults.synchronize()
+        logger.info("Pro status written to App Group: \(status)")
     }
 
     /// Pro機能にアクセス可能かチェック（nonisolated - UserDefaultsから読み取り）
@@ -125,7 +137,7 @@ extension RevenueCatManager: PurchasesDelegate {
             self.isProUser = newProStatus
 
             // Pro状態をApp Group UserDefaultsに保存
-            SharedConstants.sharedDefaults?.set(newProStatus, forKey: SharedConstants.proStatusKey)
+            saveProStatusToAppGroup(newProStatus)
 
             logger.info("Customer info updated. Pro status: \(self.isProUser)")
         }
