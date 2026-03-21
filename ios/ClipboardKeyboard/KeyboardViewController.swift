@@ -94,6 +94,7 @@ class KeyboardViewController: UIInputViewController {
 
     private func setupHistoryView() {
         scrollView.showsHorizontalScrollIndicator = false
+        scrollView.delaysContentTouches = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.backgroundColor = UIColor.secondarySystemBackground
         view.addSubview(scrollView)
@@ -203,7 +204,7 @@ class KeyboardViewController: UIInputViewController {
         vStack.addArrangedSubview(iconImageView)
         vStack.addArrangedSubview(textLabel)
 
-        card.addTarget(self, action: #selector(cardTapped(_:)), for: .touchUpInside)
+        card.addTarget(self, action: #selector(cardTapped(_:)), for: .touchDown)
         card.accessibilityIdentifier = item.id.uuidString
         return card
     }
@@ -212,8 +213,21 @@ class KeyboardViewController: UIInputViewController {
         guard let idStr = sender.accessibilityIdentifier,
               let uuid = UUID(uuidString: idStr),
               let item = clipboardItems.first(where: { $0.id == uuid }) else { return }
+
+        // 触覚フィードバック
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+
+        // カードを一瞬ハイライト
+        UIView.animate(withDuration: 0.08, animations: {
+            sender.alpha = 0.4
+        }) { _ in
+            UIView.animate(withDuration: 0.12) {
+                sender.alpha = 1.0
+            }
+        }
+
         insertItem(item)
-        KeyboardLogger.log(.paste, "カードタップ: \(item.type)")
+        KeyboardLogger.log(.paste, "\(item.type)")
     }
 
     // MARK: - Free: Proプレースホルダー
