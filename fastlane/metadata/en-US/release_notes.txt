@@ -1,0 +1,5 @@
+[New Features]
+· Favorites - Pin frequently used clips for quick access
+· Onboarding guide - Easy setup walkthrough for new users
+· Widget redesign - Cleaner and more readable layout
+· New app icon
