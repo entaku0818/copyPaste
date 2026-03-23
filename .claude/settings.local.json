@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Slack__slack_search_channels",
+      "Bash(tmux list-windows:*)",
+      "Bash(tmux list-panes:*)",
+      "Bash(cmux list:*)",
+      "Bash(cmux ls:*)",
+      "Bash(cmux --help)",
+      "Bash(cmux list-workspaces:*)",
+      "Bash(for i:*)",
+      "Bash(do echo:*)",
+      "Bash(cmux read-screen:*)",
+      "Bash(done)",
+      "Bash(cmux list-panes:*)",
+      "Bash(cmux list-pane-surfaces:*)",
+      "Read(//Users/entaku/bin/**)",
+      "Read(//Users/entaku/repository/claude-code-settings/cmux/**)",
+      "Bash(cmux send:*)",
+      "Bash(cmux send-key:*)",
+      "Bash(cmux current-workspace:*)"
+    ]
+  }
+}

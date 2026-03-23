@@ -113,3 +113,4 @@ lp/.env
 lp/firebase-config.js
 .playwright-cli/
 ios/.playwright-cli/
+firebase-debug.log
