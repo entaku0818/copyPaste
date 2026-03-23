@@ -12,7 +12,7 @@ platform :ios do
     increment_build_number(xcodeproj: "ios/copyPaste.xcodeproj")
 
     build_app(
-      scheme: "copyPaste",
+      scheme: "ClipKit",
       project: "ios/copyPaste.xcodeproj",
       export_method: "app-store"
     )

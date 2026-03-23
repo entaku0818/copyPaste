@@ -1,6 +1,6 @@
 import XCTest
 import ComposableArchitecture
-@testable import copyPaste
+@testable import ClipKit
 
 @MainActor
 final class ClipboardHistoryFeatureTests: XCTestCase {

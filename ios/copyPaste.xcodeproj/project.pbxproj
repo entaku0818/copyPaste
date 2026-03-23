@@ -29,14 +29,14 @@
 			containerPortal = 61B4C3812DC4A60F00E59DE3 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 61B4C3882DC4A60F00E59DE3;
-			remoteInfo = copyPaste;
+			remoteInfo = ClipKit;
 		};
 		61B4C3A12DC4A61100E59DE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 61B4C3812DC4A60F00E59DE3 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 61B4C3882DC4A60F00E59DE3;
-			remoteInfo = copyPaste;
+			remoteInfo = ClipKit;
 		};
 		61CC3DD02F3E271700B6F559 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -64,9 +64,9 @@
 
 /* Begin PBXFileReference section */
 		613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClipboardKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		61B4C3892DC4A60F00E59DE3 /* copyPaste.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = copyPaste.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		61B4C3962DC4A61100E59DE3 /* copyPasteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = copyPasteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = copyPasteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		61B4C3892DC4A60F00E59DE3 /* copyPaste.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClipKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		61B4C3962DC4A61100E59DE3 /* copyPasteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClipKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClipKitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClipboardWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		61CC3DBE2F3E271600B6F559 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		61CC3DC02F3E271600B6F559 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -264,13 +264,13 @@
 			fileSystemSynchronizedGroups = (
 				61B4C38B2DC4A60F00E59DE3 /* copyPaste */,
 			);
-			name = copyPaste;
+			name = ClipKit;
 			packageProductDependencies = (
 				61BB48C52DCA33D800EFE195 /* ComposableArchitecture */,
 				61CC3DDD2F42178000B6F559 /* RevenueCat */,
 				61CC8CC42F51F16F00ED729F /* GoogleMobileAds */,
 			);
-			productName = copyPaste;
+			productName = ClipKit;
 			productReference = 61B4C3892DC4A60F00E59DE3 /* copyPaste.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -290,10 +290,10 @@
 			fileSystemSynchronizedGroups = (
 				61B4C3992DC4A61100E59DE3 /* copyPasteTests */,
 			);
-			name = copyPasteTests;
+			name = ClipKitTests;
 			packageProductDependencies = (
 			);
-			productName = copyPasteTests;
+			productName = ClipKitTests;
 			productReference = 61B4C3962DC4A61100E59DE3 /* copyPasteTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -313,10 +313,10 @@
 			fileSystemSynchronizedGroups = (
 				61B4C3A32DC4A61100E59DE3 /* copyPasteUITests */,
 			);
-			name = copyPasteUITests;
+			name = ClipKitUITests;
 			packageProductDependencies = (
 			);
-			productName = copyPasteUITests;
+			productName = ClipKitUITests;
 			productReference = 61B4C3A02DC4A61100E59DE3 /* copyPasteUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -763,7 +763,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/copyPaste.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/copyPaste";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ClipKit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ClipKit";
 			};
 			name = Debug;
 		};
@@ -782,7 +782,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/copyPaste.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/copyPaste";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ClipKit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ClipKit";
 			};
 			name = Release;
 		};
@@ -799,7 +799,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = copyPaste;
+				TEST_TARGET_NAME = ClipKit;
 			};
 			name = Debug;
 		};
@@ -816,7 +816,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = copyPaste;
+				TEST_TARGET_NAME = ClipKit;
 			};
 			name = Release;
 		};

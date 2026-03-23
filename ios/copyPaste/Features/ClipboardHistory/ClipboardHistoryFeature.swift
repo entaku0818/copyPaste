@@ -91,7 +91,7 @@ struct ClipboardHistoryFeature {
     @Dependency(\.continuousClock) var clock
     private enum CancelID { case monitoring }
 
-    private static let logger = Logger(subsystem: "com.copyPaste", category: "Clipboard")
+    private static let logger = Logger(subsystem: "com.clipkit", category: "Clipboard")
 
     // 画像からClipboardItemを作成（サムネイル付き）
     private static func createImageItem(from image: UIImage) async -> ClipboardItem {

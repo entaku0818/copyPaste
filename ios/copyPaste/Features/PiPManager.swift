@@ -9,7 +9,7 @@ class PiPManager: NSObject {
     private var pipController: AVPictureInPictureController?
     private var playerLayer: AVPlayerLayer?
     private var player: AVPlayer?
-    private let logger = Logger(subsystem: "com.copyPaste", category: "PiP")
+    private let logger = Logger(subsystem: "com.clipkit", category: "PiP")
     private var shouldStartPiP = false
     private var playerObserver: NSKeyValueObservation?
     private var attachedWindow: UIWindow?

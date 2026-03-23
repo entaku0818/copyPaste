@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class copyPasteUITestsLaunchTests: XCTestCase {
+final class ClipKitUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

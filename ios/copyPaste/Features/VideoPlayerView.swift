@@ -75,7 +75,7 @@ struct VideoPlayerView: UIViewControllerRepresentable {
     }
 
     class Coordinator: NSObject, AVPlayerViewControllerDelegate {
-        let logger = Logger(subsystem: "com.copyPaste", category: "VideoPlayer")
+        let logger = Logger(subsystem: "com.clipkit", category: "VideoPlayer")
         let onPiPStateChange: (Bool) -> Void
 
         init(onPiPStateChange: @escaping (Bool) -> Void) {

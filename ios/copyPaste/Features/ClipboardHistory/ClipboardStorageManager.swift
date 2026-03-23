@@ -3,7 +3,7 @@ import OSLog
 
 class ClipboardStorageManager {
     static let shared = ClipboardStorageManager()
-    private let logger = Logger(subsystem: "com.copyPaste", category: "Storage")
+    private let logger = Logger(subsystem: "com.clipkit", category: "Storage")
 
     private let fileManager = FileManager.default
     private let baseDirectory: URL
