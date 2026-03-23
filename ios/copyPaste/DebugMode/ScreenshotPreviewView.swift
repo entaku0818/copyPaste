@@ -509,7 +509,7 @@ struct MockKeyboardPreviewView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Mock text input area
+            // App text area (上部: ノートアプリ風)
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(language == .japanese ? "メモ" : "Notes")
@@ -553,86 +553,83 @@ struct MockKeyboardPreviewView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             }
+            .frame(height: 220)
             .background(Color(UIColor.systemBackground))
 
-            // Mock keyboard
-            VStack(spacing: 0) {
-                // Clipboard history area with better visuals
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(0..<8) { index in
-                            VStack(alignment: .leading, spacing: 6) {
-                                HStack {
-                                    ZStack {
-                                        Circle()
-                                            .fill(iconColor(for: index).opacity(0.2))
-                                            .frame(width: 24, height: 24)
+            // キーボード領域: グレー背景でiOSキーボード展開状態を表現 (案C)
+            Color(UIColor.systemGray5)
+                .frame(maxHeight: .infinity)
 
-                                        Image(systemName: iconName(for: index))
-                                            .font(.system(size: 12))
-                                            .foregroundColor(iconColor(for: index))
-                                    }
-                                    Spacer()
+            // ClipKit キーボード拡張: 横スクロールカード
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(0..<8) { index in
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                ZStack {
+                                    Circle()
+                                        .fill(iconColor(for: index).opacity(0.2))
+                                        .frame(width: 24, height: 24)
+
+                                    Image(systemName: iconName(for: index))
+                                        .font(.system(size: 12))
+                                        .foregroundColor(iconColor(for: index))
                                 }
-
-                                Text(language.sampleText(index))
-                                    .lineLimit(2)
-                                    .font(.caption)
-                                    .foregroundColor(.primary)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Spacer()
                             }
-                            .padding(8)
-                            .frame(width: 120, height: 80)
-                            .background(Color(UIColor.systemBackground))
-                            .cornerRadius(8)
-                            .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
+
+                            Text(language.sampleText(index))
+                                .lineLimit(2)
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
+                        .padding(8)
+                        .frame(width: 120, height: 80)
+                        .background(Color(UIColor.systemBackground))
+                        .cornerRadius(8)
+                        .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
                 }
-                .frame(height: 100)
-                .background(
-                    LinearGradient(
-                        colors: [Color(UIColor.secondarySystemBackground), Color(UIColor.tertiarySystemBackground)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-
-                // Keyboard controls with better styling
-                HStack(spacing: 16) {
-                    Button(action: {}) {
-                        Image(systemName: "line.3.horizontal")
-                            .font(.system(size: 20))
-                            .foregroundColor(.primary)
-                            .frame(width: 44, height: 44)
-                            .background(Color(UIColor.secondarySystemBackground))
-                            .cornerRadius(8)
-                    }
-
-                    Spacer()
-
-                    Button(action: {}) {
-                        Image(systemName: "globe")
-                            .font(.system(size: 24))
-                            .foregroundColor(.primary)
-                            .frame(width: 44, height: 44)
-                    }
-
-                    Spacer().frame(width: 20)
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 12)
-                .background(Color(UIColor.systemBackground))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
             }
+            .frame(height: 100)
+            .background(
+                LinearGradient(
+                    colors: [Color(UIColor.secondarySystemBackground), Color(UIColor.tertiarySystemBackground)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
 
-            Text(language.keyboardDescription)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding()
+            // コントロールバー
+            HStack(spacing: 16) {
+                Button(action: {}) {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.system(size: 20))
+                        .foregroundColor(.primary)
+                        .frame(width: 44, height: 44)
+                        .background(Color(UIColor.secondarySystemBackground))
+                        .cornerRadius(8)
+                }
+
+                Spacer()
+
+                Button(action: {}) {
+                    Image(systemName: "globe")
+                        .font(.system(size: 24))
+                        .foregroundColor(.primary)
+                        .frame(width: 44, height: 44)
+                }
+
+                Spacer().frame(width: 20)
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 12)
+            .background(Color(UIColor.systemBackground))
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     private func iconName(for index: Int) -> String {
