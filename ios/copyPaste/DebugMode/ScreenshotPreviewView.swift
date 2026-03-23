@@ -1046,101 +1046,184 @@ struct MockFavoritesView: View {
 struct MockWidgetView: View {
     let language: AppLanguage
 
-    private var title: String { language == .english ? "Widget Preview" : "ウィジェットプレビュー" }
     private var recentLabel: String { language == .english ? "Recent Clips" : "最近のクリップ" }
     private var tapToCopyLabel: String { language == .english ? "Tap to copy" : "タップしてコピー" }
 
+    // ダミーアプリアイコン定義
+    private let iconData: [(symbol: String, colors: [Color])] = [
+        ("message.fill",      [.green, Color(red: 0.2, green: 0.8, blue: 0.4)]),
+        ("phone.fill",        [Color(red: 0.2, green: 0.8, blue: 0.2), .green]),
+        ("safari.fill",       [.blue, Color(red: 0.1, green: 0.5, blue: 1.0)]),
+        ("envelope.fill",     [Color(red: 0.1, green: 0.5, blue: 1.0), .blue]),
+        ("music.note",        [Color(red: 0.95, green: 0.2, blue: 0.3), .pink]),
+        ("map.fill",          [Color(red: 0.2, green: 0.75, blue: 0.3), .teal]),
+        ("camera.fill",       [Color(red: 0.3, green: 0.3, blue: 0.35), Color(red: 0.5, green: 0.5, blue: 0.55)]),
+        ("photo.fill",        [.orange, .yellow]),
+        ("note.text",         [Color(red: 1.0, green: 0.85, blue: 0.1), .orange]),
+        ("list.bullet",       [Color(red: 0.95, green: 0.3, blue: 0.3), .red]),
+        ("calendar",          [Color(red: 0.95, green: 0.3, blue: 0.3), Color(red: 1.0, green: 0.5, blue: 0.4)]),
+        ("gearshape.fill",    [Color(red: 0.55, green: 0.55, blue: 0.6), Color(red: 0.4, green: 0.4, blue: 0.45)]),
+    ]
+
     var body: some View {
         ZStack {
+            // iOSホーム画面風グラデーション壁紙
             LinearGradient(
-                colors: [Color(UIColor.systemBackground), Color.blue.opacity(0.05)],
-                startPoint: .top,
-                endPoint: .bottom
+                colors: [
+                    Color(red: 0.12, green: 0.22, blue: 0.75),
+                    Color(red: 0.38, green: 0.12, blue: 0.72),
+                    Color(red: 0.65, green: 0.15, blue: 0.55)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 32) {
-                VStack(spacing: 8) {
-                    Image(systemName: "square.grid.2x2.fill")
-                        .font(.system(size: 44))
-                        .foregroundColor(.blue)
-                    Text(title)
-                        .font(.title2).bold()
-                }
-                .padding(.top, 40)
+            VStack(spacing: 0) {
+                Spacer().frame(height: 16)
 
-                // Small widget
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(language == .english ? "Small" : "小")
-                        .font(.caption).foregroundColor(.secondary)
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(
-                            LinearGradient(colors: [.blue.opacity(0.15), .purple.opacity(0.1)],
-                                           startPoint: .topLeading, endPoint: .bottomTrailing)
-                        )
-                        .frame(width: 160, height: 160)
-                        .overlay(
-                            VStack(alignment: .leading, spacing: 6) {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "doc.on.clipboard.fill")
-                                        .foregroundColor(.blue)
-                                        .font(.caption)
-                                    Text("ClipKit")
-                                        .font(.caption2).bold().foregroundColor(.blue)
-                                }
-                                Spacer()
-                                Text(language.sampleText(0))
-                                    .font(.caption2)
-                                    .lineLimit(3)
-                                    .foregroundColor(.primary)
-                                Text(tapToCopyLabel)
-                                    .font(.system(size: 9))
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(12)
-                        )
-                }
+                // アプリアイコン行 1
+                iconRow(indices: [0, 1, 2, 3])
 
-                // Medium widget
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(language == .english ? "Medium" : "中")
-                        .font(.caption).foregroundColor(.secondary)
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(
-                            LinearGradient(colors: [.blue.opacity(0.15), .purple.opacity(0.1)],
-                                           startPoint: .topLeading, endPoint: .bottomTrailing)
-                        )
-                        .frame(width: 340, height: 160)
-                        .overlay(
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "doc.on.clipboard.fill")
-                                        .foregroundColor(.blue)
-                                        .font(.caption)
-                                    Text(recentLabel)
-                                        .font(.caption).bold().foregroundColor(.blue)
-                                }
-                                ForEach(0..<3) { i in
-                                    HStack(spacing: 8) {
-                                        Image(systemName: i == 1 ? "link" : "doc.text")
-                                            .font(.system(size: 11))
-                                            .foregroundColor(.secondary)
-                                        Text(language.sampleText(i))
-                                            .font(.system(size: 11))
-                                            .lineLimit(1)
-                                            .foregroundColor(.primary)
-                                    }
-                                }
-                            }
-                            .padding(14)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        )
+                Spacer().frame(height: 20)
+
+                // ミディアムウィジェット
+                mediumWidget
+                    .padding(.horizontal, 20)
+
+                Spacer().frame(height: 20)
+
+                // アプリアイコン行 2
+                iconRow(indices: [4, 5, 6, 7])
+
+                Spacer().frame(height: 20)
+
+                // スモールウィジェット + アイコン2列
+                HStack(spacing: 16) {
+                    Spacer().frame(width: 4)
+                    smallWidget
+                    Spacer()
+                    VStack(spacing: 16) {
+                        dummyIcon(index: 8)
+                        dummyIcon(index: 9)
+                    }
+                    VStack(spacing: 16) {
+                        dummyIcon(index: 10)
+                        dummyIcon(index: 11)
+                    }
+                    Spacer().frame(width: 4)
                 }
+                .padding(.horizontal, 12)
 
                 Spacer()
+
+                // ドック
+                HStack(spacing: 0) {
+                    ForEach([0, 2, 4, 6], id: \.self) { i in
+                        Spacer()
+                        dummyIcon(index: i)
+                    }
+                    Spacer()
+                }
+                .padding(.vertical, 16)
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 28))
+                .padding(.horizontal, 20)
+                .padding(.bottom, 12)
             }
-            .padding(.horizontal, 20)
         }
+    }
+
+    // MARK: - Widget Views
+
+    private var smallWidget: some View {
+        RoundedRectangle(cornerRadius: 20)
+            .fill(.ultraThinMaterial)
+            .frame(width: 160, height: 160)
+            .overlay(
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 5) {
+                        Image(systemName: "doc.on.clipboard.fill")
+                            .foregroundColor(.white)
+                            .font(.caption)
+                        Text("ClipKit")
+                            .font(.caption2).bold().foregroundColor(.white)
+                    }
+                    Spacer()
+                    Text(language.sampleText(0))
+                        .font(.caption2)
+                        .lineLimit(3)
+                        .foregroundColor(.white.opacity(0.9))
+                    Text(tapToCopyLabel)
+                        .font(.system(size: 9))
+                        .foregroundColor(.white.opacity(0.6))
+                }
+                .padding(12)
+            )
+            .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 4)
+    }
+
+    private var mediumWidget: some View {
+        RoundedRectangle(cornerRadius: 20)
+            .fill(.ultraThinMaterial)
+            .frame(height: 160)
+            .overlay(
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "doc.on.clipboard.fill")
+                            .foregroundColor(.white)
+                            .font(.caption)
+                        Text(recentLabel)
+                            .font(.caption).bold().foregroundColor(.white)
+                    }
+                    ForEach(0..<3) { i in
+                        HStack(spacing: 8) {
+                            Image(systemName: i == 1 ? "link" : "doc.text")
+                                .font(.system(size: 11))
+                                .foregroundColor(.white.opacity(0.7))
+                            Text(language.sampleText(i))
+                                .font(.system(size: 11))
+                                .lineLimit(1)
+                                .foregroundColor(.white.opacity(0.9))
+                        }
+                    }
+                }
+                .padding(14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            )
+            .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 4)
+    }
+
+    // MARK: - Helpers
+
+    private func iconRow(indices: [Int]) -> some View {
+        HStack(spacing: 0) {
+            ForEach(indices, id: \.self) { i in
+                Spacer()
+                dummyIcon(index: i)
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 12)
+    }
+
+    private func dummyIcon(index: Int) -> some View {
+        let data = iconData[index % iconData.count]
+        return ZStack {
+            RoundedRectangle(cornerRadius: 14)
+                .fill(
+                    LinearGradient(
+                        colors: data.colors,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 60, height: 60)
+            Image(systemName: data.symbol)
+                .font(.system(size: 26))
+                .foregroundColor(.white)
+        }
+        .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
     }
 }
 
