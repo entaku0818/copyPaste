@@ -41,6 +41,16 @@
                ReferencedContainer = "container:copyPaste.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "61B4C39F2DC4A61100E59DE3"
+               BuildableName = "ClipKitUITests.xctest"
+               BlueprintName = "ClipKitUITests"
+               ReferencedContainer = "container:copyPaste.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
