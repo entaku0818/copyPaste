@@ -291,6 +291,34 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 
+    var historyTitle: String {
+        switch self {
+        case .english: return "History"
+        case .japanese: return "履歴"
+        }
+    }
+
+    var proUpgradeTitle: String {
+        switch self {
+        case .english: return "Upgrade to ClipKit Pro"
+        case .japanese: return "ClipKit Proにアップグレード"
+        }
+    }
+
+    var proUpgradeDescription: String {
+        switch self {
+        case .english: return "Browse history older than 3 days"
+        case .japanese: return "3日以上前の履歴も検索・閲覧できます"
+        }
+    }
+
+    var searchPrompt: String {
+        switch self {
+        case .english: return "Search history..."
+        case .japanese: return "履歴を検索..."
+        }
+    }
+
     func sampleText(_ index: Int) -> String {
         switch self {
         case .english:
@@ -346,129 +374,133 @@ struct MockClipboardHistoryView: View {
     let language: AppLanguage
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    VStack(spacing: 12) {
-                        // Mock video player with gradient
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(
-                                LinearGradient(
-                                    colors: [.blue.opacity(0.8), .purple.opacity(0.8)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(height: 100)
-                            .overlay(
-                                VStack {
-                                    Image(systemName: "play.circle.fill")
-                                        .font(.system(size: 40))
-                                        .foregroundColor(.white)
-                                    Text("PiP Video")
-                                        .font(.caption)
-                                        .foregroundColor(.white.opacity(0.9))
+        TabView(selection: .constant(1)) {
+            NavigationStack {
+                Color.clear
+            }
+            .tabItem {
+                Label(language == .japanese ? "常時起動" : "Always On", systemImage: "play.circle.fill")
+            }
+            .tag(0)
+
+            NavigationStack {
+                List {
+                    // Sample clipboard items (9 items)
+                    ForEach(0..<9) { index in
+                        HStack(spacing: 12) {
+                            Image(systemName: itemIconName(for: index))
+                                .font(.title2)
+                                .foregroundColor(itemIconColor(for: index))
+                                .frame(width: 50, height: 50)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack(spacing: 6) {
+                                    Text(language.sampleText(index))
+                                        .font(.body)
+                                        .lineLimit(2)
+                                    if index == 0 {
+                                        Image(systemName: "star.fill")
+                                            .font(.caption)
+                                            .foregroundColor(.yellow)
+                                    }
                                 }
-                            )
 
-                        // PiP status
-                        HStack {
-                            Circle()
-                                .fill(Color.green)
-                                .frame(width: 10, height: 10)
-
-                            Text(language.pipActive)
-                                .font(.caption)
-                                .foregroundColor(.green)
+                                HStack(spacing: 4) {
+                                    Text(language.sampleTime(index))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    if index == 4 {
+                                        Text("・")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Text("24 KB")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                            }
 
                             Spacer()
-
-                            Text(language.monitoringInBackground)
-                                .font(.caption2)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.green.opacity(0.2))
-                                .cornerRadius(4)
                         }
-                        .padding(.horizontal, 4)
+                        .padding(.vertical, 4)
                     }
-                    .padding(.vertical, 8)
-                } header: {
-                    Text(language.backgroundMonitoring)
-                } footer: {
-                    Text(language.pipDescription)
-                        .font(.caption2)
-                }
 
-                // Sample clipboard items - 10 items for better showcase
-                ForEach(0..<10) { index in
-                    HStack(spacing: 12) {
-                        // Icon based on type
-                        ZStack {
-                            Circle()
-                                .fill(iconColor(for: index).opacity(0.2))
-                                .frame(width: 40, height: 40)
-
-                            Image(systemName: iconName(for: index))
-                                .font(.system(size: 18))
-                                .foregroundColor(iconColor(for: index))
-                        }
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(language.sampleText(index))
-                                .font(.body)
-                                .lineLimit(2)
-
-                            Text(language.sampleTime(index))
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-
-                        Spacer()
-
-                        // Size indicator for some items
-                        if index % 3 == 0 {
-                            Text("\(Int.random(in: 10...999)) KB")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
+                    // Pro upgrade banner
+                    Section {
+                        Button(action: {}) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "crown.fill")
+                                    .font(.title2)
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [.yellow, .orange],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(language.proUpgradeTitle)
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                    Text(language.proUpgradeDescription)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.vertical, 4)
                         }
                     }
-                    .padding(.vertical, 4)
                 }
+                .navigationTitle(language.historyTitle)
+                .searchable(
+                    text: .constant(""),
+                    placement: .navigationBarDrawer(displayMode: .always),
+                    prompt: language.searchPrompt
+                )
             }
-            .navigationTitle(language.appTitle)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {}) {
-                        Image(systemName: "gearshape.fill")
-                    }
-                }
-
-                ToolbarItemGroup(placement: .primaryAction) {
-                    HStack(spacing: 4) {
-                        Circle()
-                            .fill(Color.blue)
-                            .frame(width: 8, height: 8)
-                        Text(language.monitoring)
-                            .font(.caption)
-                            .foregroundColor(.blue)
-                    }
-
-                    Button(language.stopButton) {}
-                        .tint(.red)
-                }
+            .tabItem {
+                Label(language.historyTitle, systemImage: "clock.fill")
             }
+            .tag(1)
+
+            NavigationStack {
+                Color.clear
+            }
+            .tabItem {
+                Label(language == .japanese ? "お気に入り" : "Favorites", systemImage: "star.fill")
+            }
+            .tag(2)
+
+            NavigationStack {
+                Color.clear
+            }
+            .tabItem {
+                Label(language.settings, systemImage: "gearshape.fill")
+            }
+            .tag(3)
         }
     }
 
-    private func iconName(for index: Int) -> String {
-        let icons = ["doc.text", "link", "photo", "doc.text", "link", "envelope", "phone", "doc.plaintext", "link", "note.text"]
-        return icons[index % icons.count]
+    private func itemIconName(for index: Int) -> String {
+        switch index {
+        case 1, 8: return "link"
+        case 4: return "photo"
+        case 6: return "doc"
+        default: return "doc.text"
+        }
     }
 
-    private func iconColor(for index: Int) -> Color {
-        let colors: [Color] = [.blue, .green, .orange, .blue, .green, .purple, .pink, .blue, .green, .cyan]
-        return colors[index % colors.count]
+    private func itemIconColor(for index: Int) -> Color {
+        switch index {
+        case 1, 8: return .purple
+        case 4: return .green
+        case 6: return .orange
+        default: return .blue
+        }
     }
 }
 
@@ -478,21 +510,50 @@ struct MockKeyboardPreviewView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Mock text input area
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Notes")
-                    .font(.title)
-                    .fontWeight(.bold)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(language == .japanese ? "メモ" : "Notes")
+                        .font(.title)
+                        .fontWeight(.bold)
 
-                Text("Sample text from clipboard...")
-                    .foregroundColor(.secondary)
+                    Text(language == .japanese ? "今日やること" : "Today's Tasks")
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondary)
 
-                Spacer()
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(language == .japanese
+                            ? ["• スーパーで買い物（牛乳・卵・パン）",
+                               "• 午後3時 チームミーティング",
+                               "• メールを返信する",
+                               "• 請求書を確認する",
+                               "• 薬を飲む"]
+                            : ["• Buy groceries (milk, eggs, bread)",
+                               "• Team meeting at 3 PM",
+                               "• Reply to pending emails",
+                               "• Review monthly invoices",
+                               "• Take medication"],
+                            id: \.self
+                        ) { line in
+                            Text(line)
+                                .font(.body)
+                                .foregroundColor(.primary)
+                        }
+                    }
+
+                    Divider()
+                        .padding(.top, 4)
+
+                    Text(language == .japanese
+                         ? "最後にコピー: https://www.apple.com/jp/"
+                         : "Last copied: https://www.apple.com")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
             .background(Color(UIColor.systemBackground))
-
-            Spacer()
 
             // Mock keyboard
             VStack(spacing: 0) {
