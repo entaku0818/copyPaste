@@ -553,12 +553,12 @@ struct MockKeyboardPreviewView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             }
-            .frame(height: 220)
+            .frame(maxHeight: .infinity)
             .background(Color(UIColor.systemBackground))
 
             // キーボード領域: グレー背景でiOSキーボード展開状態を表現 (案C)
             Color(UIColor.systemGray5)
-                .frame(maxHeight: .infinity)
+                .frame(height: 260)
 
             // ClipKit キーボード拡張: 横スクロールカード
             ScrollView(.horizontal, showsIndicators: false) {

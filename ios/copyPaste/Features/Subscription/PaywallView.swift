@@ -166,15 +166,20 @@ struct PaywallView: View {
                         Text("• いつでもキャンセル可能")
                         Text("• Apple IDアカウントに課金されます")
 
-                        HStack(spacing: 16) {
-                            Link("利用規約", destination: URL(string: "https://clipkit-entaku.web.app/terms.html")!)
-                            Text("·")
-                            Link("プライバシーポリシー", destination: URL(string: "https://clipkit-entaku.web.app/privacy-policy.html")!)
-                        }
-                        .padding(.top, 4)
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
+
+                    HStack(spacing: 20) {
+                        Link("利用規約", destination: URL(string: "https://clipkit-entaku.web.app/terms.html")!)
+                            .underline()
+                        Text("·")
+                        Link("プライバシーポリシー", destination: URL(string: "https://clipkit-entaku.web.app/privacy-policy.html")!)
+                            .underline()
+                    }
+                    .font(.footnote)
+                    .foregroundColor(.accentColor)
+                    .padding(.top, 8)
 
                     Spacer(minLength: 32)
                 }

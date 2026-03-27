@@ -16,5 +16,6 @@
 • 7日間無料トライアル
 
 iOS 16以降のクリップボード制限をPicture-in-Pictureで回避。他のアプリを使いながらも自動監視を継続します。
-利用規約: https://clipkit-entaku.web.app/terms.html
+
+利用規約（EULA）: https://clipkit-entaku.web.app/terms.html
 プライバシーポリシー: https://clipkit-entaku.web.app/privacy-policy.html

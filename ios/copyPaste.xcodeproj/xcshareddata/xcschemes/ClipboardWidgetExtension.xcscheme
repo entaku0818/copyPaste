@@ -30,8 +30,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "61B4C3882DC4A60F00E59DE3"
-               BuildableName = "copyPaste.app"
-               BlueprintName = "copyPaste"
+               BuildableName = "ClipKit.app"
+               BlueprintName = "ClipKit"
                ReferencedContainer = "container:copyPaste.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -61,8 +61,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "61B4C3882DC4A60F00E59DE3"
-            BuildableName = "copyPaste.app"
-            BlueprintName = "copyPaste"
+            BuildableName = "ClipKit.app"
+            BlueprintName = "ClipKit"
             ReferencedContainer = "container:copyPaste.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -97,8 +97,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "61B4C3882DC4A60F00E59DE3"
-            BuildableName = "copyPaste.app"
-            BlueprintName = "copyPaste"
+            BuildableName = "ClipKit.app"
+            BlueprintName = "ClipKit"
             ReferencedContainer = "container:copyPaste.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
