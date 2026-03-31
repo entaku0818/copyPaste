@@ -549,6 +549,37 @@ struct MockKeyboardPreviewView: View {
                          : "Last copied: https://www.apple.com")
                         .font(.caption)
                         .foregroundColor(.secondary)
+
+                    // クリップボード履歴カード
+                    VStack(spacing: 8) {
+                        ForEach(0..<4) { index in
+                            HStack(spacing: 10) {
+                                ZStack {
+                                    Circle()
+                                        .fill(iconColor(for: index).opacity(0.15))
+                                        .frame(width: 28, height: 28)
+                                    Image(systemName: iconName(for: index))
+                                        .font(.system(size: 13))
+                                        .foregroundColor(iconColor(for: index))
+                                }
+                                Text(language.sampleText(index))
+                                    .font(.subheadline)
+                                    .foregroundColor(.primary)
+                                    .lineLimit(1)
+                                Spacer()
+                                Text(language == .japanese
+                                     ? [" 1分前", " 5分前", "10分前", "30分前"][index]
+                                     : ["1m ago", "5m ago", "10m ago", "30m ago"][index])
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 8)
+                            .background(Color(UIColor.secondarySystemBackground))
+                            .cornerRadius(8)
+                        }
+                    }
+                    .padding(.top, 8)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()

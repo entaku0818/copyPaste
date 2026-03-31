@@ -54,6 +54,7 @@ platform :ios do
       force: true,
       skip_binary_upload: true,
       precheck_include_in_app_purchases: false,
+      ignore_language_directory_validation: true,
       metadata_path: "fastlane/metadata",
       screenshots_path: "fastlane/screenshots"
     )
