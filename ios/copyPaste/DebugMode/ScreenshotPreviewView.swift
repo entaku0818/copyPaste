@@ -506,6 +506,9 @@ struct MockClipboardHistoryView: View {
 
 struct MockKeyboardPreviewView: View {
     let language: AppLanguage
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    private var cardWidth: CGFloat { horizontalSizeClass == .regular ? 160 : 120 }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -616,12 +619,13 @@ struct MockKeyboardPreviewView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
                         .padding(8)
-                        .frame(width: 120, height: 80)
+                        .frame(width: cardWidth, height: 80)
                         .background(Color(UIColor.systemBackground))
                         .cornerRadius(8)
                         .shadow(color: .black.opacity(0.15), radius: 3, x: 0, y: 2)
                     }
                 }
+                .fixedSize(horizontal: true, vertical: false)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
             }
