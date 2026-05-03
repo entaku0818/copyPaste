@@ -122,10 +122,6 @@ final class RevenueCatManager: NSObject, ObservableObject {
         return SharedConstants.sharedDefaults?.bool(forKey: SharedConstants.proStatusKey) ?? false
     }
 
-    /// 履歴件数制限（Pro: 無制限）
-    nonisolated var maxHistoryCount: Int {
-        return Int.max
-    }
 }
 
 // MARK: - PurchasesDelegate

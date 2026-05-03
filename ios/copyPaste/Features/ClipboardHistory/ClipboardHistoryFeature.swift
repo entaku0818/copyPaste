@@ -21,9 +21,9 @@ struct ClipboardHistoryFeature {
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
 
-        // 履歴件数制限（Pro: 無制限）
+        // 履歴件数制限（無料: 20件、Pro: 無制限）
         var maxHistoryCount: Int {
-            return Int.max
+            return isProUser ? Int.max : 20
         }
 
         // 無料版で表示できる履歴の起点（3日前以降）
