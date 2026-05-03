@@ -1101,6 +1101,73 @@ struct MockWidgetView: View {
     ]
 
     var body: some View {
+        GeometryReader { geo in
+            ZStack {
+                // スクリーンショット用ダーク背景
+                Color(red: 8/255, green: 19/255, blue: 17/255)
+                    .ignoresSafeArea()
+
+                // 微妙なグロー
+                RadialGradient(
+                    colors: [Color(red: 0, green: 0.6, blue: 0.45).opacity(0.12), .clear],
+                    center: .init(x: 0.5, y: 0.08),
+                    startRadius: 0,
+                    endRadius: geo.size.width * 0.85
+                )
+                .ignoresSafeArea()
+
+                VStack(spacing: 0) {
+                    // キャプションエリア
+                    Text(language == .japanese ? "ホーム画面に、\nクリップボードを" : "Your clipboard,\non the home screen")
+                        .font(.system(size: 40, weight: .bold))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .shadow(color: .black.opacity(0.5), radius: 2, x: 2, y: 2)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: geo.size.height * 0.157)
+
+                    // デバイスフレーム
+                    ZStack(alignment: .top) {
+                        // ベゼル
+                        RoundedRectangle(cornerRadius: 52)
+                            .fill(Color(white: 0.08))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 52)
+                                    .stroke(Color(white: 0.25), lineWidth: 1.5)
+                            )
+
+                        // 画面コンテンツ
+                        homeScreenContent
+                            .clipShape(RoundedRectangle(cornerRadius: 46))
+                            .padding(7)
+
+                        // ダイナミックアイランド
+                        RoundedRectangle(cornerRadius: 18)
+                            .fill(Color.black)
+                            .frame(width: 118, height: 34)
+                            .padding(.top, 14)
+
+                        // ホームインジケーター
+                        VStack {
+                            Spacer()
+                            Capsule()
+                                .fill(Color(white: 0.45))
+                                .frame(width: 120, height: 5)
+                                .padding(.bottom, 9)
+                        }
+                    }
+                    .padding(.horizontal, 14)
+                    .frame(maxHeight: .infinity)
+
+                    Spacer().frame(height: 8)
+                }
+            }
+        }
+        .ignoresSafeArea()
+        .statusBarHidden(true)
+    }
+
+    private var homeScreenContent: some View {
         ZStack {
             // iOSホーム画面風グラデーション壁紙
             LinearGradient(
@@ -1112,7 +1179,6 @@ struct MockWidgetView: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            .ignoresSafeArea()
 
             VStack(spacing: 0) {
                 Spacer().frame(height: 16)
