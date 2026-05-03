@@ -115,6 +115,9 @@ struct PaywallView: View {
                             if isPurchasing {
                                 ProgressView()
                                     .tint(.white)
+                            } else if let trialText = selectedPackageTrialText {
+                                Text("無料で試す（\(trialText)）")
+                                    .fontWeight(.semibold)
                             } else {
                                 Text("今すぐ始める")
                                     .fontWeight(.semibold)
@@ -213,8 +216,8 @@ struct PaywallView: View {
         }
         .onChange(of: revenueCat.offerings) { _, newOfferings in
             if selectedPackage == nil,
-               let package = newOfferings?.current?.availablePackages.first {
-                selectedPackage = package
+               let packages = newOfferings?.current?.availablePackages {
+                selectedPackage = packages.first(where: { $0.packageType == .annual }) ?? packages.first
             }
         }
     }
@@ -251,7 +254,8 @@ struct PaywallView: View {
     private func loadOfferings() async {
         if let current = revenueCat.offerings?.current {
             if selectedPackage == nil {
-                selectedPackage = current.availablePackages.first
+                let packages = current.availablePackages
+                selectedPackage = packages.first(where: { $0.packageType == .annual }) ?? packages.first
             }
             return
         }
@@ -259,8 +263,8 @@ struct PaywallView: View {
         offeringsLoadFailed = false
         await revenueCat.fetchOfferings()
         isLoadingOfferings = false
-        if let package = revenueCat.offerings?.current?.availablePackages.first {
-            selectedPackage = package
+        if let packages = revenueCat.offerings?.current?.availablePackages {
+            selectedPackage = packages.first(where: { $0.packageType == .annual }) ?? packages.first
         } else {
             offeringsLoadFailed = true
         }
