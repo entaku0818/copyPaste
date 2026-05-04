@@ -23,12 +23,18 @@ final class ScreenshotRenderTests: XCTestCase {
         try? FileManager.default.createDirectory(at: outputDir, withIntermediateDirectories: true)
     }
 
+    private let targetScreens: [ScreenshotScreen] = [
+        .clipboardHistory,
+        .keyboardPreview,
+        .widget,
+    ]
+
     func testRenderAllScreenshots() throws {
         for lang in AppLanguage.allCases {
-            for (idx, screen) in ScreenshotScreen.allCases.enumerated() {
+            for screen in targetScreens {
                 let view = self.makeScreenshotView(screen: screen, language: lang)
                     .frame(width: logicalWidth, height: logicalHeight)
-                let filename = "\(lang.rawValue)_\(idx)_\(screen.rawValue).png"
+                let filename = "\(lang.rawValue)_\(screen.rawValue).png"
                 try self.renderAndSave(view: view, filename: filename)
             }
         }
