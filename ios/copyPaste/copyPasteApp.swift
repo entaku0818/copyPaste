@@ -71,6 +71,16 @@ struct ClipKitApp: App {
     #if DEBUG
     @ViewBuilder
     private func screenshotView(for screen: ScreenshotScreen, language: AppLanguage) -> some View {
+        AppStoreScreenshotView(
+            caption: screen.caption(language: language),
+            background: screen.screenshotBackground
+        ) {
+            phoneContent(for: screen, language: language)
+        }
+    }
+
+    @ViewBuilder
+    private func phoneContent(for screen: ScreenshotScreen, language: AppLanguage) -> some View {
         switch screen {
         case .clipboardHistory: MockClipboardHistoryView(language: language)
         case .keyboardPreview:  MockKeyboardPreviewView(language: language)
@@ -79,7 +89,7 @@ struct ClipKitApp: App {
         case .imagePreview:     MockImagePreviewView(language: language)
         case .keyboardSetup:    MockKeyboardSetupView(language: language)
         case .favorites:        MockFavoritesView(language: language)
-        case .widget:           MockWidgetView(language: language)
+        case .widget:           MockWidgetHomeContent(language: language)
         }
     }
     #endif
