@@ -439,15 +439,11 @@ struct PhoneMockupView<Content: View>: View {
     var body: some View {
         ZStack(alignment: .top) {
             RoundedRectangle(cornerRadius: 52)
-                .fill(Color(white: 0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 52)
-                        .stroke(Color(white: 0.25), lineWidth: 1.5)
-                )
+                .stroke(Color(white: 0.3), lineWidth: 2)
 
             content()
-                .clipShape(RoundedRectangle(cornerRadius: 46))
-                .padding(7)
+                .clipShape(RoundedRectangle(cornerRadius: 48))
+                .padding(4)
 
             // Home indicator
             VStack {
@@ -590,6 +586,7 @@ struct MockClipboardHistoryView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background(Color.yellow.opacity(0.06))
+                .hidden()
             }
             .background(Color.white)
 
