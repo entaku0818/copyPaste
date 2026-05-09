@@ -136,7 +136,7 @@ struct ClipboardHistoryView: View {
         .safeAreaInset(edge: .bottom) {
             if !store.isProUser {
                 BannerAdView()
-                    .frame(height: 50)
+                    .frame(height: BannerAdView.adaptiveHeight)
             }
         }
     }
