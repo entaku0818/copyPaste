@@ -49,7 +49,7 @@ platform :ios do
 
     upload_to_app_store(
       api_key: api_key,
-      app_version: "1.1.1",
+      app_version: "1.1.2",
       submit_for_review: false,
       force: true,
       skip_binary_upload: true,
@@ -71,7 +71,6 @@ platform :ios do
 
     upload_to_app_store(
       api_key: api_key,
-      app_version: "1.1.1",
       ipa: "ios/build/export/ClipKit.ipa",
       submit_for_review: true,
       automatic_release: false,
