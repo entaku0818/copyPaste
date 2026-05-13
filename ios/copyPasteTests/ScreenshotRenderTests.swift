@@ -42,27 +42,29 @@ final class ScreenshotRenderTests: XCTestCase {
         }
     }
 
+    // iPad Pro 12.9" (3rd gen): 2048×2732 px → 1024×1366 pt @2x
+    private let iPadLogicalWidth: CGFloat  = 1024
+    private let iPadLogicalHeight: CGFloat = 1366
+    private let iPadScale: CGFloat = 2.0
+
+    func testRenderIPadScreenshots() throws {
+        for lang in AppLanguage.allCases {
+            for screen in targetScreens {
+                let view = self.makeScreenshotView(screen: screen, language: lang)
+                    .frame(width: iPadLogicalWidth, height: iPadLogicalHeight)
+                let filename = "\(lang.rawValue)_ipad_\(screen.rawValue).png"
+                try self.renderAndSaveIPad(view: view, filename: filename)
+            }
+        }
+    }
+
     // MARK: - Private
 
     private func makeScreenshotView(screen: ScreenshotScreen, language: AppLanguage) -> some View {
         let cap = screen.caption(language: language)
         let bg  = screen.screenshotBackground
         return AppStoreScreenshotView(caption: cap, background: bg) {
-            self.phoneContent(for: screen, language: language)
-        }
-    }
-
-    @ViewBuilder
-    private func phoneContent(for screen: ScreenshotScreen, language: AppLanguage) -> some View {
-        switch screen {
-        case .clipboardHistory: MockClipboardHistoryView(language: language)
-        case .keyboardPreview:  MockKeyboardPreviewView(language: language)
-        case .pipMonitoring:    MockPiPMonitoringView(language: language)
-        case .settings:         MockSettingsView(language: language)
-        case .imagePreview:     MockImagePreviewView(language: language)
-        case .keyboardSetup:    MockKeyboardSetupView(language: language)
-        case .favorites:        MockFavoritesView(language: language)
-        case .widget:           MockWidgetHomeContent(language: language)
+            screenshotContent(for: screen, language: language)
         }
     }
 
@@ -75,5 +77,16 @@ final class ScreenshotRenderTests: XCTestCase {
         }
         try pngData.write(to: outputDir.appendingPathComponent(filename))
         print("✓ \(filename): \(Int(uiImage.size.width * scale))×\(Int(uiImage.size.height * scale))px")
+    }
+
+    private func renderAndSaveIPad<V: View>(view: V, filename: String) throws {
+        let renderer = ImageRenderer(content: view)
+        renderer.proposedSize = ProposedViewSize(width: iPadLogicalWidth, height: iPadLogicalHeight)
+        renderer.scale = iPadScale
+        guard let uiImage = renderer.uiImage, let pngData = uiImage.pngData() else {
+            XCTFail("Render failed: \(filename)"); return
+        }
+        try pngData.write(to: outputDir.appendingPathComponent(filename))
+        print("✓ \(filename): \(Int(uiImage.size.width * iPadScale))×\(Int(uiImage.size.height * iPadScale))px")
     }
 }

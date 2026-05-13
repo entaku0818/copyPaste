@@ -85,21 +85,7 @@ struct FullscreenScreenshotView: View {
             caption: screen.caption(language: language),
             background: screen.screenshotBackground
         ) {
-            phoneContent(for: screen)
-        }
-    }
-
-    @ViewBuilder
-    private func phoneContent(for screen: ScreenshotScreen) -> some View {
-        switch screen {
-        case .clipboardHistory: MockClipboardHistoryView(language: language)
-        case .keyboardPreview:  MockKeyboardPreviewView(language: language)
-        case .pipMonitoring:    MockPiPMonitoringView(language: language)
-        case .settings:         MockSettingsView(language: language)
-        case .imagePreview:     MockImagePreviewView(language: language)
-        case .keyboardSetup:    MockKeyboardSetupView(language: language)
-        case .favorites:        MockFavoritesView(language: language)
-        case .widget:           MockWidgetHomeContent(language: language)
+            screenshotContent(for: screen, language: language)
         }
     }
 }
@@ -1353,6 +1339,22 @@ struct SetupStepRow: View {
 
             Spacer()
         }
+    }
+}
+
+// MARK: - Shared Screenshot Content
+
+@ViewBuilder
+func screenshotContent(for screen: ScreenshotScreen, language: AppLanguage) -> some View {
+    switch screen {
+    case .clipboardHistory: MockClipboardHistoryView(language: language)
+    case .keyboardPreview:  MockKeyboardPreviewView(language: language)
+    case .pipMonitoring:    MockPiPMonitoringView(language: language)
+    case .settings:         MockSettingsView(language: language)
+    case .imagePreview:     MockImagePreviewView(language: language)
+    case .keyboardSetup:    MockKeyboardSetupView(language: language)
+    case .favorites:        MockFavoritesView(language: language)
+    case .widget:           MockWidgetHomeContent(language: language)
     }
 }
 

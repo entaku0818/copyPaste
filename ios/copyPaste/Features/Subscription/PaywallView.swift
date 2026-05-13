@@ -200,7 +200,7 @@ struct PaywallView: View {
                     showError = false
                 }
             } message: {
-                Text(errorMessage ?? "不明なエラーが発生しました")
+                Text(errorMessage ?? NSLocalizedString("paywall.error.unknown", value: "不明なエラーが発生しました", comment: ""))
             }
             .alert("購入完了", isPresented: $showSuccess) {
                 Button("OK") {
@@ -217,7 +217,7 @@ struct PaywallView: View {
         .onChange(of: revenueCat.offerings) { _, newOfferings in
             if selectedPackage == nil,
                let packages = newOfferings?.current?.availablePackages {
-                selectedPackage = packages.first(where: { $0.packageType == .annual }) ?? packages.first
+                selectedPackage = PackageSelector.defaultPackage(from: packages)
             }
         }
     }
@@ -227,10 +227,10 @@ struct PaywallView: View {
               intro.paymentMode == .freeTrial else { return nil }
         let p = intro.subscriptionPeriod
         switch p.unit {
-        case .day: return "\(p.value)日間"
-        case .week: return "\(p.value)週間"
-        case .month: return "\(p.value)ヶ月間"
-        case .year: return "\(p.value)年間"
+        case .day:   return String(format: NSLocalizedString("paywall.trial.days", value: "%d日間", comment: ""), p.value)
+        case .week:  return String(format: NSLocalizedString("paywall.trial.weeks", value: "%d週間", comment: ""), p.value)
+        case .month: return String(format: NSLocalizedString("paywall.trial.months", value: "%dヶ月間", comment: ""), p.value)
+        case .year:  return String(format: NSLocalizedString("paywall.trial.years", value: "%d年間", comment: ""), p.value)
         @unknown default: return nil
         }
     }
@@ -238,14 +238,14 @@ struct PaywallView: View {
     private var selectedPackagePeriodText: String? {
         guard let period = selectedPackage?.storeProduct.subscriptionPeriod else { return nil }
         switch (period.unit, period.value) {
-        case (.month, 1): return "1ヶ月"
-        case (.year, 1): return "1年"
+        case (.month, 1): return NSLocalizedString("paywall.period.oneMonth", value: "1ヶ月", comment: "")
+        case (.year, 1):  return NSLocalizedString("paywall.period.oneYear", value: "1年", comment: "")
         default:
             switch period.unit {
-            case .day: return "\(period.value)日"
-            case .week: return "\(period.value)週"
-            case .month: return "\(period.value)ヶ月"
-            case .year: return "\(period.value)年"
+            case .day:   return String(format: NSLocalizedString("paywall.period.days", value: "%d日", comment: ""), period.value)
+            case .week:  return String(format: NSLocalizedString("paywall.period.weeks", value: "%d週", comment: ""), period.value)
+            case .month: return String(format: NSLocalizedString("paywall.period.months", value: "%dヶ月", comment: ""), period.value)
+            case .year:  return String(format: NSLocalizedString("paywall.period.years", value: "%d年", comment: ""), period.value)
             @unknown default: return nil
             }
         }
@@ -254,8 +254,7 @@ struct PaywallView: View {
     private func loadOfferings() async {
         if let current = revenueCat.offerings?.current {
             if selectedPackage == nil {
-                let packages = current.availablePackages
-                selectedPackage = packages.first(where: { $0.packageType == .annual }) ?? packages.first
+                selectedPackage = PackageSelector.defaultPackage(from: current.availablePackages)
             }
             return
         }
@@ -264,7 +263,7 @@ struct PaywallView: View {
         await revenueCat.fetchOfferings()
         isLoadingOfferings = false
         if let packages = revenueCat.offerings?.current?.availablePackages {
-            selectedPackage = packages.first(where: { $0.packageType == .annual }) ?? packages.first
+            selectedPackage = PackageSelector.defaultPackage(from: packages)
         } else {
             offeringsLoadFailed = true
         }
@@ -275,7 +274,7 @@ struct PaywallView: View {
         let annualMonthly = package.storeProduct.price / 12
         let discount = Int(((monthly - annualMonthly) / monthly * 100) as NSDecimalNumber)
         guard discount > 0 else { return nil }
-        return "\(discount)%お得"
+        return String(format: NSLocalizedString("paywall.discount.format", value: "%d%%お得", comment: ""), discount)
     }
 
     private func purchasePackage() async {
@@ -300,7 +299,7 @@ struct PaywallView: View {
         do {
             let info = try await revenueCat.restorePurchases()
             if info.entitlements.active.isEmpty {
-                errorMessage = "復元可能な購入が見つかりませんでした"
+                errorMessage = NSLocalizedString("paywall.error.noRestorable", value: "復元可能な購入が見つかりませんでした", comment: "")
                 showError = true
             } else {
                 dismiss()
@@ -416,9 +415,9 @@ struct PackageButton: View {
     private var packageTitle: String {
         switch package.packageType {
         case .monthly:
-            return "月間プラン"
+            return NSLocalizedString("paywall.package.monthly", value: "月間プラン", comment: "")
         case .annual:
-            return "年間プラン"
+            return NSLocalizedString("paywall.package.annual", value: "年間プラン", comment: "")
         default:
             return package.storeProduct.localizedTitle
         }
@@ -427,14 +426,14 @@ struct PackageButton: View {
     private var subscriptionPeriodText: String {
         guard let period = package.storeProduct.subscriptionPeriod else { return "" }
         switch (period.unit, period.value) {
-        case (.month, 1): return "1ヶ月ごとに自動更新"
-        case (.year, 1): return "1年ごとに自動更新"
+        case (.month, 1): return NSLocalizedString("paywall.renewal.monthly", value: "1ヶ月ごとに自動更新", comment: "")
+        case (.year, 1):  return NSLocalizedString("paywall.renewal.annual", value: "1年ごとに自動更新", comment: "")
         default:
             switch period.unit {
-            case .day: return "\(period.value)日ごとに自動更新"
-            case .week: return "\(period.value)週ごとに自動更新"
-            case .month: return "\(period.value)ヶ月ごとに自動更新"
-            case .year: return "\(period.value)年ごとに自動更新"
+            case .day:   return String(format: NSLocalizedString("paywall.renewal.days", value: "%d日ごとに自動更新", comment: ""), period.value)
+            case .week:  return String(format: NSLocalizedString("paywall.renewal.weeks", value: "%d週ごとに自動更新", comment: ""), period.value)
+            case .month: return String(format: NSLocalizedString("paywall.renewal.months", value: "%dヶ月ごとに自動更新", comment: ""), period.value)
+            case .year:  return String(format: NSLocalizedString("paywall.renewal.years", value: "%d年ごとに自動更新", comment: ""), period.value)
             @unknown default: return ""
             }
         }
@@ -445,11 +444,11 @@ struct PackageButton: View {
               intro.paymentMode == .freeTrial else { return nil }
         let p = intro.subscriptionPeriod
         switch p.unit {
-        case .day: return "\(p.value)日間無料トライアル"
-        case .week: return "\(p.value)週間無料トライアル"
-        case .month: return "\(p.value)ヶ月間無料トライアル"
-        case .year: return "\(p.value)年間無料トライアル"
-        @unknown default: return "無料トライアル付き"
+        case .day:   return String(format: NSLocalizedString("paywall.intro.days", value: "%d日間無料トライアル", comment: ""), p.value)
+        case .week:  return String(format: NSLocalizedString("paywall.intro.weeks", value: "%d週間無料トライアル", comment: ""), p.value)
+        case .month: return String(format: NSLocalizedString("paywall.intro.months", value: "%dヶ月間無料トライアル", comment: ""), p.value)
+        case .year:  return String(format: NSLocalizedString("paywall.intro.years", value: "%d年間無料トライアル", comment: ""), p.value)
+        @unknown default: return NSLocalizedString("paywall.intro.freeTrial", value: "無料トライアル付き", comment: "")
         }
     }
 
@@ -458,7 +457,7 @@ struct PackageButton: View {
         let rawMonthly = product.price / 12 as NSDecimalNumber
         let rounded = NSDecimalNumber(value: rawMonthly.doubleValue.rounded())
         guard let price = product.priceFormatter?.string(from: rounded) else { return nil }
-        return "約\(price)"
+        return String(format: NSLocalizedString("paywall.monthlyEquivalent", value: "約%@", comment: ""), price)
     }
 }
 

@@ -31,6 +31,14 @@ TestFlightにアップロード
 
 メタデータのみ更新
 
+### ios update_screenshots
+
+```sh
+[bundle exec] fastlane ios update_screenshots
+```
+
+スクリーンショットのみ更新
+
 ### ios release
 
 ```sh
