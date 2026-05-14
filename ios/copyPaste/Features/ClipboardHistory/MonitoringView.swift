@@ -8,11 +8,17 @@ struct MonitoringView: View {
         List {
             Section {
                 VStack(spacing: 12) {
-                    VideoPlayerView { isActive in
-                        store.send(.pipStateChanged(isActive))
+                    // PiP ソースビュー（非表示アンカー）
+                    PiPSourceView { sourceView in
+                        PiPManager.shared.setup(sourceView: sourceView)
+                        PiPManager.shared.onPiPStateChange = { isActive in
+                            store.send(.pipStateChanged(isActive))
+                        }
+                        // 既存のアイテムを PiP に反映
+                        PiPManager.shared.updateItems(store.items)
                     }
-                    .frame(height: 100)
-                    .cornerRadius(8)
+                    .frame(width: 1, height: 1)
+                    .opacity(0)
 
                     HStack {
                         Circle()
@@ -29,7 +35,7 @@ struct MonitoringView: View {
             } header: {
                 Text("バックグラウンド監視")
             } footer: {
-                Text("このアプリを起動した状態でバックグラウンドにすると、他のアプリを使用中もクリップボードを監視できます。")
+                Text("PiPウィンドウを開いて他のアプリを使いながらクリップボードを監視できます。ウィンドウ内のアイテムをタップするとコピーできます。")
                     .font(.caption2)
             }
 
@@ -51,6 +57,15 @@ struct MonitoringView: View {
                     .tint(store.isMonitoring ? .red : .blue)
                 }
                 .padding(.vertical, 4)
+
+                if store.isMonitoring {
+                    Button {
+                        PiPManager.shared.startPiP()
+                    } label: {
+                        Label("PiPウィンドウを開く", systemImage: "pip.enter")
+                    }
+                    .tint(.blue)
+                }
             } header: {
                 Text("監視コントロール")
             }

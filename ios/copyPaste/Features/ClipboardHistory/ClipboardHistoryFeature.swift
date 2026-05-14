@@ -117,10 +117,13 @@ struct ClipboardHistoryFeature {
                 let limit = min(state.maxHistoryCount, state.maxItems)
                 if state.items.count > limit {
                     let removed = state.items.removeLast()
-                    // 削除されたアイテムのファイルも削除
                     try? ClipboardStorageManager.shared.deleteItem(removed)
                 }
-                return .send(.saveItems)
+                let latestItems = Array(state.items.prefix(5))
+                return .merge(
+                    .send(.saveItems),
+                    .run { _ in await MainActor.run { PiPManager.shared.updateItems(latestItems) } }
+                )
 
             case let .removeItems(indexSet):
                 if state.isProUser {
@@ -273,8 +276,10 @@ struct ClipboardHistoryFeature {
             case .stopMonitoring:
                 guard state.isMonitoring else { return .none }
                 state.isMonitoring = false
-                PiPManager.shared.stopPiP()
-                return .cancel(id: CancelID.monitoring)
+                return .merge(
+                    .cancel(id: CancelID.monitoring),
+                    .run { _ in await MainActor.run { PiPManager.shared.stopPiP() } }
+                )
                 
             case .checkClipboard:
                 // PiPモード中はバックグラウンドでもチェックを試みる
@@ -405,21 +410,18 @@ struct ClipboardHistoryFeature {
                 }
 
             case let .itemsLoaded(items):
-                // お気に入りを先頭に、その後は日時順にソート
                 state.items = items.sorted { lhs, rhs in
-                    if lhs.isFavorite != rhs.isFavorite {
-                        return lhs.isFavorite
-                    }
+                    if lhs.isFavorite != rhs.isFavorite { return lhs.isFavorite }
                     return lhs.timestamp > rhs.timestamp
                 }
                 Self.logger.info("Loaded \(items.count) items from storage")
 
-                // 初回起動時にクリップボードアクセスの説明を表示
                 if !state.hasRequestedPermission {
                     state.showPermissionAlert = true
                 }
 
-                return .none
+                let latestItems = Array(state.items.prefix(5))
+                return .run { _ in await MainActor.run { PiPManager.shared.updateItems(latestItems) } }
 
             case .saveItems:
                 let items = state.items
