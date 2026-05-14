@@ -44,24 +44,13 @@ struct VideoPlayerView: UIViewControllerRepresentable {
         controller.player = player
         controller.allowsPictureInPicturePlayback = true
         controller.canStartPictureInPictureAutomaticallyFromInline = true
-        controller.showsPlaybackControls = true
-
-        // ビデオレイヤーを小さく透明に
-        controller.videoGravity = .resizeAspect
-        if let playerLayer = controller.view.layer.sublayers?.first {
-            playerLayer.opacity = 0.3
-        }
+        controller.showsPlaybackControls = false
 
         context.coordinator.logger.info("AVPlayerViewController setup complete")
 
-        // 自動再生
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            player.play()
-            context.coordinator.logger.info("Video playback started")
-
-            // iOS 18+: canStartPictureInPictureAutomaticallyFromInline で自動的にPiPが開始される
-            context.coordinator.logger.info("Waiting for automatic PiP start...")
-        }
+        // 即時再生開始（UIBackgroundModes: audio が必要）
+        player.play()
+        context.coordinator.logger.info("Video playback started")
 
         return controller
     }
