@@ -2,6 +2,7 @@ import Foundation
 import ComposableArchitecture
 import UIKit
 import OSLog
+import StoreKit
 
 @Reducer
 struct ClipboardHistoryFeature {
@@ -20,6 +21,7 @@ struct ClipboardHistoryFeature {
         var showPaywall: Bool = false
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
+        var copyCount: Int = UserDefaults.standard.integer(forKey: "clipkit.copyCount")
 
         // 履歴件数制限（無料: 20件、Pro: 無制限）
         var maxHistoryCount: Int {
@@ -80,6 +82,7 @@ struct ClipboardHistoryFeature {
         case showPaywall
         case dismissPaywall
         case updateProStatus
+        case requestReview
         case loadTrash
         case trashLoaded([ClipboardItem])
         case saveTrash
@@ -178,6 +181,12 @@ struct ClipboardHistoryFeature {
                     updated.timestamp = Date()
                     state.items.remove(at: index)
                     state.items.insert(updated, at: 0)
+                }
+                // 20回コピーでレビュー促進
+                state.copyCount += 1
+                UserDefaults.standard.set(state.copyCount, forKey: "clipkit.copyCount")
+                if state.copyCount == 20 {
+                    return .merge(.send(.saveItems), .send(.requestReview))
                 }
                 return .send(.saveItems)
 
@@ -433,8 +442,12 @@ struct ClipboardHistoryFeature {
 
             case .updateProStatus:
                 let newProStatus = RevenueCatManager.shared.hasProAccess()
+                let becamePro = !state.isProUser && newProStatus
                 state.isProUser = newProStatus
                 Self.logger.info("Pro status updated: \(newProStatus)")
+                if becamePro {
+                    return .send(.requestReview)
+                }
                 return .none
 
             case .loadTrash:
@@ -470,6 +483,15 @@ struct ClipboardHistoryFeature {
                 state.trashedItems.removeAll { $0.id == item.id }
                 try? ClipboardStorageManager.shared.deleteItem(item)
                 return .send(.saveTrash)
+
+            case .requestReview:
+                return .run { _ in
+                    await MainActor.run {
+                        guard let scene = UIApplication.shared.connectedScenes
+                            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else { return }
+                        AppStore.requestReview(in: scene)
+                    }
+                }
 
             case .emptyTrash:
                 for item in state.trashedItems {

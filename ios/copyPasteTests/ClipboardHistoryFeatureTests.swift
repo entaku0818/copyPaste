@@ -370,6 +370,73 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         )
     }
 
+    // MARK: - Review Request Tests
+
+    func testCopyItem_triggersReviewAt20thCopy() async {
+        let item = ClipboardItem(content: "Test")
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], copyCount: 19)
+        ) {
+            ClipboardHistoryFeature()
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyItem(item)) {
+            $0.copyCount = 20
+        }
+        await store.receive(\.saveItems)
+        await store.receive(\.requestReview)
+    }
+
+    func testCopyItem_doesNotTriggerReviewBefore20th() async {
+        let item = ClipboardItem(content: "Test")
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], copyCount: 18)
+        ) {
+            ClipboardHistoryFeature()
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyItem(item)) {
+            $0.copyCount = 19
+        }
+        await store.receive(\.saveItems)
+        // requestReview は受け取らない（19回目なのでトリガーされない）
+        XCTAssertEqual(store.state.copyCount, 19)
+    }
+
+    func testCopyItem_doesNotTriggerReviewAfter20th() async {
+        let item = ClipboardItem(content: "Test")
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], copyCount: 20)
+        ) {
+            ClipboardHistoryFeature()
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyItem(item)) {
+            $0.copyCount = 21
+        }
+        await store.receive(\.saveItems)
+        // 21回目以降はトリガーされない
+        XCTAssertEqual(store.state.copyCount, 21)
+    }
+
+    func testCopyItem_copyCountIncrementsEachTime() async {
+        let item = ClipboardItem(content: "Test")
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], copyCount: 0)
+        ) {
+            ClipboardHistoryFeature()
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyItem(item)) { $0.copyCount = 1 }
+        await store.send(.copyItem(item)) { $0.copyCount = 2 }
+        await store.send(.copyItem(item)) { $0.copyCount = 3 }
+        XCTAssertEqual(store.state.copyCount, 3)
+    }
+
     // MARK: - Duplicate detection tests
 
     func testCheckClipboard_duplicateText_stateHasCorrectFirst() {
