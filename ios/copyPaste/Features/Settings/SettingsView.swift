@@ -7,6 +7,7 @@ struct SettingsView: View {
     @State private var showOnboarding = false
     @State private var showPaywall = false
     @State private var showTrash = false
+    @State private var syncMode: CloudKitSyncMode = CloudKitSyncMode.current
     @Environment(\.requestReview) private var requestReview
 
     var body: some View {
@@ -62,6 +63,25 @@ struct SettingsView: View {
                         } label: {
                             Label("ゴミ箱", systemImage: "trash")
                         }
+                    }
+                }
+
+                // iCloud同期セクション（Pro限定）
+                if store.isProUser {
+                    Section {
+                        Picker("同期する内容", selection: $syncMode) {
+                            ForEach(CloudKitSyncMode.allCases, id: \.self) { mode in
+                                Text(mode.displayName).tag(mode)
+                            }
+                        }
+                        .onChange(of: syncMode) { _, newMode in
+                            CloudKitSyncMode.current = newMode
+                        }
+                    } header: {
+                        Label("iCloud同期", systemImage: "icloud")
+                    } footer: {
+                        Text("「画像・ファイルも含む全て」を選択するとiCloudストレージを消費します。")
+                            .font(.caption2)
                     }
                 }
 

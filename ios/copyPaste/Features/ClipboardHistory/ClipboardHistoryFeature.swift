@@ -117,11 +117,13 @@ struct ClipboardHistoryFeature {
                 let limit = min(state.maxHistoryCount, state.maxItems)
                 if state.items.count > limit {
                     let removed = state.items.removeLast()
-                    try? ClipboardStorageManager.shared.deleteItem(removed)
+                    try? ClipboardRepository.shared.deleteItem(removed)
                 }
                 let latestItems = Array(state.items.prefix(5))
+                let newItem = item
                 return .merge(
                     .send(.saveItems),
+                    .run { _ in try? await ClipboardRepository.shared.saveAndSync(item: newItem) },
                     .run { _ in await MainActor.run { PiPManager.shared.updateItems(latestItems) } }
                 )
 
@@ -144,7 +146,7 @@ struct ClipboardHistoryFeature {
                 } else {
                     for index in indexSet {
                         if index < state.items.count {
-                            try? ClipboardStorageManager.shared.deleteItem(state.items[index])
+                            try? ClipboardRepository.shared.deleteItem(state.items[index])
                         }
                     }
                     state.items.remove(atOffsets: indexSet)
@@ -169,7 +171,7 @@ struct ClipboardHistoryFeature {
                         .run { _ in await MainActor.run { PiPManager.shared.updateItems([]) } }
                     )
                 } else {
-                    try? ClipboardStorageManager.shared.clearAll()
+                    try? ClipboardRepository.shared.clearAll()
                     state.items.removeAll()
                     return .merge(
                         .send(.saveItems),
@@ -421,13 +423,14 @@ struct ClipboardHistoryFeature {
             case .loadItems:
                 return .run { send in
                     do {
-                        let items = try await ClipboardStorageManager.shared.load()
+                        let items = try await ClipboardRepository.shared.load()
                         await send(.itemsLoaded(items))
                     } catch {
                         Self.logger.error("Failed to load items: \(error.localizedDescription)")
                         await send(.itemsLoaded([]))
                     }
                 }
+
 
             case let .itemsLoaded(items):
                 state.items = items.sorted { lhs, rhs in
@@ -447,7 +450,7 @@ struct ClipboardHistoryFeature {
                 let items = state.items
                 return .run { _ in
                     do {
-                        try await ClipboardStorageManager.shared.save(items: items)
+                        try await ClipboardRepository.shared.save(items: items)
                     } catch {
                         Self.logger.error("Failed to save items: \(error.localizedDescription)")
                     }
@@ -474,7 +477,7 @@ struct ClipboardHistoryFeature {
 
             case .loadTrash:
                 return .run { send in
-                    let items = (try? await ClipboardStorageManager.shared.loadTrash()) ?? []
+                    let items = (try? await ClipboardRepository.shared.loadTrash()) ?? []
                     // 30日以上経過したアイテムを除外
                     let threshold = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
                     let valid = items.filter { ($0.deletedAt ?? Date()) >= threshold }
@@ -488,7 +491,7 @@ struct ClipboardHistoryFeature {
             case .saveTrash:
                 let items = state.trashedItems
                 return .run { _ in
-                    try? await ClipboardStorageManager.shared.saveTrash(items: items)
+                    try? await ClipboardRepository.shared.saveTrash(items: items)
                 }
 
             case let .restoreItem(item):
@@ -507,7 +510,7 @@ struct ClipboardHistoryFeature {
 
             case let .permanentlyDeleteItem(item):
                 state.trashedItems.removeAll { $0.id == item.id }
-                try? ClipboardStorageManager.shared.deleteItem(item)
+                try? ClipboardRepository.shared.deleteItem(item)
                 return .send(.saveTrash)
 
             case .requestReview:
@@ -521,7 +524,7 @@ struct ClipboardHistoryFeature {
 
             case .emptyTrash:
                 for item in state.trashedItems {
-                    try? ClipboardStorageManager.shared.deleteItem(item)
+                    try? ClipboardRepository.shared.deleteItem(item)
                 }
                 state.trashedItems.removeAll()
                 return .send(.saveTrash)
