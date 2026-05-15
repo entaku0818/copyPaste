@@ -70,6 +70,13 @@ struct PaywallView: View {
                             color: .orange
                         )
 
+                        FeatureRow(
+                            icon: "icloud",
+                            title: "iCloud同期",
+                            description: "複数デバイスで履歴を共有",
+                            color: .cyan
+                        )
+
                     }
                     .padding(.horizontal)
 
