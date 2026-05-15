@@ -1,2 +1,2 @@
-· Improved search discoverability (added keywords: snippet, template, text formatting)
-· Stability improvements and code quality enhancements
+· Added Picture in Picture (PiP) support: view your clipboard history in a floating window while using other apps
+· Stability improvements and bug fixes
