@@ -35,7 +35,7 @@ struct MonitoringView: View {
             } header: {
                 Text("バックグラウンド監視")
             } footer: {
-                Text("PiPウィンドウを開いて他のアプリを使いながらクリップボードを監視できます。ウィンドウ内のアイテムをタップするとコピーできます。")
+                Text("PiPウィンドウを開いて他のアプリを使いながらクリップボード履歴を確認できます。")
                     .font(.caption2)
             }
 

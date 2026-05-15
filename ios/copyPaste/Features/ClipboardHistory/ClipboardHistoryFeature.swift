@@ -136,7 +136,11 @@ struct ClipboardHistoryFeature {
                         }
                     }
                     state.items.remove(atOffsets: indexSet)
-                    return .merge(.send(.saveItems), .send(.saveTrash))
+                    let afterRemove = Array(state.items.prefix(5))
+                    return .merge(
+                        .send(.saveItems), .send(.saveTrash),
+                        .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterRemove) } }
+                    )
                 } else {
                     for index in indexSet {
                         if index < state.items.count {
@@ -144,7 +148,11 @@ struct ClipboardHistoryFeature {
                         }
                     }
                     state.items.remove(atOffsets: indexSet)
-                    return .send(.saveItems)
+                    let afterRemove = Array(state.items.prefix(5))
+                    return .merge(
+                        .send(.saveItems),
+                        .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterRemove) } }
+                    )
                 }
 
             case .clearAll:
@@ -156,11 +164,17 @@ struct ClipboardHistoryFeature {
                     }
                     state.trashedItems.insert(contentsOf: newTrashed, at: 0)
                     state.items.removeAll()
-                    return .merge(.send(.saveItems), .send(.saveTrash))
+                    return .merge(
+                        .send(.saveItems), .send(.saveTrash),
+                        .run { _ in await MainActor.run { PiPManager.shared.updateItems([]) } }
+                    )
                 } else {
                     try? ClipboardStorageManager.shared.clearAll()
                     state.items.removeAll()
-                    return .send(.saveItems)
+                    return .merge(
+                        .send(.saveItems),
+                        .run { _ in await MainActor.run { PiPManager.shared.updateItems([]) } }
+                    )
                 }
                 
             case let .copyItem(item):
@@ -188,10 +202,12 @@ struct ClipboardHistoryFeature {
                 // 20回コピーでレビュー促進
                 state.copyCount += 1
                 UserDefaults.standard.set(state.copyCount, forKey: "clipkit.copyCount")
+                let afterCopy = Array(state.items.prefix(5))
+                let pipEffect: Effect<Action> = .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterCopy) } }
                 if state.copyCount == 20 {
-                    return .merge(.send(.saveItems), .send(.requestReview))
+                    return .merge(.send(.saveItems), .send(.requestReview), pipEffect)
                 }
-                return .send(.saveItems)
+                return .merge(.send(.saveItems), pipEffect)
 
             case let .pasteItem(item):
                 switch item.type {
@@ -230,7 +246,11 @@ struct ClipboardHistoryFeature {
                         // 同じお気に入り状態なら日時でソート
                         return lhs.timestamp > rhs.timestamp
                     }
-                    return .send(.saveItems)
+                    let afterToggle = Array(state.items.prefix(5))
+                    return .merge(
+                        .send(.saveItems),
+                        .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterToggle) } }
+                    )
                 }
                 return .none
 
@@ -479,7 +499,11 @@ struct ClipboardHistoryFeature {
                     state.trashedItems.remove(at: index)
                     state.items.insert(restored, at: 0)
                 }
-                return .merge(.send(.saveItems), .send(.saveTrash))
+                let afterRestore = Array(state.items.prefix(5))
+                return .merge(
+                    .send(.saveItems), .send(.saveTrash),
+                    .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterRestore) } }
+                )
 
             case let .permanentlyDeleteItem(item):
                 state.trashedItems.removeAll { $0.id == item.id }

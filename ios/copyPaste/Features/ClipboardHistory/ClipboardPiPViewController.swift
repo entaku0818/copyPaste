@@ -1,10 +1,8 @@
 import AVKit
 import UIKit
-import OSLog
 
 /// PiP ウィンドウに表示するカスタムコンテンツ
 final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewController {
-    private let logger = Logger(subsystem: "com.clipkit", category: "PiPVC")
     private var tableView: UITableView!
     private var emptyLabel: UILabel!
     private(set) var items: [ClipboardItem] = []
@@ -33,7 +31,7 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
         title.translatesAutoresizingMaskIntoConstraints = false
 
         let hint = UILabel()
-        hint.text = "タップでコピー"
+        hint.text = "クリップボード履歴"
         hint.font = .systemFont(ofSize: 9)
         hint.textColor = .secondaryLabel
         hint.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +43,6 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
         tableView = UITableView(frame: .zero, style: .plain)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.dataSource = self
-        tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .singleLine
         tableView.rowHeight = UITableView.automaticDimension
@@ -99,9 +96,9 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
     }
 }
 
-// MARK: - UITableViewDataSource / Delegate
+// MARK: - UITableViewDataSource
 
-extension ClipboardPiPViewController: UITableViewDataSource, UITableViewDelegate {
+extension ClipboardPiPViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         items.count
     }
@@ -134,27 +131,4 @@ extension ClipboardPiPViewController: UITableViewDataSource, UITableViewDelegate
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let item = items[indexPath.row]
-
-        switch item.type {
-        case .text:    UIPasteboard.general.string = item.textContent
-        case .url:     UIPasteboard.general.url = item.url
-        case .image:   UIPasteboard.general.image = item.thumbnail
-        case .file:    break
-        }
-        logger.info("Copied from PiP: \(item.type.rawValue)")
-
-        // コピー完了フィードバック
-        if let cell = tableView.cellForRow(at: indexPath) {
-            UIView.animate(withDuration: 0.15) {
-                cell.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.3)
-            } completion: { _ in
-                UIView.animate(withDuration: 0.3) {
-                    cell.backgroundColor = .systemBackground
-                }
-            }
-        }
-    }
 }
