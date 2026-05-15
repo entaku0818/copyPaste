@@ -9,7 +9,7 @@ struct ClipboardHistoryFeature {
     @ObservableState
     struct State: Equatable {
         var items: [ClipboardItem] = []
-        let maxItems: Int = 100
+        let maxItems: Int = Int.max
         var isMonitoring: Bool = false
         var lastChangeCount: Int = UIPasteboard.general.changeCount
         var isAppActive: Bool = true
@@ -113,7 +113,7 @@ struct ClipboardHistoryFeature {
             switch action {
             case let .addItem(item):
                 state.items.insert(item, at: 0)
-                // 履歴件数制限を適用（無料版: 20件、Pro: 100件）
+                // 履歴件数制限を適用（無料版: 20件、Pro: 無制限）
                 let limit = min(state.maxHistoryCount, state.maxItems)
                 if state.items.count > limit {
                     let removed = state.items.removeLast()
