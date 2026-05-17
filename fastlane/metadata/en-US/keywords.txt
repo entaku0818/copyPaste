@@ -1,1 +1,1 @@
-clipboard,copy paste,history,widget,keyboard,auto save,iCloud,search
+clipboard,copy paste,history,widget,keyboard,auto save,iCloud,search,manager,snippet,template
