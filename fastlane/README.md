@@ -39,6 +39,14 @@ TestFlightにアップロード
 
 スクリーンショットのみ更新
 
+### ios submit_build
+
+```sh
+[bundle exec] fastlane ios submit_build
+```
+
+アップロード済みビルドを審査申請
+
 ### ios release
 
 ```sh
