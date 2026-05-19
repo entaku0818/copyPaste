@@ -1,2 +1,2 @@
-· Added Picture in Picture (PiP) support: view your clipboard history in a floating window while using other apps
-· Stability improvements and bug fixes
+· Added Firebase Analytics to help improve the app
+· Stability improvements and performance enhancements

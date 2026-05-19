@@ -7,9 +7,22 @@
 
 import SwiftUI
 import ComposableArchitecture
+import FirebaseCore
+import FirebaseAnalytics
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+    Analytics.logEvent(AnalyticsEventAppOpen, parameters: nil)
+    return true
+  }
+}
+
 
 @main
 struct ClipKitApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     private let store = Store(
@@ -19,9 +32,7 @@ struct ClipKitApp: App {
     }
 
     init() {
-        // RevenueCatの初期化
         RevenueCatManager.shared.configure()
-        // AdMobの初期化
         AdManager.shared.configure()
     }
 

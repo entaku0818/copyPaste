@@ -3,6 +3,7 @@ import ComposableArchitecture
 import UIKit
 import OSLog
 import StoreKit
+import FirebaseAnalytics
 
 @Reducer
 struct ClipboardHistoryFeature {
@@ -22,6 +23,8 @@ struct ClipboardHistoryFeature {
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
         var copyCount: Int = UserDefaults.standard.integer(forKey: "clipkit.copyCount")
+        var showSatisfactionPrompt: Bool = false
+        var showFeedbackForm: Bool = false
 
         // 履歴件数制限（無料: 20件、Pro: 無制限）
         var maxHistoryCount: Int {
@@ -83,6 +86,11 @@ struct ClipboardHistoryFeature {
         case dismissPaywall
         case updateProStatus
         case requestReview
+        case checkReviewTrigger
+        case satisfactionResponsePositive
+        case satisfactionResponseNegative
+        case dismissSatisfactionPrompt
+        case dismissFeedbackForm
         case loadTrash
         case trashLoaded([ClipboardItem])
         case saveTrash
@@ -201,14 +209,11 @@ struct ClipboardHistoryFeature {
                     state.items.remove(at: index)
                     state.items.insert(updated, at: 0)
                 }
-                // 20回コピーでレビュー促進
                 state.copyCount += 1
                 UserDefaults.standard.set(state.copyCount, forKey: "clipkit.copyCount")
+                Analytics.logEvent("copy_item", parameters: ["item_type": item.type.rawValue])
                 let afterCopy = Array(state.items.prefix(5))
                 let pipEffect: Effect<Action> = .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterCopy) } }
-                if state.copyCount == 20 {
-                    return .merge(.send(.saveItems), .send(.requestReview), pipEffect)
-                }
                 return .merge(.send(.saveItems), pipEffect)
 
             case let .pasteItem(item):
@@ -238,6 +243,8 @@ struct ClipboardHistoryFeature {
                 }
 
                 if let index = state.items.firstIndex(where: { $0.id == item.id }) {
+                    let newValue = !state.items[index].isFavorite
+                    Analytics.logEvent("toggle_favorite", parameters: ["is_favorite": newValue])
                     state.items[index].isFavorite.toggle()
                     // お気に入りの状態が変わったらソート
                     state.items.sort { lhs, rhs in
@@ -384,11 +391,11 @@ struct ClipboardHistoryFeature {
                 return .none
                 
             case .onAppear:
-                // Pro状態を更新してから、保存されたアイテムを読み込む
                 return .merge(
                     .send(.updateProStatus),
                     .send(.loadItems),
-                    .send(.loadTrash)
+                    .send(.loadTrash),
+                    .send(.checkReviewTrigger)
                 )
 
             case .requestClipboardPermission:
@@ -457,6 +464,7 @@ struct ClipboardHistoryFeature {
                 }
 
             case .showPaywall:
+                Analytics.logEvent("show_paywall", parameters: nil)
                 state.showPaywall = true
                 return .none
 
@@ -521,6 +529,42 @@ struct ClipboardHistoryFeature {
                         AppStore.requestReview(in: scene)
                     }
                 }
+
+            case .checkReviewTrigger:
+                let defaults = UserDefaults.standard
+                let now = Date().timeIntervalSince1970
+                if defaults.double(forKey: "clipkit.firstLaunchDate") == 0 {
+                    defaults.set(now, forKey: "clipkit.firstLaunchDate")
+                    return .none
+                }
+                let firstLaunch = defaults.double(forKey: "clipkit.firstLaunchDate")
+                let shown = defaults.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []
+                let elapsed = now - firstLaunch
+                let oneMonth: Double = 30 * 24 * 60 * 60
+                let threeMonths: Double = 90 * 24 * 60 * 60
+                if elapsed >= threeMonths && !shown.contains("3month") {
+                    defaults.set(shown + ["3month"], forKey: "clipkit.reviewMilestonesShown")
+                    state.showSatisfactionPrompt = true
+                } else if elapsed >= oneMonth && !shown.contains("1month") {
+                    defaults.set(shown + ["1month"], forKey: "clipkit.reviewMilestonesShown")
+                    state.showSatisfactionPrompt = true
+                }
+                return .none
+
+            case .satisfactionResponsePositive:
+                return .send(.requestReview)
+
+            case .satisfactionResponseNegative:
+                state.showFeedbackForm = true
+                return .none
+
+            case .dismissSatisfactionPrompt:
+                state.showSatisfactionPrompt = false
+                return .none
+
+            case .dismissFeedbackForm:
+                state.showFeedbackForm = false
+                return .none
 
             case .emptyTrash:
                 for item in state.trashedItems {
