@@ -1,2 +1,3 @@
+· Banner ads now shown on all screens (hidden for Pro users)
 · Added Firebase Analytics to help improve the app
 · Stability improvements and performance enhancements

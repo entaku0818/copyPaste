@@ -1,5 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
+import GoogleMobileAds
 
 struct FavoritesView: View {
     let store: StoreOf<ClipboardHistoryFeature>
@@ -53,26 +54,30 @@ struct FavoritesView: View {
         }
         .safeAreaInset(edge: .bottom) {
             if !store.isProUser {
-                Button {
-                    showPaywall = true
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "crown.fill")
-                            .foregroundStyle(LinearGradient(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing))
-                        Text("Pro で無制限に追加 (\(favoriteItems.count)/10)")
-                            .font(.caption)
-                            .foregroundColor(.primary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
+                VStack(spacing: 0) {
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "crown.fill")
+                                .foregroundStyle(LinearGradient(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing))
+                            Text("Pro で無制限に追加 (\(favoriteItems.count)/10)")
+                                .font(.caption)
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(.regularMaterial)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(.regularMaterial)
-                }
-                .sheet(isPresented: $showPaywall) {
-                    PaywallView()
+                    .sheet(isPresented: $showPaywall) {
+                        PaywallView()
+                    }
+                    BannerAdView()
+                        .frame(height: BannerAdView.adaptiveHeight)
                 }
             }
         }

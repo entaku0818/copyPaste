@@ -14,6 +14,9 @@
 		61CC3DD22F3E271700B6F559 /* ClipboardWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		61CC3DDE2F42178000B6F559 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 61CC3DDD2F42178000B6F559 /* RevenueCat */; };
 		61CC8CC52F51F16F00ED729F /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 61CC8CC42F51F16F00ED729F /* GoogleMobileAds */; };
+		61E59BE22FBCB1DF007925A3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 61E59BE12FBCB1DF007925A3 /* FirebaseAnalytics */; };
+		61E59BE42FBCB352007925A3 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 61E59BE32FBCB352007925A3 /* FirebaseFunctions */; };
+		61E59BF22FBCB400007925A3 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 61E59BF12FBCB400007925A3 /* FirebaseCrashlytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +89,7 @@
 				Features/ClipboardHistory/ClipboardItem.swift,
 				Features/ClipboardHistory/ClipboardStorageManager.swift,
 				Features/ClipboardHistory/SharedConstants.swift,
+				"GoogleService-Info.plist",
 			);
 			target = 613FED652F2901E400AE78D8 /* ClipboardKeyboard */;
 		};
@@ -100,6 +104,13 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+			);
+			target = 61CC3DBB2F3E271600B6F559 /* ClipboardWidgetExtension */;
+		};
+		61E59DFB2FBCB80E007925A3 /* Exceptions for "copyPaste" folder in "ClipboardWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
 			);
 			target = 61CC3DBB2F3E271600B6F559 /* ClipboardWidgetExtension */;
 		};
@@ -119,6 +130,7 @@
 			exceptions = (
 				61BB48CE2DCA3ED700EFE195 /* Exceptions for "copyPaste" folder in "ClipKit" target */,
 				61AE521A2F38DB6A0052F115 /* Exceptions for "copyPaste" folder in "ClipboardKeyboard" target */,
+				61E59DFB2FBCB80E007925A3 /* Exceptions for "copyPaste" folder in "ClipboardWidgetExtension" target */,
 			);
 			path = copyPaste;
 			sourceTree = "<group>";
@@ -157,6 +169,9 @@
 			files = (
 				61CC8CC52F51F16F00ED729F /* GoogleMobileAds in Frameworks */,
 				61CC3DDE2F42178000B6F559 /* RevenueCat in Frameworks */,
+				61E59BE42FBCB352007925A3 /* FirebaseFunctions in Frameworks */,
+				61E59BE22FBCB1DF007925A3 /* FirebaseAnalytics in Frameworks */,
+				61E59BF22FBCB400007925A3 /* FirebaseCrashlytics in Frameworks */,
 				61BB48C62DCA33D800EFE195 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,8 +255,6 @@
 				613FED672F2901E400AE78D8 /* ClipboardKeyboard */,
 			);
 			name = ClipboardKeyboard;
-			packageProductDependencies = (
-			);
 			productName = ClipboardKeyboard;
 			productReference = 613FED662F2901E400AE78D8 /* ClipboardKeyboard.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -269,6 +282,9 @@
 				61BB48C52DCA33D800EFE195 /* ComposableArchitecture */,
 				61CC3DDD2F42178000B6F559 /* RevenueCat */,
 				61CC8CC42F51F16F00ED729F /* GoogleMobileAds */,
+				61E59BE12FBCB1DF007925A3 /* FirebaseAnalytics */,
+				61E59BE32FBCB352007925A3 /* FirebaseFunctions */,
+				61E59BF12FBCB400007925A3 /* FirebaseCrashlytics */,
 			);
 			productName = ClipKit;
 			productReference = 61B4C3892DC4A60F00E59DE3 /* ClipKit.app */;
@@ -291,8 +307,6 @@
 				61B4C3992DC4A61100E59DE3 /* copyPasteTests */,
 			);
 			name = ClipKitTests;
-			packageProductDependencies = (
-			);
 			productName = ClipKitTests;
 			productReference = 61B4C3962DC4A61100E59DE3 /* ClipKitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -314,8 +328,6 @@
 				61B4C3A32DC4A61100E59DE3 /* copyPasteUITests */,
 			);
 			name = ClipKitUITests;
-			packageProductDependencies = (
-			);
 			productName = ClipKitUITests;
 			productReference = 61B4C3A02DC4A61100E59DE3 /* ClipKitUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -336,8 +348,6 @@
 				61CC3DC22F3E271600B6F559 /* ClipboardWidget */,
 			);
 			name = ClipboardWidgetExtension;
-			packageProductDependencies = (
-			);
 			productName = ClipboardWidgetExtension;
 			productReference = 61CC3DBC2F3E271600B6F559 /* ClipboardWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -384,6 +394,7 @@
 				61BB48C42DCA33D800EFE195 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				61CC3DDC2F42178000B6F559 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				61CC8CC32F51F16F00ED729F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				61E59BE02FBCB1DF007925A3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 61B4C38A2DC4A60F00E59DE3 /* Products */;
@@ -504,7 +515,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ClipboardKeyboard/ClipboardKeyboard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClipboardKeyboard/Info.plist;
@@ -516,7 +527,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardKeyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -534,7 +545,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ClipboardKeyboard/ClipboardKeyboard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClipboardKeyboard/Info.plist;
@@ -546,7 +557,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardKeyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -691,7 +702,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = copyPaste/copyPaste.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -707,7 +718,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -723,7 +734,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = copyPaste/copyPaste.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -739,7 +750,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -753,11 +764,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -772,11 +783,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -790,10 +801,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -807,10 +818,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -827,7 +838,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = ClipboardWidget/ClipboardWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClipboardWidget/Info.plist;
@@ -839,7 +850,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -859,7 +870,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = ClipboardWidget/ClipboardWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClipboardWidget/Info.plist;
@@ -871,7 +882,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -968,6 +979,14 @@
 				minimumVersion = 13.1.0;
 			};
 		};
+		61E59BE02FBCB1DF007925A3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.13.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -985,6 +1004,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 61CC8CC32F51F16F00ED729F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
+		};
+		61E59BE12FBCB1DF007925A3 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61E59BE02FBCB1DF007925A3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		61E59BE32FBCB352007925A3 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61E59BE02FBCB1DF007925A3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		61E59BF12FBCB400007925A3 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61E59BE02FBCB1DF007925A3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

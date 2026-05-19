@@ -1,6 +1,7 @@
 import SwiftUI
 import StoreKit
 import ComposableArchitecture
+import GoogleMobileAds
 
 struct SettingsView: View {
     let store: StoreOf<ClipboardHistoryFeature>
@@ -56,6 +57,11 @@ struct SettingsView: View {
                         requestReview()
                     } label: {
                         Label("レビューを書く", systemImage: "star.fill")
+                    }
+                    Button {
+                        store.send(.satisfactionResponseNegative)
+                    } label: {
+                        Label("お問い合わせ", systemImage: "envelope")
                     }
                     if store.isProUser {
                         Button {
@@ -124,6 +130,12 @@ struct SettingsView: View {
                         .font(.caption)
                 }
                 #endif
+            }
+            .safeAreaInset(edge: .bottom) {
+                if !store.isProUser {
+                    BannerAdView()
+                        .frame(height: BannerAdView.adaptiveHeight)
+                }
             }
             .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
