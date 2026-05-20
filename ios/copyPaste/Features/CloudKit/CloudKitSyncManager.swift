@@ -1,7 +1,6 @@
 import CloudKit
 import OSLog
 
-@MainActor
 final class CloudKitSyncManager {
     static let shared = CloudKitSyncManager()
 
@@ -68,7 +67,7 @@ final class CloudKitSyncManager {
     func deleteAll() async {
         do {
             let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
-            let result = try await database.records(matching: query)
+            let result = try await database.records(matching: query, resultsLimit: 200)
             let ids = result.matchResults.compactMap { try? $0.1.get().recordID }
             if ids.isEmpty { return }
             let (_, errors) = try await database.modifyRecords(saving: [], deleting: ids)
@@ -88,7 +87,7 @@ final class CloudKitSyncManager {
         guard mode.isEnabled else { return [] }
 
         let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
-        let result = try await database.records(matching: query, desiredKeys: desiredKeys(for: mode))
+        let result = try await database.records(matching: query, desiredKeys: desiredKeys(for: mode), resultsLimit: 200)
 
         var items: [ClipboardItem] = []
         for (_, recordResult) in result.matchResults {
