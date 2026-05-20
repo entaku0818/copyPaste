@@ -6,6 +6,10 @@ enum SharedConstants {
     /// Xcodeの Signing & Capabilities でこのIDを追加してください
     static let appGroupID = "group.com.entaku.clipkit"
 
+    /// Keychainアクセスグループ（メインアプリとキーボード拡張で暗号化キーを共有するため）
+    /// entitlementsの keychain-access-groups に $(AppIdentifierPrefix)com.entaku.clipkit を追加すること
+    static let keychainAccessGroup = "4YZQY4C47E.com.entaku.clipkit"
+
     /// 共有ストレージのベースディレクトリ名
     static let storageDirectoryName = "ClipboardHistory"
 

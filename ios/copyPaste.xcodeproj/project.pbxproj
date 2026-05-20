@@ -88,6 +88,7 @@
 			membershipExceptions = (
 				Features/ClipboardHistory/ClipboardItem.swift,
 				Features/ClipboardHistory/ClipboardStorageManager.swift,
+				Features/ClipboardHistory/EncryptionHelper.swift,
 				Features/ClipboardHistory/SharedConstants.swift,
 				"GoogleService-Info.plist",
 			);

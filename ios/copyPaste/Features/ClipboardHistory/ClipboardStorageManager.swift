@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import OSLog
 
@@ -75,11 +76,12 @@ class ClipboardStorageManager {
             itemsToSave.append(metadata)
         }
 
-        // メタデータをJSONで保存
+        // メタデータをJSONで保存（AES-GCM暗号化）
         let metadataURL = baseDirectory.appendingPathComponent(metadataFileName)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(itemsToSave)
+        let jsonData = try encoder.encode(itemsToSave)
+        let data = (try? EncryptionHelper.encrypt(jsonData)) ?? jsonData
         try data.write(to: metadataURL)
 
         logger.info("Successfully saved \(items.count) items")
@@ -98,8 +100,15 @@ class ClipboardStorageManager {
             return []
         }
 
-        // メタデータを読み込み
-        let data = try Data(contentsOf: metadataURL)
+        // メタデータを読み込み（AES-GCM復号、移行互換のため失敗時は平文として処理）
+        let rawData = try Data(contentsOf: metadataURL)
+        let data: Data
+        if let decrypted = try? EncryptionHelper.decrypt(rawData) {
+            data = decrypted
+        } else {
+            data = rawData
+            logger.info("Loaded unencrypted data, will be encrypted on next save")
+        }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let metadataList = try decoder.decode([ClipboardItemMetadata].self, from: data)
@@ -180,14 +189,16 @@ class ClipboardStorageManager {
         let trashURL = baseDirectory.appendingPathComponent(trashFileName)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(itemsToSave)
+        let jsonData = try encoder.encode(itemsToSave)
+        let data = (try? EncryptionHelper.encrypt(jsonData)) ?? jsonData
         try data.write(to: trashURL)
     }
 
     func loadTrash() async throws -> [ClipboardItem] {
         let trashURL = baseDirectory.appendingPathComponent(trashFileName)
         guard fileManager.fileExists(atPath: trashURL.path) else { return [] }
-        let data = try Data(contentsOf: trashURL)
+        let rawData = try Data(contentsOf: trashURL)
+        let data = (try? EncryptionHelper.decrypt(rawData)) ?? rawData
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let metadataList = try decoder.decode([ClipboardItemMetadata].self, from: data)
