@@ -133,6 +133,25 @@ struct ClipboardHistoryView: View {
         ) {
             PaywallView()
         }
+        .sheet(
+            isPresented: Binding(
+                get: { store.showSatisfactionPrompt },
+                set: { if !$0 { store.send(.dismissSatisfactionPrompt) } }
+            )
+        ) {
+            SatisfactionPromptView(
+                onSatisfied: { store.send(.satisfactionResponsePositive) },
+                onUnsatisfied: { store.send(.satisfactionResponseNegative) }
+            )
+        }
+        .sheet(
+            isPresented: Binding(
+                get: { store.showFeedbackForm },
+                set: { if !$0 { store.send(.dismissFeedbackForm) } }
+            )
+        ) {
+            FeedbackFormView()
+        }
         .safeAreaInset(edge: .bottom) {
             if !store.isProUser {
                 BannerAdView()

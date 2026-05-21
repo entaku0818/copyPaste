@@ -372,54 +372,114 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
 
     // MARK: - Review Request Tests
 
-    func testCopyItem_triggersReviewAt20thCopy() async {
-        let item = ClipboardItem(content: "Test")
-        let store = TestStore(
-            initialState: ClipboardHistoryFeature.State(items: [item], copyCount: 19)
-        ) {
+    override func setUp() {
+        super.setUp()
+        UserDefaults.standard.removeObject(forKey: "clipkit.firstLaunchDate")
+        UserDefaults.standard.removeObject(forKey: "clipkit.reviewMilestonesShown")
+    }
+
+    override func tearDown() {
+        UserDefaults.standard.removeObject(forKey: "clipkit.firstLaunchDate")
+        UserDefaults.standard.removeObject(forKey: "clipkit.reviewMilestonesShown")
+        super.tearDown()
+    }
+
+    func testCheckReviewTrigger_recordsFirstLaunchDate() async {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
             ClipboardHistoryFeature()
         }
         store.exhaustivity = .off
 
-        await store.send(.copyItem(item)) {
-            $0.copyCount = 20
+        await store.send(.checkReviewTrigger)
+
+        XCTAssertGreaterThan(
+            UserDefaults.standard.double(forKey: "clipkit.firstLaunchDate"), 0,
+            "初回起動日時が記録されること"
+        )
+    }
+
+    func testCheckReviewTrigger_showsPromptAfter1Month() async {
+        // 31日前に初回起動
+        let thirtyOneDaysAgo = Date().timeIntervalSince1970 - 31 * 24 * 60 * 60
+        UserDefaults.standard.set(thirtyOneDaysAgo, forKey: "clipkit.firstLaunchDate")
+
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
         }
-        await store.receive(\.saveItems)
+
+        await store.send(.checkReviewTrigger) {
+            $0.showSatisfactionPrompt = true
+        }
+
+        XCTAssertTrue(
+            (UserDefaults.standard.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []).contains("1month")
+        )
+    }
+
+    func testCheckReviewTrigger_showsPromptAfter3Months() async {
+        // 91日前に初回起動、1monthはすでに表示済み
+        let ninetyOneDaysAgo = Date().timeIntervalSince1970 - 91 * 24 * 60 * 60
+        UserDefaults.standard.set(ninetyOneDaysAgo, forKey: "clipkit.firstLaunchDate")
+        UserDefaults.standard.set(["1month"], forKey: "clipkit.reviewMilestonesShown")
+
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger) {
+            $0.showSatisfactionPrompt = true
+        }
+
+        XCTAssertTrue(
+            (UserDefaults.standard.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []).contains("3month")
+        )
+    }
+
+    func testCheckReviewTrigger_doesNotRepeatShownMilestone() async {
+        // 1monthをすでに表示済みの場合は再表示しない
+        let thirtyOneDaysAgo = Date().timeIntervalSince1970 - 31 * 24 * 60 * 60
+        UserDefaults.standard.set(thirtyOneDaysAgo, forKey: "clipkit.firstLaunchDate")
+        UserDefaults.standard.set(["1month"], forKey: "clipkit.reviewMilestonesShown")
+
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger)
+        XCTAssertFalse(store.state.showSatisfactionPrompt)
+    }
+
+    func testCheckReviewTrigger_doesNotShowPromptBeforeOneMonth() async {
+        // 10日前では表示しない
+        let tenDaysAgo = Date().timeIntervalSince1970 - 10 * 24 * 60 * 60
+        UserDefaults.standard.set(tenDaysAgo, forKey: "clipkit.firstLaunchDate")
+
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger)
+        XCTAssertFalse(store.state.showSatisfactionPrompt)
+    }
+
+    func testSatisfactionResponsePositive_sendsRequestReview() async {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        }
+        store.exhaustivity = .off
+
+        await store.send(.satisfactionResponsePositive)
         await store.receive(\.requestReview)
     }
 
-    func testCopyItem_doesNotTriggerReviewBefore20th() async {
-        let item = ClipboardItem(content: "Test")
-        let store = TestStore(
-            initialState: ClipboardHistoryFeature.State(items: [item], copyCount: 18)
-        ) {
+    func testSatisfactionResponseNegative_showsFeedbackForm() async {
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
             ClipboardHistoryFeature()
         }
-        store.exhaustivity = .off
 
-        await store.send(.copyItem(item)) {
-            $0.copyCount = 19
+        await store.send(.satisfactionResponseNegative) {
+            $0.showFeedbackForm = true
         }
-        await store.receive(\.saveItems)
-        // requestReview は受け取らない（19回目なのでトリガーされない）
-        XCTAssertEqual(store.state.copyCount, 19)
-    }
-
-    func testCopyItem_doesNotTriggerReviewAfter20th() async {
-        let item = ClipboardItem(content: "Test")
-        let store = TestStore(
-            initialState: ClipboardHistoryFeature.State(items: [item], copyCount: 20)
-        ) {
-            ClipboardHistoryFeature()
-        }
-        store.exhaustivity = .off
-
-        await store.send(.copyItem(item)) {
-            $0.copyCount = 21
-        }
-        await store.receive(\.saveItems)
-        // 21回目以降はトリガーされない
-        XCTAssertEqual(store.state.copyCount, 21)
     }
 
     func testCopyItem_copyCountIncrementsEachTime() async {

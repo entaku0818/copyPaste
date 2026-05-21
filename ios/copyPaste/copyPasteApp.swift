@@ -34,6 +34,7 @@ struct ClipKitApp: App {
     init() {
         RevenueCatManager.shared.configure()
         AdManager.shared.configure()
+        Task { await JSONMigration.migrateIfNeeded() }
     }
 
     private var mainView: some View {

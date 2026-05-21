@@ -111,6 +111,7 @@ fastlane/AuthKey_*.p8
 # Firebase config (secrets)
 lp/.env
 lp/firebase-config.js
+ios/copyPaste/GoogleService-Info.plist
 .playwright-cli/
 ios/.playwright-cli/
 firebase-debug.log

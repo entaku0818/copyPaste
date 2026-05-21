@@ -1,4 +1,4 @@
-import CryptoKit
+import CoreData
 import Foundation
 import OSLog
 
@@ -6,335 +6,105 @@ class ClipboardStorageManager {
     static let shared = ClipboardStorageManager()
     private let logger = Logger(subsystem: "com.clipkit", category: "Storage")
 
-    private let fileManager = FileManager.default
-    private let baseDirectory: URL
-    private let metadataFileName = "items.json"
-    private let trashFileName = "trash.json"
-
-    // ストレージ制限
-    private let maxStorageSize: Int64 = 100 * 1024 * 1024 // 100MB
-
-    private init() {
-        // App Groupコンテナを使用（メインアプリとキーボード拡張で共有）
-        if let containerURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: SharedConstants.appGroupID) {
-            baseDirectory = containerURL.appendingPathComponent(SharedConstants.storageDirectoryName, isDirectory: true)
-            logger.info("Using App Group container: \(self.baseDirectory.path)")
-        } else {
-            // フォールバック: App Groupが設定されていない場合はDocumentsディレクトリを使用
-            let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            baseDirectory = documentsDirectory.appendingPathComponent(SharedConstants.storageDirectoryName, isDirectory: true)
-            logger.warning("App Group not configured, using Documents directory")
-        }
-
-        // ディレクトリが存在しない場合は作成
-        if !fileManager.fileExists(atPath: baseDirectory.path) {
-            do {
-                try fileManager.createDirectory(at: baseDirectory, withIntermediateDirectories: true)
-                logger.info("Created clipboard history directory")
-            } catch {
-                logger.error("Failed to create directory: \(error.localizedDescription)")
-            }
-        }
-    }
+    private init() {}
 
     // MARK: - Save
 
     func save(items: [ClipboardItem]) async throws {
-        logger.info("Saving \(items.count) items...")
-
-        // 画像データを別ファイルとして保存し、メタデータのみ保存
-        var itemsToSave: [ClipboardItemMetadata] = []
-
-        for item in items {
-            var metadata = ClipboardItemMetadata(
-                id: item.id,
-                timestamp: item.timestamp,
-                type: item.type,
-                isFavorite: item.isFavorite,
-                textContent: item.textContent,
-                url: item.url,
-                fileName: item.fileName,
-                fileSize: item.fileSize,
-                fileURL: item.fileURL
+        let ctx = PersistenceController.shared.newBackgroundContext()
+        try await ctx.perform {
+            // 既存アイテムを取得して upsert（削除対象は消す）
+            let request = ClipboardItemEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "isInTrash == NO")
+            let existing = try ctx.fetch(request)
+            let existingByID = Dictionary(
+                uniqueKeysWithValues: existing.compactMap { e -> (UUID, ClipboardItemEntity)? in
+                    guard let id = e.id else { return nil }
+                    return (id, e)
+                }
             )
-
-            // 画像データを別ファイルに保存
-            if let imageData = item.imageData {
-                let imageFileName = "\(item.id.uuidString)_image.dat"
-                let imageURL = baseDirectory.appendingPathComponent(imageFileName)
-                try imageData.write(to: imageURL)
-                metadata.imageFileName = imageFileName
+            let newIDs = Set(items.map { $0.id })
+            for (id, entity) in existingByID where !newIDs.contains(id) {
+                ctx.delete(entity)
             }
-
-            if let thumbnailData = item.imageThumbnailData {
-                let thumbnailFileName = "\(item.id.uuidString)_thumbnail.dat"
-                let thumbnailURL = baseDirectory.appendingPathComponent(thumbnailFileName)
-                try thumbnailData.write(to: thumbnailURL)
-                metadata.thumbnailFileName = thumbnailFileName
+            for item in items {
+                let entity = existingByID[item.id] ?? ClipboardItemEntity(context: ctx)
+                entity.configure(from: item, isInTrash: false)
             }
-
-            itemsToSave.append(metadata)
+            try ctx.save()
         }
-
-        // メタデータをJSONで保存（AES-GCM暗号化）
-        let metadataURL = baseDirectory.appendingPathComponent(metadataFileName)
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let jsonData = try encoder.encode(itemsToSave)
-        let data = (try? EncryptionHelper.encrypt(jsonData)) ?? jsonData
-        try data.write(to: metadataURL)
-
-        logger.info("Successfully saved \(items.count) items")
+        logger.info("Saved \(items.count) items")
     }
 
     // MARK: - Load
 
     func load() async throws -> [ClipboardItem] {
-        logger.info("Loading items...")
-
-        let metadataURL = baseDirectory.appendingPathComponent(metadataFileName)
-
-        // ファイルが存在しない場合は空配列を返す
-        guard fileManager.fileExists(atPath: metadataURL.path) else {
-            logger.info("No saved items found")
-            return []
+        let ctx = PersistenceController.shared.newBackgroundContext()
+        return try await ctx.perform {
+            let request = ClipboardItemEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "isInTrash == NO")
+            request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+            return try ctx.fetch(request).compactMap { $0.toClipboardItem() }
         }
-
-        // メタデータを読み込み（AES-GCM復号、移行互換のため失敗時は平文として処理）
-        let rawData = try Data(contentsOf: metadataURL)
-        let data: Data
-        if let decrypted = try? EncryptionHelper.decrypt(rawData) {
-            data = decrypted
-        } else {
-            data = rawData
-            logger.info("Loaded unencrypted data, will be encrypted on next save")
-        }
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        let metadataList = try decoder.decode([ClipboardItemMetadata].self, from: data)
-
-        // ClipboardItemに変換
-        var items: [ClipboardItem] = []
-
-        for metadata in metadataList {
-            var imageData: Data?
-            var thumbnailData: Data?
-
-            // 画像データを読み込み
-            if let imageFileName = metadata.imageFileName {
-                let imageURL = baseDirectory.appendingPathComponent(imageFileName)
-                if fileManager.fileExists(atPath: imageURL.path) {
-                    imageData = try? Data(contentsOf: imageURL)
-                }
-            }
-
-            if let thumbnailFileName = metadata.thumbnailFileName {
-                let thumbnailURL = baseDirectory.appendingPathComponent(thumbnailFileName)
-                if fileManager.fileExists(atPath: thumbnailURL.path) {
-                    thumbnailData = try? Data(contentsOf: thumbnailURL)
-                }
-            }
-
-            let item = ClipboardItem(
-                id: metadata.id,
-                timestamp: metadata.timestamp,
-                type: metadata.type,
-                isFavorite: metadata.isFavorite,
-                textContent: metadata.textContent,
-                imageData: imageData,
-                imageThumbnailData: thumbnailData,
-                url: metadata.url,
-                fileName: metadata.fileName,
-                fileSize: metadata.fileSize,
-                fileURL: metadata.fileURL
-            )
-
-            items.append(item)
-        }
-
-        logger.info("Successfully loaded \(items.count) items")
-        return items
     }
 
     // MARK: - Trash
 
     func saveTrash(items: [ClipboardItem]) async throws {
-        var itemsToSave: [ClipboardItemMetadata] = []
-        for item in items {
-            var metadata = ClipboardItemMetadata(
-                id: item.id,
-                timestamp: item.timestamp,
-                type: item.type,
-                textContent: item.textContent,
-                url: item.url,
-                fileName: item.fileName,
-                fileSize: item.fileSize,
-                fileURL: item.fileURL,
-                deletedAt: item.deletedAt
+        let ctx = PersistenceController.shared.newBackgroundContext()
+        try await ctx.perform {
+            let request = ClipboardItemEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "isInTrash == YES")
+            let existing = try ctx.fetch(request)
+            let existingByID = Dictionary(
+                uniqueKeysWithValues: existing.compactMap { e -> (UUID, ClipboardItemEntity)? in
+                    guard let id = e.id else { return nil }
+                    return (id, e)
+                }
             )
-            if let imageData = item.imageData {
-                let imageFileName = "\(item.id.uuidString)_image.dat"
-                let imageURL = baseDirectory.appendingPathComponent(imageFileName)
-                try imageData.write(to: imageURL)
-                metadata.imageFileName = imageFileName
+            let newIDs = Set(items.map { $0.id })
+            for (id, entity) in existingByID where !newIDs.contains(id) {
+                ctx.delete(entity)
             }
-            if let thumbnailData = item.imageThumbnailData {
-                let thumbnailFileName = "\(item.id.uuidString)_thumbnail.dat"
-                let thumbnailURL = baseDirectory.appendingPathComponent(thumbnailFileName)
-                try thumbnailData.write(to: thumbnailURL)
-                metadata.thumbnailFileName = thumbnailFileName
+            for item in items {
+                let entity = existingByID[item.id] ?? ClipboardItemEntity(context: ctx)
+                entity.configure(from: item, isInTrash: true)
             }
-            itemsToSave.append(metadata)
+            try ctx.save()
         }
-        let trashURL = baseDirectory.appendingPathComponent(trashFileName)
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let jsonData = try encoder.encode(itemsToSave)
-        let data = (try? EncryptionHelper.encrypt(jsonData)) ?? jsonData
-        try data.write(to: trashURL)
     }
 
     func loadTrash() async throws -> [ClipboardItem] {
-        let trashURL = baseDirectory.appendingPathComponent(trashFileName)
-        guard fileManager.fileExists(atPath: trashURL.path) else { return [] }
-        let rawData = try Data(contentsOf: trashURL)
-        let data = (try? EncryptionHelper.decrypt(rawData)) ?? rawData
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        let metadataList = try decoder.decode([ClipboardItemMetadata].self, from: data)
-        var items: [ClipboardItem] = []
-        for metadata in metadataList {
-            var imageData: Data?
-            var thumbnailData: Data?
-            if let imageFileName = metadata.imageFileName {
-                let imageURL = baseDirectory.appendingPathComponent(imageFileName)
-                if fileManager.fileExists(atPath: imageURL.path) {
-                    imageData = try? Data(contentsOf: imageURL)
-                }
-            }
-            if let thumbnailFileName = metadata.thumbnailFileName {
-                let thumbnailURL = baseDirectory.appendingPathComponent(thumbnailFileName)
-                if fileManager.fileExists(atPath: thumbnailURL.path) {
-                    thumbnailData = try? Data(contentsOf: thumbnailURL)
-                }
-            }
-            var item = ClipboardItem(
-                id: metadata.id,
-                timestamp: metadata.timestamp,
-                type: metadata.type,
-                textContent: metadata.textContent,
-                imageData: imageData,
-                imageThumbnailData: thumbnailData,
-                url: metadata.url,
-                fileName: metadata.fileName,
-                fileSize: metadata.fileSize,
-                fileURL: metadata.fileURL
-            )
-            item.deletedAt = metadata.deletedAt
-            items.append(item)
+        let ctx = PersistenceController.shared.newBackgroundContext()
+        return try await ctx.perform {
+            let request = ClipboardItemEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "isInTrash == YES")
+            request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+            return try ctx.fetch(request).compactMap { $0.toClipboardItem() }
         }
-        return items
     }
 
     // MARK: - Delete
 
     func deleteItem(_ item: ClipboardItem) throws {
-        // 画像ファイルを削除
-        if item.imageData != nil {
-            let imageFileName = "\(item.id.uuidString)_image.dat"
-            let imageURL = baseDirectory.appendingPathComponent(imageFileName)
-            try? fileManager.removeItem(at: imageURL)
-        }
-
-        if item.imageThumbnailData != nil {
-            let thumbnailFileName = "\(item.id.uuidString)_thumbnail.dat"
-            let thumbnailURL = baseDirectory.appendingPathComponent(thumbnailFileName)
-            try? fileManager.removeItem(at: thumbnailURL)
-        }
+        let ctx = PersistenceController.shared.viewContext
+        let request = ClipboardItemEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", item.id as CVarArg)
+        guard let entity = try ctx.fetch(request).first else { return }
+        ctx.delete(entity)
+        try ctx.save()
     }
 
     func clearAll() throws {
-        logger.info("Clearing all items...")
-
-        // ディレクトリ内のすべてのファイルを削除
-        let contents = try fileManager.contentsOfDirectory(at: baseDirectory, includingPropertiesForKeys: nil)
-        for url in contents {
-            try fileManager.removeItem(at: url)
-        }
-
-        logger.info("Successfully cleared all items")
+        let ctx = PersistenceController.shared.viewContext
+        let request = ClipboardItemEntity.fetchRequest()
+        let entities = (try? ctx.fetch(request)) ?? []
+        entities.forEach { ctx.delete($0) }
+        try ctx.save()
     }
 
-    // MARK: - Storage Info
+    // MARK: - Storage Info（CoreData では目安のみ）
 
-    func getTotalStorageSize() throws -> Int64 {
-        let contents = try fileManager.contentsOfDirectory(at: baseDirectory, includingPropertiesForKeys: [.fileSizeKey])
-
-        var totalSize: Int64 = 0
-        for url in contents {
-            let resourceValues = try url.resourceValues(forKeys: [.fileSizeKey])
-            if let fileSize = resourceValues.fileSize {
-                totalSize += Int64(fileSize)
-            }
-        }
-
-        return totalSize
-    }
-
-    func checkStorageLimit() async throws {
-        let totalSize = try getTotalStorageSize()
-
-        if totalSize > self.maxStorageSize {
-            logger.warning("Storage limit exceeded: \(totalSize) bytes (limit: \(self.maxStorageSize) bytes)")
-            // TODO: 古いアイテムを自動削除
-        }
-    }
-}
-
-// MARK: - Metadata Model
-
-private struct ClipboardItemMetadata: Codable {
-    let id: UUID
-    let timestamp: Date
-    let type: ClipboardItemType
-    var isFavorite: Bool
-
-    var textContent: String?
-    var imageFileName: String?
-    var thumbnailFileName: String?
-    var url: URL?
-    var fileName: String?
-    var fileSize: Int64?
-    var fileURL: URL?
-    var deletedAt: Date?
-
-    init(id: UUID, timestamp: Date, type: ClipboardItemType, isFavorite: Bool = false, textContent: String? = nil, url: URL? = nil, fileName: String? = nil, fileSize: Int64? = nil, fileURL: URL? = nil, deletedAt: Date? = nil) {
-        self.id = id
-        self.timestamp = timestamp
-        self.type = type
-        self.isFavorite = isFavorite
-        self.textContent = textContent
-        self.url = url
-        self.fileName = fileName
-        self.fileSize = fileSize
-        self.fileURL = fileURL
-        self.deletedAt = deletedAt
-    }
-
-    // 既存データ（isFavoriteキーなし）との後方互換性
-    init(from decoder: Decoder) throws {
-        let c = try decoder.container(keyedBy: CodingKeys.self)
-        id = try c.decode(UUID.self, forKey: .id)
-        timestamp = try c.decode(Date.self, forKey: .timestamp)
-        type = try c.decode(ClipboardItemType.self, forKey: .type)
-        isFavorite = try c.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
-        textContent = try c.decodeIfPresent(String.self, forKey: .textContent)
-        imageFileName = try c.decodeIfPresent(String.self, forKey: .imageFileName)
-        thumbnailFileName = try c.decodeIfPresent(String.self, forKey: .thumbnailFileName)
-        url = try c.decodeIfPresent(URL.self, forKey: .url)
-        fileName = try c.decodeIfPresent(String.self, forKey: .fileName)
-        fileSize = try c.decodeIfPresent(Int64.self, forKey: .fileSize)
-        fileURL = try c.decodeIfPresent(URL.self, forKey: .fileURL)
-        deletedAt = try c.decodeIfPresent(Date.self, forKey: .deletedAt)
-    }
+    func getTotalStorageSize() throws -> Int64 { 0 }
+    func checkStorageLimit() async throws {}
 }

@@ -86,6 +86,9 @@
 		61AE521A2F38DB6A0052F115 /* Exceptions for "copyPaste" folder in "ClipboardKeyboard" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"CoreData/ClipboardDataModel.xcdatamodeld",
+				CoreData/ClipboardItemEntity.swift,
+				CoreData/PersistenceController.swift,
 				Features/ClipboardHistory/ClipboardItem.swift,
 				Features/ClipboardHistory/ClipboardStorageManager.swift,
 				Features/ClipboardHistory/EncryptionHelper.swift,
@@ -111,6 +114,7 @@
 		61E59DFB2FBCB80E007925A3 /* Exceptions for "copyPaste" folder in "ClipboardWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				"CoreData/ClipboardDataModel.xcdatamodeld",
 				"GoogleService-Info.plist",
 			);
 			target = 61CC3DBB2F3E271600B6F559 /* ClipboardWidgetExtension */;

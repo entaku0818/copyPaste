@@ -1,10 +1,35 @@
+import CoreData
 import WidgetKit
 import SwiftUI
 
 // MARK: - Shared Constants (Widget用)
 private let appGroupID = "group.com.entaku.clipkit"
-private let storageDirectoryName = "ClipboardHistory"
 private let proStatusKey = "isProUser"
+
+// MARK: - Widget用 軽量PersistenceController
+
+private final class WidgetPersistenceController {
+    static let shared = WidgetPersistenceController()
+    let container: NSPersistentContainer
+
+    init() {
+        container = NSPersistentContainer(name: "ClipboardDataModel")
+        if let groupURL = FileManager.default.containerURL(
+            forSecurityApplicationGroupIdentifier: appGroupID
+        ) {
+            let storeURL = groupURL.appendingPathComponent("ClipboardData.sqlite")
+            let desc = NSPersistentStoreDescription(url: storeURL)
+            desc.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+            desc.setOption(
+                FileProtectionType.completeUnlessOpen as NSObject,
+                forKey: NSPersistentStoreFileProtectionKey
+            )
+            container.persistentStoreDescriptions = [desc]
+        }
+        container.loadPersistentStores { _, _ in }
+        container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+}
 
 // MARK: - Minimal Item Model
 private struct WidgetItem: Identifiable, Decodable {
@@ -29,16 +54,28 @@ private struct WidgetItem: Identifiable, Decodable {
 
 // MARK: - Storage
 private func loadItems() -> [WidgetItem] {
-    guard let containerURL = FileManager.default.containerURL(
-        forSecurityApplicationGroupIdentifier: appGroupID
-    ) else { return [] }
-    let metadataURL = containerURL
-        .appendingPathComponent(storageDirectoryName)
-        .appendingPathComponent("items.json")
-    guard let data = try? Data(contentsOf: metadataURL) else { return [] }
-    let decoder = JSONDecoder()
-    decoder.dateDecodingStrategy = .iso8601
-    return (try? decoder.decode([WidgetItem].self, from: data)) ?? []
+    let ctx = WidgetPersistenceController.shared.container.viewContext
+    let request = NSFetchRequest<NSManagedObject>(entityName: "ClipboardItemEntity")
+    request.predicate = NSPredicate(format: "isInTrash == NO")
+    request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
+    request.fetchLimit = 10
+    let entities = (try? ctx.fetch(request)) ?? []
+    return entities.compactMap { entity in
+        guard
+            let id = entity.value(forKey: "id") as? UUID,
+            let timestamp = entity.value(forKey: "timestamp") as? Date,
+            let typeRaw = entity.value(forKey: "typeRaw") as? String
+        else { return nil }
+        return WidgetItem(
+            id: id,
+            timestamp: timestamp,
+            type: typeRaw,
+            textContent: entity.value(forKey: "textContent") as? String,
+            url: (entity.value(forKey: "urlString") as? String).flatMap { URL(string: $0) },
+            fileName: entity.value(forKey: "fileName") as? String,
+            isFavorite: (entity.value(forKey: "isFavorite") as? Bool) ?? false
+        )
+    }
 }
 
 private func isProUser() -> Bool {
