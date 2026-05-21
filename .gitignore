@@ -111,6 +111,10 @@ fastlane/AuthKey_*.p8
 # Firebase config (secrets)
 lp/.env
 lp/firebase-config.js
+
+# Firebase Functions build artifacts
+functions/lib/
+functions/node_modules/
 ios/copyPaste/GoogleService-Info.plist
 .playwright-cli/
 ios/.playwright-cli/
