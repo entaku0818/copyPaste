@@ -23,6 +23,7 @@ struct ClipboardHistoryFeature {
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
         var copyCount: Int = UserDefaults.standard.integer(forKey: "clipkit.copyCount")
+        var captureCount: Int = UserDefaults.standard.integer(forKey: "clipkit.captureCount")
         var showSatisfactionPrompt: Bool = false
         var showFeedbackForm: Bool = false
 
@@ -131,10 +132,13 @@ struct ClipboardHistoryFeature {
                         Self.logger.error("Failed to delete overflow item: \(error.localizedDescription)")
                     }
                 }
+                state.captureCount += 1
+                UserDefaults.standard.set(state.captureCount, forKey: "clipkit.captureCount")
                 let latestItems = Array(state.items.prefix(5))
                 let newItem = item
                 return .merge(
                     .send(.saveItems),
+                    .send(.checkReviewTrigger),
                     .run { _ in
                         do {
                             try await ClipboardRepository.shared.saveAndSync(item: newItem)
@@ -563,21 +567,20 @@ struct ClipboardHistoryFeature {
 
             case .checkReviewTrigger:
                 let defaults = UserDefaults.standard
-                let now = Date().timeIntervalSince1970
-                if defaults.double(forKey: "clipkit.firstLaunchDate") == 0 {
-                    defaults.set(now, forKey: "clipkit.firstLaunchDate")
-                    return .none
-                }
-                let firstLaunch = defaults.double(forKey: "clipkit.firstLaunchDate")
                 let shown = defaults.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []
-                let elapsed = now - firstLaunch
-                let oneMonth: Double = 30 * 24 * 60 * 60
-                let threeMonths: Double = 90 * 24 * 60 * 60
-                if elapsed >= threeMonths && !shown.contains("3month") {
-                    defaults.set(shown + ["3month"], forKey: "clipkit.reviewMilestonesShown")
+                let count = state.captureCount
+                // クリップボード保存回数のマイルストーンで満足度プロンプトを表示
+                // 5回: アプリを試し始めたタイミング
+                // 20回: 継続的に利用しているタイミング
+                // 50回: ヘビーユーザーのタイミング
+                if count >= 50 && !shown.contains("capture50") {
+                    defaults.set(shown + ["capture50"], forKey: "clipkit.reviewMilestonesShown")
                     state.showSatisfactionPrompt = true
-                } else if elapsed >= oneMonth && !shown.contains("1month") {
-                    defaults.set(shown + ["1month"], forKey: "clipkit.reviewMilestonesShown")
+                } else if count >= 20 && !shown.contains("capture20") {
+                    defaults.set(shown + ["capture20"], forKey: "clipkit.reviewMilestonesShown")
+                    state.showSatisfactionPrompt = true
+                } else if count >= 5 && !shown.contains("capture5") {
+                    defaults.set(shown + ["capture5"], forKey: "clipkit.reviewMilestonesShown")
                     state.showSatisfactionPrompt = true
                 }
                 return .none
