@@ -125,13 +125,23 @@ struct ClipboardHistoryFeature {
                 let limit = min(state.maxHistoryCount, state.maxItems)
                 if state.items.count > limit {
                     let removed = state.items.removeLast()
-                    try? ClipboardRepository.shared.deleteItem(removed)
+                    do {
+                        try ClipboardRepository.shared.deleteItem(removed)
+                    } catch {
+                        Self.logger.error("Failed to delete overflow item: \(error.localizedDescription)")
+                    }
                 }
                 let latestItems = Array(state.items.prefix(5))
                 let newItem = item
                 return .merge(
                     .send(.saveItems),
-                    .run { _ in try? await ClipboardRepository.shared.saveAndSync(item: newItem) },
+                    .run { _ in
+                        do {
+                            try await ClipboardRepository.shared.saveAndSync(item: newItem)
+                        } catch {
+                            Self.logger.error("Failed to saveAndSync item: \(error.localizedDescription)")
+                        }
+                    },
                     .run { _ in await MainActor.run { PiPManager.shared.updateItems(latestItems) } }
                 )
 
@@ -154,7 +164,11 @@ struct ClipboardHistoryFeature {
                 } else {
                     for index in indexSet {
                         if index < state.items.count {
-                            try? ClipboardRepository.shared.deleteItem(state.items[index])
+                            do {
+                                try ClipboardRepository.shared.deleteItem(state.items[index])
+                            } catch {
+                                Self.logger.error("Failed to delete item at \(index): \(error.localizedDescription)")
+                            }
                         }
                     }
                     state.items.remove(atOffsets: indexSet)
@@ -179,7 +193,11 @@ struct ClipboardHistoryFeature {
                         .run { _ in await MainActor.run { PiPManager.shared.updateItems([]) } }
                     )
                 } else {
-                    try? ClipboardRepository.shared.clearAll()
+                    do {
+                        try ClipboardRepository.shared.clearAll()
+                    } catch {
+                        Self.logger.error("Failed to clear all items: \(error.localizedDescription)")
+                    }
                     state.items.removeAll()
                     return .merge(
                         .send(.saveItems),
@@ -485,11 +503,16 @@ struct ClipboardHistoryFeature {
 
             case .loadTrash:
                 return .run { send in
-                    let items = (try? await ClipboardRepository.shared.loadTrash()) ?? []
-                    // 30日以上経過したアイテムを除外
-                    let threshold = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
-                    let valid = items.filter { ($0.deletedAt ?? Date()) >= threshold }
-                    await send(.trashLoaded(valid))
+                    do {
+                        let items = try await ClipboardRepository.shared.loadTrash()
+                        // 30日以上経過したアイテムを除外
+                        let threshold = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
+                        let valid = items.filter { ($0.deletedAt ?? Date()) >= threshold }
+                        await send(.trashLoaded(valid))
+                    } catch {
+                        Self.logger.error("Failed to load trash: \(error.localizedDescription)")
+                        await send(.trashLoaded([]))
+                    }
                 }
 
             case let .trashLoaded(items):
@@ -499,7 +522,11 @@ struct ClipboardHistoryFeature {
             case .saveTrash:
                 let items = state.trashedItems
                 return .run { _ in
-                    try? await ClipboardRepository.shared.saveTrash(items: items)
+                    do {
+                        try await ClipboardRepository.shared.saveTrash(items: items)
+                    } catch {
+                        Self.logger.error("Failed to save trash: \(error.localizedDescription)")
+                    }
                 }
 
             case let .restoreItem(item):
@@ -518,7 +545,11 @@ struct ClipboardHistoryFeature {
 
             case let .permanentlyDeleteItem(item):
                 state.trashedItems.removeAll { $0.id == item.id }
-                try? ClipboardRepository.shared.deleteItem(item)
+                do {
+                    try ClipboardRepository.shared.deleteItem(item)
+                } catch {
+                    Self.logger.error("Failed to permanently delete item: \(error.localizedDescription)")
+                }
                 return .send(.saveTrash)
 
             case .requestReview:
@@ -568,7 +599,11 @@ struct ClipboardHistoryFeature {
 
             case .emptyTrash:
                 for item in state.trashedItems {
-                    try? ClipboardRepository.shared.deleteItem(item)
+                    do {
+                        try ClipboardRepository.shared.deleteItem(item)
+                    } catch {
+                        Self.logger.error("Failed to delete item from trash: \(error.localizedDescription)")
+                    }
                 }
                 state.trashedItems.removeAll()
                 return .send(.saveTrash)

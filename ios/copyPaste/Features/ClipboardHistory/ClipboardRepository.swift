@@ -28,17 +28,32 @@ final class ClipboardRepository {
     // MARK: - Trash
 
     func loadTrash() async throws -> [ClipboardItem] {
-        (try? await local.loadTrash()) ?? []
+        do {
+            return try await local.loadTrash()
+        } catch {
+            logger.error("Failed to load trash: \(error.localizedDescription)")
+            return []
+        }
     }
 
     func saveTrash(items: [ClipboardItem]) async throws {
-        try? await local.saveTrash(items: items)
+        do {
+            try await local.saveTrash(items: items)
+        } catch {
+            logger.error("Failed to save trash: \(error.localizedDescription)")
+            throw error
+        }
     }
 
     // MARK: - Delete
 
     func deleteItem(_ item: ClipboardItem) throws {
-        try? local.deleteItem(item)
+        do {
+            try local.deleteItem(item)
+        } catch {
+            logger.error("Failed to delete item: \(error.localizedDescription)")
+            throw error
+        }
     }
 
     func clearAll() throws {
