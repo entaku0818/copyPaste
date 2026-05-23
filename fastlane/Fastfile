@@ -35,7 +35,9 @@ platform :ios do
       skip_binary_upload: true,
       skip_screenshots: true,
       precheck_include_in_app_purchases: false,
-      metadata_path: "fastlane/metadata"
+      metadata_path: "fastlane/metadata",
+      edit_live: true,
+      use_live_version: true
     )
   end
 
