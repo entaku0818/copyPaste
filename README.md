@@ -133,7 +133,12 @@ open copyPaste.xcodeproj
    - 主な依存関係：
      - [The Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture)
 
-4. 実機で実行
+4. Firebase設定ファイルの配置
+   - `GoogleService-Info.plist` はセキュリティ上の理由でgit管理から除外されています
+   - [Firebase Console](https://console.firebase.google.com/) でプロジェクトを選択し、iOSアプリの設定から `GoogleService-Info.plist` をダウンロードしてください
+   - ダウンロードしたファイルを `ios/copyPaste/GoogleService-Info.plist` に配置してください
+
+5. 実機で実行
    - PiP機能はシミュレーターでは動作しません
    - 実機で実行してください
 
