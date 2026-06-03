@@ -601,12 +601,11 @@ struct ClipboardHistoryFeature {
                 return .none
 
             case .emptyTrash:
-                for item in state.trashedItems {
-                    do {
-                        try ClipboardRepository.shared.deleteItem(item)
-                    } catch {
-                        Self.logger.error("Failed to delete item from trash: \(error.localizedDescription)")
-                    }
+                // 個別削除（N+1）ではなく単一トランザクションのバッチ削除を使う
+                do {
+                    try ClipboardRepository.shared.emptyTrash()
+                } catch {
+                    Self.logger.error("Failed to empty trash: \(error.localizedDescription)")
                 }
                 state.trashedItems.removeAll()
                 return .send(.saveTrash)

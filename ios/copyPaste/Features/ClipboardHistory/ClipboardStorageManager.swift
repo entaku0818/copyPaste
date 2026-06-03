@@ -87,20 +87,45 @@ class ClipboardStorageManager {
     // MARK: - Delete
 
     func deleteItem(_ item: ClipboardItem) throws {
-        let ctx = PersistenceController.shared.viewContext
-        let request = ClipboardItemEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", item.id as CVarArg)
-        guard let entity = try ctx.fetch(request).first else { return }
-        ctx.delete(entity)
-        try ctx.save()
+        try batchDelete(predicate: NSPredicate(format: "id == %@", item.id as CVarArg))
+    }
+
+    /// ゴミ箱内の全アイテムを単一トランザクションで削除する。
+    /// 個別削除（N+1）ではなく NSBatchDeleteRequest を使う。
+    func emptyTrash() throws {
+        try batchDelete(predicate: NSPredicate(format: "isInTrash == YES"))
+        logger.info("Emptied trash via batch delete")
     }
 
     func clearAll() throws {
-        let ctx = PersistenceController.shared.viewContext
-        let request = ClipboardItemEntity.fetchRequest()
-        let entities = (try? ctx.fetch(request)) ?? []
-        entities.forEach { ctx.delete($0) }
-        try ctx.save()
+        try batchDelete(predicate: nil)
+    }
+
+    /// predicate に合致するエンティティを NSBatchDeleteRequest で一括削除する。
+    /// メインスレッドの viewContext ではなくバックグラウンドコンテキストを使い、
+    /// 削除結果（objectID）を viewContext にマージして UI 表示と整合させる。
+    private func batchDelete(predicate: NSPredicate?) throws {
+        let ctx = PersistenceController.shared.newBackgroundContext()
+        var caughtError: Error?
+        ctx.performAndWait {
+            do {
+                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ClipboardItemEntity")
+                fetchRequest.predicate = predicate
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                deleteRequest.resultType = .resultTypeObjectIDs
+                let result = try ctx.execute(deleteRequest) as? NSBatchDeleteResult
+                if let objectIDs = result?.result as? [NSManagedObjectID], !objectIDs.isEmpty {
+                    // バッチ削除は永続ストアを直接更新するため、メモリ上のコンテキストへ手動で反映する
+                    NSManagedObjectContext.mergeChanges(
+                        fromRemoteContextSave: [NSDeletedObjectsKey: objectIDs],
+                        into: [PersistenceController.shared.viewContext]
+                    )
+                }
+            } catch {
+                caughtError = error
+            }
+        }
+        if let caughtError { throw caughtError }
     }
 
     // MARK: - Storage Info（CoreData では目安のみ）
