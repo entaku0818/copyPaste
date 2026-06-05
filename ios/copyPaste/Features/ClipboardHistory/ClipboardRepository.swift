@@ -59,4 +59,14 @@ final class ClipboardRepository {
     func clearAll() throws {
         try local.clearAll()
     }
+
+    /// ゴミ箱内の全アイテムを一括削除する（NSBatchDeleteRequest）。
+    func emptyTrash() throws {
+        do {
+            try local.emptyTrash()
+        } catch {
+            logger.error("Failed to empty trash: \(error.localizedDescription)")
+            throw error
+        }
+    }
 }
