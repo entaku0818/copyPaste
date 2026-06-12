@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  swiftlint:
+    name: SwiftLint
+    runs-on: ubuntu-latest
+    container: ghcr.io/realm/swiftlint:0.57.0
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run SwiftLint
+        run: swiftlint lint --reporter github-actions-logging
+
+  ios-test:
+    name: iOS Build & Test
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up build config from templates
+        run: |
+          cp ios/copyPaste/Config/Debug.xcconfig.template ios/copyPaste/Config/Debug.xcconfig
+          cp ios/copyPaste/Config/Release.xcconfig.template ios/copyPaste/Config/Release.xcconfig
+
+      - name: Create dummy GoogleService-Info.plist
+        run: |
+          cat > ios/copyPaste/GoogleService-Info.plist <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key>
+            <string>AIzaSyDUMMY0000000000000000000000000000</string>
+            <key>GCM_SENDER_ID</key>
+            <string>123456789012</string>
+            <key>PLIST_VERSION</key>
+            <string>1</string>
+            <key>BUNDLE_ID</key>
+            <string>com.entaku.clipkit</string>
+            <key>PROJECT_ID</key>
+            <string>dummy-project</string>
+            <key>STORAGE_BUCKET</key>
+            <string>dummy-project.appspot.com</string>
+            <key>IS_ADS_ENABLED</key>
+            <false/>
+            <key>IS_ANALYTICS_ENABLED</key>
+            <false/>
+            <key>IS_APPINVITE_ENABLED</key>
+            <true/>
+            <key>IS_GCM_ENABLED</key>
+            <true/>
+            <key>IS_SIGNIN_ENABLED</key>
+            <true/>
+            <key>GOOGLE_APP_ID</key>
+            <string>1:123456789012:ios:0000000000000000</string>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Run unit tests
+        run: |
+          set -o pipefail
+          DEVICE_ID=$(xcrun simctl list devices available --json | jq -r '[.devices | to_entries | sort_by(.key) | .[] | select(.key | contains("iOS")) | .value[] | select(.name | startswith("iPhone")) | .udid] | last')
+          echo "Using simulator: $DEVICE_ID"
+          xcodebuild test \
+            -project ios/copyPaste.xcodeproj \
+            -scheme ClipKit \
+            -destination "id=$DEVICE_ID" \
+            -skip-testing:ClipKitTests/ScreenshotRenderTests \
+            -skip-testing:ClipKitUITests \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+  functions-build:
+    name: Functions Build (tsc)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Type-check & build
+        run: npm run build
