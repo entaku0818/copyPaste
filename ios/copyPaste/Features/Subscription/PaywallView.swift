@@ -122,6 +122,9 @@ struct PaywallView: View {
                             if isPurchasing {
                                 ProgressView()
                                     .tint(.white)
+                            } else if selectedPackage?.packageType == .lifetime {
+                                Text("購入する")
+                                    .fontWeight(.semibold)
                             } else if let trialText = selectedPackageTrialText {
                                 Text("無料で試す（\(trialText)）")
                                     .fontWeight(.semibold)
@@ -167,15 +170,19 @@ struct PaywallView: View {
 
                     // 注意事項・リンク
                     VStack(spacing: 8) {
-                        if let trialText = selectedPackageTrialText {
-                            Text("• \(trialText)の無料トライアル")
+                        if selectedPackage?.packageType == .lifetime {
+                            Text("• 一度の購入で永久に利用できます")
+                            Text("• Apple IDアカウントに課金されます")
+                        } else {
+                            if let trialText = selectedPackageTrialText {
+                                Text("• \(trialText)の無料トライアル")
+                            }
+                            if let periodText = selectedPackagePeriodText {
+                                Text("• \(periodText)ごとに自動更新")
+                            }
+                            Text("• いつでもキャンセル可能")
+                            Text("• Apple IDアカウントに課金されます")
                         }
-                        if let periodText = selectedPackagePeriodText {
-                            Text("• \(periodText)ごとに自動更新")
-                        }
-                        Text("• いつでもキャンセル可能")
-                        Text("• Apple IDアカウントに課金されます")
-
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -425,12 +432,17 @@ struct PackageButton: View {
             return NSLocalizedString("paywall.package.monthly", value: "月間プラン", comment: "")
         case .annual:
             return NSLocalizedString("paywall.package.annual", value: "年間プラン", comment: "")
+        case .lifetime:
+            return NSLocalizedString("paywall.package.lifetime", value: "買い切りプラン", comment: "")
         default:
             return package.storeProduct.localizedTitle
         }
     }
 
     private var subscriptionPeriodText: String {
+        if package.packageType == .lifetime {
+            return NSLocalizedString("paywall.renewal.lifetime", value: "一度の購入で永久に利用可能", comment: "")
+        }
         guard let period = package.storeProduct.subscriptionPeriod else { return "" }
         switch (period.unit, period.value) {
         case (.month, 1): return NSLocalizedString("paywall.renewal.monthly", value: "1ヶ月ごとに自動更新", comment: "")
