@@ -92,6 +92,7 @@
 				Features/ClipboardHistory/ClipboardItem.swift,
 				Features/ClipboardHistory/ClipboardStorageManager.swift,
 				Features/ClipboardHistory/EncryptionHelper.swift,
+				Features/ClipboardHistory/ItemCategory.swift,
 				Features/ClipboardHistory/SharedConstants.swift,
 				"GoogleService-Info.plist",
 			);
@@ -272,6 +273,7 @@
 				61B4C3862DC4A60F00E59DE3 /* Frameworks */,
 				61B4C3872DC4A60F00E59DE3 /* Resources */,
 				613FED6E2F2901E400AE78D8 /* Embed Foundation Extensions */,
+				86FABCAB7A044845B5D03002 /* Upload dSYM to Firebase Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -491,6 +493,28 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		86FABCAB7A044845B5D03002 /* Upload dSYM to Firebase Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Upload dSYM to Firebase Crashlytics";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXTargetDependency section */
 		613FED6C2F2901E400AE78D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -532,7 +556,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardKeyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -562,7 +586,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardKeyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -723,7 +747,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -755,7 +779,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -773,7 +797,7 @@
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -792,7 +816,7 @@
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -809,7 +833,7 @@
 				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -826,7 +850,7 @@
 				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = 4YZQY4C47E;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkitUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -855,7 +879,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -887,7 +911,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.3.2;
+				MARKETING_VERSION = 1.3.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.entaku.clipkit.ClipboardWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

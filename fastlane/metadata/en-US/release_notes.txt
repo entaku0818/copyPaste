@@ -1,2 +1,5 @@
-· Stability improvements from library updates
-· Minor bug fixes
+【New Feature】
+· Added Lifetime Access plan. Purchase once and use ClipKit Pro forever.
+
+【Improvements】
+· Stability improvements
