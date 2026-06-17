@@ -15,6 +15,8 @@ class ClipboardItemEntity: NSManagedObject {
     @NSManaged var urlString: String?
     @NSManaged var fileName: String?
     @NSManaged var fileSize: Int64
+    @NSManaged var categoryRaw: String?
+    @NSManaged var ocrText: String?
 }
 
 extension ClipboardItemEntity {
@@ -35,6 +37,8 @@ extension ClipboardItemEntity {
         self.urlString = item.url?.absoluteString
         self.fileName = item.fileName
         self.fileSize = item.fileSize ?? 0
+        self.categoryRaw = item.category?.rawValue
+        self.ocrText = item.ocrText
     }
 
     func toClipboardItem() -> ClipboardItem? {
@@ -55,7 +59,9 @@ extension ClipboardItemEntity {
             imageThumbnailData: imageThumbnailData,
             url: urlString.flatMap { URL(string: $0) },
             fileName: fileName,
-            fileSize: fileSize == 0 ? nil : fileSize
+            fileSize: fileSize == 0 ? nil : fileSize,
+            category: categoryRaw.flatMap { ItemCategory(rawValue: $0) },
+            ocrText: ocrText
         )
         item.deletedAt = deletedAt
         return item

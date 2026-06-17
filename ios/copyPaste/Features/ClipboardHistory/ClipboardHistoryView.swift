@@ -11,11 +11,11 @@ struct ClipboardHistoryView: View {
             if !store.searchText.isEmpty {
                 Section {
                     HStack {
-                        Text("\(store.filteredItems.count)件の結果")
+                        Text(String(format: String(localized: "search.results %lld"), Int64(store.filteredItems.count)))
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Spacer()
-                        Button("クリア") {
+                        Button("search.clear") {
                             store.send(.updateSearchText(""))
                         }
                         .font(.caption)
@@ -38,7 +38,7 @@ struct ClipboardHistoryView: View {
                             store.send(.toggleFavorite(item))
                         } label: {
                             Label(
-                                item.isFavorite ? "お気に入り解除" : "お気に入り",
+                                item.isFavorite ? String(localized: "item.unfavorite") : String(localized: "item.favorite"),
                                 systemImage: item.isFavorite ? "star.slash" : "star.fill"
                             )
                         }
@@ -50,7 +50,7 @@ struct ClipboardHistoryView: View {
                                 store.send(.removeItems(IndexSet(integer: index)))
                             }
                         } label: {
-                            Label("削除", systemImage: "trash")
+                            Label("item.delete", systemImage: "trash")
                         }
                     }
             }
@@ -72,10 +72,10 @@ struct ClipboardHistoryView: View {
                                     )
                                 )
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("ClipKit Proにアップグレード")
+                                Text("upgrade.title")
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text("3日以上前の履歴も検索・閲覧できます")
+                                Text("upgrade.description")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -89,15 +89,21 @@ struct ClipboardHistoryView: View {
                 }
             }
         }
-        .navigationTitle("履歴")
+        .navigationTitle("history.title")
         .searchable(
             text: Binding(
                 get: { store.searchText },
                 set: { store.send(.updateSearchText($0)) }
             ),
             placement: .navigationBarDrawer(displayMode: .always),
-            prompt: "履歴を検索..."
+            prompt: "search.placeholder"
         )
+        .safeAreaInset(edge: .top) {
+            CategoryFilterBar(
+                selectedCategory: store.selectedCategory,
+                onSelect: { store.send(.selectCategory($0)) }
+            )
+        }
         .onAppear {
             store.send(.onAppear)
         }
@@ -200,7 +206,7 @@ struct ClipboardItemDetailView: View {
                             }
 
                         case .file:
-                            Text(item.fileName ?? "ファイル")
+                            Text(item.fileName ?? String(localized: "item.file"))
                                 .font(.body)
                         }
                     }
@@ -212,18 +218,18 @@ struct ClipboardItemDetailView: View {
                     HStack {
                         Image(systemName: typeIcon)
                             .foregroundColor(.secondary)
-                        Text(item.timestamp.formatted(.dateTime.year().month().day().hour().minute().locale(Locale(identifier: "ja_JP"))))
+                        Text(item.timestamp.formatted(.dateTime.year().month().day().hour().minute().locale(Locale.current)))
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
                 .padding()
             }
-            .navigationTitle("詳細")
+            .navigationTitle("detail.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("閉じる") { dismiss() }
+                    Button("button.close") { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack {
@@ -240,7 +246,7 @@ struct ClipboardItemDetailView: View {
                                 copied = false
                             }
                         } label: {
-                            Label(copied ? "コピー済み" : "コピー",
+                            Label(copied ? String(localized: "copy.done") : String(localized: "copy.action"),
                                   systemImage: copied ? "checkmark" : "doc.on.doc")
                         }
                         .tint(copied ? .green : .blue)
@@ -257,5 +263,60 @@ struct ClipboardItemDetailView: View {
         case .image: return "photo"
         case .file: return "doc"
         }
+    }
+}
+
+// MARK: - Category Filter Bar
+
+struct CategoryFilterBar: View {
+    let selectedCategory: ItemCategory?
+    let onSelect: (ItemCategory?) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                CategoryChip(
+                    label: String(localized: "category.all"),
+                    icon: "tray.2",
+                    isSelected: selectedCategory == nil
+                ) { onSelect(nil) }
+
+                ForEach(ItemCategory.allCases, id: \.self) { cat in
+                    CategoryChip(
+                        label: cat.displayName,
+                        icon: cat.systemImageName,
+                        isSelected: selectedCategory == cat
+                    ) { onSelect(selectedCategory == cat ? nil : cat) }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+        }
+        .background(.bar)
+    }
+}
+
+struct CategoryChip: View {
+    let label: String
+    let icon: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.caption2)
+                Text(label)
+                    .font(.caption)
+                    .fontWeight(isSelected ? .semibold : .regular)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(isSelected ? Color.accentColor : Color(.systemGray5))
+            .foregroundStyle(isSelected ? .white : .primary)
+            .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
     }
 }

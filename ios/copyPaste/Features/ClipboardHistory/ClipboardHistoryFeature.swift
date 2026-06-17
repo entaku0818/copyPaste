@@ -19,6 +19,7 @@ struct ClipboardHistoryFeature {
         var hasRequestedPermission: Bool = UserDefaults.standard.bool(forKey: "hasRequestedClipboardPermission")
         var selectedImageItem: ClipboardItem?
         var searchText: String = ""
+        var selectedCategory: ItemCategory? = nil
         var showPaywall: Bool = false
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
@@ -40,22 +41,29 @@ struct ClipboardHistoryFeature {
         // 検索結果のフィルタリング
         var filteredItems: [ClipboardItem] {
             // 無料版は直近3日のみ
-            let baseItems = isProUser ? items : items.filter { $0.timestamp >= freeHistoryStartDate }
+            var baseItems = isProUser ? items : items.filter { $0.timestamp >= freeHistoryStartDate }
+
+            // カテゴリフィルター
+            if let cat = selectedCategory {
+                baseItems = baseItems.filter { $0.category == cat }
+            }
 
             if searchText.isEmpty {
                 return baseItems
             }
 
             return baseItems.filter { item in
+                let q = searchText
                 switch item.type {
                 case .text:
-                    return item.textContent?.localizedCaseInsensitiveContains(searchText) ?? false
+                    return item.textContent?.localizedCaseInsensitiveContains(q) ?? false
                 case .url:
-                    return item.url?.absoluteString.localizedCaseInsensitiveContains(searchText) ?? false
+                    return item.url?.absoluteString.localizedCaseInsensitiveContains(q) ?? false
                 case .file:
-                    return item.fileName?.localizedCaseInsensitiveContains(searchText) ?? false
+                    return item.fileName?.localizedCaseInsensitiveContains(q) ?? false
                 case .image:
-                    return false
+                    // OCRテキストも検索対象
+                    return item.ocrText?.localizedCaseInsensitiveContains(q) ?? false
                 }
             }
         }
@@ -69,6 +77,8 @@ struct ClipboardHistoryFeature {
         case copyItem(ClipboardItem)
         case toggleFavorite(ClipboardItem)
         case updateSearchText(String)
+        case selectCategory(ItemCategory?)
+        case updateItemOCR(id: UUID, ocrText: String, category: ItemCategory?)
         case startMonitoring
         case stopMonitoring
         case checkClipboard
@@ -107,14 +117,9 @@ struct ClipboardHistoryFeature {
 
     // 画像からClipboardItemを作成（サムネイル付き）
     private static func createImageItem(from image: UIImage) async -> ClipboardItem {
-        // サムネイル生成（200x200）
         let thumbnailSize = CGSize(width: 200, height: 200)
         let thumbnail = await image.byPreparingThumbnail(ofSize: thumbnailSize)
-
-        return ClipboardItem(
-            image: image,
-            thumbnail: thumbnail
-        )
+        return ClipboardItem(image: image, thumbnail: thumbnail)
     }
     
     var body: some ReducerOf<Self> {
@@ -289,6 +294,19 @@ struct ClipboardHistoryFeature {
                 state.searchText = text
                 return .none
 
+            case let .selectCategory(category):
+                state.selectedCategory = category
+                return .none
+
+            case let .updateItemOCR(id, ocrText, category):
+                if let index = state.items.firstIndex(where: { $0.id == id }) {
+                    state.items[index].ocrText = ocrText
+                    if let cat = category {
+                        state.items[index].category = cat
+                    }
+                }
+                return .send(.saveItems)
+
             case .startMonitoring:
                 guard !state.isMonitoring else {
                     Self.logger.warning("Already monitoring")
@@ -361,22 +379,27 @@ struct ClipboardHistoryFeature {
                         return .none
                     }
                     return .run { send in
-                        let item = await Self.createImageItem(from: image)
+                        var item = await Self.createImageItem(from: image)
                         await send(.addItem(item))
+                        // OCRをバックグラウンドで実行してアイテムを更新
+                        if let text = await ClipboardItemAnalyzer.extractText(from: image), !text.isEmpty {
+                            let cat = ClipboardItemAnalyzer.category(for: text)
+                            await send(.updateItemOCR(id: item.id, ocrText: text, category: cat))
+                        }
                     }
                 }
 
                 // URLをチェック
                 if let url = UIPasteboard.general.url {
                     Self.logger.info("Got URL: \(url.absoluteString)")
-                    // 直前と同じURLならスキップ
                     if let lastItem = state.items.first,
                        lastItem.type == .url,
                        lastItem.url == url {
                         Self.logger.debug("Skipping duplicate URL")
                         return .none
                     }
-                    let item = ClipboardItem(url: url)
+                    var item = ClipboardItem(url: url)
+                    item.category = .url
                     return .send(.addItem(item))
                 }
 
@@ -384,14 +407,14 @@ struct ClipboardHistoryFeature {
                 if let content = UIPasteboard.general.string {
                     let preview = String(content.prefix(50))
                     Self.logger.info("Got text content: \(preview)...")
-                    // 直前と同じテキストならスキップ
                     if let lastItem = state.items.first,
                        lastItem.type == .text,
                        lastItem.textContent == content {
                         Self.logger.debug("Skipping duplicate text")
                         return .none
                     }
-                    let item = ClipboardItem(content: content)
+                    var item = ClipboardItem(content: content)
+                    item.category = ClipboardItemAnalyzer.category(for: content)
                     return .send(.addItem(item))
                 }
 

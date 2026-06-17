@@ -91,7 +91,6 @@
 				CoreData/PersistenceController.swift,
 				Features/ClipboardHistory/ClipboardItem.swift,
 				Features/ClipboardHistory/ClipboardStorageManager.swift,
-				Features/ClipboardHistory/EncryptionHelper.swift,
 				Features/ClipboardHistory/ItemCategory.swift,
 				Features/ClipboardHistory/SharedConstants.swift,
 				"GoogleService-Info.plist",
@@ -394,6 +393,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = 61B4C3802DC4A60F00E59DE3;
 			minimizedProjectReferenceProxies = 1;

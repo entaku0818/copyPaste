@@ -30,6 +30,10 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
     var fileSize: Int64?
     var fileURL: URL?
 
+    // 分析結果
+    var category: ItemCategory?
+    var ocrText: String?
+
     // 後方互換性のため、contentプロパティを残す
     var content: String {
         switch type {
@@ -100,7 +104,9 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         url: URL? = nil,
         fileName: String? = nil,
         fileSize: Int64? = nil,
-        fileURL: URL? = nil
+        fileURL: URL? = nil,
+        category: ItemCategory? = nil,
+        ocrText: String? = nil
     ) {
         self.id = id
         self.timestamp = timestamp
@@ -113,6 +119,8 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         self.fileName = fileName
         self.fileSize = fileSize
         self.fileURL = fileURL
+        self.category = category
+        self.ocrText = ocrText
     }
 
     // Codableの実装
@@ -120,5 +128,6 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         case id, timestamp, type, isFavorite
         case textContent, imageData, imageThumbnailData
         case url, fileName, fileSize, fileURL
+        case category, ocrText
     }
 } 

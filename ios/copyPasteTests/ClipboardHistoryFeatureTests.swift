@@ -679,4 +679,101 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         XCTAssertEqual(state.items.first?.textContent, "Hello")
         XCTAssertEqual(state.items.first?.type, .text)
     }
+
+    // MARK: - Category Filter Tests
+
+    func testFilteredItems_withCategorySelected_showsOnlyMatchingItems() {
+        let textItem = ClipboardItem(
+            id: UUID(), timestamp: Date(), type: .text,
+            textContent: "hello", category: .text
+        )
+        let urlItem = ClipboardItem(
+            id: UUID(), timestamp: Date(), type: .url,
+            url: URL(string: "https://example.com"), category: .url
+        )
+        var state = ClipboardHistoryFeature.State(items: [textItem, urlItem], isProUser: true)
+        state.selectedCategory = .url
+        XCTAssertEqual(state.filteredItems.count, 1)
+        XCTAssertEqual(state.filteredItems.first?.category, .url)
+    }
+
+    func testFilteredItems_withNoCategorySelected_showsAllItems() {
+        let textItem = ClipboardItem(
+            id: UUID(), timestamp: Date(), type: .text,
+            textContent: "hello", category: .text
+        )
+        let urlItem = ClipboardItem(
+            id: UUID(), timestamp: Date(), type: .url,
+            url: URL(string: "https://example.com"), category: .url
+        )
+        var state = ClipboardHistoryFeature.State(items: [textItem, urlItem], isProUser: true)
+        state.selectedCategory = nil
+        XCTAssertEqual(state.filteredItems.count, 2)
+    }
+
+    func testSelectCategory_updatesState() async {
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(isProUser: true)
+        ) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.selectCategory(.url)) {
+            $0.selectedCategory = .url
+        }
+
+        await store.send(.selectCategory(nil)) {
+            $0.selectedCategory = nil
+        }
+    }
+
+    // MARK: - updateItemOCR Tests
+
+    func testUpdateItemOCR_setsOCRTextAndCategory() async {
+        let imageItem = ClipboardItem(
+            id: UUID(), timestamp: Date(), type: .image,
+            imageData: UIImage().pngData()
+        )
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [imageItem], isProUser: true)
+        ) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.updateItemOCR(id: imageItem.id, ocrText: "extracted text", category: .text)) {
+            $0.items[0].ocrText = "extracted text"
+            $0.items[0].category = .text
+        }
+
+        await store.receive(\.saveItems)
+    }
+
+    func testUpdateItemOCR_ignoresUnknownID() async {
+        let imageItem = ClipboardItem(
+            id: UUID(), timestamp: Date(), type: .image
+        )
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [imageItem], isProUser: true)
+        ) {
+            ClipboardHistoryFeature()
+        }
+
+        // IDが一致しない場合もstateは変わらないが、saveItemsは送出される
+        await store.send(.updateItemOCR(id: UUID(), ocrText: "text", category: nil))
+        await store.receive(\.saveItems)
+    }
+
+    // MARK: - OCR search via filteredItems
+
+    func testFilteredItems_searchMatchesOCRText() {
+        let imageItem = ClipboardItem(
+            id: UUID(), timestamp: Date(), type: .image,
+            ocrText: "請求書 2024年"
+        )
+        var state = ClipboardHistoryFeature.State(items: [imageItem], isProUser: true)
+        state.searchText = "請求書"
+        XCTAssertEqual(state.filteredItems.count, 1)
+        state.searchText = "存在しないテキスト"
+        XCTAssertEqual(state.filteredItems.count, 0)
+    }
 }

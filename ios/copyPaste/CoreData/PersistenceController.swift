@@ -50,6 +50,9 @@ final class PersistenceController {
                 true as NSNumber,
                 forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey
             )
+            // v1 → v2 自動マイグレーション（categoryRaw/ocrText フィールド追加）
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
             // NSFileProtection: デバイスロック中でも拡張機能が読めるよう CompleteUnlessOpen を使用
             description.setOption(
                 FileProtectionType.completeUnlessOpen as NSObject,
