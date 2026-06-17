@@ -8,9 +8,9 @@ enum FeedbackCategory: String, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .bug: return "バグ報告"
-        case .feature: return "機能要望"
-        case .other: return "その他"
+        case .bug: return String(localized: "feedbackCategory.bug")
+        case .feature: return String(localized: "feedbackCategory.feature")
+        case .other: return String(localized: "feedbackCategory.other")
         }
     }
 }
@@ -32,46 +32,46 @@ struct FeedbackFormView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("カテゴリ") {
-                    Picker("カテゴリ", selection: $category) {
+                Section("feedback.category") {
+                    Picker("feedback.category", selection: $category) {
                         ForEach(FeedbackCategory.allCases, id: \.self) { c in
                             Text(c.displayName).tag(c)
                         }
                     }
                     .pickerStyle(.segmented)
                 }
-                Section("内容") {
+                Section("feedback.content") {
                     TextEditor(text: $message)
                         .frame(minHeight: 120)
                 }
-                Section("メールアドレス（任意）") {
-                    TextField("返信先メールアドレス", text: $email)
+                Section("feedback.email") {
+                    TextField("feedback.emailPlaceholder", text: $email)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                 }
             }
-            .navigationTitle("フィードバック")
+            .navigationTitle("feedback.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("キャンセル") { dismiss() }
+                    Button("button.cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     if isSending {
                         ProgressView()
                     } else {
-                        Button("送信") { submit() }
+                        Button("feedback.send") { submit() }
                             .disabled(!canSubmit)
                     }
                 }
             }
-            .alert("送信しました", isPresented: $showSuccessAlert) {
+            .alert("feedback.success", isPresented: $showSuccessAlert) {
                 Button("OK") { dismiss() }
             } message: {
-                Text("フィードバックありがとうございます。")
+                Text("feedback.successMessage")
             }
-            .alert("送信に失敗しました", isPresented: $showErrorAlert) {
+            .alert("feedback.failure", isPresented: $showErrorAlert) {
                 Button("OK") {}
             } message: {
                 Text(errorMessage)

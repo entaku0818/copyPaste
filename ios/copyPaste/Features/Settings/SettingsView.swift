@@ -33,7 +33,7 @@ struct SettingsView: View {
                                 Text("ClipKit Pro")
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text("3ヶ月履歴・お気に入り・ウィジェット")
+                                Text("settings.proDescription")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
@@ -51,23 +51,23 @@ struct SettingsView: View {
                     Button {
                         showOnboarding = true
                     } label: {
-                        Label("使い方を見る", systemImage: "book.fill")
+                        Label("settings.howToUse", systemImage: "book.fill")
                     }
                     Button {
                         requestReview()
                     } label: {
-                        Label("レビューを書く", systemImage: "star.fill")
+                        Label("settings.writeReview", systemImage: "star.fill")
                     }
                     Button {
                         store.send(.satisfactionResponseNegative)
                     } label: {
-                        Label("お問い合わせ", systemImage: "envelope")
+                        Label("settings.contact", systemImage: "envelope")
                     }
                     if store.isProUser {
                         Button {
                             showTrash = true
                         } label: {
-                            Label("ゴミ箱", systemImage: "trash")
+                            Label("settings.trash", systemImage: "trash")
                         }
                     }
                 }
@@ -75,7 +75,7 @@ struct SettingsView: View {
                 // iCloud同期セクション（Pro限定）
                 if store.isProUser {
                     Section {
-                        Picker("同期する内容", selection: $syncMode) {
+                        Picker("settings.iCloudSyncPicker", selection: $syncMode) {
                             ForEach(CloudKitSyncMode.allCases, id: \.self) { mode in
                                 Text(mode.displayName).tag(mode)
                             }
@@ -84,9 +84,9 @@ struct SettingsView: View {
                             CloudKitSyncMode.current = newMode
                         }
                     } header: {
-                        Label("iCloud同期", systemImage: "icloud")
+                        Label("settings.iCloudSync", systemImage: "icloud")
                     } footer: {
-                        Text("「画像・ファイルも含む全て」を選択するとiCloudストレージを消費します。")
+                        Text("settings.iCloudSyncFooter")
                             .font(.caption2)
                     }
                 }
@@ -94,14 +94,14 @@ struct SettingsView: View {
                 // アプリ情報セクション
                 Section {
                     HStack {
-                        Text("バージョン")
+                        Text("settings.version")
                         Spacer()
                         Text(appVersion)
                             .foregroundColor(.secondary)
                     }
 
                 } header: {
-                    Text("アプリ情報")
+                    Text("settings.appInfo")
                 }
 
                 // デバッグセクション（DEBUGビルドのみ）
@@ -112,7 +112,7 @@ struct SettingsView: View {
                             Image(systemName: "camera.fill")
                                 .foregroundColor(.blue)
                                 .frame(width: 30)
-                            Text("スクリーンショットプレビュー")
+                            Text("settings.screenshotPreview")
                         }
                     }
                     NavigationLink(destination: KeyboardLogView()) {
@@ -120,13 +120,13 @@ struct SettingsView: View {
                             Image(systemName: "keyboard")
                                 .foregroundColor(.purple)
                                 .frame(width: 30)
-                            Text("キーボードログ")
+                            Text("settings.keyboardLog")
                         }
                     }
                 } header: {
-                    Text("デバッグ")
+                    Text("settings.debug")
                 } footer: {
-                    Text("キーボードログはApp Groups経由でリアルタイム収集されます")
+                    Text("settings.keyboardLogFooter")
                         .font(.caption)
                 }
                 #endif
@@ -137,7 +137,7 @@ struct SettingsView: View {
                         .frame(height: BannerAdView.adaptiveHeight)
                 }
             }
-            .navigationTitle("設定")
+            .navigationTitle("settings.title")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showOnboarding) {
                 OnboardingView {

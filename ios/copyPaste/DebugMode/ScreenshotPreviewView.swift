@@ -362,7 +362,7 @@ extension ScreenshotScreen {
     func caption(language: AppLanguage) -> String {
         switch (self, language) {
         case (.clipboardHistory, .japanese): return "全コピー履歴が、\n手元に"
-        case (.clipboardHistory, .english):  return "All your clipboard history,\nat your fingertips"
+        case (.clipboardHistory, .english):  return "Every copy, sorted\nand searchable"
         case (.keyboardPreview, .japanese):  return "キーボードから、\nそのまま貼り付け"
         case (.keyboardPreview, .english):   return "Paste directly\nfrom your keyboard"
         case (.pipMonitoring,   .japanese):  return "使いながら、\n監視を続ける"
@@ -481,6 +481,27 @@ struct AppStoreScreenshotView<Content: View>: View {
 }
 
 // MARK: - Status Bar (ImageRenderer safe, no UIKit)
+struct MockCategoryChip: View {
+    let label: String
+    let icon: String
+    let isSelected: Bool
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: icon)
+                .font(.caption2)
+            Text(label)
+                .font(.caption)
+                .fontWeight(isSelected ? .semibold : .regular)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(isSelected ? Color.accentColor : Color(UIColor.systemGray5))
+        .foregroundStyle(isSelected ? Color.white : Color.primary)
+        .clipShape(Capsule())
+    }
+}
+
 struct MockStatusBar: View {
     var foreground: Color = Color(red: 0.1, green: 0.1, blue: 0.1)
 
@@ -537,6 +558,20 @@ struct MockClipboardHistoryView: View {
             .padding(.horizontal, 12)
             .padding(.bottom, 6)
             .background(Color.white)
+
+            // Category filter bar
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    MockCategoryChip(label: language == .japanese ? "すべて" : "All", icon: "tray.2", isSelected: false)
+                    MockCategoryChip(label: "URL", icon: "link", isSelected: true)
+                    MockCategoryChip(label: language == .japanese ? "テキスト" : "Text", icon: "doc.text", isSelected: false)
+                    MockCategoryChip(label: language == .japanese ? "メール" : "Email", icon: "envelope", isSelected: false)
+                    MockCategoryChip(label: language == .japanese ? "コード" : "Code", icon: "chevron.left.forwardslash.chevron.right", isSelected: false)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+            }
+            .background(Color(UIColor.systemBackground).opacity(0.95))
 
             // Clip rows
             VStack(spacing: 0) {

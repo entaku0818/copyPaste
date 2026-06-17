@@ -10,9 +10,9 @@ struct TrashView: View {
             Group {
                 if store.trashedItems.isEmpty {
                     ContentUnavailableView(
-                        "ゴミ箱は空です",
+                        "trash.empty",
                         systemImage: "trash",
-                        description: Text("削除したアイテムは30日間ここに保存されます")
+                        description: Text("trash.description")
                     )
                 } else {
                     List {
@@ -24,7 +24,7 @@ struct TrashView: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     itemContent(for: item)
                                     if let deletedAt = item.deletedAt {
-                                        Text("削除: \(deletedAt.formatted(.dateTime.year().month().day().locale(Locale(identifier: "ja_JP"))))")
+                                        Text("削除: \(deletedAt.formatted(.dateTime.year().month().day().locale(Locale.current)))")
                                             .font(.caption2)
                                             .foregroundColor(.secondary)
                                     }
@@ -36,7 +36,7 @@ struct TrashView: View {
                                 Button {
                                     store.send(.restoreItem(item))
                                 } label: {
-                                    Label("復元", systemImage: "arrow.uturn.backward")
+                                    Label("item.restore", systemImage: "arrow.uturn.backward")
                                 }
                                 .tint(.blue)
                             }
@@ -44,22 +44,22 @@ struct TrashView: View {
                                 Button(role: .destructive) {
                                     store.send(.permanentlyDeleteItem(item))
                                 } label: {
-                                    Label("完全削除", systemImage: "trash.fill")
+                                    Label("item.deletePermanently", systemImage: "trash.fill")
                                 }
                             }
                         }
                     }
                 }
             }
-            .navigationTitle("ゴミ箱")
+            .navigationTitle("trash.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("閉じる") { dismiss() }
+                    Button("button.close") { dismiss() }
                 }
                 if !store.trashedItems.isEmpty {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("すべて削除") {
+                        Button("trash.deleteAll") {
                             store.send(.emptyTrash)
                         }
                         .foregroundColor(.red)
@@ -96,9 +96,9 @@ struct TrashView: View {
         case .url:
             Text(item.url?.host ?? item.url?.absoluteString ?? "URL").lineLimit(1).font(.subheadline)
         case .image:
-            Text("画像").font(.subheadline)
+            Text("item.image").font(.subheadline)
         case .file:
-            Text(item.fileName ?? "ファイル").lineLimit(1).font(.subheadline)
+            Text(item.fileName ?? String(localized: "item.file")).lineLimit(1).font(.subheadline)
         }
     }
 }

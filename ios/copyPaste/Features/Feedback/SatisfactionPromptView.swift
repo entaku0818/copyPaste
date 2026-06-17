@@ -20,12 +20,12 @@ struct SatisfactionPromptView: View {
                         )
                     )
 
-                Text("ClipKitをご利用いただき\nありがとうございます！")
+                Text("satisfaction.title")
                     .font(.title2)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
 
-                Text("アプリの品質にご満足いただいていますか？")
+                Text("satisfaction.question")
                     .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -39,7 +39,7 @@ struct SatisfactionPromptView: View {
                     dismiss()
                     onSatisfied()
                 } label: {
-                    Label("満足している", systemImage: "star.fill")
+                    Label("satisfaction.satisfied", systemImage: "star.fill")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -52,7 +52,7 @@ struct SatisfactionPromptView: View {
                     dismiss()
                     onUnsatisfied()
                 } label: {
-                    Label("改善してほしい", systemImage: "bubble.left.and.bubble.right")
+                    Label("satisfaction.improve", systemImage: "bubble.left.and.bubble.right")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()

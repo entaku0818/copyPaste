@@ -16,9 +16,9 @@ struct FavoritesView: View {
         Group {
             if favoriteItems.isEmpty {
                 ContentUnavailableView(
-                    "お気に入りがありません",
+                    "favorites.empty",
                     systemImage: "star",
-                    description: Text("履歴を左スワイプするとお気に入りに追加できます")
+                    description: Text("favorites.emptyDescription")
                 )
             } else {
                 List {
@@ -35,7 +35,7 @@ struct FavoritesView: View {
                                 Button {
                                     store.send(.toggleFavorite(item))
                                 } label: {
-                                    Label("解除", systemImage: "star.slash")
+                                    Label("favorites.unfavorite", systemImage: "star.slash")
                                 }
                                 .tint(.gray)
                             }
@@ -45,7 +45,7 @@ struct FavoritesView: View {
                                         store.send(.removeItems(IndexSet(integer: index)))
                                     }
                                 } label: {
-                                    Label("削除", systemImage: "trash")
+                                    Label("item.delete", systemImage: "trash")
                                 }
                             }
                     }
@@ -61,7 +61,7 @@ struct FavoritesView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "crown.fill")
                                 .foregroundStyle(LinearGradient(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing))
-                            Text("Pro で無制限に追加 (\(favoriteItems.count)/10)")
+                            Text(String(format: String(localized: "favorites.proUpgrade %lld"), Int64(favoriteItems.count)))
                                 .font(.caption)
                                 .foregroundColor(.primary)
                             Spacer()
@@ -81,7 +81,7 @@ struct FavoritesView: View {
                 }
             }
         }
-        .navigationTitle("お気に入り")
+        .navigationTitle("favorites.title")
         .onAppear {
             store.send(.updateProStatus)
         }

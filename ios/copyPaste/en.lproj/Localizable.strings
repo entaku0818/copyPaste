@@ -1,0 +1,111 @@
+/* Navigation */
+"history.title" = "History";
+"detail.title" = "Detail";
+"settings.title" = "Settings";
+"favorites.title" = "Favorites";
+"trash.title" = "Trash";
+"image.preview.title" = "Image Preview";
+"monitoring.title" = "Always On";
+"feedback.title" = "Feedback";
+
+/* Buttons */
+"button.close" = "Close";
+"button.cancel" = "Cancel";
+"item.delete" = "Delete";
+"item.restore" = "Restore";
+"item.deletePermanently" = "Delete Permanently";
+"item.favorite" = "Favorite";
+"item.unfavorite" = "Unfavorite";
+"copy.action" = "Copy";
+"copy.done" = "Copied";
+
+/* Search */
+"search.placeholder" = "Search history...";
+"search.clear" = "Clear";
+"search.results %lld" = "%lld results";
+
+/* Category filter */
+"category.all" = "All";
+"category.url" = "URL";
+"category.email" = "Email";
+"category.phone" = "Phone";
+"category.code" = "Code";
+"category.address" = "Address";
+"category.text" = "Text";
+
+/* Clipboard items */
+"item.image" = "Image";
+"item.file" = "File";
+
+/* Time */
+"time.justnow" = "Just now";
+"time.minutes %lld" = "%lld min ago";
+"time.hours %lld" = "%lld hr ago";
+"time.days %lld" = "%lld days ago";
+
+/* Trash */
+"trash.empty" = "Trash is Empty";
+"trash.description" = "Deleted items are stored here for 30 days";
+"trash.deleteAll" = "Delete All";
+
+/* Favorites */
+"favorites.empty" = "No Favorites";
+"favorites.emptyDescription" = "Swipe left on a history item to add to favorites";
+"favorites.unfavorite" = "Unfavorite";
+"favorites.proUpgrade %lld" = "Add unlimited with Pro (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Upgrade to ClipKit Pro";
+"upgrade.description" = "Search and view history older than 3 days";
+
+/* Image */
+"image.loadError" = "Cannot load image";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Background Monitoring";
+"monitoring.pipDescription" = "Open PiP window to monitor clipboard history while using other apps.";
+"monitoring.active" = "Monitoring in background";
+"monitoring.inactive" = "Monitoring";
+"monitoring.controlSection" = "Monitoring Control";
+"monitoring.statusActive" = "Active";
+"monitoring.statusStopped" = "Stopped";
+"monitoring.openPiP" = "Open PiP Window";
+"permission.title" = "Clipboard Access Permission";
+"permission.allow" = "Allow";
+"permission.later" = "Later";
+"permission.message" = "This app requires clipboard access to save clipboard history.\n\niOS 16 and later will show a system prompt on first access. Please select 'Allow'.";
+
+/* Settings */
+"settings.proDescription" = "3-month history · Favorites · Widget";
+"settings.howToUse" = "How to Use";
+"settings.writeReview" = "Write a Review";
+"settings.contact" = "Contact Us";
+"settings.trash" = "Trash";
+"settings.iCloudSync" = "iCloud Sync";
+"settings.iCloudSyncPicker" = "Sync Content";
+"settings.iCloudSyncFooter" = "Selecting 'All including images and files' will consume iCloud storage.";
+"settings.appInfo" = "App Info";
+"settings.version" = "Version";
+"settings.debug" = "Debug";
+"settings.screenshotPreview" = "Screenshot Preview";
+"settings.keyboardLog" = "Keyboard Log";
+"settings.keyboardLogFooter" = "Keyboard logs are collected in real time via App Groups";
+
+/* Feedback */
+"feedback.category" = "Category";
+"feedback.content" = "Content";
+"feedback.email" = "Email Address (optional)";
+"feedback.emailPlaceholder" = "Reply email address";
+"feedback.send" = "Send";
+"feedback.success" = "Sent";
+"feedback.successMessage" = "Thank you for your feedback.";
+"feedback.failure" = "Failed to send";
+"feedbackCategory.bug" = "Bug Report";
+"feedbackCategory.feature" = "Feature Request";
+"feedbackCategory.other" = "Other";
+
+/* Satisfaction */
+"satisfaction.title" = "Thank you for using ClipKit!";
+"satisfaction.question" = "Are you satisfied with the app quality?";
+"satisfaction.satisfied" = "Satisfied";
+"satisfaction.improve" = "Room for improvement";

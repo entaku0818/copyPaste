@@ -24,7 +24,7 @@ struct MonitoringView: View {
                         Circle()
                             .fill(store.isPiPActive ? Color.green : Color.blue)
                             .frame(width: 8, height: 8)
-                        Text(store.isPiPActive ? "バックグラウンドで監視中" : "監視中")
+                        Text(store.isPiPActive ? String(localized: "monitoring.active") : String(localized: "monitoring.inactive"))
                             .font(.caption)
                             .foregroundColor(store.isPiPActive ? .green : .blue)
                         Spacer()
@@ -33,9 +33,9 @@ struct MonitoringView: View {
                 }
                 .padding(.vertical, 8)
             } header: {
-                Text("バックグラウンド監視")
+                Text("monitoring.backgroundSection")
             } footer: {
-                Text("PiPウィンドウを開いて他のアプリを使いながらクリップボード履歴を確認できます。")
+                Text("monitoring.pipDescription")
                     .font(.caption2)
             }
 
@@ -45,7 +45,7 @@ struct MonitoringView: View {
                         .fill(store.isMonitoring ? Color.blue : Color.gray)
                         .frame(width: 10, height: 10)
 
-                    Text(store.isMonitoring ? "監視中" : "停止中")
+                    Text(store.isMonitoring ? String(localized: "monitoring.statusActive") : String(localized: "monitoring.statusStopped"))
                         .font(.subheadline)
                         .foregroundColor(store.isMonitoring ? .blue : .secondary)
 
@@ -62,38 +62,34 @@ struct MonitoringView: View {
                     Button {
                         PiPManager.shared.startPiP()
                     } label: {
-                        Label("PiPウィンドウを開く", systemImage: "pip.enter")
+                        Label("monitoring.openPiP", systemImage: "pip.enter")
                     }
                     .tint(.blue)
                 }
             } header: {
-                Text("監視コントロール")
+                Text("monitoring.controlSection")
             }
         }
-        .navigationTitle("常時起動")
+        .navigationTitle("monitoring.title")
         .onAppear {
             store.send(.onAppear)
             store.send(.startMonitoring)
         }
         .alert(
-            "クリップボードアクセス許可",
+            "permission.title",
             isPresented: Binding(
                 get: { store.showPermissionAlert },
                 set: { if !$0 { store.send(.dismissPermissionAlert) } }
             )
         ) {
-            Button("許可する") {
+            Button("permission.allow") {
                 store.send(.requestClipboardPermission)
             }
-            Button("後で", role: .cancel) {
+            Button("permission.later", role: .cancel) {
                 store.send(.dismissPermissionAlert)
             }
         } message: {
-            Text("""
-            このアプリはクリップボードの履歴を保存するため、クリップボードへのアクセスが必要です。
-
-            iOS 16以降では、初回アクセス時にシステムの確認が表示されます。「許可」を選択してください。
-            """)
+            Text("permission.message")
         }
     }
 }

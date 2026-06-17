@@ -19,16 +19,16 @@ struct ImagePreviewView: View {
                             )
                     }
                 } else {
-                    Text("画像を読み込めません")
+                    Text("image.loadError")
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
-            .navigationTitle("画像プレビュー")
+            .navigationTitle("image.preview.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("閉じる") {
+                    Button("button.close") {
                         dismiss()
                     }
                 }
@@ -36,7 +36,7 @@ struct ImagePreviewView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if let imageData = item.imageData,
                        let image = UIImage(data: imageData) {
-                        ShareLink(item: Image(uiImage: image), preview: SharePreview("画像", image: Image(uiImage: image))) {
+                        ShareLink(item: Image(uiImage: image), preview: SharePreview(String(localized: "item.image"), image: Image(uiImage: image))) {
                             Image(systemName: "square.and.arrow.up")
                         }
                     }
