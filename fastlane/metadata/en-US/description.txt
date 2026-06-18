@@ -4,15 +4,18 @@ Automatically monitor your clipboard in the background. ClipKit saves everything
 • Background clipboard monitoring (using PiP technology)
 • Auto-save up to 20 items
 • Text, image & URL support
+• Auto-categorization (URL, Email, Phone, Code, Address, Text)
 • iCloud sync (up to 20 items)
 • First-time onboarding guide
 
 [Pro Features]
 • Unlimited history (up to 100 items)
-• Advanced search
+• Advanced search + image OCR search
 • Favorites & pin (instantly access your most-used clips)
 • Home screen widgets (3 sizes)
 • Custom keyboard
+• iCloud sync (all items)
+• Export history (CSV / Markdown)
 • 7-day free trial
 
 ClipKit works around iOS 16+ clipboard restrictions using Picture-in-Picture, so monitoring continues even while you use other apps.
