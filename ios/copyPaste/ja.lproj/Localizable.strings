@@ -109,3 +109,8 @@
 "satisfaction.question" = "アプリの品質にご満足いただいていますか？";
 "satisfaction.satisfied" = "満足している";
 "satisfaction.improve" = "改善してほしい";
+
+/* Export */
+"export.title" = "エクスポート";
+"export.action" = "履歴をエクスポート";
+"export.formatPicker" = "形式を選択";

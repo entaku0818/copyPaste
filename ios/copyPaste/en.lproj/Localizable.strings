@@ -109,3 +109,8 @@
 "satisfaction.question" = "Are you satisfied with the app quality?";
 "satisfaction.satisfied" = "Satisfied";
 "satisfaction.improve" = "Room for improvement";
+
+/* Export */
+"export.title" = "Export";
+"export.action" = "Export History";
+"export.formatPicker" = "Choose Format";

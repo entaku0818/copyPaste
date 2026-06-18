@@ -8,6 +8,8 @@ struct SettingsView: View {
     @State private var showOnboarding = false
     @State private var showPaywall = false
     @State private var showTrash = false
+    @State private var showExportPicker = false
+    @State private var exportURL: URL?
     @State private var syncMode: CloudKitSyncMode = CloudKitSyncMode.current
     @Environment(\.requestReview) private var requestReview
 
@@ -69,6 +71,19 @@ struct SettingsView: View {
                         } label: {
                             Label("settings.trash", systemImage: "trash")
                         }
+                    }
+                }
+
+                // エクスポートセクション（Pro限定）
+                if store.isProUser {
+                    Section {
+                        Button {
+                            showExportPicker = true
+                        } label: {
+                            Label("export.action", systemImage: "square.and.arrow.up")
+                        }
+                    } header: {
+                        Text("export.title")
                     }
                 }
 
@@ -149,6 +164,18 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showTrash) {
                 TrashView(store: store)
+            }
+            .sheet(item: $exportURL) { url in
+                ShareSheet(url: url)
+            }
+            .confirmationDialog("export.formatPicker", isPresented: $showExportPicker, titleVisibility: .visible) {
+                Button("CSV") {
+                    exportURL = ExportManager.export(store.items, format: .csv)
+                }
+                Button("Markdown") {
+                    exportURL = ExportManager.export(store.items, format: .markdown)
+                }
+                Button("button.cancel", role: .cancel) {}
             }
         }
     }
