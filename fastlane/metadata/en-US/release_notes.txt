@@ -1,5 +1,8 @@
-【New Feature】
-· Added Lifetime Access plan. Purchase once and use ClipKit Pro forever.
+【New Features】
+· Category filter: Filter clipboard history by URL, email, phone, code, address, or text
+· Image OCR search: Automatically extract and search text from copied images
+· History export (Pro): Export clipboard history as CSV or Markdown
+· English support: App language automatically switches based on device language
 
 【Improvements】
 · Stability improvements
