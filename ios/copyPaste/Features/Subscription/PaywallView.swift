@@ -77,6 +77,13 @@ struct PaywallView: View {
                             color: .cyan
                         )
 
+                        FeatureRow(
+                            icon: "square.and.arrow.up",
+                            title: "履歴エクスポート",
+                            description: "CSV / Markdown 形式で書き出し",
+                            color: .indigo
+                        )
+
                     }
                     .padding(.horizontal)
 
