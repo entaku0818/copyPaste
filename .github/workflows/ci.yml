@@ -62,6 +62,12 @@ jobs:
           </plist>
           EOF
 
+      - name: Resolve Swift Package dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project ios/copyPaste.xcodeproj \
+            -scheme ClipKit
+
       - name: Run unit tests
         run: |
           set -o pipefail
