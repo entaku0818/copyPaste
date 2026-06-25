@@ -73,7 +73,7 @@ jobs:
             -destination "id=$DEVICE_ID" \
             -skip-testing:ClipKitTests/ScreenshotRenderTests \
             -skip-testing:ClipKitUITests \
-            -skipPackagePluginValidation \
+            -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY=""
