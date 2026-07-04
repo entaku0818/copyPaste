@@ -117,6 +117,20 @@
 "export.action" = "履歴をエクスポート";
 "export.formatPicker" = "形式を選択";
 
+/* Snippets */
+"snippets.title" = "定型文";
+"snippets.empty" = "定型文がありません";
+"snippets.emptyDescription" = "よく使う文章を登録すると、キーボードから1タップで貼り付けられます";
+"snippets.add" = "定型文を追加";
+"snippets.edit" = "定型文を編集";
+"snippets.titleField" = "タイトル";
+"snippets.titlePlaceholder" = "例: 挨拶";
+"snippets.contentField" = "内容";
+"snippets.placeholderHint" = "{日付} {時刻} は貼り付け時に現在の日付・時刻に置き換えられます";
+"snippets.save" = "保存";
+"snippets.cancel" = "キャンセル";
+"snippets.freeLimit %lld" = "無料版は%lld件まで登録できます（Proで無制限）";
+
 /* Text Transform */
 "transform.menu.copy" = "変換してコピー";
 "transform.menu.paste" = "変換して貼付け";

@@ -32,12 +32,20 @@ public struct ContentView: View {
             .tag(2)
 
             NavigationStack {
+                SnippetsView(store: store)
+            }
+            .tabItem {
+                Label("snippets.title", systemImage: "text.quote")
+            }
+            .tag(3)
+
+            NavigationStack {
                 SettingsView(store: store)
             }
             .tabItem {
                 Label("設定", systemImage: "gearshape.fill")
             }
-            .tag(3)
+            .tag(4)
         }
     }
 }

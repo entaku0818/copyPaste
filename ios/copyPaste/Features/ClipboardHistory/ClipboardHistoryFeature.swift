@@ -23,6 +23,7 @@ struct ClipboardHistoryFeature {
         var showPaywall: Bool = false
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
+        var snippets: [Snippet] = []
         var copyCount: Int = UserDefaults.standard.integer(forKey: "clipkit.copyCount")
         var captureCount: Int = UserDefaults.standard.integer(forKey: "clipkit.captureCount")
         var showSatisfactionPrompt: Bool = false
@@ -31,6 +32,15 @@ struct ClipboardHistoryFeature {
         // 履歴件数制限（無料: 20件、Pro: 無制限）
         var maxHistoryCount: Int {
             return isProUser ? Int.max : 20
+        }
+
+        // スニペット件数制限（無料: 3件、Pro: 無制限）
+        static let freeSnippetLimit = 3
+        var maxSnippetCount: Int {
+            return isProUser ? Int.max : Self.freeSnippetLimit
+        }
+        var canAddSnippet: Bool {
+            snippets.count < maxSnippetCount
         }
 
         // 無料版で表示できる履歴の起点（3日前以降）
@@ -109,15 +119,30 @@ struct ClipboardHistoryFeature {
         case restoreItem(ClipboardItem)
         case permanentlyDeleteItem(ClipboardItem)
         case emptyTrash
+        case loadSnippets
+        case snippetsLoaded([Snippet])
+        case saveSnippets
+        case addSnippet(title: String, content: String)
+        case updateSnippet(Snippet)
+        case deleteSnippets(IndexSet)
+        case moveSnippets(IndexSet, Int)
     }
 
     @Dependency(\.continuousClock) var clock
     @Dependency(\.pipClient) var pip
     @Dependency(\.clipboardRepository) var repository
+    @Dependency(\.snippetRepository) var snippetRepository
     @Dependency(\.interstitialAd) var interstitialAd
     private enum CancelID { case monitoring }
 
     private static let logger = Logger(subsystem: "com.clipkit", category: "Clipboard")
+
+    // 並び替え・削除後にsortOrderをインデックスで振り直す
+    private static func renumberSnippets(_ snippets: inout [Snippet]) {
+        for index in snippets.indices {
+            snippets[index].sortOrder = Int64(index)
+        }
+    }
 
     // 画像からClipboardItemを作成（サムネイル付き）
     private static func createImageItem(from image: UIImage) async -> ClipboardItem {
@@ -460,6 +485,7 @@ struct ClipboardHistoryFeature {
                     .send(.updateProStatus),
                     .send(.loadItems),
                     .send(.loadTrash),
+                    .send(.loadSnippets),
                     .send(.checkReviewTrigger)
                 )
 
@@ -658,6 +684,66 @@ struct ClipboardHistoryFeature {
                 }
                 state.trashedItems.removeAll()
                 return .send(.saveTrash)
+
+            // MARK: - Snippets（定型文, issue #85）
+
+            case .loadSnippets:
+                return .run { send in
+                    do {
+                        let snippets = try await snippetRepository.load()
+                        await send(.snippetsLoaded(snippets))
+                    } catch {
+                        Self.logger.error("Failed to load snippets: \(error.localizedDescription)")
+                        await send(.snippetsLoaded([]))
+                    }
+                }
+
+            case let .snippetsLoaded(snippets):
+                state.snippets = snippets.sorted { $0.sortOrder < $1.sortOrder }
+                return .none
+
+            case .saveSnippets:
+                let snippets = state.snippets
+                return .run { _ in
+                    do {
+                        try await snippetRepository.save(snippets)
+                    } catch {
+                        Self.logger.error("Failed to save snippets: \(error.localizedDescription)")
+                    }
+                }
+
+            case let .addSnippet(title, content):
+                // 無料ユーザーは3件まで
+                guard state.canAddSnippet else {
+                    return .send(.showPaywall)
+                }
+                let snippet = Snippet(
+                    title: title,
+                    content: content,
+                    sortOrder: Int64(state.snippets.count)
+                )
+                state.snippets.append(snippet)
+                Analytics.logEvent("add_snippet", parameters: nil)
+                return .send(.saveSnippets)
+
+            case let .updateSnippet(snippet):
+                guard let index = state.snippets.firstIndex(where: { $0.id == snippet.id }) else {
+                    return .none
+                }
+                var updated = snippet
+                updated.updatedAt = Date()
+                state.snippets[index] = updated
+                return .send(.saveSnippets)
+
+            case let .deleteSnippets(indexSet):
+                state.snippets.remove(atOffsets: indexSet)
+                Self.renumberSnippets(&state.snippets)
+                return .send(.saveSnippets)
+
+            case let .moveSnippets(source, destination):
+                state.snippets.move(fromOffsets: source, toOffset: destination)
+                Self.renumberSnippets(&state.snippets)
+                return .send(.saveSnippets)
             }
         }
     }

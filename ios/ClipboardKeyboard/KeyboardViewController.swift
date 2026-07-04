@@ -17,10 +17,22 @@ class KeyboardViewController: UIInputViewController {
     private let stackView = UIStackView()
     private let controlBar = UIView()
     private let nextKeyboardButton = UIButton(type: .system)
+    private let modeSegmentedControl = UISegmentedControl(items: [
+        String(localized: "keyboard.tab.history", defaultValue: "履歴"),
+        String(localized: "keyboard.tab.snippets", defaultValue: "定型文"),
+    ])
 
     // MARK: - State
 
+    /// 表示モード（履歴 / 定型文）
+    private enum DisplayMode {
+        case history
+        case snippets
+    }
+
+    private var displayMode: DisplayMode = .history
     private var clipboardItems: [ClipboardItem] = []
+    private var snippets: [Snippet] = []
     private var isProUser = false
 
     // MARK: - Lifecycle
@@ -32,6 +44,7 @@ class KeyboardViewController: UIInputViewController {
         checkProStatus()
         setupUI()
         loadClipboardHistory()
+        loadSnippets()
     }
 
     // MARK: - Pro Status
@@ -60,6 +73,18 @@ class KeyboardViewController: UIInputViewController {
             controlBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             controlBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             controlBar.heightAnchor.constraint(equalToConstant: 44),
+        ])
+
+        // 履歴/定型文の切り替え
+        modeSegmentedControl.selectedSegmentIndex = 0
+        modeSegmentedControl.addTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
+        modeSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        controlBar.addSubview(modeSegmentedControl)
+
+        NSLayoutConstraint.activate([
+            modeSegmentedControl.leadingAnchor.constraint(equalTo: controlBar.leadingAnchor, constant: 16),
+            modeSegmentedControl.centerYAnchor.constraint(equalTo: controlBar.centerYAnchor),
+            modeSegmentedControl.heightAnchor.constraint(equalToConstant: 32),
         ])
 
         // 地球儀ボタンは複数キーボードがある時のみ表示
@@ -117,13 +142,31 @@ class KeyboardViewController: UIInputViewController {
         stackView.addArrangedSubview(loadingIndicator)
     }
 
+    @objc private func modeChanged(_ sender: UISegmentedControl) {
+        displayMode = sender.selectedSegmentIndex == 0 ? .history : .snippets
+        refreshCards()
+    }
+
     /// 無料版は直近3件＋アップグレードカード、Proは10件表示
     private var maxVisibleItems: Int { isProUser ? 10 : 3 }
 
-    private func refreshHistoryCards() {
+    /// 無料版の定型文は3件まで表示（登録上限も3件。Pro解約で超過した分はPro再開で表示）
+    private var maxVisibleSnippets: Int { isProUser ? Int.max : 3 }
+
+    /// 現在の表示モードに応じてカード列を作り直す
+    private func refreshCards() {
         // 既存のカードを削除
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
+        switch displayMode {
+        case .history:
+            refreshHistoryCards()
+        case .snippets:
+            refreshSnippetCards()
+        }
+    }
+
+    private func refreshHistoryCards() {
         if clipboardItems.isEmpty {
             let label = UILabel()
             label.text = "履歴なし"
@@ -140,6 +183,93 @@ class KeyboardViewController: UIInputViewController {
         if !isProUser && clipboardItems.count > maxVisibleItems {
             stackView.addArrangedSubview(makeUpgradeCard())
         }
+    }
+
+    // MARK: - 定型文ビュー
+
+    private func refreshSnippetCards() {
+        if snippets.isEmpty {
+            let label = UILabel()
+            label.text = "定型文なし"
+            label.textColor = .secondaryLabel
+            label.font = .systemFont(ofSize: 14)
+            stackView.addArrangedSubview(label)
+            return
+        }
+
+        for snippet in snippets.prefix(maxVisibleSnippets) {
+            stackView.addArrangedSubview(makeSnippetCard(snippet))
+        }
+
+        if !isProUser && snippets.count > maxVisibleSnippets {
+            stackView.addArrangedSubview(makeUpgradeCard(message: "もっと見る\nProで無制限"))
+        }
+    }
+
+    private func makeSnippetCard(_ snippet: Snippet) -> UIView {
+        let card = UIButton(type: .system)
+        card.backgroundColor = UIColor.systemBackground
+        card.layer.cornerRadius = 8
+        card.layer.shadowColor = UIColor.black.cgColor
+        card.layer.shadowOpacity = 0.1
+        card.layer.shadowRadius = 2
+        card.layer.shadowOffset = CGSize(width: 0, height: 1)
+        card.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            card.widthAnchor.constraint(equalToConstant: 120),
+            card.heightAnchor.constraint(equalToConstant: 80),
+        ])
+
+        let vStack = UIStackView()
+        vStack.axis = .vertical
+        vStack.spacing = 4
+        vStack.alignment = .leading
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(vStack)
+        NSLayoutConstraint.activate([
+            vStack.topAnchor.constraint(equalTo: card.topAnchor, constant: 8),
+            vStack.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 8),
+            vStack.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -8),
+        ])
+
+        let titleLabel = UILabel()
+        titleLabel.font = .systemFont(ofSize: 11, weight: .semibold)
+        titleLabel.textColor = .label
+        titleLabel.numberOfLines = 1
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.text = snippet.displayTitle
+
+        let contentLabel = UILabel()
+        contentLabel.font = .systemFont(ofSize: 11)
+        contentLabel.textColor = .secondaryLabel
+        contentLabel.numberOfLines = 2
+        contentLabel.lineBreakMode = .byTruncatingTail
+        contentLabel.text = snippet.content
+
+        vStack.addArrangedSubview(titleLabel)
+        vStack.addArrangedSubview(contentLabel)
+
+        // サブビューのタッチをボタンに透過させる
+        vStack.isUserInteractionEnabled = false
+        titleLabel.isUserInteractionEnabled = false
+        contentLabel.isUserInteractionEnabled = false
+
+        card.addTarget(self, action: #selector(cardTouchDown(_:)), for: .touchDown)
+        card.addTarget(self, action: #selector(snippetCardTapped(_:)), for: .touchUpInside)
+        card.addTarget(self, action: #selector(cardCancelled(_:)), for: [.touchUpOutside, .touchCancel])
+        card.accessibilityIdentifier = snippet.id.uuidString
+        return card
+    }
+
+    @objc private func snippetCardTapped(_ sender: UIButton) {
+        hideCardLoading(sender)
+        setAllCardsEnabled(true)
+        guard let idStr = sender.accessibilityIdentifier,
+              let uuid = UUID(uuidString: idStr),
+              let snippet = snippets.first(where: { $0.id == uuid }) else { return }
+        // {日付} {時刻} 等のプレースホルダを貼り付け時点の値に展開する
+        textDocumentProxy.insertText(SnippetVariableExpander.expand(snippet.content))
+        KeyboardLogger.log(.paste, "snippet(\(snippet.displayTitle.prefix(20)))")
     }
 
     private func makeHistoryCard(_ item: ClipboardItem) -> UIView {
@@ -298,8 +428,8 @@ class KeyboardViewController: UIInputViewController {
 
     // MARK: - Free: アップグレードカード
 
-    /// 無料版の履歴カード列末尾に表示する「もっと見る」カード
-    private func makeUpgradeCard() -> UIView {
+    /// 無料版のカード列末尾に表示する「もっと見る」カード
+    private func makeUpgradeCard(message: String = "もっと見る\nProで10件表示") -> UIView {
         let card = UIButton(type: .system)
         card.backgroundColor = UIColor.systemBackground
         card.layer.cornerRadius = 8
@@ -332,7 +462,7 @@ class KeyboardViewController: UIInputViewController {
         ])
 
         let textLabel = UILabel()
-        textLabel.text = "もっと見る\nProで10件表示"
+        textLabel.text = message
         textLabel.font = .systemFont(ofSize: 11, weight: .semibold)
         textLabel.textColor = .label
         textLabel.textAlignment = .center
@@ -370,10 +500,28 @@ class KeyboardViewController: UIInputViewController {
                 let items = try await ClipboardStorageManager.shared.load()
                 await MainActor.run {
                     self.clipboardItems = items
-                    self.refreshHistoryCards()
+                    if self.displayMode == .history {
+                        self.refreshCards()
+                    }
                 }
             } catch {
                 KeyboardLogger.log(.error, "履歴読込失敗: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func loadSnippets() {
+        Task {
+            do {
+                let snippets = try await SnippetStorageManager.shared.load()
+                await MainActor.run {
+                    self.snippets = snippets
+                    if self.displayMode == .snippets {
+                        self.refreshCards()
+                    }
+                }
+            } catch {
+                KeyboardLogger.log(.error, "定型文読込失敗: \(error.localizedDescription)")
             }
         }
     }

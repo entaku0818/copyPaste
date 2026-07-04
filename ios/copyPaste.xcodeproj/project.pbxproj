@@ -89,12 +89,16 @@
 				"CoreData/ClipboardDataModel.xcdatamodeld",
 				CoreData/ClipboardItemEntity.swift,
 				CoreData/PersistenceController.swift,
+				CoreData/SnippetEntity.swift,
 				Features/ClipboardHistory/ClipboardItem.swift,
 				Features/ClipboardHistory/ClipboardStorageManager.swift,
 				Features/ClipboardHistory/ItemCategory.swift,
 				Features/ClipboardHistory/SharedConstants.swift,
 				Features/ClipboardHistory/TextTransformer.swift,
 				Features/CloudKit/CloudKitSyncMode.swift,
+				Features/Snippets/Snippet.swift,
+				Features/Snippets/SnippetStorageManager.swift,
+				Features/Snippets/SnippetVariableExpander.swift,
 				"GoogleService-Info.plist",
 			);
 			target = 613FED652F2901E400AE78D8 /* ClipboardKeyboard */;

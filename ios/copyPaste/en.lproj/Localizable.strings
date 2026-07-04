@@ -117,6 +117,20 @@
 "export.action" = "Export History";
 "export.formatPicker" = "Choose Format";
 
+/* Snippets */
+"snippets.title" = "Snippets";
+"snippets.empty" = "No Snippets";
+"snippets.emptyDescription" = "Save frequently used text and paste it with one tap from the keyboard";
+"snippets.add" = "Add Snippet";
+"snippets.edit" = "Edit Snippet";
+"snippets.titleField" = "Title";
+"snippets.titlePlaceholder" = "e.g. Greeting";
+"snippets.contentField" = "Content";
+"snippets.placeholderHint" = "{日付} {時刻} ({date} {time}) are replaced with the current date and time when pasted";
+"snippets.save" = "Save";
+"snippets.cancel" = "Cancel";
+"snippets.freeLimit %lld" = "Free plan allows up to %lld snippets (unlimited with Pro)";
+
 /* Text Transform */
 "transform.menu.copy" = "Transform & Copy";
 "transform.menu.paste" = "Transform & Paste";

@@ -80,6 +80,34 @@ extension DependencyValues {
     }
 }
 
+// MARK: - SnippetRepositoryClient
+
+// スニペット（定型文）のCoreData I/OをDependency化する（issue #85）。
+// テストでは実CoreDataに書き込まないno-op実装を使う。
+struct SnippetRepositoryClient {
+    var load: @Sendable () async throws -> [Snippet]
+    var save: @Sendable ([Snippet]) async throws -> Void
+}
+
+extension SnippetRepositoryClient: DependencyKey {
+    static let liveValue = SnippetRepositoryClient(
+        load: { try await SnippetStorageManager.shared.load() },
+        save: { try await SnippetStorageManager.shared.save(snippets: $0) }
+    )
+
+    static let testValue = SnippetRepositoryClient(
+        load: { [] },
+        save: { _ in }
+    )
+}
+
+extension DependencyValues {
+    var snippetRepository: SnippetRepositoryClient {
+        get { self[SnippetRepositoryClient.self] }
+        set { self[SnippetRepositoryClient.self] = newValue }
+    }
+}
+
 // MARK: - InterstitialAdClient
 
 // インタースティシャル広告をDependency化する（issue #90）。
