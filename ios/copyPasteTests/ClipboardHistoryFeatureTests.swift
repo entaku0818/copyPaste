@@ -686,6 +686,87 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.finish()
     }
 
+    // MARK: - Interstitial Ad wiring tests (issue #90)
+
+    func testCopyItem_freeUser_notifiesInterstitialAd() async {
+        let item = ClipboardItem(content: "Test")
+        let pastedCalls = LockIsolated<[Bool]>([])
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], isProUser: false)
+        ) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.interstitialAd.onItemPasted = { isProUser in
+                pastedCalls.withValue { $0.append(isProUser) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyItem(item))
+        await store.finish()
+
+        XCTAssertEqual(pastedCalls.value, [false], "copyItemでonItemPastedがisProUser=falseで呼ばれること")
+    }
+
+    func testCopyItem_proUser_notifiesInterstitialAdWithProFlag() async {
+        let item = ClipboardItem(content: "Test")
+        let pastedCalls = LockIsolated<[Bool]>([])
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], isProUser: true)
+        ) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.interstitialAd.onItemPasted = { isProUser in
+                pastedCalls.withValue { $0.append(isProUser) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyItem(item))
+        await store.finish()
+
+        XCTAssertEqual(pastedCalls.value, [true], "ProユーザーではisProUser=trueで呼ばれること（表示可否はManager側で判定）")
+    }
+
+    func testCopyTransformedText_notifiesInterstitialAd() async {
+        let pastedCalls = LockIsolated<[Bool]>([])
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(isProUser: false)
+        ) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.interstitialAd.onItemPasted = { isProUser in
+                pastedCalls.withValue { $0.append(isProUser) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyTransformedText("HELLO", .uppercase))
+        await store.finish()
+
+        XCTAssertEqual(pastedCalls.value, [false], "copyTransformedTextでonItemPastedが呼ばれること")
+    }
+
+    func testPasteItem_notifiesInterstitialAd() async {
+        let item = ClipboardItem(content: "Test")
+        let pastedCalls = LockIsolated<[Bool]>([])
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], isProUser: false)
+        ) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.interstitialAd.onItemPasted = { isProUser in
+                pastedCalls.withValue { $0.append(isProUser) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.pasteItem(item))
+        await store.finish()
+
+        XCTAssertEqual(pastedCalls.value, [false], "pasteItemでonItemPastedが呼ばれること")
+    }
+
     // MARK: - Duplicate detection tests
 
     func testCheckClipboard_duplicateText_stateHasCorrectFirst() {

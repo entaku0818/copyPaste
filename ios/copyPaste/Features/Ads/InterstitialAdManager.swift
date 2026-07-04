@@ -19,8 +19,9 @@ final class InterstitialAdManager: NSObject, ObservableObject {
         super.init()
     }
 
-    /// 広告をプリロード
+    /// 広告をプリロード（ロード済みならスキップ）
     func loadAd() async {
+        guard interstitial == nil else { return }
         do {
             interstitial = try await InterstitialAd.load(
                 with: adUnitID,
@@ -54,7 +55,8 @@ final class InterstitialAdManager: NSObject, ObservableObject {
 
         interstitial.present(from: rootVC)
 
-        // 次の広告をプリロード
+        // インタースティシャルは1回しか表示できないため破棄し、次の広告をプリロード
+        self.interstitial = nil
         Task {
             await loadAd()
         }

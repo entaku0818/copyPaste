@@ -114,6 +114,7 @@ struct ClipboardHistoryFeature {
     @Dependency(\.continuousClock) var clock
     @Dependency(\.pipClient) var pip
     @Dependency(\.clipboardRepository) var repository
+    @Dependency(\.interstitialAd) var interstitialAd
     private enum CancelID { case monitoring }
 
     private static let logger = Logger(subsystem: "com.clipkit", category: "Clipboard")
@@ -243,8 +244,13 @@ struct ClipboardHistoryFeature {
                 UserDefaults.standard.set(state.copyCount, forKey: "clipkit.copyCount")
                 Analytics.logEvent("copy_item", parameters: ["item_type": item.type.rawValue])
                 let afterCopy = Array(state.items.prefix(5))
+                let isProUser = state.isProUser
                 let pipEffect: Effect<Action> = .run { _ in await pip.updateItems(afterCopy) }
-                return .merge(.send(.saveItems), pipEffect)
+                return .merge(
+                    .send(.saveItems),
+                    pipEffect,
+                    .run { _ in await interstitialAd.onItemPasted(isProUser) }
+                )
 
             case let .copyTransformedText(text, transform):
                 // 変換後テキストをクリップボードへ。lastChangeCount は更新せず、
@@ -253,7 +259,8 @@ struct ClipboardHistoryFeature {
                 state.copyCount += 1
                 UserDefaults.standard.set(state.copyCount, forKey: "clipkit.copyCount")
                 Analytics.logEvent("transform_copy", parameters: ["transform": transform.rawValue])
-                return .none
+                let isProUser = state.isProUser
+                return .run { _ in await interstitialAd.onItemPasted(isProUser) }
 
             case let .pasteItem(item):
                 switch item.type {
@@ -268,7 +275,8 @@ struct ClipboardHistoryFeature {
                 case .file:
                     break
                 }
-                return .none
+                let isProUser = state.isProUser
+                return .run { _ in await interstitialAd.onItemPasted(isProUser) }
 
             case let .toggleFavorite(item):
                 // 無料ユーザーはお気に入り10件まで
@@ -535,10 +543,16 @@ struct ClipboardHistoryFeature {
                 let becamePro = !state.isProUser && newProStatus
                 state.isProUser = newProStatus
                 Self.logger.info("Pro status updated: \(newProStatus)")
+                var effects: [Effect<Action>] = []
                 if becamePro {
-                    return .send(.requestReview)
+                    effects.append(.send(.requestReview))
                 }
-                return .none
+                if !newProStatus {
+                    // 無料ユーザーのみインタースティシャル広告をプリロード
+                    // （ロード済みならInterstitialAdManager側でスキップされる）
+                    effects.append(.run { _ in await interstitialAd.loadAd() })
+                }
+                return .merge(effects)
 
             case .loadTrash:
                 return .run { send in

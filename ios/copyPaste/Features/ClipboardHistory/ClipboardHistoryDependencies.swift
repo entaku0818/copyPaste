@@ -79,3 +79,37 @@ extension DependencyValues {
         set { self[ClipboardRepositoryClient.self] = newValue }
     }
 }
+
+// MARK: - InterstitialAdClient
+
+// インタースティシャル広告をDependency化する（issue #90）。
+// 本体アプリのcopy/paste系actionからのみ配線する（キーボード拡張は本Reducerを
+// 使わないため、キーボードからの貼付けでは表示されない）。
+// テストでは実AdMob SDKを触らないno-op実装を使う。
+struct InterstitialAdClient {
+    var loadAd: @Sendable () async -> Void
+    var onItemPasted: @Sendable (_ isProUser: Bool) async -> Void
+}
+
+extension InterstitialAdClient: DependencyKey {
+    static let liveValue = InterstitialAdClient(
+        loadAd: {
+            await InterstitialAdManager.shared.loadAd()
+        },
+        onItemPasted: { isProUser in
+            await InterstitialAdManager.shared.onItemPasted(isProUser: isProUser)
+        }
+    )
+
+    static let testValue = InterstitialAdClient(
+        loadAd: {},
+        onItemPasted: { _ in }
+    )
+}
+
+extension DependencyValues {
+    var interstitialAd: InterstitialAdClient {
+        get { self[InterstitialAdClient.self] }
+        set { self[InterstitialAdClient.self] = newValue }
+    }
+}
