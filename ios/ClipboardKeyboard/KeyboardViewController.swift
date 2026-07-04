@@ -31,10 +31,7 @@ class KeyboardViewController: UIInputViewController {
 
         checkProStatus()
         setupUI()
-
-        if isProUser {
-            loadClipboardHistory()
-        }
+        loadClipboardHistory()
     }
 
     // MARK: - Pro Status
@@ -83,14 +80,10 @@ class KeyboardViewController: UIInputViewController {
     }
 
     private func setupContentArea() {
-        if isProUser {
-            setupHistoryView()
-        } else {
-            setupProPlaceholder()
-        }
+        setupHistoryView()
     }
 
-    // MARK: - Pro: 履歴ビュー
+    // MARK: - 履歴ビュー
 
     private func setupHistoryView() {
         scrollView.showsHorizontalScrollIndicator = false
@@ -124,6 +117,9 @@ class KeyboardViewController: UIInputViewController {
         stackView.addArrangedSubview(loadingIndicator)
     }
 
+    /// 無料版は直近3件＋アップグレードカード、Proは10件表示
+    private var maxVisibleItems: Int { isProUser ? 10 : 3 }
+
     private func refreshHistoryCards() {
         // 既存のカードを削除
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
@@ -135,10 +131,14 @@ class KeyboardViewController: UIInputViewController {
             label.font = .systemFont(ofSize: 14)
             stackView.addArrangedSubview(label)
         } else {
-            for item in clipboardItems.prefix(10) {
+            for item in clipboardItems.prefix(maxVisibleItems) {
                 let card = makeHistoryCard(item)
                 stackView.addArrangedSubview(card)
             }
+        }
+
+        if !isProUser && clipboardItems.count > maxVisibleItems {
+            stackView.addArrangedSubview(makeUpgradeCard())
         }
     }
 
@@ -266,65 +266,57 @@ class KeyboardViewController: UIInputViewController {
         button.viewWithTag(9999)?.removeFromSuperview()
     }
 
-    // MARK: - Free: Proプレースホルダー
+    // MARK: - Free: アップグレードカード
 
-    private func setupProPlaceholder() {
-        let container = UIView()
-        container.backgroundColor = UIColor.secondarySystemBackground
-        container.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(container)
-
+    /// 無料版の履歴カード列末尾に表示する「もっと見る」カード
+    private func makeUpgradeCard() -> UIView {
+        let card = UIButton(type: .system)
+        card.backgroundColor = UIColor.systemBackground
+        card.layer.cornerRadius = 8
+        card.layer.borderWidth = 1
+        card.layer.borderColor = UIColor.systemYellow.cgColor
+        card.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            container.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            container.bottomAnchor.constraint(equalTo: controlBar.topAnchor),
-            container.heightAnchor.constraint(equalToConstant: 100),
+            card.widthAnchor.constraint(equalToConstant: 120),
+            card.heightAnchor.constraint(equalToConstant: 80),
         ])
 
-        // クラウンアイコン
+        let vStack = UIStackView()
+        vStack.axis = .vertical
+        vStack.spacing = 4
+        vStack.alignment = .center
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        card.addSubview(vStack)
+        NSLayoutConstraint.activate([
+            vStack.centerXAnchor.constraint(equalTo: card.centerXAnchor),
+            vStack.centerYAnchor.constraint(equalTo: card.centerYAnchor),
+        ])
+
         let crownImageView = UIImageView(image: UIImage(systemName: "crown.fill"))
         crownImageView.tintColor = .systemYellow
         crownImageView.contentMode = .scaleAspectFit
         crownImageView.translatesAutoresizingMaskIntoConstraints = false
-
-        // メッセージ
-        let messageLabel = UILabel()
-        messageLabel.text = "ClipKit Proでキーボードから即ペースト"
-        messageLabel.font = .systemFont(ofSize: 12, weight: .semibold)
-        messageLabel.textColor = .label
-        messageLabel.textAlignment = .center
-        messageLabel.numberOfLines = 2
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        // アップグレードボタン
-        let upgradeButton = UIButton(type: .system)
-        upgradeButton.setTitle("Proにアップグレード", for: .normal)
-        upgradeButton.setTitleColor(.white, for: .normal)
-        upgradeButton.titleLabel?.font = .systemFont(ofSize: 13, weight: .semibold)
-        upgradeButton.backgroundColor = .systemBlue
-        upgradeButton.layer.cornerRadius = 8
-        upgradeButton.translatesAutoresizingMaskIntoConstraints = false
-        upgradeButton.addTarget(self, action: #selector(upgradeButtonTapped), for: .touchUpInside)
-
-        container.addSubview(crownImageView)
-        container.addSubview(messageLabel)
-        container.addSubview(upgradeButton)
-
         NSLayoutConstraint.activate([
-            crownImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
-            crownImageView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-            crownImageView.widthAnchor.constraint(equalToConstant: 22),
-            crownImageView.heightAnchor.constraint(equalToConstant: 22),
-
-            messageLabel.topAnchor.constraint(equalTo: crownImageView.bottomAnchor, constant: 4),
-            messageLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            messageLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
-
-            upgradeButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 6),
-            upgradeButton.centerXAnchor.constraint(equalTo: container.centerXAnchor),
-            upgradeButton.widthAnchor.constraint(equalToConstant: 180),
-            upgradeButton.heightAnchor.constraint(equalToConstant: 28),
+            crownImageView.widthAnchor.constraint(equalToConstant: 20),
+            crownImageView.heightAnchor.constraint(equalToConstant: 20),
         ])
+
+        let textLabel = UILabel()
+        textLabel.text = "もっと見る\nProで10件表示"
+        textLabel.font = .systemFont(ofSize: 11, weight: .semibold)
+        textLabel.textColor = .label
+        textLabel.textAlignment = .center
+        textLabel.numberOfLines = 2
+
+        vStack.addArrangedSubview(crownImageView)
+        vStack.addArrangedSubview(textLabel)
+
+        vStack.isUserInteractionEnabled = false
+        crownImageView.isUserInteractionEnabled = false
+        textLabel.isUserInteractionEnabled = false
+
+        card.addTarget(self, action: #selector(upgradeButtonTapped), for: .touchUpInside)
+        return card
     }
 
     @objc private func upgradeButtonTapped() {
