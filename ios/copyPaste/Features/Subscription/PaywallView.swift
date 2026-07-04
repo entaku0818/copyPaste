@@ -65,8 +65,8 @@ struct PaywallView: View {
 
                         FeatureRow(
                             icon: "keyboard",
-                            title: "キーボードエクステンション",
-                            description: "どこからでもアクセス",
+                            title: "キーボードフル表示",
+                            description: "キーボードに履歴10件を表示（無料版は3件）",
                             color: .orange
                         )
 
