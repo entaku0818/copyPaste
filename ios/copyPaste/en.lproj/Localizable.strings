@@ -82,8 +82,10 @@
 "settings.contact" = "Contact Us";
 "settings.trash" = "Trash";
 "settings.iCloudSync" = "iCloud Sync";
-"settings.iCloudSyncPicker" = "Sync Content";
-"settings.iCloudSyncFooter" = "Selecting 'All including images and files' will consume iCloud storage.";
+"settings.iCloudSyncPicker" = "Sync";
+"settings.iCloudSyncFooter" = "Changes take effect the next time the app is launched.";
+"cloudKitSync.disabled" = "Don't Sync";
+"cloudKitSync.all" = "Sync";
 "settings.appInfo" = "App Info";
 "settings.version" = "Version";
 "settings.debug" = "Debug";

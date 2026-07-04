@@ -82,8 +82,10 @@
 "settings.contact" = "お問い合わせ";
 "settings.trash" = "ゴミ箱";
 "settings.iCloudSync" = "iCloud同期";
-"settings.iCloudSyncPicker" = "同期する内容";
-"settings.iCloudSyncFooter" = "「画像・ファイルも含む全て」を選択するとiCloudストレージを消費します。";
+"settings.iCloudSyncPicker" = "同期";
+"settings.iCloudSyncFooter" = "変更は次回アプリ起動時に反映されます。";
+"cloudKitSync.disabled" = "同期しない";
+"cloudKitSync.all" = "同期する";
 "settings.appInfo" = "アプリ情報";
 "settings.version" = "バージョン";
 "settings.debug" = "デバッグ";

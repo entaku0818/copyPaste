@@ -8,7 +8,7 @@ final class PersistenceController {
     private static let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
 
     static let shared = PersistenceController(
-        useCloudKit: !isExtension && !isRunningTests,
+        useCloudKit: !isExtension && !isRunningTests && CloudKitSyncMode.current.isEnabled,
         inMemory: isRunningTests
     )
 
