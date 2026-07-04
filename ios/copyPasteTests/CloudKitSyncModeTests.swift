@@ -22,10 +22,10 @@ final class CloudKitSyncModeTests: XCTestCase {
 
     // MARK: - CloudKitSyncMode
 
-    func testDefaultIsDisabled() {
+    func testDefaultIsAll() {
         UserDefaults.standard.removeObject(forKey: key)
-        XCTAssertEqual(CloudKitSyncMode.current, .disabled)
-        XCTAssertFalse(CloudKitSyncMode.current.isEnabled)
+        XCTAssertEqual(CloudKitSyncMode.current, .all)
+        XCTAssertTrue(CloudKitSyncMode.current.isEnabled)
     }
 
     func testAllIsEnabled() {

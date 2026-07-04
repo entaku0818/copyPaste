@@ -15,7 +15,10 @@ enum CloudKitSyncMode: String, CaseIterable {
 
     static var current: CloudKitSyncMode {
         get {
-            let raw = UserDefaults.standard.string(forKey: "cloudKitSyncMode") ?? "disabled"
+            // 未設定時は「同期する」。「同期しない」は明示的に選んだ場合のみ
+            guard let raw = UserDefaults.standard.string(forKey: "cloudKitSyncMode") else {
+                return .all
+            }
             if let mode = CloudKitSyncMode(rawValue: raw) {
                 return mode
             }
