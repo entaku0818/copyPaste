@@ -114,3 +114,18 @@
 "export.title" = "Export";
 "export.action" = "Export History";
 "export.formatPicker" = "Choose Format";
+
+/* Text Transform */
+"transform.menu.copy" = "Transform & Copy";
+"transform.menu.paste" = "Transform & Paste";
+"transform.uppercase" = "Uppercase";
+"transform.lowercase" = "Lowercase";
+"transform.removeLineBreaks" = "Remove Line Breaks";
+"transform.trimWhitespace" = "Trim Whitespace";
+"transform.snakeCase" = "Convert to snake_case";
+"transform.camelCase" = "Convert to camelCase";
+"transform.fullWidth" = "Convert to Full-width";
+"transform.halfWidth" = "Convert to Half-width";
+"transform.removeMarkdown" = "Remove Markdown";
+"transform.urlEncode" = "URL Encode";
+"transform.urlDecode" = "URL Decode";

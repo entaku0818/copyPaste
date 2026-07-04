@@ -112,12 +112,19 @@ struct ClipboardHistoryView: View {
             // （let item のままだと toggleFavorite 後に isFavorite が更新されない）
             ClipboardItemDetailView(
                 item: store.items.first(where: { $0.id == sheetItem.id }) ?? sheetItem,
+                isProUser: store.isProUser,
                 onCopy: {
                     store.send(.copyItem(sheetItem))
                     selectedItem = nil
                 },
                 onToggleFavorite: {
                     store.send(.toggleFavorite(sheetItem))
+                },
+                onCopyTransformed: { text, transform in
+                    store.send(.copyTransformedText(text, transform))
+                },
+                onPaywallDismiss: {
+                    store.send(.updateProStatus)
                 }
             )
         }
@@ -171,10 +178,24 @@ struct ClipboardHistoryView: View {
 
 struct ClipboardItemDetailView: View {
     let item: ClipboardItem
+    let isProUser: Bool
     let onCopy: () -> Void
     let onToggleFavorite: () -> Void
+    let onCopyTransformed: (String, TextTransform) -> Void
+    let onPaywallDismiss: () -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var copied = false
+    @State private var transformCopied = false
+    @State private var showTransformPaywall = false
+
+    // 変換対象のテキスト（テキスト・URLアイテムのみ）
+    private var transformSourceText: String? {
+        switch item.type {
+        case .text: return item.textContent
+        case .url: return item.url?.absoluteString
+        case .image, .file: return nil
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -222,6 +243,11 @@ struct ClipboardItemDetailView: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
+
+                    // 変換してコピー
+                    if let sourceText = transformSourceText {
+                        transformMenu(sourceText: sourceText)
+                    }
                 }
                 .padding()
             }
@@ -253,6 +279,48 @@ struct ClipboardItemDetailView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $showTransformPaywall, onDismiss: onPaywallDismiss) {
+            PaywallView()
+        }
+    }
+
+    @ViewBuilder
+    private func transformMenu(sourceText: String) -> some View {
+        Menu {
+            ForEach(TextTransform.allCases, id: \.self) { transform in
+                Button {
+                    if transform.requiresPro && !isProUser {
+                        showTransformPaywall = true
+                    } else {
+                        onCopyTransformed(transform.apply(to: sourceText), transform)
+                        transformCopied = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            transformCopied = false
+                        }
+                    }
+                } label: {
+                    Label(
+                        transform.displayName,
+                        systemImage: transform.requiresPro && !isProUser
+                            ? "crown.fill"
+                            : transform.systemImageName
+                    )
+                }
+            }
+        } label: {
+            HStack {
+                Image(systemName: transformCopied ? "checkmark" : "wand.and.stars")
+                Text(transformCopied ? String(localized: "copy.done") : String(localized: "transform.menu.copy"))
+                Spacer()
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .foregroundColor(transformCopied ? .green : .accentColor)
+            .cornerRadius(12)
         }
     }
 

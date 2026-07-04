@@ -75,6 +75,7 @@ struct ClipboardHistoryFeature {
         case clearAll
         case pasteItem(ClipboardItem)
         case copyItem(ClipboardItem)
+        case copyTransformedText(String, TextTransform)
         case toggleFavorite(ClipboardItem)
         case updateSearchText(String)
         case selectCategory(ItemCategory?)
@@ -242,6 +243,15 @@ struct ClipboardHistoryFeature {
                 let afterCopy = Array(state.items.prefix(5))
                 let pipEffect: Effect<Action> = .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterCopy) } }
                 return .merge(.send(.saveItems), pipEffect)
+
+            case let .copyTransformedText(text, transform):
+                // 変換後テキストをクリップボードへ。lastChangeCount は更新せず、
+                // 監視ループに新規履歴アイテムとして取り込ませる
+                UIPasteboard.general.string = text
+                state.copyCount += 1
+                UserDefaults.standard.set(state.copyCount, forKey: "clipkit.copyCount")
+                Analytics.logEvent("transform_copy", parameters: ["transform": transform.rawValue])
+                return .none
 
             case let .pasteItem(item):
                 switch item.type {

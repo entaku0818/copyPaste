@@ -84,6 +84,13 @@ struct PaywallView: View {
                             color: .indigo
                         )
 
+                        FeatureRow(
+                            icon: "wand.and.stars",
+                            title: "高度なテキスト変換",
+                            description: "ケース変換・全角半角・URLエンコード等",
+                            color: .purple
+                        )
+
                     }
                     .padding(.horizontal)
 

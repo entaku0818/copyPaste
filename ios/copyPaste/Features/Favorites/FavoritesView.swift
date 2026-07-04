@@ -88,12 +88,19 @@ struct FavoritesView: View {
         .sheet(item: $selectedItem) { sheetItem in
             ClipboardItemDetailView(
                 item: store.items.first(where: { $0.id == sheetItem.id }) ?? sheetItem,
+                isProUser: store.isProUser,
                 onCopy: {
                     store.send(.copyItem(sheetItem))
                     selectedItem = nil
                 },
                 onToggleFavorite: {
                     store.send(.toggleFavorite(sheetItem))
+                },
+                onCopyTransformed: { text, transform in
+                    store.send(.copyTransformedText(text, transform))
+                },
+                onPaywallDismiss: {
+                    store.send(.updateProStatus)
                 }
             )
         }

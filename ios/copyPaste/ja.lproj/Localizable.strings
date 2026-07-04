@@ -114,3 +114,18 @@
 "export.title" = "エクスポート";
 "export.action" = "履歴をエクスポート";
 "export.formatPicker" = "形式を選択";
+
+/* Text Transform */
+"transform.menu.copy" = "変換してコピー";
+"transform.menu.paste" = "変換して貼付け";
+"transform.uppercase" = "大文字に変換";
+"transform.lowercase" = "小文字に変換";
+"transform.removeLineBreaks" = "改行を除去";
+"transform.trimWhitespace" = "前後の空白を除去";
+"transform.snakeCase" = "snake_caseに変換";
+"transform.camelCase" = "camelCaseに変換";
+"transform.fullWidth" = "全角に変換";
+"transform.halfWidth" = "半角に変換";
+"transform.removeMarkdown" = "Markdownを除去";
+"transform.urlEncode" = "URLエンコード";
+"transform.urlDecode" = "URLデコード";

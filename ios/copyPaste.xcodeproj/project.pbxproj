@@ -93,6 +93,7 @@
 				Features/ClipboardHistory/ClipboardStorageManager.swift,
 				Features/ClipboardHistory/ItemCategory.swift,
 				Features/ClipboardHistory/SharedConstants.swift,
+				Features/ClipboardHistory/TextTransformer.swift,
 				"GoogleService-Info.plist",
 			);
 			target = 613FED652F2901E400AE78D8 /* ClipboardKeyboard */;

@@ -213,7 +213,37 @@ class KeyboardViewController: UIInputViewController {
         card.addTarget(self, action: #selector(cardTapped(_:)), for: .touchUpInside)
         card.addTarget(self, action: #selector(cardCancelled(_:)), for: [.touchUpOutside, .touchCancel])
         card.accessibilityIdentifier = item.id.uuidString
+
+        // 長押しで「変換して貼付け」メニュー（テキスト・URLのみ）
+        if let menu = makeTransformMenu(for: item) {
+            card.menu = menu
+        }
         return card
+    }
+
+    private func makeTransformMenu(for item: ClipboardItem) -> UIMenu? {
+        let sourceText: String?
+        switch item.type {
+        case .text: sourceText = item.textContent
+        case .url: sourceText = item.url?.absoluteString
+        case .image, .file: sourceText = nil
+        }
+        guard let sourceText, !sourceText.isEmpty else { return nil }
+
+        let actions = TextTransform.allCases.map { transform in
+            UIAction(
+                title: transform.displayName,
+                image: UIImage(systemName: transform.systemImageName)
+            ) { [weak self] _ in
+                guard let self else { return }
+                self.textDocumentProxy.insertText(transform.apply(to: sourceText))
+                KeyboardLogger.log(.paste, "transform(\(transform.rawValue))")
+            }
+        }
+        return UIMenu(
+            title: String(localized: "transform.menu.paste", defaultValue: "変換して貼付け"),
+            children: actions
+        )
     }
 
     private var isPasting = false
