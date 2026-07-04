@@ -112,6 +112,8 @@ struct ClipboardHistoryFeature {
     }
 
     @Dependency(\.continuousClock) var clock
+    @Dependency(\.pipClient) var pip
+    @Dependency(\.clipboardRepository) var repository
     private enum CancelID { case monitoring }
 
     private static let logger = Logger(subsystem: "com.clipkit", category: "Clipboard")
@@ -133,7 +135,7 @@ struct ClipboardHistoryFeature {
                 if state.items.count > limit {
                     let removed = state.items.removeLast()
                     do {
-                        try ClipboardRepository.shared.deleteItem(removed)
+                        try repository.deleteItem(removed)
                     } catch {
                         Self.logger.error("Failed to delete overflow item: \(error.localizedDescription)")
                     }
@@ -147,12 +149,12 @@ struct ClipboardHistoryFeature {
                     .send(.checkReviewTrigger),
                     .run { _ in
                         do {
-                            try await ClipboardRepository.shared.saveAndSync(item: newItem)
+                            try await repository.saveAndSync(newItem)
                         } catch {
                             Self.logger.error("Failed to saveAndSync item: \(error.localizedDescription)")
                         }
                     },
-                    .run { _ in await MainActor.run { PiPManager.shared.updateItems(latestItems) } }
+                    .run { _ in await pip.updateItems(latestItems) }
                 )
 
             case let .removeItems(indexSet):
@@ -169,13 +171,13 @@ struct ClipboardHistoryFeature {
                     let afterRemove = Array(state.items.prefix(5))
                     return .merge(
                         .send(.saveItems), .send(.saveTrash),
-                        .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterRemove) } }
+                        .run { _ in await pip.updateItems(afterRemove) }
                     )
                 } else {
                     for index in indexSet {
                         if index < state.items.count {
                             do {
-                                try ClipboardRepository.shared.deleteItem(state.items[index])
+                                try repository.deleteItem(state.items[index])
                             } catch {
                                 Self.logger.error("Failed to delete item at \(index): \(error.localizedDescription)")
                             }
@@ -185,7 +187,7 @@ struct ClipboardHistoryFeature {
                     let afterRemove = Array(state.items.prefix(5))
                     return .merge(
                         .send(.saveItems),
-                        .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterRemove) } }
+                        .run { _ in await pip.updateItems(afterRemove) }
                     )
                 }
 
@@ -200,18 +202,18 @@ struct ClipboardHistoryFeature {
                     state.items.removeAll()
                     return .merge(
                         .send(.saveItems), .send(.saveTrash),
-                        .run { _ in await MainActor.run { PiPManager.shared.updateItems([]) } }
+                        .run { _ in await pip.updateItems([]) }
                     )
                 } else {
                     do {
-                        try ClipboardRepository.shared.clearAll()
+                        try repository.clearAll()
                     } catch {
                         Self.logger.error("Failed to clear all items: \(error.localizedDescription)")
                     }
                     state.items.removeAll()
                     return .merge(
                         .send(.saveItems),
-                        .run { _ in await MainActor.run { PiPManager.shared.updateItems([]) } }
+                        .run { _ in await pip.updateItems([]) }
                     )
                 }
                 
@@ -241,7 +243,7 @@ struct ClipboardHistoryFeature {
                 UserDefaults.standard.set(state.copyCount, forKey: "clipkit.copyCount")
                 Analytics.logEvent("copy_item", parameters: ["item_type": item.type.rawValue])
                 let afterCopy = Array(state.items.prefix(5))
-                let pipEffect: Effect<Action> = .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterCopy) } }
+                let pipEffect: Effect<Action> = .run { _ in await pip.updateItems(afterCopy) }
                 return .merge(.send(.saveItems), pipEffect)
 
             case let .copyTransformedText(text, transform):
@@ -295,7 +297,7 @@ struct ClipboardHistoryFeature {
                     let afterToggle = Array(state.items.prefix(5))
                     return .merge(
                         .send(.saveItems),
-                        .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterToggle) } }
+                        .run { _ in await pip.updateItems(afterToggle) }
                     )
                 }
                 return .none
@@ -357,7 +359,7 @@ struct ClipboardHistoryFeature {
                 state.isMonitoring = false
                 return .merge(
                     .cancel(id: CancelID.monitoring),
-                    .run { _ in await MainActor.run { PiPManager.shared.stopPiP() } }
+                    .run { _ in await pip.stopPiP() }
                 )
                 
             case .checkClipboard:
@@ -485,7 +487,7 @@ struct ClipboardHistoryFeature {
             case .loadItems:
                 return .run { send in
                     do {
-                        let items = try await ClipboardRepository.shared.load()
+                        let items = try await repository.load()
                         await send(.itemsLoaded(items))
                     } catch {
                         Self.logger.error("Failed to load items: \(error.localizedDescription)")
@@ -506,13 +508,13 @@ struct ClipboardHistoryFeature {
                 }
 
                 let latestItems = Array(state.items.prefix(5))
-                return .run { _ in await MainActor.run { PiPManager.shared.updateItems(latestItems) } }
+                return .run { _ in await pip.updateItems(latestItems) }
 
             case .saveItems:
                 let items = state.items
                 return .run { _ in
                     do {
-                        try await ClipboardRepository.shared.save(items: items)
+                        try await repository.save(items)
                     } catch {
                         Self.logger.error("Failed to save items: \(error.localizedDescription)")
                     }
@@ -541,7 +543,7 @@ struct ClipboardHistoryFeature {
             case .loadTrash:
                 return .run { send in
                     do {
-                        let items = try await ClipboardRepository.shared.loadTrash()
+                        let items = try await repository.loadTrash()
                         // 30日以上経過したアイテムを除外
                         let threshold = Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date()
                         let valid = items.filter { ($0.deletedAt ?? Date()) >= threshold }
@@ -560,7 +562,7 @@ struct ClipboardHistoryFeature {
                 let items = state.trashedItems
                 return .run { _ in
                     do {
-                        try await ClipboardRepository.shared.saveTrash(items: items)
+                        try await repository.saveTrash(items)
                     } catch {
                         Self.logger.error("Failed to save trash: \(error.localizedDescription)")
                     }
@@ -577,13 +579,13 @@ struct ClipboardHistoryFeature {
                 let afterRestore = Array(state.items.prefix(5))
                 return .merge(
                     .send(.saveItems), .send(.saveTrash),
-                    .run { _ in await MainActor.run { PiPManager.shared.updateItems(afterRestore) } }
+                    .run { _ in await pip.updateItems(afterRestore) }
                 )
 
             case let .permanentlyDeleteItem(item):
                 state.trashedItems.removeAll { $0.id == item.id }
                 do {
-                    try ClipboardRepository.shared.deleteItem(item)
+                    try repository.deleteItem(item)
                 } catch {
                     Self.logger.error("Failed to permanently delete item: \(error.localizedDescription)")
                 }
@@ -636,7 +638,7 @@ struct ClipboardHistoryFeature {
             case .emptyTrash:
                 // 個別削除（N+1）ではなく単一トランザクションのバッチ削除を使う
                 do {
-                    try ClipboardRepository.shared.emptyTrash()
+                    try repository.emptyTrash()
                 } catch {
                     Self.logger.error("Failed to empty trash: \(error.localizedDescription)")
                 }

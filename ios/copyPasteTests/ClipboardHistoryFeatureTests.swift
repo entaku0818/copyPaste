@@ -19,6 +19,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
 
         await store.receive(\.saveItems)
+        await store.finish()
     }
 
     func testToggleFavorite_unfavoritesItem() async {
@@ -33,6 +34,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
 
         await store.receive(\.saveItems)
+        await store.finish()
     }
 
     func testToggleFavorite_sortsItemsCorrectly() async {
@@ -68,6 +70,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
 
         await store.receive(\.saveItems)
+        await store.finish()
     }
 
     func testToggleFavorite_maintainsSortingWithMultipleFavorites() async {
@@ -110,6 +113,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
 
         await store.receive(\.saveItems)
+        await store.finish()
     }
 
     func testItemsLoaded_sortsFavoritesFirst() async {
@@ -142,6 +146,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.send(.itemsLoaded([item1, item2, item3])) {
             $0.items = [item2, item1, item3]
         }
+        await store.finish()
     }
 
     // MARK: - Free user paywall tests
@@ -310,6 +315,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             store.state.items.first(where: { $0.id == item.id })!.isFavorite,
             "再toggleFavorite後、IDで引いた値がfalseに戻ること"
         )
+        await store.finish()
     }
 
     /// 観点2a（リグレッション）: 修正前のバグパターンを文書化
@@ -341,6 +347,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             store.state.items[0].isFavorite,
             "Store 本体は正しく true に更新されている"
         )
+        await store.finish()
     }
 
     /// 観点2b（リグレッション）: 修正後の正しいパターンを証明
@@ -367,6 +374,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             "【修正の証明】IDで引き直すと最新の true が取れる。" +
             "store.items.first(where: { $0.id == sheetItem.id }) が正しい実装"
         )
+        await store.finish()
     }
 
     // MARK: - Trash Operations Tests (Pro user)
@@ -387,6 +395,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         XCTAssertEqual(store.state.items.first?.id, item2.id, "item2が残ること")
         XCTAssertEqual(store.state.trashedItems.count, 1, "ゴミ箱にアイテムが追加されること")
         XCTAssertEqual(store.state.trashedItems.first?.id, item1.id, "item1がゴミ箱に移動されること")
+        await store.finish()
     }
 
     func testRemoveItems_proUser_setsDeletedAt() async {
@@ -401,6 +410,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.send(.removeItems(IndexSet([0])))
 
         XCTAssertNotNil(store.state.trashedItems.first?.deletedAt, "ゴミ箱移動時にdeletedAtが設定されること")
+        await store.finish()
     }
 
     func testRestoreItem_movesFromTrashToItems() async {
@@ -419,6 +429,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         XCTAssertTrue(store.state.trashedItems.isEmpty, "ゴミ箱からアイテムが取り除かれること")
         XCTAssertEqual(store.state.items.count, 1, "メインリストにアイテムが追加されること")
         XCTAssertNil(store.state.items.first?.deletedAt, "復元後はdeletedAtがクリアされること")
+        await store.finish()
     }
 
     func testRestoreItem_updatesTimestamp() async {
@@ -440,6 +451,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             oldDate,
             "復元時にタイムスタンプが現在時刻に更新されること"
         )
+        await store.finish()
     }
 
     func testPermanentlyDeleteItem_removesFromTrash() async {
@@ -459,6 +471,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
 
         XCTAssertEqual(store.state.trashedItems.count, 1, "指定アイテムのみ削除されること")
         XCTAssertEqual(store.state.trashedItems.first?.id, item2.id, "item2が残ること")
+        await store.finish()
     }
 
     func testEmptyTrash_clearsAllTrashedItems() async {
@@ -477,6 +490,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.send(.emptyTrash)
 
         XCTAssertTrue(store.state.trashedItems.isEmpty, "ゴミ箱が空になること")
+        await store.finish()
     }
 
     func testTrashLoaded_sortsByDeletedAtDescending() async {
@@ -528,6 +542,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
             store.state.items.contains(where: { $0.id == oldestItemID }),
             "最古のアイテムが追い出されること"
         )
+        await store.finish()
     }
 
     func testAddItem_incrementsCaptureCount() async {
@@ -542,6 +557,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.send(.addItem(item)) {
             $0.captureCount = 4
         }
+        await store.finish()
     }
 
     // MARK: - Review Request Tests
@@ -667,6 +683,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.send(.copyItem(item)) { $0.copyCount = 2 }
         await store.send(.copyItem(item)) { $0.copyCount = 3 }
         XCTAssertEqual(store.state.copyCount, 3)
+        await store.finish()
     }
 
     // MARK: - Duplicate detection tests
@@ -746,6 +763,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
 
         await store.receive(\.saveItems)
+        await store.finish()
     }
 
     func testUpdateItemOCR_ignoresUnknownID() async {
@@ -761,6 +779,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         // IDが一致しない場合もstateは変わらないが、saveItemsは送出される
         await store.send(.updateItemOCR(id: UUID(), ocrText: "text", category: nil))
         await store.receive(\.saveItems)
+        await store.finish()
     }
 
     // MARK: - OCR search via filteredItems
