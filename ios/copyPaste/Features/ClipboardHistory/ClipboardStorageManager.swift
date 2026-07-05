@@ -92,18 +92,21 @@ class ClipboardStorageManager {
 
     // MARK: - Delete
 
-    func deleteItem(_ item: ClipboardItem) throws {
+    func deleteItem(_ item: ClipboardItem) async throws {
+        await PersistenceController.shared.waitUntilLoaded()
         try batchDelete(predicate: NSPredicate(format: "id == %@", item.id as CVarArg))
     }
 
     /// ゴミ箱内の全アイテムを単一トランザクションで削除する。
     /// 個別削除（N+1）ではなく NSBatchDeleteRequest を使う。
-    func emptyTrash() throws {
+    func emptyTrash() async throws {
+        await PersistenceController.shared.waitUntilLoaded()
         try batchDelete(predicate: NSPredicate(format: "isInTrash == YES"))
         logger.info("Emptied trash via batch delete")
     }
 
-    func clearAll() throws {
+    func clearAll() async throws {
+        await PersistenceController.shared.waitUntilLoaded()
         try batchDelete(predicate: nil)
     }
 

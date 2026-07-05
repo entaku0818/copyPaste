@@ -160,13 +160,9 @@ struct ClipboardHistoryFeature {
                 state.items.insert(item, at: 0)
                 // 履歴件数制限を適用（無料版: 20件、Pro: 無制限）
                 let limit = min(state.maxHistoryCount, state.maxItems)
+                var overflowItem: ClipboardItem?
                 if state.items.count > limit {
-                    let removed = state.items.removeLast()
-                    do {
-                        try repository.deleteItem(removed)
-                    } catch {
-                        Self.logger.error("Failed to delete overflow item: \(error.localizedDescription)")
-                    }
+                    overflowItem = state.items.removeLast()
                 }
                 state.captureCount += 1
                 UserDefaults.standard.set(state.captureCount, forKey: "clipkit.captureCount")
@@ -177,10 +173,22 @@ struct ClipboardHistoryFeature {
                 guard !state.isPiPActive else {
                     // PiP中はCoreData書き込み（CloudKit同期のトリガー）を避け、
                     // 軽量なローカルチェックポイントのみ即時に行う。
+                    // あふれたアイテムの削除も次回の.saveItems（差分ベース保存）で
+                    // 自然にプルーニングされるため、ここでは明示的に削除しない。
                     // 本保存はPiP終了時（.flushPendingPiPItems）にまとめて行う。
                     pendingBuffer.append(newItem)
                     return .merge(.send(.checkReviewTrigger), pipEffect)
                 }
+
+                let deleteOverflowEffect: Effect<Action> = overflowItem.map { removed in
+                    .run { _ in
+                        do {
+                            try await repository.deleteItem(removed)
+                        } catch {
+                            Self.logger.error("Failed to delete overflow item: \(error.localizedDescription)")
+                        }
+                    }
+                } ?? .none
 
                 return .merge(
                     .send(.saveItems),
@@ -192,6 +200,7 @@ struct ClipboardHistoryFeature {
                             Self.logger.error("Failed to saveAndSync item: \(error.localizedDescription)")
                         }
                     },
+                    deleteOverflowEffect,
                     pipEffect
                 )
 
@@ -212,20 +221,21 @@ struct ClipboardHistoryFeature {
                         .run { _ in await pip.updateItems(afterRemove) }
                     )
                 } else {
-                    for index in indexSet {
-                        if index < state.items.count {
-                            do {
-                                try repository.deleteItem(state.items[index])
-                            } catch {
-                                Self.logger.error("Failed to delete item at \(index): \(error.localizedDescription)")
-                            }
-                        }
-                    }
+                    let toDelete = indexSet.compactMap { $0 < state.items.count ? state.items[$0] : nil }
                     state.items.remove(atOffsets: indexSet)
                     let afterRemove = Array(state.items.prefix(5))
                     return .merge(
                         .send(.saveItems),
-                        .run { _ in await pip.updateItems(afterRemove) }
+                        .run { _ in await pip.updateItems(afterRemove) },
+                        .run { _ in
+                            for item in toDelete {
+                                do {
+                                    try await repository.deleteItem(item)
+                                } catch {
+                                    Self.logger.error("Failed to delete item: \(error.localizedDescription)")
+                                }
+                            }
+                        }
                     )
                 }
 
@@ -243,15 +253,17 @@ struct ClipboardHistoryFeature {
                         .run { _ in await pip.updateItems([]) }
                     )
                 } else {
-                    do {
-                        try repository.clearAll()
-                    } catch {
-                        Self.logger.error("Failed to clear all items: \(error.localizedDescription)")
-                    }
                     state.items.removeAll()
                     return .merge(
                         .send(.saveItems),
-                        .run { _ in await pip.updateItems([]) }
+                        .run { _ in await pip.updateItems([]) },
+                        .run { _ in
+                            do {
+                                try await repository.clearAll()
+                            } catch {
+                                Self.logger.error("Failed to clear all items: \(error.localizedDescription)")
+                            }
+                        }
                     )
                 }
                 
@@ -666,12 +678,16 @@ struct ClipboardHistoryFeature {
 
             case let .permanentlyDeleteItem(item):
                 state.trashedItems.removeAll { $0.id == item.id }
-                do {
-                    try repository.deleteItem(item)
-                } catch {
-                    Self.logger.error("Failed to permanently delete item: \(error.localizedDescription)")
-                }
-                return .send(.saveTrash)
+                return .merge(
+                    .send(.saveTrash),
+                    .run { _ in
+                        do {
+                            try await repository.deleteItem(item)
+                        } catch {
+                            Self.logger.error("Failed to permanently delete item: \(error.localizedDescription)")
+                        }
+                    }
+                )
 
             case .requestReview:
                 return .run { _ in
@@ -718,14 +734,18 @@ struct ClipboardHistoryFeature {
                 return .none
 
             case .emptyTrash:
-                // 個別削除（N+1）ではなく単一トランザクションのバッチ削除を使う
-                do {
-                    try repository.emptyTrash()
-                } catch {
-                    Self.logger.error("Failed to empty trash: \(error.localizedDescription)")
-                }
                 state.trashedItems.removeAll()
-                return .send(.saveTrash)
+                return .merge(
+                    .send(.saveTrash),
+                    // 個別削除（N+1）ではなく単一トランザクションのバッチ削除を使う
+                    .run { _ in
+                        do {
+                            try await repository.emptyTrash()
+                        } catch {
+                            Self.logger.error("Failed to empty trash: \(error.localizedDescription)")
+                        }
+                    }
+                )
 
             // MARK: - Snippets（定型文, issue #85）
 

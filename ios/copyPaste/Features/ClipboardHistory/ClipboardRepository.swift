@@ -47,23 +47,23 @@ final class ClipboardRepository {
 
     // MARK: - Delete
 
-    func deleteItem(_ item: ClipboardItem) throws {
+    func deleteItem(_ item: ClipboardItem) async throws {
         do {
-            try local.deleteItem(item)
+            try await local.deleteItem(item)
         } catch {
             logger.error("Failed to delete item: \(error.localizedDescription)")
             throw error
         }
     }
 
-    func clearAll() throws {
-        try local.clearAll()
+    func clearAll() async throws {
+        try await local.clearAll()
     }
 
     /// ゴミ箱内の全アイテムを一括削除する（NSBatchDeleteRequest）。
-    func emptyTrash() throws {
+    func emptyTrash() async throws {
         do {
-            try local.emptyTrash()
+            try await local.emptyTrash()
         } catch {
             logger.error("Failed to empty trash: \(error.localizedDescription)")
             throw error

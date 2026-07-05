@@ -44,9 +44,9 @@ struct ClipboardRepositoryClient {
     var saveAndSync: @Sendable (ClipboardItem) async throws -> Void
     var loadTrash: @Sendable () async throws -> [ClipboardItem]
     var saveTrash: @Sendable ([ClipboardItem]) async throws -> Void
-    var deleteItem: @Sendable (ClipboardItem) throws -> Void
-    var clearAll: @Sendable () throws -> Void
-    var emptyTrash: @Sendable () throws -> Void
+    var deleteItem: @Sendable (ClipboardItem) async throws -> Void
+    var clearAll: @Sendable () async throws -> Void
+    var emptyTrash: @Sendable () async throws -> Void
 }
 
 extension ClipboardRepositoryClient: DependencyKey {
@@ -56,9 +56,9 @@ extension ClipboardRepositoryClient: DependencyKey {
         saveAndSync: { try await ClipboardRepository.shared.saveAndSync(item: $0) },
         loadTrash: { try await ClipboardRepository.shared.loadTrash() },
         saveTrash: { try await ClipboardRepository.shared.saveTrash(items: $0) },
-        deleteItem: { try ClipboardRepository.shared.deleteItem($0) },
-        clearAll: { try ClipboardRepository.shared.clearAll() },
-        emptyTrash: { try ClipboardRepository.shared.emptyTrash() }
+        deleteItem: { try await ClipboardRepository.shared.deleteItem($0) },
+        clearAll: { try await ClipboardRepository.shared.clearAll() },
+        emptyTrash: { try await ClipboardRepository.shared.emptyTrash() }
     )
 
     static let testValue = ClipboardRepositoryClient(
