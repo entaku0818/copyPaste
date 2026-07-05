@@ -12,6 +12,7 @@ class SnippetStorageManager {
 
     /// 現在の一覧で全置換するupsert（削除・並び替えもこの1本で永続化する）
     func save(snippets: [Snippet]) async throws {
+        await PersistenceController.shared.waitUntilLoaded()
         let ctx = PersistenceController.shared.newBackgroundContext()
         try await ctx.perform {
             let request = SnippetEntity.fetchRequest()
@@ -37,6 +38,7 @@ class SnippetStorageManager {
     }
 
     func load() async throws -> [Snippet] {
+        await PersistenceController.shared.waitUntilLoaded()
         let ctx = PersistenceController.shared.newBackgroundContext()
         return try await ctx.perform {
             let request = SnippetEntity.fetchRequest()

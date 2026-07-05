@@ -17,6 +17,39 @@ final class PersistenceController {
 
     var viewContext: NSManagedObjectContext { container.viewContext }
 
+    // MARK: - Store Loading Gate
+
+    // loadPersistentStores は非同期のため、読み込み完了前に保存/読み込みを行うと
+    // 「NSPersistentStoreCoordinator has no persistent stores」という
+    // Swiftのdo/catchで捕捉できないNSException（即クラッシュ）が発生する。
+    // CoreDataを触る前に必ず waitUntilLoaded() を待つこと。
+    private let stateLock = NSLock()
+    private var isStoreLoaded = false
+    private var pendingContinuations: [CheckedContinuation<Void, Never>] = []
+
+    private func markStoreLoaded() {
+        stateLock.lock()
+        isStoreLoaded = true
+        let continuations = pendingContinuations
+        pendingContinuations.removeAll()
+        stateLock.unlock()
+        continuations.forEach { $0.resume() }
+    }
+
+    /// 永続ストアの読み込み完了を待つ（読み込み失敗時もエラーはログ済みとしてresumeする）。
+    func waitUntilLoaded() async {
+        await withCheckedContinuation { continuation in
+            stateLock.lock()
+            if isStoreLoaded {
+                stateLock.unlock()
+                continuation.resume()
+                return
+            }
+            pendingContinuations.append(continuation)
+            stateLock.unlock()
+        }
+    }
+
     init(useCloudKit: Bool = true, inMemory: Bool = false) {
         if useCloudKit {
             container = NSPersistentCloudKitContainer(name: "ClipboardDataModel")
@@ -66,6 +99,7 @@ final class PersistenceController {
             if let error {
                 self?.logger.error("CoreData load failed: \(error.localizedDescription)")
             }
+            self?.markStoreLoaded()
         }
 
         container.viewContext.automaticallyMergesChangesFromParent = true

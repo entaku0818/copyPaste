@@ -11,6 +11,7 @@ class ClipboardStorageManager {
     // MARK: - Save
 
     func save(items: [ClipboardItem]) async throws {
+        await PersistenceController.shared.waitUntilLoaded()
         let ctx = PersistenceController.shared.newBackgroundContext()
         try await ctx.perform {
             // 既存アイテムを取得して upsert（削除対象は消す）
@@ -18,10 +19,11 @@ class ClipboardStorageManager {
             request.predicate = NSPredicate(format: "isInTrash == NO")
             let existing = try ctx.fetch(request)
             let existingByID = Dictionary(
-                uniqueKeysWithValues: existing.compactMap { e -> (UUID, ClipboardItemEntity)? in
+                existing.compactMap { e -> (UUID, ClipboardItemEntity)? in
                     guard let id = e.id else { return nil }
                     return (id, e)
-                }
+                },
+                uniquingKeysWith: { first, _ in first }
             )
             let newIDs = Set(items.map { $0.id })
             for (id, entity) in existingByID where !newIDs.contains(id) {
@@ -39,6 +41,7 @@ class ClipboardStorageManager {
     // MARK: - Load
 
     func load() async throws -> [ClipboardItem] {
+        await PersistenceController.shared.waitUntilLoaded()
         let ctx = PersistenceController.shared.newBackgroundContext()
         return try await ctx.perform {
             let request = ClipboardItemEntity.fetchRequest()
@@ -51,16 +54,18 @@ class ClipboardStorageManager {
     // MARK: - Trash
 
     func saveTrash(items: [ClipboardItem]) async throws {
+        await PersistenceController.shared.waitUntilLoaded()
         let ctx = PersistenceController.shared.newBackgroundContext()
         try await ctx.perform {
             let request = ClipboardItemEntity.fetchRequest()
             request.predicate = NSPredicate(format: "isInTrash == YES")
             let existing = try ctx.fetch(request)
             let existingByID = Dictionary(
-                uniqueKeysWithValues: existing.compactMap { e -> (UUID, ClipboardItemEntity)? in
+                existing.compactMap { e -> (UUID, ClipboardItemEntity)? in
                     guard let id = e.id else { return nil }
                     return (id, e)
-                }
+                },
+                uniquingKeysWith: { first, _ in first }
             )
             let newIDs = Set(items.map { $0.id })
             for (id, entity) in existingByID where !newIDs.contains(id) {
@@ -75,6 +80,7 @@ class ClipboardStorageManager {
     }
 
     func loadTrash() async throws -> [ClipboardItem] {
+        await PersistenceController.shared.waitUntilLoaded()
         let ctx = PersistenceController.shared.newBackgroundContext()
         return try await ctx.perform {
             let request = ClipboardItemEntity.fetchRequest()
