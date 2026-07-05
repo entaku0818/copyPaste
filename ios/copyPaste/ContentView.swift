@@ -47,6 +47,7 @@ public struct ContentView: View {
             }
             .tag(4)
         }
+        .tint(ClipKitColor.indigo)
     }
 }
 

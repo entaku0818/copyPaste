@@ -19,26 +19,26 @@ struct PaywallView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     // ヘッダー
-                    VStack(spacing: 12) {
-                        Image(systemName: "crown.fill")
-                            .font(.system(size: 60))
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.yellow, .orange],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
+                    VStack(spacing: 14) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(ClipKitColor.brandGradient)
+                                .frame(width: 72, height: 72)
+                                .shadow(color: ClipKitColor.indigoLight.opacity(0.5), radius: 24)
+                            Image(systemName: "crown.fill")
+                                .font(.system(size: 32))
+                                .foregroundColor(ClipKitColor.crown)
+                        }
 
                         Text("ClipKit Pro")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                            .font(.system(size: 26, weight: .heavy))
+                            .foregroundColor(ClipKitColor.textOnDark)
 
                         Text("すべての機能を解放")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
+                            .font(.system(size: 14))
+                            .foregroundColor(ClipKitColor.textOnDarkSecondary)
                     }
-                    .padding(.top, 32)
+                    .padding(.top, 20)
 
                     // 機能リスト
                     VStack(alignment: .leading, spacing: 16) {
@@ -46,49 +46,49 @@ struct PaywallView: View {
                             icon: "calendar",
                             title: "3ヶ月履歴",
                             description: "過去3ヶ月分の履歴を保存・閲覧",
-                            color: .blue
+                            color: ClipKitColor.indigoLight
                         )
 
                         FeatureRow(
                             icon: "star.fill",
                             title: "お気に入り機能",
                             description: "重要な項目をピン留め",
-                            color: .yellow
+                            color: ClipKitColor.favorite
                         )
 
                         FeatureRow(
                             icon: "app.badge",
                             title: "ホーム画面ウィジェット",
                             description: "3サイズのウィジェット",
-                            color: .green
+                            color: ClipKitColor.success
                         )
 
                         FeatureRow(
                             icon: "keyboard",
                             title: "キーボードフル表示",
                             description: "キーボードに履歴10件を表示（無料版は3件）",
-                            color: .orange
+                            color: Color(hex: 0x6F9BFF)
                         )
 
                         FeatureRow(
                             icon: "icloud",
                             title: "iCloud同期",
                             description: "複数デバイスで履歴を共有",
-                            color: .cyan
+                            color: Color(hex: 0x3AA3FF)
                         )
 
                         FeatureRow(
                             icon: "square.and.arrow.up",
                             title: "履歴エクスポート",
                             description: "CSV / Markdown 形式で書き出し",
-                            color: .indigo
+                            color: Color(hex: 0x4FD0C8)
                         )
 
                         FeatureRow(
                             icon: "wand.and.stars",
                             title: "高度なテキスト変換",
                             description: "ケース変換・全角半角・URLエンコード等",
-                            color: .purple
+                            color: ClipKitColor.badgePurple.foreground
                         )
 
                     }
@@ -148,16 +148,15 @@ struct PaywallView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        .frame(height: 50)
+                        .frame(height: 52)
                         .background(
-                            LinearGradient(
-                                colors: selectedPackage != nil ? [.blue, .purple] : [.gray, .gray],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
+                            selectedPackage != nil
+                                ? ClipKitColor.brandGradient
+                                : LinearGradient(colors: [.gray, .gray], startPoint: .leading, endPoint: .trailing)
                         )
                         .foregroundColor(.white)
-                        .cornerRadius(12)
+                        .clipShape(RoundedRectangle(cornerRadius: ClipKitRadius.control, style: .continuous))
+                        .shadow(color: selectedPackage != nil ? ClipKitColor.indigo.opacity(0.45) : .clear, radius: 16, y: 8)
                         .contentShape(Rectangle())
                     }
                     .disabled(selectedPackage == nil || isPurchasing)
@@ -209,20 +208,23 @@ struct PaywallView: View {
                             .underline()
                     }
                     .font(.footnote)
-                    .foregroundColor(.accentColor)
+                    .foregroundColor(ClipKitColor.accentOnDark)
                     .padding(.top, 8)
 
                     Spacer(minLength: 32)
                 }
             }
+            .background(ClipKitColor.darkSurface.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("閉じる") {
                         dismiss()
                     }
+                    .tint(ClipKitColor.accentOnDark)
                 }
             }
+            .preferredColorScheme(.dark)
             .alert("エラー", isPresented: $showError) {
                 Button("OK") {
                     showError = false
@@ -347,30 +349,32 @@ struct FeatureRow: View {
     let color: Color
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             ZStack {
-                Circle()
-                    .fill(color.opacity(0.2))
-                    .frame(width: 48, height: 48)
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(color.opacity(0.16))
+                    .frame(width: 38, height: 38)
 
                 Image(systemName: icon)
-                    .font(.title3)
+                    .font(.system(size: 17))
                     .foregroundColor(color)
             }
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.headline)
+                    .font(.system(size: 14.5, weight: .semibold))
+                    .foregroundColor(ClipKitColor.textOnDark)
 
                 Text(description)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 12))
+                    .foregroundColor(ClipKitColor.textOnDarkSecondary)
             }
 
             Spacer()
 
             Image(systemName: "checkmark.circle.fill")
-                .foregroundColor(.green)
+                .font(.system(size: 18))
+                .foregroundColor(ClipKitColor.indigoLight)
         }
     }
 }
@@ -388,40 +392,41 @@ struct PackageButton: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(packageTitle)
-                            .font(.headline)
+                            .font(.system(size: 14.5, weight: .semibold))
+                            .foregroundColor(ClipKitColor.textOnDark)
 
                         if let label = discountLabel {
                             Text(label)
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.white)
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .foregroundColor(ClipKitColor.darkSurface)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 2)
-                                .background(Color.green)
-                                .cornerRadius(4)
+                                .background(ClipKitColor.crown)
+                                .clipShape(Capsule())
                         }
                     }
 
                     Text(package.storeProduct.localizedPriceString)
-                        .font(.title2)
-                        .fontWeight(.bold)
+                        .font(.system(size: 20, weight: .heavy))
+                        .foregroundColor(ClipKitColor.textOnDark)
 
                     Text(subscriptionPeriodText)
                         .font(.caption)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(ClipKitColor.textOnDarkSecondary)
 
                     if let trial = introductoryOfferText {
                         Text(trial)
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundColor(.green)
+                            .foregroundColor(ClipKitColor.success)
                     }
 
                     if package.packageType == .annual,
                        let monthlyPrice = monthlyEquivalentPrice {
                         Text("月額換算 \(monthlyPrice)")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(ClipKitColor.textOnDarkSecondary)
                     }
                 }
 
@@ -429,12 +434,16 @@ struct PackageButton: View {
 
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.title2)
-                    .foregroundColor(isSelected ? .blue : .gray)
+                    .foregroundColor(isSelected ? ClipKitColor.indigoLight : .gray)
             }
             .padding()
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 2)
+                RoundedRectangle(cornerRadius: ClipKitRadius.control, style: .continuous)
+                    .fill(isSelected ? ClipKitColor.indigoLight.opacity(0.12) : Color.clear)
+            )
+            .background(
+                RoundedRectangle(cornerRadius: ClipKitRadius.control, style: .continuous)
+                    .strokeBorder(isSelected ? ClipKitColor.indigoLight : Color.white.opacity(0.18), lineWidth: isSelected ? 2 : 1.5)
             )
         }
         .buttonStyle(.plain)

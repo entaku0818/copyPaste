@@ -4,37 +4,36 @@ struct ClipboardItemRow: View {
     let item: ClipboardItem
 
     var body: some View {
-        HStack(spacing: 12) {
-            // サムネイル/アイコン
+        HStack(spacing: ClipKitSpacing.rowGap) {
             itemIcon
-                .frame(width: 50, height: 50)
+                .frame(width: 40, height: 40)
 
-            // コンテンツ
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     itemContent
 
                     if item.isFavorite {
                         Image(systemName: "star.fill")
-                            .font(.caption)
-                            .foregroundColor(.yellow)
+                            .font(.caption2)
+                            .foregroundColor(ClipKitColor.favorite)
                     }
                 }
 
                 HStack(spacing: 4) {
                     Text(timestampText(item.timestamp))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(ClipKitFont.meta)
+                        .foregroundColor(ClipKitColor.textTertiary)
 
                     if item.sizeInBytes > 0 {
                         Text("・")
-                            .foregroundColor(.secondary)
+                            .font(ClipKitFont.meta)
+                            .foregroundColor(ClipKitColor.textTertiary)
                         Text(ByteCountFormatter.string(
                             fromByteCount: item.sizeInBytes,
                             countStyle: .file
                         ))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                        .font(ClipKitFont.meta)
+                        .foregroundColor(ClipKitColor.textTertiary)
                     }
                 }
             }
@@ -59,34 +58,14 @@ struct ClipboardItemRow: View {
 
     @ViewBuilder
     private var itemIcon: some View {
-        switch item.type {
-        case .text:
-            Image(systemName: "doc.text")
-                .font(.title2)
-                .foregroundColor(.blue)
-
-        case .image:
-            if let thumbnail = item.thumbnail {
-                Image(uiImage: thumbnail)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 50, height: 50)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            } else {
-                Image(systemName: "photo")
-                    .font(.title2)
-                    .foregroundColor(.green)
-            }
-
-        case .url:
-            Image(systemName: "link")
-                .font(.title2)
-                .foregroundColor(.purple)
-
-        case .file:
-            Image(systemName: "doc")
-                .font(.title2)
-                .foregroundColor(.orange)
+        if item.type == .image, let thumbnail = item.thumbnail {
+            Image(uiImage: thumbnail)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 40, height: 40)
+                .clipShape(RoundedRectangle(cornerRadius: ClipKitRadius.badge, style: .continuous))
+        } else {
+            IconBadge(systemImage: item.badgeSystemImageName, colors: item.badgeColors, size: 40)
         }
     }
 
@@ -95,25 +74,30 @@ struct ClipboardItemRow: View {
         switch item.type {
         case .text:
             Text(item.textContent ?? "")
+                .font(ClipKitFont.rowTitle)
+                .foregroundColor(ClipKitColor.textPrimary)
                 .lineLimit(2)
 
         case .image:
             Text("item.image")
-                .font(.headline)
+                .font(ClipKitFont.rowTitleEmphasized)
+                .foregroundColor(ClipKitColor.textPrimary)
 
         case .url:
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.url?.host ?? "URL")
-                    .font(.headline)
+                    .font(ClipKitFont.rowTitleEmphasized)
+                    .foregroundColor(ClipKitColor.textPrimary)
                 Text(item.url?.absoluteString ?? "")
                     .lineLimit(1)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(ClipKitFont.meta)
+                    .foregroundColor(ClipKitColor.textTertiary)
             }
 
         case .file:
             Text(item.fileName ?? String(localized: "item.file"))
-                .font(.headline)
+                .font(ClipKitFont.rowTitleEmphasized)
+                .foregroundColor(ClipKitColor.textPrimary)
         }
     }
 }

@@ -9,23 +9,24 @@ struct ClipboardHistoryView: View {
         List {
             // 検索結果件数
             if !store.searchText.isEmpty {
-                Section {
-                    HStack {
-                        Text(String(format: String(localized: "search.results %lld"), Int64(store.filteredItems.count)))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Button("search.clear") {
-                            store.send(.updateSearchText(""))
-                        }
-                        .font(.caption)
+                HStack {
+                    Text(String(format: String(localized: "search.results %lld"), Int64(store.filteredItems.count)))
+                        .font(ClipKitFont.meta)
+                        .foregroundColor(ClipKitColor.textSecondary)
+                    Spacer()
+                    Button("search.clear") {
+                        store.send(.updateSearchText(""))
                     }
-                    .padding(.vertical, 4)
+                    .font(ClipKitFont.meta)
                 }
+                .listRowInsets(EdgeInsets(top: 0, leading: ClipKitSpacing.screenPadding, bottom: 8, trailing: ClipKitSpacing.screenPadding))
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
             }
 
-            ForEach(store.filteredItems) { item in
+            ForEach(Array(store.filteredItems.enumerated()), id: \.element.id) { index, item in
                 ClipboardItemRow(item: item)
+                    .clipKitCardRow(.at(index, count: store.filteredItems.count))
                     .onTapGesture {
                         if item.type == .image {
                             store.send(.showImagePreview(item))
@@ -42,7 +43,7 @@ struct ClipboardHistoryView: View {
                                 systemImage: item.isFavorite ? "star.slash" : "star.fill"
                             )
                         }
-                        .tint(item.isFavorite ? .gray : .yellow)
+                        .tint(item.isFavorite ? .gray : ClipKitColor.favorite)
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
@@ -57,38 +58,34 @@ struct ClipboardHistoryView: View {
 
             // 無料版: Pro誘導バナー
             if !store.isProUser {
-                Section {
-                    Button {
-                        store.send(.showPaywall)
-                    } label: {
-                        HStack(spacing: 12) {
-                            Image(systemName: "crown.fill")
-                                .font(.title2)
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.yellow, .orange],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("upgrade.title")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                Text("upgrade.description")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                Button {
+                    store.send(.showPaywall)
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "crown.fill")
+                            .font(.title2)
+                            .foregroundStyle(ClipKitColor.crown)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("upgrade.title")
+                                .font(ClipKitFont.rowTitleEmphasized)
+                                .foregroundColor(ClipKitColor.textPrimary)
+                            Text("upgrade.description")
+                                .font(ClipKitFont.meta)
+                                .foregroundColor(ClipKitColor.textSecondary)
                         }
-                        .padding(.vertical, 4)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundColor(ClipKitColor.textTertiary)
                     }
                 }
+                .clipKitCardRow(.single)
+                .padding(.top, 4)
             }
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(ClipKitColor.canvas)
         .navigationTitle("history.title")
         .searchable(
             text: Binding(
@@ -206,16 +203,17 @@ struct ClipboardItemDetailView: View {
                         switch item.type {
                         case .text:
                             Text(item.textContent ?? "")
-                                .font(.body)
+                                .font(.system(size: 16))
+                                .foregroundColor(ClipKitColor.textPrimary)
                                 .textSelection(.enabled)
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                         case .url:
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(item.url?.absoluteString ?? "")
-                                    .font(.body)
+                                    .font(.system(size: 16))
                                     .textSelection(.enabled)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(ClipKitColor.indigo)
                             }
 
                         case .image:
@@ -228,20 +226,22 @@ struct ClipboardItemDetailView: View {
 
                         case .file:
                             Text(item.fileName ?? String(localized: "item.file"))
-                                .font(.body)
+                                .font(.system(size: 16))
+                                .foregroundColor(ClipKitColor.textPrimary)
                         }
                     }
                     .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(12)
+                    .lineSpacing(4)
+                    .background(ClipKitColor.card)
+                    .clipShape(RoundedRectangle(cornerRadius: ClipKitRadius.card, style: .continuous))
 
                     // メタ情報
                     HStack {
                         Image(systemName: typeIcon)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(ClipKitColor.textTertiary)
                         Text(item.timestamp.formatted(.dateTime.year().month().day().hour().minute().locale(Locale.current)))
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                            .font(ClipKitFont.meta)
+                            .foregroundColor(ClipKitColor.textTertiary)
                     }
 
                     // 変換してコピー
@@ -251,6 +251,7 @@ struct ClipboardItemDetailView: View {
                 }
                 .padding()
             }
+            .background(ClipKitColor.canvas)
             .navigationTitle("detail.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -263,7 +264,7 @@ struct ClipboardItemDetailView: View {
                             onToggleFavorite()
                         } label: {
                             Image(systemName: item.isFavorite ? "star.fill" : "star")
-                                .foregroundColor(item.isFavorite ? .yellow : .gray)
+                                .foregroundColor(item.isFavorite ? ClipKitColor.favorite : .gray)
                         }
                         Button {
                             onCopy()
@@ -275,7 +276,7 @@ struct ClipboardItemDetailView: View {
                             Label(copied ? String(localized: "copy.done") : String(localized: "copy.action"),
                                   systemImage: copied ? "checkmark" : "doc.on.doc")
                         }
-                        .tint(copied ? .green : .blue)
+                        .tint(copied ? ClipKitColor.success : ClipKitColor.indigo)
                     }
                 }
             }
@@ -315,12 +316,12 @@ struct ClipboardItemDetailView: View {
                 Spacer()
                 Image(systemName: "chevron.up.chevron.down")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(ClipKitColor.textTertiary)
             }
             .padding()
-            .background(Color(.secondarySystemBackground))
-            .foregroundColor(transformCopied ? .green : .accentColor)
-            .cornerRadius(12)
+            .background(ClipKitColor.card)
+            .foregroundColor(transformCopied ? ClipKitColor.success : ClipKitColor.indigo)
+            .clipShape(RoundedRectangle(cornerRadius: ClipKitRadius.card, style: .continuous))
         }
     }
 
@@ -357,7 +358,7 @@ struct CategoryFilterBar: View {
                     ) { onSelect(selectedCategory == cat ? nil : cat) }
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, ClipKitSpacing.screenPadding)
             .padding(.vertical, 8)
         }
         .background(.bar)
@@ -381,8 +382,8 @@ struct CategoryChip: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
-            .background(isSelected ? Color.accentColor : Color(.systemGray5))
-            .foregroundStyle(isSelected ? .white : .primary)
+            .background(isSelected ? ClipKitColor.indigo : ClipKitColor.controlBackground)
+            .foregroundStyle(isSelected ? .white : ClipKitColor.textPrimary)
             .clipShape(Capsule())
         }
         .buttonStyle(.plain)

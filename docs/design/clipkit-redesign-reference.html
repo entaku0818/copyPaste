@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="2c336c77-6590-44a1-9fc6-72e6b5825b0d"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: #e9eaee; font-family: -apple-system, "SF Pro Text", "SF Pro Display", system-ui, "Hiragino Kaku Gothic ProN", sans-serif; }
+  .icn { width: 100%; height: 100%; display: block; }
+</style>
+</helmet>
+
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2.75h7L18.25 8v13.25H6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13 2.75V8h5.25" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.5 12.5h7M8.5 15.5h7M8.5 18h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.54 3.54 0 0 0-5-5L11 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><path d="M14 10.5a3.5 3.5 0 0 0-5 0L6.5 13a3.54 3.54 0 0 0 5 5L13 16.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"></rect><circle cx="8.5" cy="9.5" r="1.5" fill="currentColor"></circle><path d="M5 17l4.5-4.5 3.5 3 3-2.5L20 17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="6" width="17" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"></rect><path d="M4.5 7.5l7.5 5 7.5-5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A15.5 15.5 0 0 1 4.5 5.5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21c4-4.5 6-7.6 6-10.5a6 6 0 1 0-12 0C6 13.4 8 16.5 12 21z" fill="none" stroke="currentColor" stroke-width="1.7"></path><circle cx="12" cy="10.5" r="2.2" fill="currentColor"></circle></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"></circle><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+    <symbol id="i-clock-f" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"></circle><path d="M12 7v5l3.2 2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"></path></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9L3.5 9.7l5.9-.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-star-f" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.1 6.5 20l1-6.1L3.2 9.5l6.1-.9z" fill="currentColor"></path></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"></circle><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor"></path></symbol>
+    <symbol id="i-play-f" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"></circle><path d="M10 8l5.5 4-5.5 4z" fill="#fff"></path></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.7"></circle><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4L5.3 5.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+    <symbol id="i-gear-f" viewBox="0 0 24 24"><path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1M18.7 18.7l-2.1-2.1M7.4 7.4L5.3 5.3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><circle cx="12" cy="12" r="4.4" fill="currentColor"></circle><circle cx="12" cy="12" r="1.7" fill="#fff"></circle></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3.5 8l4 4 4.5-6.5L16.5 12l4-4-1.3 10.5H4.8z" fill="currentColor"></path></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.9"></circle><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"></circle><path d="M8 12.5l2.6 2.6L16 9.5" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4L16 5l3 3L8 19z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M14 7l3 3" stroke="currentColor" stroke-width="1.7"></path></symbol>
+    <symbol id="i-tray" viewBox="0 0 24 24"><path d="M4 13l2.5-7h11L20 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M4 13v5h16v-5h-5l-1.5 2h-3L9 13z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-kbd" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"></rect><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M8 14h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></symbol>
+    <symbol id="i-icloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.3-8A5.5 5.5 0 0 1 17.5 11 3.5 3.5 0 0 1 17 18z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4M12 4L8.5 7.5M12 4l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 11H5v9h14v-9h-1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"></rect><path d="M4 9.5h16M8 3.5v3M16 3.5v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+    <symbol id="i-widget" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"></rect><rect x="13" y="4" width="7" height="7" rx="2" fill="currentColor"></rect><rect x="4" y="13" width="7" height="7" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"></rect><rect x="13" y="13" width="7" height="7" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"></rect></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M5.5 12a10 10 0 0 1 13 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><path d="M9 15.5a5 5 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="19" r="1.3" fill="currentColor"></circle></symbol>
+    <symbol id="i-batt" viewBox="0 0 26 24"><rect x="2" y="8" width="19" height="9" rx="2.4" fill="currentColor"></rect><rect x="22" y="11" width="2" height="3" rx="1" fill="currentColor"></rect></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M3.5 12h17M12 3.5c2.5 2.4 2.5 14.6 0 17M12 3.5c-2.5 2.4-2.5 14.6 0 17" fill="none" stroke="currentColor" stroke-width="1.5"></path></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"></rect><path d="M15.5 8V5.5A1.5 1.5 0 0 0 14 4H5.5A1.5 1.5 0 0 0 4 5.5v11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></symbol>
+    <symbol id="i-clip" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"></rect><rect x="8.5" y="2.5" width="7" height="3.4" rx="1.4" fill="currentColor"></rect><path d="M8.5 11h7M8.5 14.5h7M8.5 18h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7L5 11l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 11h9a5 5 0 0 1 0 10h-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5.5A1.5 1.5 0 0 1 11.5 4h1A1.5 1.5 0 0 1 14 5.5V7M6.5 7l1 12.5A1.5 1.5 0 0 0 9 21h6a1.5 1.5 0 0 0 1.5-1.5L17.5 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+  </defs>
+</svg>
+
+<section id="turn2-wrap" style="padding:56px 48px 40px; display:flex; flex-direction:column; gap:36px;">
+  <div style="max-width:760px;">
+    <div style="display:inline-flex; align-items:center; gap:8px; background:#5b5bd6; color:#fff; font-size:13px; font-weight:600; padding:5px 12px; border-radius:100px; letter-spacing:.02em;">案2 · 追加画面</div>
+    <h1 style="font-size:34px; font-weight:700; margin:16px 0 8px; color:#111; letter-spacing:-.02em;">Indigo — 未作成画面</h1>
+    <p style="font-size:15px; line-height:1.7; color:#5b5f66; margin:0;">選ばれた <a href="#1b" style="color:#5b5bd6; text-decoration:none; font-weight:600;">Indigo</a> 基調で、詳細ビュー・キーボード拡張・オンボーディング・ゴミ箱を作成。<a href="#2a" style="color:#5b5bd6;text-decoration:none;font-weight:600;">2a</a> 詳細 · <a href="#2b" style="color:#5b5bd6;text-decoration:none;font-weight:600;">2b</a> キーボード · <a href="#2c" style="color:#5b5bd6;text-decoration:none;font-weight:600;">2c</a> オンボーディング · <a href="#2d" style="color:#5b5bd6;text-decoration:none;font-weight:600;">2d</a> ゴミ箱。</p>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:24px; align-items:flex-start;">
+
+    <!-- 2a: Detail -->
+    <div id="2a" style="display:flex; flex-direction:column; gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:#fff;background:#5b5bd6;padding:3px 10px;border-radius:100px;width:max-content;">2a</span>
+      <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+        <div style="height:66px;background:rgba(0,0,0,.28);"></div>
+        <div style="flex:1; background:#fff; border-radius:20px 20px 0 0; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 -8px 30px rgba(0,0,0,.12);">
+          <div style="display:flex; justify-content:center; padding-top:8px;"><span style="width:36px;height:5px;border-radius:3px;background:#d6d6db;"></span></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 16px 10px; border-bottom:.5px solid #ececef;">
+            <span style="font-size:15px; color:#5b5bd6;">閉じる</span>
+            <span style="font-size:16px; font-weight:600; color:#14142b;">詳細</span>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <svg viewBox="0 0 24 24" style="width:21px;height:21px;color:#c0c0c8"><use href="#i-star"></use></svg>
+              <span style="display:flex;align-items:center;gap:5px;font-size:14px;font-weight:600;color:#fff;background:#5b5bd6;padding:6px 12px;border-radius:100px;"><svg viewBox="0 0 24 24" style="width:15px;height:15px"><use href="#i-copy"></use></svg>コピー</span>
+            </div>
+          </div>
+          <div style="flex:1; padding:18px 18px; overflow:hidden;">
+            <div style="background:#f2f2f7; border-radius:14px; padding:18px; font-size:16px; line-height:1.75; color:#14142b;">こんにちは世界！これはクリップボードテスト用のサンプルテキストです。コピーした内容はここで全文を確認でき、ワンタップで再コピーできます。</div>
+            <div style="display:flex; align-items:center; gap:8px; padding:16px 4px 0; color:#a0a4ab;">
+              <svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-doc"></use></svg>
+              <span style="font-size:13px;">テキスト · 2026年1月27日 9:41</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; padding:6px 4px 0; color:#a0a4ab;">
+              <svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-tray"></use></svg>
+              <span style="font-size:13px;">62 バイト</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">詳細ビュー（シート）</div>
+    </div>
+
+    <!-- 2b: Keyboard extension -->
+    <div id="2b" style="display:flex; flex-direction:column; gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:#fff;background:#5b5bd6;padding:3px 10px;border-radius:100px;width:max-content;">2b</span>
+      <div style="width:320px; height:680px; background:#fff; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+        <!-- host app: Notes -->
+        <div style="padding:6px 18px 4px; display:flex; align-items:center; justify-content:space-between;"><div style="font-size:30px;font-weight:700;color:#000;">メモ</div><svg viewBox="0 0 24 24" style="width:24px;height:24px;color:#f0a500"><use href="#i-pencil"></use></svg></div>
+        <div style="flex:1; padding:2px 18px; overflow:hidden;">
+          <div style="font-size:15px;color:#a0a4ab;">今日やること</div>
+          <div style="font-size:16px;color:#14142b;line-height:2;margin-top:6px;">・スーパーで買い物<br>・午後3時 チームMTG<br>・メールを返信する<span style="display:inline-block;width:2px;height:19px;background:#5b5bd6;vertical-align:-4px;margin-left:2px;"></span></div>
+        </div>
+        <!-- ClipKit keyboard -->
+        <div style="background:#e8e8ed; padding-top:8px;">
+          <div style="display:flex; gap:11px; padding:0 12px 8px; overflow:hidden;">
+            <div style="width:118px;height:78px;background:#fff;border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.12);padding:9px;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;color:#2f6bff"><use href="#i-doc"></use></svg><div style="font-size:11.5px;color:#14142b;line-height:1.35;margin-top:5px;overflow:hidden;">こんにちは世界！これはクリップ…</div></div>
+            <div style="width:118px;height:78px;background:#fff;border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.12);padding:9px;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;color:#22a04c"><use href="#i-link"></use></svg><div style="font-size:11.5px;color:#14142b;line-height:1.35;margin-top:5px;overflow:hidden;">apple.com</div></div>
+            <div style="width:118px;height:78px;background:#fff;border-radius:9px;box-shadow:0 1px 3px rgba(0,0,0,.12);padding:9px;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:16px;height:16px;color:#7b5bd6"><use href="#i-mail"></use></svg><div style="font-size:11.5px;color:#14142b;line-height:1.35;margin-top:5px;overflow:hidden;">user@example.com</div></div>
+            <div style="width:118px;height:78px;background:#fff;border-radius:9px;border:1.5px solid #f5c542;padding:9px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;"><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#f0a500"><use href="#i-crown"></use></svg><div style="font-size:11px;font-weight:600;color:#14142b;text-align:center;line-height:1.3;">もっと見る<br>Proで10件</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; padding:6px 16px 14px; background:#fff;">
+            <div style="flex:1; display:flex; background:#e5e5ea; border-radius:8px; padding:2px;">
+              <span style="flex:1;text-align:center;font-size:12.5px;font-weight:600;color:#14142b;background:#fff;padding:5px 0;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.12);">履歴</span>
+              <span style="flex:1;text-align:center;font-size:12.5px;color:#5b6470;padding:5px 0;">定型文</span>
+            </div>
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;color:#14142b"><use href="#i-globe"></use></svg>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">キーボード拡張（履歴/定型文）</div>
+    </div>
+
+    <!-- 2c: Onboarding -->
+    <div id="2c" style="display:flex; flex-direction:column; gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:#fff;background:#5b5bd6;padding:3px 10px;border-radius:100px;width:max-content;">2c</span>
+      <div style="width:320px; height:680px; background:#fff; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 34px; text-align:center;">
+          <div style="width:120px;height:120px;border-radius:32px;background:linear-gradient(135deg,#7b78f0,#5b5bd6);display:flex;align-items:center;justify-content:center;box-shadow:0 20px 44px rgba(91,91,214,.4);"><svg viewBox="0 0 24 24" style="width:62px;height:62px;color:#fff"><use href="#i-clip"></use></svg></div>
+          <div style="font-size:27px;font-weight:800;color:#14142b;margin-top:36px;letter-spacing:-.01em;">ClipKitへようこそ</div>
+          <div style="font-size:15px;color:#8a8f96;margin-top:14px;line-height:1.7;">コピーしたテキスト・URL・画像を<br>自動で記録。いつでも履歴から<br>取り出せます。</div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:8px; padding-bottom:22px;">
+          <span style="width:9px;height:9px;border-radius:50%;background:#5b5bd6;"></span>
+          <span style="width:9px;height:9px;border-radius:50%;background:#d6d6de;"></span>
+          <span style="width:9px;height:9px;border-radius:50%;background:#d6d6de;"></span>
+          <span style="width:9px;height:9px;border-radius:50%;background:#d6d6de;"></span>
+        </div>
+        <div style="padding:0 24px 40px;">
+          <div style="background:linear-gradient(135deg,#7b78f0,#5b5bd6); border-radius:14px; height:52px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; font-weight:700; box-shadow:0 10px 24px rgba(91,91,214,.4);">次へ</div>
+        </div>
+      </div>
+      <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">オンボーディング（1/4）</div>
+    </div>
+
+    <!-- 2d: Trash -->
+    <div id="2d" style="display:flex; flex-direction:column; gap:10px;">
+      <span style="font-size:12px;font-weight:700;color:#fff;background:#5b5bd6;padding:3px 10px;border-radius:100px;width:max-content;">2d</span>
+      <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+        <div style="height:66px;background:rgba(0,0,0,.28);"></div>
+        <div style="flex:1; background:#f2f2f7; border-radius:20px 20px 0 0; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 -8px 30px rgba(0,0,0,.12);">
+          <div style="display:flex; justify-content:center; padding-top:8px;"><span style="width:36px;height:5px;border-radius:3px;background:#c8c8d0;"></span></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 16px 12px; background:#fff; border-bottom:.5px solid #ececef;">
+            <span style="font-size:15px; color:#5b5bd6;">閉じる</span>
+            <span style="font-size:16px; font-weight:600; color:#14142b;">ゴミ箱</span>
+            <span style="font-size:15px; color:#e5484d;">すべて削除</span>
+          </div>
+          <div style="padding:12px 16px; font-size:12.5px; color:#a0a4ab; text-align:center; line-height:1.5;">削除したアイテムは30日間ここに保存されます</div>
+          <div style="padding:0 16px;">
+            <div style="background:#fff; border-radius:16px; overflow:hidden;">
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                <div style="width:40px;height:40px;border-radius:11px;background:#ecebfb;color:#5b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-doc"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">古いメモ：会議のアジェンダ案</div><div style="font-size:11.5px;color:#b4b8bf;margin-top:3px;">削除: 2026/1/20</div></div>
+                <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#5b5bd6;flex-shrink:0"><use href="#i-undo"></use></svg>
+              </div>
+              <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                <div style="width:40px;height:40px;border-radius:11px;background:#e2ebff;color:#2f6bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-link"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;">github.com</div><div style="font-size:11.5px;color:#b4b8bf;margin-top:3px;">削除: 2026/1/18</div></div>
+                <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#5b5bd6;flex-shrink:0"><use href="#i-undo"></use></svg>
+              </div>
+              <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                <div style="width:40px;height:40px;border-radius:11px;background:#f3e9d6;color:#c98a00;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-photo"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;">画像</div><div style="font-size:11.5px;color:#b4b8bf;margin-top:3px;">削除: 2026/1/15</div></div>
+                <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#5b5bd6;flex-shrink:0"><use href="#i-undo"></use></svg>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:center; gap:7px; padding:16px 4px 0; color:#b4b8bf;">
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px"><use href="#i-undo"></use></svg>
+              <span style="font-size:12px;">左スワイプで復元 · 右スワイプで完全削除</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">ゴミ箱（Pro）</div>
+    </div>
+
+  </div>
+</section>
+
+<section id="turn1-wrap" style="padding:56px 48px 120px; display:flex; flex-direction:column; gap:36px;">
+  <div style="max-width:760px;">
+    <div style="display:inline-flex; align-items:center; gap:8px; background:#111; color:#fff; font-size:13px; font-weight:600; padding:5px 12px; border-radius:100px; letter-spacing:.02em;">案 1</div>
+    <h1 style="font-size:34px; font-weight:700; margin:16px 0 8px; color:#111; letter-spacing:-.02em;">ClipKit デザイン見直し</h1>
+    <p style="font-size:15px; line-height:1.7; color:#5b5f66; margin:0;">iOS標準に忠実なまま、<strong style="color:#111;">見つけやすさ</strong>を磨いた2案。現状（左）を基準に、行の情報設計・カテゴリ導線・ピン留めの扱い・新しいブランドカラーを比較できます。<a href="#1a" style="color:#129e92; text-decoration:none; font-weight:600;">1a</a> はティール、<a href="#1b" style="color:#5b5bd6; text-decoration:none; font-weight:600;">1b</a> はインディゴ。</p>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:44px; align-items:flex-start;">
+
+    <!-- ===================== BEFORE ===================== -->
+    <div id="col-before" style="display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:12px; font-weight:700; color:#8a8f98; background:#dcdee3; padding:4px 11px; border-radius:100px; letter-spacing:.04em;">現状 · BEFORE</span>
+      </div>
+
+      <!-- BEFORE: History -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="width:320px; height:680px; background:#fff; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;">
+            <span>9:41</span>
+            <span style="display:flex; align-items:center; gap:6px; color:#000;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span>
+          </div>
+          <div style="padding:6px 18px 8px;">
+            <div style="font-size:30px; font-weight:700; color:#000; letter-spacing:-.01em;">履歴</div>
+            <div style="margin-top:10px; display:flex; align-items:center; gap:8px; background:#e6e6ea; border-radius:11px; padding:9px 12px; color:#8a8a8e;">
+              <svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#8a8a8e"><use href="#i-search"></use></svg>
+              <span style="font-size:15px;">履歴を検索...</span>
+            </div>
+          </div>
+          <div style="flex:1; overflow:hidden; background:#fff;">
+            <!-- rows -->
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #e6e6ea;">
+              <div style="width:44px;height:44px;border-radius:50%;background:#e5f0ff;color:#1e88ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+              <div style="min-width:0;flex:1;"><div style="font-size:15px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">こんにちは世界！これはクリップ… <svg viewBox="0 0 24 24" style="width:13px;height:13px;color:#f5b800;vertical-align:middle"><use href="#i-star-f"></use></svg></div><div style="font-size:12.5px;color:#8a8a8e;margin-top:2px;">1分前</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #e6e6ea;">
+              <div style="width:44px;height:44px;border-radius:50%;background:#f3e9ff;color:#a24be0;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-link"></use></svg></div>
+              <div style="min-width:0;flex:1;"><div style="font-size:15px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">https://www.apple.com/jp/</div><div style="font-size:12.5px;color:#8a8a8e;margin-top:2px;">5分前</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #e6e6ea;">
+              <div style="width:44px;height:44px;border-radius:50%;background:#e5f0ff;color:#1e88ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+              <div style="min-width:0;flex:1;"><div style="font-size:15px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">吾輩は猫である。名前はまだ無い。</div><div style="font-size:12.5px;color:#8a8a8e;margin-top:2px;">10分前</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #e6e6ea;">
+              <div style="width:44px;height:44px;border-radius:50%;background:#e5f0ff;color:#1e88ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+              <div style="min-width:0;flex:1;"><div style="font-size:15px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">重要：明日の午後3時にミーティング</div><div style="font-size:12.5px;color:#8a8a8e;margin-top:2px;">30分前</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #e6e6ea;">
+              <div style="width:44px;height:44px;border-radius:50%;background:#e4f7ea;color:#25a14b;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-photo"></use></svg></div>
+              <div style="min-width:0;flex:1;"><div style="font-size:15px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">メモ：買い物に行く</div><div style="font-size:12.5px;color:#8a8a8e;margin-top:2px;">1時間前</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #e6e6ea;">
+              <div style="width:44px;height:44px;border-radius:50%;background:#e5f0ff;color:#1e88ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+              <div style="min-width:0;flex:1;"><div style="font-size:15px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">メール例：user@example.com</div><div style="font-size:12.5px;color:#8a8a8e;margin-top:2px;">2時間前</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #e6e6ea;">
+              <div style="width:44px;height:44px;border-radius:50%;background:#ffefdb;color:#f08a00;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+              <div style="min-width:0;flex:1;"><div style="font-size:15px;color:#000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">電話：090-1234-5678</div><div style="font-size:12.5px;color:#8a8a8e;margin-top:2px;">3時間前</div></div>
+            </div>
+          </div>
+          <!-- tab bar -->
+          <div style="display:flex; border-top:.5px solid #d8d8dc; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#8a8a8e;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play"></use></svg><span style="font-size:10px;">常時起動</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#1e88ff;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock-f"></use></svg><span style="font-size:10px;font-weight:600;">履歴</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#8a8a8e;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star"></use></svg><span style="font-size:10px;">お気に入り</span></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#8a8a8e;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear"></use></svg><span style="font-size:10px;">設定</span></div>
+          </div>
+        </div>
+        <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">履歴（現状）</div>
+      </div>
+    </div>
+
+    <!-- ===================== 案A · TEAL ===================== -->
+    <div id="1a" style="display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:12px; font-weight:700; color:#fff; background:#12A594; padding:5px 12px; border-radius:100px; letter-spacing:.03em;">案A · 1a</span>
+        <span style="font-size:13px; color:#5b5f66; font-weight:500;">Fresh Teal — 落ち着いた実用系</span>
+        <span style="width:16px;height:16px;border-radius:5px;background:#12A594;display:inline-block;"></span>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:24px;">
+
+        <!-- A: History -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#fff; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:4px 18px 6px;">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;"><div style="font-size:30px; font-weight:700; color:#0d1114; letter-spacing:-.01em;">履歴</div><span style="font-size:12px;color:#12A594;font-weight:600;background:#e2f4f1;padding:4px 10px;border-radius:100px;">24件</span></div>
+              <div style="margin-top:10px; display:flex; align-items:center; gap:8px; background:#eef0f2; border-radius:11px; padding:9px 12px; color:#8a8f96;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-search"></use></svg><span style="font-size:15px;">履歴を検索...</span></div>
+            </div>
+            <div style="display:flex; gap:7px; padding:4px 18px 10px; overflow:hidden;">
+              <span style="font-size:13px;font-weight:600;color:#fff;background:#12A594;padding:6px 13px;border-radius:100px;white-space:nowrap;">すべて</span>
+              <span style="font-size:13px;color:#3a3f47;background:#eef0f2;padding:6px 12px;border-radius:100px;white-space:nowrap;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" style="width:13px;height:13px"><use href="#i-link"></use></svg>URL</span>
+              <span style="font-size:13px;color:#3a3f47;background:#eef0f2;padding:6px 12px;border-radius:100px;white-space:nowrap;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" style="width:13px;height:13px"><use href="#i-mail"></use></svg>メール</span>
+              <span style="font-size:13px;color:#3a3f47;background:#eef0f2;padding:6px 12px;border-radius:100px;white-space:nowrap;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" style="width:13px;height:13px"><use href="#i-code"></use></svg>コード</span>
+            </div>
+            <div style="flex:1; overflow:hidden; background:#fff;">
+              <div style="font-size:11px;font-weight:700;color:#12A594;letter-spacing:.06em;padding:2px 18px 6px;display:flex;align-items:center;gap:5px;"><svg viewBox="0 0 24 24" style="width:12px;height:12px"><use href="#i-pin"></use></svg>ピン留め</div>
+              <div style="display:flex; align-items:center; gap:12px; padding:9px 18px; background:#f4faf9;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#d6f0eb;color:#0f8f80;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">こんにちは世界！これはクリップ…</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">テキスト · 1分前</div></div>
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+              </div>
+              <div style="height:.5px;background:#ececef;margin:0 18px;"></div>
+              <div style="font-size:11px;font-weight:700;color:#9aa0a6;letter-spacing:.06em;padding:12px 18px 6px;">最近</div>
+              <div style="display:flex; align-items:center; gap:12px; padding:9px 18px;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#e2ebff;color:#2f6bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-link"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">apple.com</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">https://www.apple.com/jp/ · 5分前</div></div>
+              </div>
+              <div style="height:.5px;background:#ececef;margin:0 18px;"></div>
+              <div style="display:flex; align-items:center; gap:12px; padding:9px 18px;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#d6f0eb;color:#0f8f80;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">吾輩は猫である。名前はまだ無い。</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">テキスト · 10分前</div></div>
+              </div>
+              <div style="height:.5px;background:#ececef;margin:0 18px;"></div>
+              <div style="display:flex; align-items:center; gap:12px; padding:9px 18px;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#e9e3fb;color:#7b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-mail"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">user@example.com</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">メール · 2時間前</div></div>
+              </div>
+              <div style="height:.5px;background:#ececef;margin:0 18px;"></div>
+              <div style="display:flex; align-items:center; gap:12px; padding:9px 18px;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#dff3e6;color:#22a04c;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-phone"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">090-1234-5678</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">電話 · 3時間前</div></div>
+              </div>
+              <div style="height:.5px;background:#ececef;margin:0 18px;"></div>
+              <div style="display:flex; align-items:center; gap:12px; padding:9px 18px;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#eceef1;color:#5b6470;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-code"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14px;color:#0d1114;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'SF Mono',ui-monospace,monospace;">func test() { print(…) }</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">コード · 5時間前</div></div>
+              </div>
+            </div>
+            <div style="display:flex; border-top:.5px solid #e2e2e6; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play"></use></svg><span style="font-size:10px;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#12A594;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock-f"></use></svg><span style="font-size:10px;font-weight:600;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star"></use></svg><span style="font-size:10px;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear"></use></svg><span style="font-size:10px;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">履歴 — カテゴリ絞り込み＋ピン留め</div>
+        </div>
+
+        <!-- A: Monitoring -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000; background:#fff;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:4px 18px 14px; background:#fff; border-bottom:.5px solid #e2e2e6;"><div style="font-size:30px; font-weight:700; color:#0d1114;">常時起動</div></div>
+            <div style="flex:1; overflow:hidden; padding:20px 18px;">
+              <div style="background:linear-gradient(135deg,#0f8f80,#14b8a5); border-radius:20px; padding:22px; color:#fff; box-shadow:0 12px 30px rgba(18,165,148,.32);">
+                <div style="display:flex;align-items:center;gap:10px;"><span style="width:9px;height:9px;border-radius:50%;background:#7fffd8;box-shadow:0 0 0 4px rgba(127,255,216,.3);"></span><span style="font-size:15px;font-weight:600;">バックグラウンドで監視中</span></div>
+                <div style="font-size:13px;line-height:1.6;color:rgba(255,255,255,.85);margin-top:12px;">PiPウィンドウを開くと、他のアプリを使いながらクリップボード履歴を確認できます。</div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#9aa0a6;letter-spacing:.05em;padding:22px 4px 8px;">監視コントロール</div>
+              <div style="background:#fff;border-radius:14px;overflow:hidden;">
+                <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;"><span style="width:10px;height:10px;border-radius:50%;background:#12A594;"></span><span style="font-size:15px;color:#0d1114;flex:1;">監視中</span><span style="font-size:14px;font-weight:600;color:#e5484d;">停止</span></div>
+                <div style="height:.5px;background:#ececef;margin-left:16px;"></div>
+                <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;color:#12A594;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-play"></use></svg><span style="font-size:15px;">PiPウィンドウを開く</span></div>
+              </div>
+              <div style="font-size:12px;color:#9aa0a6;line-height:1.6;padding:14px 6px 0;">PiPモードにより iOS 16以降のバックグラウンド制限を回避しています。</div>
+            </div>
+            <div style="display:flex; border-top:.5px solid #e2e2e6; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#12A594;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play-f"></use></svg><span style="font-size:10px;font-weight:600;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock"></use></svg><span style="font-size:10px;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star"></use></svg><span style="font-size:10px;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear"></use></svg><span style="font-size:10px;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">常時起動 — 状態を一目で</div>
+        </div>
+
+        <!-- A: Favorites -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#fff; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:4px 18px 12px; display:flex; align-items:flex-end; justify-content:space-between;"><div style="font-size:30px; font-weight:700; color:#0d1114;">お気に入り</div><span style="font-size:15px;color:#12A594;font-weight:500;">編集</span></div>
+            <div style="flex:1; overflow:hidden;">
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #ececef;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#d6f0eb;color:#0f8f80;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-doc"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;line-height:1.35;">こんにちは世界！これはクリップボード…</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">1分前</div></div>
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #ececef;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#e2ebff;color:#2f6bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-link"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;">apple.com</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">5分前</div></div>
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #ececef;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#e9e3fb;color:#7b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-mail"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#0d1114;">重要：明日の午後3時にミーティング</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">30分前</div></div>
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+              </div>
+              <div style="display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:.5px solid #ececef;">
+                <div style="width:44px;height:44px;border-radius:13px;background:#eceef1;color:#5b6470;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><use href="#i-code"></use></svg></div>
+                <div style="min-width:0;flex:1;"><div style="font-size:14px;color:#0d1114;font-family:'SF Mono',ui-monospace,monospace;">func test() { … }</div><div style="font-size:12px;color:#9aa0a6;margin-top:3px;">5時間前</div></div>
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+              </div>
+            </div>
+            <div style="padding:10px 16px; background:#f4faf9; border-top:.5px solid #e2e2e6; display:flex; align-items:center; gap:9px;">
+              <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#f0a400"><use href="#i-crown"></use></svg>
+              <span style="font-size:12.5px;color:#0d1114;flex:1;">Pro で無制限に追加 <span style="color:#9aa0a6;">(4/10)</span></span>
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c2c7cd"><use href="#i-chev"></use></svg>
+            </div>
+            <div style="display:flex; border-top:.5px solid #e2e2e6; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play"></use></svg><span style="font-size:10px;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock"></use></svg><span style="font-size:10px;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#12A594;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star-f"></use></svg><span style="font-size:10px;font-weight:600;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear"></use></svg><span style="font-size:10px;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">お気に入り</div>
+        </div>
+
+        <!-- A: Settings -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000; background:#fff;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:10px 18px 12px; background:#fff; border-bottom:.5px solid #e2e2e6; text-align:center;"><div style="font-size:17px; font-weight:600; color:#0d1114;">設定</div></div>
+            <div style="flex:1; overflow:hidden; padding:18px 16px;">
+              <div style="background:linear-gradient(120deg,#0f8f80,#16b7a4); border-radius:16px; padding:16px; display:flex; align-items:center; gap:13px; box-shadow:0 10px 26px rgba(18,165,148,.3);">
+                <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:26px;height:26px;color:#ffe08a"><use href="#i-crown"></use></svg></div>
+                <div style="flex:1;"><div style="font-size:16px;font-weight:700;color:#fff;">ClipKit Pro</div><div style="font-size:12px;color:rgba(255,255,255,.85);margin-top:2px;">3ヶ月履歴・お気に入り・ウィジェット</div></div>
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;color:rgba(255,255,255,.8)"><use href="#i-chev"></use></svg>
+              </div>
+              <div style="background:#fff; border-radius:14px; overflow:hidden; margin-top:18px;">
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#12A594;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-book"></use></svg></div><span style="font-size:15px;color:#0d1114;flex:1;">使い方を見る</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+                <div style="height:.5px;background:#ececef;margin-left:56px;"></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#f5b800;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-star-f"></use></svg></div><span style="font-size:15px;color:#0d1114;flex:1;">レビューを書く</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+                <div style="height:.5px;background:#ececef;margin-left:56px;"></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#7b5bd6;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-mail"></use></svg></div><span style="font-size:15px;color:#0d1114;flex:1;">お問い合わせ</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#9aa0a6;letter-spacing:.05em;padding:20px 4px 7px;">同期</div>
+              <div style="background:#fff; border-radius:14px; overflow:hidden;">
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#3aa3ff;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-icloud"></use></svg></div><span style="font-size:15px;color:#0d1114;flex:1;">iCloud同期</span><span style="font-size:14px;color:#9aa0a6;">テキストのみ</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+                <div style="height:.5px;background:#ececef;margin-left:56px;"></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#5b6470;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-share"></use></svg></div><span style="font-size:15px;color:#0d1114;flex:1;">履歴をエクスポート</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 6px 0;"><span style="font-size:13px;color:#9aa0a6;">バージョン</span><span style="font-size:13px;color:#c2c7cd;">1.3.1</span></div>
+            </div>
+            <div style="display:flex; border-top:.5px solid #e2e2e6; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play"></use></svg><span style="font-size:10px;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock"></use></svg><span style="font-size:10px;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#9aa0a6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star"></use></svg><span style="font-size:10px;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#12A594;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear-f"></use></svg><span style="font-size:10px;font-weight:600;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">設定 — 分類された導線</div>
+        </div>
+
+        <!-- A: Paywall -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#fff; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="font-size:15px;color:#12A594;">閉じる</span></div>
+            <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+              <div style="text-align:center; padding:16px 20px 18px;">
+                <div style="width:72px;height:72px;margin:0 auto;border-radius:20px;background:linear-gradient(135deg,#0f8f80,#16b7a4);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(18,165,148,.35);"><svg viewBox="0 0 24 24" style="width:40px;height:40px;color:#ffe08a"><use href="#i-crown"></use></svg></div>
+                <div style="font-size:26px;font-weight:800;color:#0d1114;margin-top:14px;letter-spacing:-.01em;">ClipKit Pro</div>
+                <div style="font-size:14px;color:#8a8f96;margin-top:3px;">すべての機能を解放</div>
+              </div>
+              <div style="flex:1; padding:0 18px; overflow:hidden;">
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:#e2f4f1;color:#0f8f80;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-cal"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#0d1114;">3ヶ月履歴</div><div style="font-size:12px;color:#9aa0a6;">過去3ヶ月分を保存・閲覧</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#12A594"><use href="#i-check"></use></svg></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:#fdf3d6;color:#e0a400;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-star-f"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#0d1114;">お気に入り機能</div><div style="font-size:12px;color:#9aa0a6;">重要な項目をピン留め</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#12A594"><use href="#i-check"></use></svg></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:#dff3e6;color:#22a04c;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-widget"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#0d1114;">ホーム画面ウィジェット</div><div style="font-size:12px;color:#9aa0a6;">3サイズのウィジェット</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#12A594"><use href="#i-check"></use></svg></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:#e2ebff;color:#2f6bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-kbd"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#0d1114;">キーボードフル表示</div><div style="font-size:12px;color:#9aa0a6;">履歴10件を表示（無料版3件）</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#12A594"><use href="#i-check"></use></svg></div>
+              </div>
+              <div style="padding:8px 18px 0; display:flex; gap:10px;">
+                <div style="flex:1;border:2px solid #e2e2e6;border-radius:14px;padding:12px;text-align:center;"><div style="font-size:12px;color:#9aa0a6;">月額</div><div style="font-size:18px;font-weight:800;color:#0d1114;margin-top:2px;">¥250</div></div>
+                <div style="flex:1;border:2px solid #12A594;border-radius:14px;padding:12px;text-align:center;position:relative;background:#f4faf9;"><span style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:#fff;background:#22a04c;padding:2px 8px;border-radius:100px;">20%お得</span><div style="font-size:12px;color:#9aa0a6;">年額</div><div style="font-size:18px;font-weight:800;color:#0d1114;margin-top:2px;">¥2,400</div><div style="font-size:10px;color:#9aa0a6;">月換算 ¥200</div></div>
+              </div>
+              <div style="padding:14px 18px 22px;">
+                <div style="background:linear-gradient(135deg,#0f8f80,#16b7a4);border-radius:14px;padding:15px;text-align:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 10px 24px rgba(18,165,148,.35);">無料で試す（7日間）</div>
+                <div style="text-align:center;font-size:12px;color:#9aa0a6;margin-top:10px;">7日間無料 · いつでもキャンセル可能</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">Pro 課金 — 価値の対比</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================== 案B · INDIGO ===================== -->
+    <div id="1b" style="display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:12px; font-weight:700; color:#fff; background:#5b5bd6; padding:5px 12px; border-radius:100px; letter-spacing:.03em;">案B · 1b</span>
+        <span style="font-size:13px; color:#5b5f66; font-weight:500;">Indigo — インセットカード＋セグメント</span>
+        <span style="width:16px;height:16px;border-radius:5px;background:#5b5bd6;display:inline-block;"></span>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:24px;">
+
+        <!-- B: History -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:4px 18px 6px;">
+              <div style="font-size:30px; font-weight:700; color:#14142b; letter-spacing:-.01em;">履歴</div>
+              <div style="margin-top:10px; display:flex; align-items:center; gap:8px; background:#e5e5ea; border-radius:11px; padding:9px 12px; color:#8a8f96;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-search"></use></svg><span style="font-size:15px;">履歴を検索...</span></div>
+              <div style="margin-top:12px; display:flex; background:#e5e5ea; border-radius:9px; padding:2px;">
+                <span style="flex:1;text-align:center;font-size:12.5px;font-weight:600;color:#14142b;background:#fff;padding:6px 0;border-radius:7px;box-shadow:0 1px 3px rgba(0,0,0,.1);">すべて</span>
+                <span style="flex:1;text-align:center;font-size:12.5px;color:#5b6470;padding:6px 0;">URL</span>
+                <span style="flex:1;text-align:center;font-size:12.5px;color:#5b6470;padding:6px 0;">メール</span>
+                <span style="flex:1;text-align:center;font-size:12.5px;color:#5b6470;padding:6px 0;">コード</span>
+              </div>
+            </div>
+            <div style="flex:1; overflow:hidden; padding:14px 16px 0;">
+              <div style="background:#fff; border-radius:16px; overflow:hidden;">
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#ecebfb;color:#5b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-doc"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">こんにちは世界！これはクリップ…</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">1分前</div></div>
+                  <svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+                </div>
+                <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#e2ebff;color:#2f6bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-link"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;font-weight:600;color:#2f6bff;background:#e2ebff;padding:2px 7px;border-radius:6px;">apple.com</span></div><div style="font-size:12px;color:#a0a4ab;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">https://www.apple.com/jp/ · 5分前</div></div>
+                </div>
+                <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#ecebfb;color:#5b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-doc"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">吾輩は猫である。名前はまだ無い。</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">10分前</div></div>
+                </div>
+                <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#f3e9d6;color:#c98a00;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-photo"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">メモ：買い物に行く</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">1時間前</div></div>
+                </div>
+              </div>
+              <div style="background:#fff; border-radius:16px; overflow:hidden; margin-top:16px;">
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#ecebfb;color:#5b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-mail"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">user@example.com</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">2時間前</div></div>
+                </div>
+                <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#1c1c2e;color:#a8f0d0;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-code"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:13.5px;color:#14142b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'SF Mono',ui-monospace,monospace;">func test() { print("…") }</div><div style="font-size:12px;color:#a0a4ab;margin-top:3px;">コード · 5時間前</div></div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex; border-top:.5px solid #dcdce2; background:rgba(249,249,249,.94); padding:8px 0 22px; margin-top:14px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play"></use></svg><span style="font-size:10px;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#5b5bd6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock-f"></use></svg><span style="font-size:10px;font-weight:600;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star"></use></svg><span style="font-size:10px;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear"></use></svg><span style="font-size:10px;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">履歴 — インセットカード＋セグメント</div>
+        </div>
+
+        <!-- B: Monitoring -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:4px 18px 4px;"><div style="font-size:30px; font-weight:700; color:#14142b;">常時起動</div></div>
+            <div style="flex:1; overflow:hidden; padding:16px 16px;">
+              <div style="background:#14142b; border-radius:20px; padding:24px 20px; text-align:center; position:relative; overflow:hidden;">
+                <div style="width:76px;height:76px;margin:0 auto;border-radius:50%;background:radial-gradient(circle at 50% 40%,#7b78f0,#5b5bd6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(123,120,240,.6);"><svg viewBox="0 0 24 24" style="width:38px;height:38px;color:#fff"><use href="#i-play-f"></use></svg></div>
+                <div style="font-size:16px;font-weight:700;color:#fff;margin-top:16px;">バックグラウンドで監視中</div>
+                <div style="font-size:12.5px;color:rgba(255,255,255,.6);margin-top:6px;line-height:1.5;">PiPウィンドウで他アプリ使用中も<br>クリップボードを記録します</div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#a0a4ab;letter-spacing:.05em;padding:22px 4px 8px;">監視コントロール</div>
+              <div style="background:#fff;border-radius:16px;overflow:hidden;">
+                <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;"><span style="width:10px;height:10px;border-radius:50%;background:#5b5bd6;"></span><span style="font-size:15px;color:#14142b;flex:1;">監視中</span><span style="font-size:14px;font-weight:600;color:#e5484d;">停止</span></div>
+                <div style="height:.5px;background:#efeff2;margin-left:16px;"></div>
+                <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;color:#5b5bd6;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-play"></use></svg><span style="font-size:15px;">PiPウィンドウを開く</span></div>
+              </div>
+            </div>
+            <div style="display:flex; border-top:.5px solid #dcdce2; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#5b5bd6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play-f"></use></svg><span style="font-size:10px;font-weight:600;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock"></use></svg><span style="font-size:10px;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star"></use></svg><span style="font-size:10px;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear"></use></svg><span style="font-size:10px;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">常時起動 — ヒーロー状態表示</div>
+        </div>
+
+        <!-- B: Favorites -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:4px 18px 12px; display:flex; align-items:flex-end; justify-content:space-between;"><div style="font-size:30px; font-weight:700; color:#14142b;">お気に入り</div><svg viewBox="0 0 24 24" style="width:22px;height:22px;color:#5b5bd6"><use href="#i-pencil"></use></svg></div>
+            <div style="flex:1; overflow:hidden; padding:2px 16px 0;">
+              <div style="background:#fff; border-radius:16px; overflow:hidden;">
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#ecebfb;color:#5b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-doc"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;line-height:1.35;">こんにちは世界！これはクリップ…</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">1分前</div></div>
+                  <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+                </div>
+                <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#e2ebff;color:#2f6bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-link"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;">apple.com</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">5分前</div></div>
+                  <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+                </div>
+                <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#ecebfb;color:#5b5bd6;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-doc"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:14.5px;color:#14142b;">重要：明日の午後3時にミーティング</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">30分前</div></div>
+                  <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+                </div>
+                <div style="height:.5px;background:#efeff2;margin-left:52px;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:11px 14px;">
+                  <div style="width:40px;height:40px;border-radius:11px;background:#1c1c2e;color:#a8f0d0;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:21px;height:21px"><use href="#i-code"></use></svg></div>
+                  <div style="min-width:0;flex:1;"><div style="font-size:13.5px;color:#14142b;font-family:'SF Mono',ui-monospace,monospace;">func test() { … }</div><div style="font-size:12px;color:#a0a4ab;margin-top:2px;">5時間前</div></div>
+                  <svg viewBox="0 0 24 24" style="width:19px;height:19px;color:#f5b800;flex-shrink:0"><use href="#i-star-f"></use></svg>
+                </div>
+              </div>
+            </div>
+            <div style="margin:12px 16px; background:linear-gradient(120deg,#5b5bd6,#7b78f0); border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:10px;">
+              <svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#ffe08a"><use href="#i-crown"></use></svg>
+              <span style="font-size:12.5px;color:#fff;flex:1;font-weight:500;">Pro で無制限に追加 <span style="color:rgba(255,255,255,.75);">(4/10)</span></span>
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px;color:rgba(255,255,255,.85)"><use href="#i-chev"></use></svg>
+            </div>
+            <div style="display:flex; border-top:.5px solid #dcdce2; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play"></use></svg><span style="font-size:10px;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock"></use></svg><span style="font-size:10px;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#5b5bd6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star-f"></use></svg><span style="font-size:10px;font-weight:600;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear"></use></svg><span style="font-size:10px;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">お気に入り — Pro導線を強調</div>
+        </div>
+
+        <!-- B: Settings -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#f2f2f7; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#000;"><span>9:41</span><span style="display:flex; align-items:center; gap:6px;"><svg viewBox="0 0 24 24" style="width:17px;height:17px"><use href="#i-wifi"></use></svg><svg viewBox="0 0 26 24" style="width:25px;height:15px"><use href="#i-batt"></use></svg></span></div>
+            <div style="padding:4px 18px 10px;"><div style="font-size:30px; font-weight:700; color:#14142b;">設定</div></div>
+            <div style="flex:1; overflow:hidden; padding:2px 16px;">
+              <div style="background:#14142b; border-radius:18px; padding:18px; display:flex; align-items:center; gap:14px; position:relative; overflow:hidden;">
+                <div style="width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#7b78f0,#5b5bd6);display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:27px;height:27px;color:#ffe08a"><use href="#i-crown"></use></svg></div>
+                <div style="flex:1;"><div style="font-size:17px;font-weight:800;color:#fff;">ClipKit Pro</div><div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:2px;">3ヶ月履歴・お気に入り・ウィジェット</div></div>
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;color:rgba(255,255,255,.6)"><use href="#i-chev"></use></svg>
+              </div>
+              <div style="background:#fff; border-radius:16px; overflow:hidden; margin-top:18px;">
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#5b5bd6;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-book"></use></svg></div><span style="font-size:15px;color:#14142b;flex:1;">使い方を見る</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+                <div style="height:.5px;background:#efeff2;margin-left:56px;"></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#f5b800;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-star-f"></use></svg></div><span style="font-size:15px;color:#14142b;flex:1;">レビューを書く</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+                <div style="height:.5px;background:#efeff2;margin-left:56px;"></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#7b5bd6;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-mail"></use></svg></div><span style="font-size:15px;color:#14142b;flex:1;">お問い合わせ</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+              </div>
+              <div style="background:#fff; border-radius:16px; overflow:hidden; margin-top:18px;">
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#3aa3ff;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-icloud"></use></svg></div><span style="font-size:15px;color:#14142b;flex:1;">iCloud同期</span><span style="font-size:14px;color:#a0a4ab;">テキストのみ</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+                <div style="height:.5px;background:#efeff2;margin-left:56px;"></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px 15px;"><div style="width:29px;height:29px;border-radius:8px;background:#5b6470;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" style="width:17px;height:17px;color:#fff"><use href="#i-share"></use></svg></div><span style="font-size:15px;color:#14142b;flex:1;">履歴をエクスポート</span><svg viewBox="0 0 24 24" style="width:14px;height:14px;color:#c8ccd2"><use href="#i-chev"></use></svg></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 6px 0;"><span style="font-size:13px;color:#a0a4ab;">バージョン</span><span style="font-size:13px;color:#c2c7cd;">1.3.1</span></div>
+            </div>
+            <div style="display:flex; border-top:.5px solid #dcdce2; background:rgba(249,249,249,.94); padding:8px 0 22px;">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-play"></use></svg><span style="font-size:10px;">常時起動</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-clock"></use></svg><span style="font-size:10px;">履歴</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#a0a4ab;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-star"></use></svg><span style="font-size:10px;">お気に入り</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:#5b5bd6;"><svg viewBox="0 0 24 24" style="width:24px;height:24px"><use href="#i-gear-f"></use></svg><span style="font-size:10px;font-weight:600;">設定</span></div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">設定</div>
+        </div>
+
+        <!-- B: Paywall -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="width:320px; height:680px; background:#14142b; border-radius:42px; overflow:hidden; box-shadow:0 22px 55px rgba(20,22,30,.16); border:1px solid rgba(0,0,0,.05); position:relative; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 4px; font-size:15px; font-weight:600; color:#fff;"><span>9:41</span><span style="font-size:15px;color:#9d9af0;">閉じる</span></div>
+            <div style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+              <div style="text-align:center; padding:14px 20px 16px;">
+                <div style="width:72px;height:72px;margin:0 auto;border-radius:20px;background:linear-gradient(135deg,#7b78f0,#5b5bd6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(123,120,240,.5);"><svg viewBox="0 0 24 24" style="width:40px;height:40px;color:#ffe08a"><use href="#i-crown"></use></svg></div>
+                <div style="font-size:26px;font-weight:800;color:#fff;margin-top:14px;letter-spacing:-.01em;">ClipKit Pro</div>
+                <div style="font-size:14px;color:rgba(255,255,255,.55);margin-top:3px;">すべての機能を解放</div>
+              </div>
+              <div style="flex:1; padding:0 18px; overflow:hidden;">
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:rgba(123,120,240,.16);color:#9d9af0;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-cal"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#fff;">3ヶ月履歴</div><div style="font-size:12px;color:rgba(255,255,255,.5);">過去3ヶ月分を保存・閲覧</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#7b78f0"><use href="#i-check"></use></svg></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:rgba(245,184,0,.16);color:#f5c542;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-star-f"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#fff;">お気に入り機能</div><div style="font-size:12px;color:rgba(255,255,255,.5);">重要な項目をピン留め</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#7b78f0"><use href="#i-check"></use></svg></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:rgba(34,160,76,.16);color:#4fd07a;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-widget"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#fff;">ホーム画面ウィジェット</div><div style="font-size:12px;color:rgba(255,255,255,.5);">3サイズのウィジェット</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#7b78f0"><use href="#i-check"></use></svg></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:8px 0;"><div style="width:38px;height:38px;border-radius:10px;background:rgba(47,107,255,.16);color:#6f9bff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" style="width:20px;height:20px"><use href="#i-kbd"></use></svg></div><div style="flex:1;"><div style="font-size:14.5px;font-weight:600;color:#fff;">キーボードフル表示</div><div style="font-size:12px;color:rgba(255,255,255,.5);">履歴10件を表示（無料版3件）</div></div><svg viewBox="0 0 24 24" style="width:20px;height:20px;color:#7b78f0"><use href="#i-check"></use></svg></div>
+              </div>
+              <div style="padding:6px 18px 0; display:flex; gap:10px;">
+                <div style="flex:1;border:1.5px solid rgba(255,255,255,.18);border-radius:14px;padding:12px;text-align:center;"><div style="font-size:12px;color:rgba(255,255,255,.5);">月額</div><div style="font-size:18px;font-weight:800;color:#fff;margin-top:2px;">¥250</div></div>
+                <div style="flex:1;border:2px solid #7b78f0;border-radius:14px;padding:12px;text-align:center;position:relative;background:rgba(123,120,240,.12);"><span style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;color:#14142b;background:#f5c542;padding:2px 8px;border-radius:100px;">20%お得</span><div style="font-size:12px;color:rgba(255,255,255,.5);">年額</div><div style="font-size:18px;font-weight:800;color:#fff;margin-top:2px;">¥2,400</div><div style="font-size:10px;color:rgba(255,255,255,.5);">月換算 ¥200</div></div>
+              </div>
+              <div style="padding:14px 18px 22px;">
+                <div style="background:linear-gradient(135deg,#7b78f0,#5b5bd6);border-radius:14px;padding:15px;text-align:center;color:#fff;font-size:16px;font-weight:700;box-shadow:0 10px 24px rgba(91,91,214,.45);">無料で試す（7日間）</div>
+                <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.45);margin-top:10px;">7日間無料 · いつでもキャンセル可能</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:12.5px; color:#8a8f98; text-align:center; font-weight:500;">Pro 課金 — ダークで没入感</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+
+
+</body></html>

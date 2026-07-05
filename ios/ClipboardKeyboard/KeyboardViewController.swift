@@ -77,6 +77,8 @@ class KeyboardViewController: UIInputViewController {
 
         // 履歴/定型文の切り替え
         modeSegmentedControl.selectedSegmentIndex = 0
+        modeSegmentedControl.selectedSegmentTintColor = .systemBackground
+        modeSegmentedControl.setTitleTextAttributes([.foregroundColor: KeyboardColor.indigo], for: .selected)
         modeSegmentedControl.addTarget(self, action: #selector(modeChanged(_:)), for: .valueChanged)
         modeSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
         controlBar.addSubview(modeSegmentedControl)
@@ -315,19 +317,19 @@ class KeyboardViewController: UIInputViewController {
         switch item.type {
         case .text:
             iconImageView.image = UIImage(systemName: "doc.text")
-            iconImageView.tintColor = .systemBlue
+            iconImageView.tintColor = KeyboardColor.indigo
             textLabel.text = item.textContent ?? ""
         case .url:
             iconImageView.image = UIImage(systemName: "link")
-            iconImageView.tintColor = .systemGreen
+            iconImageView.tintColor = KeyboardColor.badgeBlueFg
             textLabel.text = item.url?.host ?? item.url?.absoluteString ?? ""
         case .image:
             iconImageView.image = UIImage(systemName: "photo")
-            iconImageView.tintColor = .systemOrange
+            iconImageView.tintColor = KeyboardColor.badgeAmberFg
             textLabel.text = "画像"
         case .file:
             iconImageView.image = UIImage(systemName: "doc")
-            iconImageView.tintColor = .systemPurple
+            iconImageView.tintColor = .secondaryLabel
             textLabel.text = item.fileName ?? "ファイル"
         }
 
@@ -409,7 +411,7 @@ class KeyboardViewController: UIInputViewController {
     }
 
     private func showCardLoading(_ button: UIButton) {
-        button.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.15)
+        button.backgroundColor = KeyboardColor.indigo.withAlphaComponent(0.15)
         let spinner = UIActivityIndicatorView(style: .medium)
         spinner.tag = 9999
         spinner.startAnimating()
@@ -434,7 +436,7 @@ class KeyboardViewController: UIInputViewController {
         card.backgroundColor = UIColor.systemBackground
         card.layer.cornerRadius = 8
         card.layer.borderWidth = 1
-        card.layer.borderColor = UIColor.systemYellow.cgColor
+        card.layer.borderColor = KeyboardColor.crown.cgColor
         card.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             card.widthAnchor.constraint(equalToConstant: 120),
@@ -453,7 +455,7 @@ class KeyboardViewController: UIInputViewController {
         ])
 
         let crownImageView = UIImageView(image: UIImage(systemName: "crown.fill"))
-        crownImageView.tintColor = .systemYellow
+        crownImageView.tintColor = KeyboardColor.crown
         crownImageView.contentMode = .scaleAspectFit
         crownImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

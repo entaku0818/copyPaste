@@ -18,25 +18,33 @@ struct SnippetsView: View {
                 )
             } else {
                 List {
-                    ForEach(store.snippets) { snippet in
+                    ForEach(Array(store.snippets.enumerated()), id: \.element.id) { index, snippet in
                         Button {
                             editingSnippet = snippet
                         } label: {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(snippet.displayTitle)
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                    .lineLimit(1)
-                                Text(snippet.content)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                    .lineLimit(2)
+                            HStack(spacing: ClipKitSpacing.rowGap) {
+                                IconBadge(systemImage: "text.quote", colors: ClipKitColor.badgeIndigo, size: 40)
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(snippet.displayTitle)
+                                        .font(ClipKitFont.rowTitleEmphasized)
+                                        .foregroundColor(ClipKitColor.textPrimary)
+                                        .lineLimit(1)
+                                    Text(snippet.content)
+                                        .font(ClipKitFont.meta)
+                                        .foregroundColor(ClipKitColor.textTertiary)
+                                        .lineLimit(2)
+                                }
+                                Spacer()
                             }
                         }
+                        .clipKitCardRow(.at(index, count: store.snippets.count))
                     }
                     .onDelete { store.send(.deleteSnippets($0)) }
                     .onMove { store.send(.moveSnippets($0, $1)) }
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(ClipKitColor.canvas)
             }
         }
         .navigationTitle("snippets.title")
@@ -63,7 +71,7 @@ struct SnippetsView: View {
                     Int64(ClipboardHistoryFeature.State.freeSnippetLimit)
                 ))
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(ClipKitColor.textSecondary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
                 .background(.regularMaterial)

@@ -42,6 +42,7 @@ struct ClipKitApp: App {
 
     var body: some Scene {
         WindowGroup {
+            Group {
             #if DEBUG
             if ProcessInfo.processInfo.arguments.contains("--screenshots") {
                 let args = ProcessInfo.processInfo.arguments
@@ -76,6 +77,8 @@ struct ClipKitApp: App {
                 }
             }
             #endif
+            }
+            .tint(ClipKitColor.indigo)
         }
     }
 

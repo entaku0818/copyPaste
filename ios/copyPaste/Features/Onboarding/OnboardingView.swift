@@ -7,26 +7,22 @@ struct OnboardingView: View {
     private let pages: [OnboardingPage] = [
         OnboardingPage(
             systemImage: "doc.on.clipboard.fill",
-            imageColor: .blue,
             title: "ClipKitへようこそ",
             description: "コピーしたテキスト・URL・画像を自動で記録。\nいつでも履歴から取り出せます。"
         ),
         OnboardingPage(
             systemImage: "play.circle.fill",
-            imageColor: .green,
             title: "常時起動で自動記録",
             description: "「常時起動」タブでモニタリングを開始すると、コピーした内容を自動で保存します。"
         ),
         OnboardingPage(
             systemImage: "clipboard",
-            imageColor: .orange,
             title: "ペースト許可の設定",
             description: "毎回ダイアログが出ないよう、\niOSの設定から許可しておくと便利です。",
             hasSettingsButton: true
         ),
         OnboardingPage(
             systemImage: "checkmark.circle.fill",
-            imageColor: .purple,
             title: "準備完了！",
             description: "さっそく使ってみましょう。"
         )
@@ -46,44 +42,28 @@ struct OnboardingView: View {
             HStack(spacing: 8) {
                 ForEach(0..<pages.count, id: \.self) { index in
                     Circle()
-                        .fill(index == currentPage ? Color.primary : Color.secondary.opacity(0.4))
-                        .frame(width: 8, height: 8)
+                        .fill(index == currentPage ? ClipKitColor.indigo : ClipKitColor.textTertiary.opacity(0.4))
+                        .frame(width: 9, height: 9)
                         .animation(.easeInOut, value: currentPage)
                 }
             }
             .padding(.bottom, 24)
 
             // ボタン
-            if currentPage < pages.count - 1 {
-                Button {
+            Button {
+                if currentPage < pages.count - 1 {
                     withAnimation { currentPage += 1 }
-                } label: {
-                    Text("次へ")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 40)
-            } else {
-                Button {
+                } else {
                     onComplete()
-                } label: {
-                    Text("はじめる")
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
                 }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 40)
+            } label: {
+                Text(currentPage < pages.count - 1 ? "次へ" : "はじめる")
             }
+            .buttonStyle(PrimaryGradientButtonStyle())
+            .padding(.horizontal, 24)
+            .padding(.bottom, 40)
         }
+        .background(ClipKitColor.canvas)
     }
 
     @ViewBuilder
@@ -91,19 +71,25 @@ struct OnboardingView: View {
         VStack(spacing: 32) {
             Spacer()
 
-            Image(systemName: page.systemImage)
-                .font(.system(size: 80))
-                .foregroundColor(page.imageColor)
+            ZStack {
+                RoundedRectangle(cornerRadius: 32, style: .continuous)
+                    .fill(ClipKitColor.brandGradient)
+                    .frame(width: 120, height: 120)
+                    .shadow(color: ClipKitColor.indigoLight.opacity(0.4), radius: 24, y: 12)
+                Image(systemName: page.systemImage)
+                    .font(.system(size: 52))
+                    .foregroundColor(.white)
+            }
 
             VStack(spacing: 12) {
                 Text(page.title)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(.system(size: 27, weight: .heavy))
+                    .foregroundColor(ClipKitColor.textPrimary)
                     .multilineTextAlignment(.center)
 
                 Text(page.description)
-                    .font(.body)
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 15))
+                    .foregroundColor(ClipKitColor.textSecondary)
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
             }
@@ -113,9 +99,10 @@ struct OnboardingView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("設定 → プライバシーとセキュリティ → ペースト → ClipKit")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(ClipKitColor.textSecondary)
                     Text("「他のAppからペースト」を **許可** に変更")
                         .font(.subheadline)
+                        .foregroundColor(ClipKitColor.textPrimary)
 
                     Button {
                         if let url = URL(string: UIApplication.openSettingsURLString) {
@@ -124,12 +111,13 @@ struct OnboardingView: View {
                     } label: {
                         Label("設定を開く", systemImage: "arrow.up.right.square")
                             .font(.subheadline)
+                            .foregroundColor(ClipKitColor.indigo)
                             .padding(.top, 4)
                     }
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(12)
+                .background(ClipKitColor.card)
+                .clipShape(RoundedRectangle(cornerRadius: ClipKitRadius.card, style: .continuous))
                 .padding(.horizontal, 32)
             }
 
@@ -141,7 +129,6 @@ struct OnboardingView: View {
 
 private struct OnboardingPage {
     let systemImage: String
-    let imageColor: Color
     let title: String
     let description: String
     var hasSettingsButton: Bool = false

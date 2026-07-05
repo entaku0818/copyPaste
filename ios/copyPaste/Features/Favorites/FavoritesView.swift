@@ -22,8 +22,9 @@ struct FavoritesView: View {
                 )
             } else {
                 List {
-                    ForEach(favoriteItems) { item in
+                    ForEach(Array(favoriteItems.enumerated()), id: \.element.id) { index, item in
                         ClipboardItemRow(item: item)
+                            .clipKitCardRow(.at(index, count: favoriteItems.count))
                             .onTapGesture {
                                 if item.type == .image {
                                     store.send(.showImagePreview(item))
@@ -50,6 +51,9 @@ struct FavoritesView: View {
                             }
                     }
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .background(ClipKitColor.canvas)
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -58,20 +62,23 @@ struct FavoritesView: View {
                     Button {
                         showPaywall = true
                     } label: {
-                        HStack(spacing: 8) {
+                        HStack(spacing: 10) {
                             Image(systemName: "crown.fill")
-                                .foregroundStyle(LinearGradient(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing))
+                                .foregroundStyle(ClipKitColor.crown)
                             Text(String(format: String(localized: "favorites.proUpgrade %lld"), Int64(favoriteItems.count)))
-                                .font(.caption)
-                                .foregroundColor(.primary)
+                                .font(.system(size: 12.5, weight: .medium))
+                                .foregroundColor(.white)
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .font(.caption2)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.white.opacity(0.85))
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 10)
-                        .background(.regularMaterial)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 12)
+                        .background(ClipKitColor.brandGradient)
+                        .clipShape(RoundedRectangle(cornerRadius: ClipKitRadius.control, style: .continuous))
+                        .padding(.horizontal, ClipKitSpacing.screenPadding)
+                        .padding(.top, 12)
                     }
                     .sheet(isPresented: $showPaywall) {
                         PaywallView()
@@ -79,6 +86,7 @@ struct FavoritesView: View {
                     BannerAdView()
                         .frame(height: BannerAdView.adaptiveHeight)
                 }
+                .background(ClipKitColor.canvas)
             }
         }
         .navigationTitle("favorites.title")
