@@ -22,8 +22,22 @@ disabled_rules:
   - todo
   - nesting
 
-opt_in_rules: []
+opt_in_rules:
+  - custom_rules
 
 force_cast: warning
 force_try: warning
 large_tuple: warning
+
+custom_rules:
+  unsafe_coredata_context_access:
+    included: ".*\\.swift"
+    excluded: "PersistenceController\\.swift"
+    regex: "\\bPersistenceController\\.shared\\.(newBackgroundContext|viewContext|container)\\b"
+    match_kinds:
+      - identifier
+    message: >
+      PersistenceController.shared.newBackgroundContext/viewContext/container への直接アクセスは禁止。
+      ストア読み込み完了前の書き込みで即クラッシュしうるため、必ず
+      PersistenceController.shared.performBackgroundTask(_:) 経由でCoreDataにアクセスすること。
+    severity: error

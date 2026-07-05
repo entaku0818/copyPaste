@@ -56,11 +56,11 @@ final class CloudKitSyncModeTests: XCTestCase {
 
     func testPersistenceControllerWithoutCloudKitUsesPlainContainer() {
         let controller = PersistenceController(useCloudKit: false, inMemory: true)
-        XCTAssertFalse(controller.container is NSPersistentCloudKitContainer)
+        XCTAssertFalse(controller.isUsingCloudKit)
     }
 
     func testPersistenceControllerWithCloudKitUsesCloudKitContainer() {
         let controller = PersistenceController(useCloudKit: true, inMemory: true)
-        XCTAssertTrue(controller.container is NSPersistentCloudKitContainer)
+        XCTAssertTrue(controller.isUsingCloudKit)
     }
 }

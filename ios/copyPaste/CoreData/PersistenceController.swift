@@ -13,9 +13,11 @@ final class PersistenceController {
     )
 
     private let logger = Logger(subsystem: "com.clipkit", category: "Persistence")
-    let container: NSPersistentContainer
+    private let container: NSPersistentContainer
 
-    var viewContext: NSManagedObjectContext { container.viewContext }
+    /// テスト用途: 実際に使われているコンテナがCloudKit対応かどうかを確認するため。
+    /// CoreDataの読み書きには使わないこと（performBackgroundTask経由で行う）。
+    var isUsingCloudKit: Bool { container is NSPersistentCloudKitContainer }
 
     // MARK: - Store Loading Gate
 
@@ -106,9 +108,40 @@ final class PersistenceController {
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
 
-    func newBackgroundContext() -> NSManagedObjectContext {
+    // MARK: - Safe Access
+
+    // newBackgroundContext/viewContext は意図的に外部非公開にしている。
+    // CoreDataの読み書きは必ず performBackgroundTask(_:) 経由で行うこと。
+    // こうすることで「ストア読み込み完了を待たずにアクセスする」という
+    // 今回の即クラッシュと同じ書き方が、新しく増えてもコンパイルエラーになる。
+
+    private func newBackgroundContext() -> NSManagedObjectContext {
         let ctx = container.newBackgroundContext()
         ctx.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         return ctx
+    }
+
+    /// ストア読み込み完了を待ってから背景コンテキストで処理を実行する。
+    /// CoreDataへのアクセスは必ずこのメソッド経由で行うこと。
+    @discardableResult
+    func performBackgroundTask<T: Sendable>(
+        _ body: @escaping (NSManagedObjectContext) throws -> T
+    ) async throws -> T {
+        await waitUntilLoaded()
+        let ctx = newBackgroundContext()
+        return try await ctx.perform {
+            try body(ctx)
+        }
+    }
+
+    /// NSBatchDeleteRequestの削除結果（objectID）をviewContextへ反映する。
+    /// バッチ削除は永続ストアを直接更新するため、メモリ上のコンテキストへの
+    /// 手動マージが必要（UI表示との整合性のため）。
+    func mergeDeletedObjectIDs(_ objectIDs: [NSManagedObjectID]) {
+        guard !objectIDs.isEmpty else { return }
+        NSManagedObjectContext.mergeChanges(
+            fromRemoteContextSave: [NSDeletedObjectsKey: objectIDs],
+            into: [container.viewContext]
+        )
     }
 }
