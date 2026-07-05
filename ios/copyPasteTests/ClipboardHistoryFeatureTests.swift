@@ -146,6 +146,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.send(.itemsLoaded([item1, item2, item3])) {
             $0.items = [item2, item1, item3]
         }
+        await store.receive(\.flushPendingPiPItems)
         await store.finish()
     }
 

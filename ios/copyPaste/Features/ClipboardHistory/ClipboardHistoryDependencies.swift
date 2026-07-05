@@ -141,3 +141,34 @@ extension DependencyValues {
         set { self[InterstitialAdClient.self] = newValue }
     }
 }
+
+// MARK: - PendingItemBufferClient
+
+// PiP中の軽量チェックポイント（App Group UserDefaults）をDependency化する。
+// テストでは実UserDefaultsに触れないよう空実装を使う。
+struct PendingItemBufferClient {
+    var load: @Sendable () -> [ClipboardItem]
+    var append: @Sendable (ClipboardItem) -> Void
+    var clear: @Sendable () -> Void
+}
+
+extension PendingItemBufferClient: DependencyKey {
+    static let liveValue = PendingItemBufferClient(
+        load: { PendingItemBuffer.load() },
+        append: { PendingItemBuffer.append($0) },
+        clear: { PendingItemBuffer.clear() }
+    )
+
+    static let testValue = PendingItemBufferClient(
+        load: { [] },
+        append: { _ in },
+        clear: {}
+    )
+}
+
+extension DependencyValues {
+    var pendingItemBuffer: PendingItemBufferClient {
+        get { self[PendingItemBufferClient.self] }
+        set { self[PendingItemBufferClient.self] = newValue }
+    }
+}

@@ -99,6 +99,7 @@ struct ClipboardHistoryFeature {
         case requestClipboardPermission
         case dismissPermissionAlert
         case pipStateChanged(Bool)
+        case flushPendingPiPItems
         case showImagePreview(ClipboardItem)
         case dismissImagePreview
         case loadItems
@@ -133,6 +134,7 @@ struct ClipboardHistoryFeature {
     @Dependency(\.clipboardRepository) var repository
     @Dependency(\.snippetRepository) var snippetRepository
     @Dependency(\.interstitialAd) var interstitialAd
+    @Dependency(\.pendingItemBuffer) var pendingBuffer
     private enum CancelID { case monitoring }
 
     private static let logger = Logger(subsystem: "com.clipkit", category: "Clipboard")
@@ -170,6 +172,16 @@ struct ClipboardHistoryFeature {
                 UserDefaults.standard.set(state.captureCount, forKey: "clipkit.captureCount")
                 let latestItems = Array(state.items.prefix(5))
                 let newItem = item
+                let pipEffect: Effect<Action> = .run { _ in await pip.updateItems(latestItems) }
+
+                guard !state.isPiPActive else {
+                    // PiP中はCoreData書き込み（CloudKit同期のトリガー）を避け、
+                    // 軽量なローカルチェックポイントのみ即時に行う。
+                    // 本保存はPiP終了時（.flushPendingPiPItems）にまとめて行う。
+                    pendingBuffer.append(newItem)
+                    return .merge(.send(.checkReviewTrigger), pipEffect)
+                }
+
                 return .merge(
                     .send(.saveItems),
                     .send(.checkReviewTrigger),
@@ -180,7 +192,7 @@ struct ClipboardHistoryFeature {
                             Self.logger.error("Failed to saveAndSync item: \(error.localizedDescription)")
                         }
                     },
-                    .run { _ in await pip.updateItems(latestItems) }
+                    pipEffect
                 )
 
             case let .removeItems(indexSet):
@@ -474,7 +486,7 @@ struct ClipboardHistoryFeature {
                 
             case .appDidBecomeActive:
                 state.isAppActive = true
-                return .none
+                return .send(.flushPendingPiPItems)
                 
             case .appDidEnterBackground:
                 state.isAppActive = false
@@ -508,7 +520,33 @@ struct ClipboardHistoryFeature {
             case let .pipStateChanged(isActive):
                 Self.logger.info("PiP state changed: \(isActive)")
                 state.isPiPActive = isActive
-                return .none
+                guard !isActive else { return .none }
+                return .send(.flushPendingPiPItems)
+
+            case .flushPendingPiPItems:
+                let pending = pendingBuffer.load()
+                guard !pending.isEmpty else { return .none }
+
+                let existingIDs = Set(state.items.map(\.id))
+                let newOnes = pending.filter { !existingIDs.contains($0.id) }
+                if !newOnes.isEmpty {
+                    state.items.insert(contentsOf: newOnes, at: 0)
+                    state.items.sort { lhs, rhs in
+                        if lhs.isFavorite != rhs.isFavorite { return lhs.isFavorite }
+                        return lhs.timestamp > rhs.timestamp
+                    }
+                    let limit = min(state.maxHistoryCount, state.maxItems)
+                    if state.items.count > limit {
+                        state.items.removeLast(state.items.count - limit)
+                    }
+                }
+                pendingBuffer.clear()
+
+                let latestItems = Array(state.items.prefix(5))
+                return .merge(
+                    .send(.saveItems),
+                    .run { _ in await pip.updateItems(latestItems) }
+                )
 
             case let .showImagePreview(item):
                 state.selectedImageItem = item
@@ -542,7 +580,11 @@ struct ClipboardHistoryFeature {
                 }
 
                 let latestItems = Array(state.items.prefix(5))
-                return .run { _ in await pip.updateItems(latestItems) }
+                return .merge(
+                    .run { _ in await pip.updateItems(latestItems) },
+                    // 前回起動時にPiP中で本保存できず退避されたアイテムがあれば復旧する
+                    .send(.flushPendingPiPItems)
+                )
 
             case .saveItems:
                 let items = state.items
