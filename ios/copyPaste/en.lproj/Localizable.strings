@@ -36,6 +36,7 @@
 /* Clipboard items */
 "item.image" = "Image";
 "item.file" = "File";
+"item.text.empty" = "(No content)";
 
 /* Time */
 "time.justnow" = "Just now";

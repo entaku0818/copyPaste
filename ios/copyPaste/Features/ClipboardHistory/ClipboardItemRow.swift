@@ -73,9 +73,10 @@ struct ClipboardItemRow: View {
     private var itemContent: some View {
         switch item.type {
         case .text:
-            Text(item.textContent ?? "")
+            let text = item.textContent
+            Text(text?.isEmpty == false ? text! : String(localized: "item.text.empty"))
                 .font(ClipKitFont.rowTitle)
-                .foregroundColor(ClipKitColor.textPrimary)
+                .foregroundColor(text?.isEmpty == false ? ClipKitColor.textPrimary : ClipKitColor.textTertiary)
                 .lineLimit(2)
 
         case .image:

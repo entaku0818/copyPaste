@@ -7,6 +7,18 @@ struct ClipboardHistoryView: View {
 
     var body: some View {
         List {
+            // カテゴリフィルタ
+            // NOTE: .safeAreaInset(edge: .top) + .searchable() の組み合わせは
+            // 特定のiOSバージョンでnavigationTitleが描画されなくなる不具合があるため、
+            // safeAreaInsetではなくList内の通常行として配置する。
+            CategoryFilterBar(
+                selectedCategory: store.selectedCategory,
+                onSelect: { store.send(.selectCategory($0)) }
+            )
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+
             // 検索結果件数
             if !store.searchText.isEmpty {
                 HStack {
@@ -95,12 +107,6 @@ struct ClipboardHistoryView: View {
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "search.placeholder"
         )
-        .safeAreaInset(edge: .top) {
-            CategoryFilterBar(
-                selectedCategory: store.selectedCategory,
-                onSelect: { store.send(.selectCategory($0)) }
-            )
-        }
         .onAppear {
             store.send(.onAppear)
         }

@@ -36,6 +36,7 @@
 /* Clipboard items */
 "item.image" = "画像";
 "item.file" = "ファイル";
+"item.text.empty" = "(内容なし)";
 
 /* Time */
 "time.justnow" = "たった今";
