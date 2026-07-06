@@ -374,6 +374,8 @@ struct ClipboardHistoryFeature {
                         state.items[index].category = cat
                     }
                 }
+                // PiP中はCoreData書き込みを避ける（.flushPendingPiPItemsで後からまとめて保存される）
+                guard !state.isPiPActive else { return .none }
                 return .send(.saveItems)
 
             case .startMonitoring:
@@ -447,9 +449,13 @@ struct ClipboardHistoryFeature {
                         Self.logger.debug("Skipping duplicate image")
                         return .none
                     }
+                    let isPiPActive = state.isPiPActive
                     return .run { send in
                         var item = await Self.createImageItem(from: image)
                         await send(.addItem(item))
+                        // PiP中はVisionによる重いOCR処理を避ける。背景実行のタイムアウトで
+                        // プロセスごと強制終了されるのを防ぐため（OCR検索は次回起動時に取りこぼす）。
+                        guard !isPiPActive else { return }
                         // OCRをバックグラウンドで実行してアイテムを更新
                         if let text = await ClipboardItemAnalyzer.extractText(from: image), !text.isEmpty {
                             let cat = ClipboardItemAnalyzer.category(for: text)
