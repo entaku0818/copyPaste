@@ -33,6 +33,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
+		<string>remote-notification</string>
 	</array>
 	<key>NSPasteboardUsageDescription</key>
 	<string>クリップボードの履歴を保存するためにクリップボードへのアクセスが必要です。</string>

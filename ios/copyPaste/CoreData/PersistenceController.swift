@@ -1,6 +1,14 @@
 import CoreData
 import OSLog
 
+enum PersistenceError: LocalizedError {
+    case storeNotAvailable
+
+    var errorDescription: String? {
+        "CoreData永続ストアが利用できません（読み込み失敗、または未完了）"
+    }
+}
+
 final class PersistenceController {
     // 拡張機能（keyboard/widget）は .appex バンドルで動くため CloudKit 同期なし
     private static let isExtension = Bundle.main.bundlePath.hasSuffix(".appex")
@@ -14,6 +22,8 @@ final class PersistenceController {
 
     private let logger = Logger(subsystem: "com.clipkit", category: "Persistence")
     private let container: NSPersistentContainer
+    // ストア読み込みにかかった時間を計測するための基準時刻（診断ログ用）
+    private let createdAt = ProcessInfo.processInfo.systemUptime
 
     /// テスト用途: 実際に使われているコンテナがCloudKit対応かどうかを確認するため。
     /// CoreDataの読み書きには使わないこと（performBackgroundTask経由で行う）。
@@ -29,7 +39,28 @@ final class PersistenceController {
     private var isStoreLoaded = false
     private var pendingContinuations: [CheckedContinuation<Void, Never>] = []
 
-    private func markStoreLoaded() {
+    private func markStoreLoaded(error: Error?) {
+        let elapsed = ProcessInfo.processInfo.systemUptime - createdAt
+        let elapsedStr = String(format: "%.2f", elapsed)
+        if let error {
+            let nsError = error as NSError
+            let underlying = nsError.userInfo[NSUnderlyingErrorKey] as? NSError
+            let detailed = nsError.userInfo[NSDetailedErrorsKey] as? [NSError]
+            let failureReason = nsError.localizedFailureReason
+                ?? (nsError.userInfo[NSLocalizedFailureReasonErrorKey] as? String)
+            logger.error("""
+                Store load finished with error after \(elapsedStr)s: \
+                domain=\(nsError.domain) code=\(nsError.code) \
+                description=\(nsError.localizedDescription) \
+                failureReason=\(failureReason ?? "nil") \
+                underlying=\(underlying.map { "\($0.domain)/\($0.code): \($0.localizedDescription)" } ?? "nil") \
+                detailed=\(detailed?.map { "\($0.domain)/\($0.code): \($0.localizedDescription)" } ?? []) \
+                userInfo=\(nsError.userInfo)
+                """)
+        } else {
+            logger.info("Store loaded successfully after \(elapsedStr)s")
+        }
+
         stateLock.lock()
         isStoreLoaded = true
         let continuations = pendingContinuations
@@ -40,6 +71,8 @@ final class PersistenceController {
 
     /// 永続ストアの読み込み完了を待つ（読み込み失敗時もエラーはログ済みとしてresumeする）。
     func waitUntilLoaded() async {
+        let waitStart = ProcessInfo.processInfo.systemUptime
+        var hadToWait = false
         await withCheckedContinuation { continuation in
             stateLock.lock()
             if isStoreLoaded {
@@ -47,8 +80,13 @@ final class PersistenceController {
                 continuation.resume()
                 return
             }
+            hadToWait = true
             pendingContinuations.append(continuation)
             stateLock.unlock()
+        }
+        if hadToWait {
+            let elapsed = ProcessInfo.processInfo.systemUptime - waitStart
+            logger.info("waitUntilLoaded: caller waited \(String(format: "%.2f", elapsed))s for store to load")
         }
     }
 
@@ -66,7 +104,11 @@ final class PersistenceController {
                 forSecurityApplicationGroupIdentifier: SharedConstants.appGroupID
             ) else {
                 logger.error("App Group container not found")
-                container.loadPersistentStores { _, _ in }
+                // markStoreLoaded()を呼ばないとwaitUntilLoaded()が永久に
+                // ハングしてしまうため、失敗時も必ず呼ぶ。
+                container.loadPersistentStores { [weak self] _, error in
+                    self?.markStoreLoaded(error: error)
+                }
                 return
             }
 
@@ -97,11 +139,11 @@ final class PersistenceController {
             container.persistentStoreDescriptions = [description]
         }
 
+        logger.info(
+            "Loading persistent store... (isExtension=\(Self.isExtension), useCloudKit=\(useCloudKit), inMemory=\(inMemory))"
+        )
         container.loadPersistentStores { [weak self] _, error in
-            if let error {
-                self?.logger.error("CoreData load failed: \(error.localizedDescription)")
-            }
-            self?.markStoreLoaded()
+            self?.markStoreLoaded(error: error)
         }
 
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -123,11 +165,28 @@ final class PersistenceController {
 
     /// ストア読み込み完了を待ってから背景コンテキストで処理を実行する。
     /// CoreDataへのアクセスは必ずこのメソッド経由で行うこと。
+    ///
+    /// waitUntilLoaded()のフラグだけに頼らず、実際に
+    /// persistentStoreCoordinator にストアが登録されているかを直接確認する。
+    /// こうすることで、万一何らかの理由で読み込みが失敗/未完了のまま
+    /// 通過してしまっても、ctx.save()が投げる捕捉不可能なNSException
+    /// （即クラッシュ）ではなく、捕捉可能なSwiftのErrorとして安全に弾ける。
+    /// この経路に入った場合はos.Loggerに発生時の状況
+    /// （経過時間・CloudKit有無・ストア構成）を残す。
     @discardableResult
     func performBackgroundTask<T: Sendable>(
         _ body: @escaping (NSManagedObjectContext) throws -> T
     ) async throws -> T {
         await waitUntilLoaded()
+        guard !container.persistentStoreCoordinator.persistentStores.isEmpty else {
+            let elapsed = ProcessInfo.processInfo.systemUptime - createdAt
+            let descriptions = container.persistentStoreDescriptions.map { $0.url?.lastPathComponent ?? "nil" }
+            let message = "performBackgroundTask: no persistent stores after waitUntilLoaded() "
+                + "(elapsed=\(String(format: "%.2f", elapsed))s, isExtension=\(Self.isExtension), "
+                + "isUsingCloudKit=\(isUsingCloudKit), descriptions=\(descriptions))"
+            logger.error("\(message)")
+            throw PersistenceError.storeNotAvailable
+        }
         let ctx = newBackgroundContext()
         return try await ctx.perform {
             try body(ctx)
