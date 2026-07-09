@@ -1,8 +1,9 @@
 【New Features】
-· Category filter: Filter clipboard history by URL, email, phone, code, address, or text
-· Image OCR search: Automatically extract and search text from copied images
-· History export (Pro): Export clipboard history as CSV or Markdown
-· English support: App language automatically switches based on device language
+· Keyboard extension is now free (3 items free, 10 with Pro)
+· Transform text and paste directly from the keyboard
+· Added snippets (canned text) feature
+· Redesigned every screen with the new "Indigo" design
+· Choose iCloud sync on/off from Settings
 
 【Improvements】
-· Stability improvements
+· Stability improvements (fixed crashes and freezes)
