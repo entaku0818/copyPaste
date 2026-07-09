@@ -64,7 +64,7 @@ platform :ios do
   end
 
   desc "アップロード済みビルドを審査申請"
-  lane :submit_build do
+  lane :submit_build do |options|
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
       issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
@@ -73,11 +73,12 @@ platform :ios do
 
     deliver(
       api_key: api_key,
+      app_version: options[:app_version],
       skip_binary_upload: true,
       skip_screenshots: true,
       skip_metadata: false,
       force: true,
-      submit_for_review: true,
+      submit_for_review: false,
       automatic_release: false,
       precheck_include_in_app_purchases: false,
       ignore_language_directory_validation: true,
