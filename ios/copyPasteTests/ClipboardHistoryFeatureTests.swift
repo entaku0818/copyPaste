@@ -546,6 +546,86 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.finish()
     }
 
+    func testAddItem_nonPiP_overflowCallsDeleteItem() async {
+        let oldestItemID = UUID()
+        let oldestItem = ClipboardItem(
+            id: oldestItemID, content: "Oldest Item",
+            timestamp: Date(timeIntervalSince1970: 0)
+        )
+        var existing = (1...19).map { i in
+            ClipboardItem(id: UUID(), content: "Item \(i)",
+                          timestamp: Date(timeIntervalSince1970: Double(20 - i)))
+        }
+        existing.append(oldestItem)
+
+        let newItem = ClipboardItem(content: "New Item")
+        let initialState = ClipboardHistoryFeature.State(
+            items: existing, isPiPActive: false, isProUser: false
+        )
+        let deletedItems = LockIsolated<[ClipboardItem]>([])
+        let store = TestStore(initialState: initialState) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.clipboardRepository.deleteItem = { item in
+                deletedItems.withValue { $0.append(item) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.addItem(newItem))
+        await store.finish()
+
+        XCTAssertEqual(store.state.items.count, 20, "上限を超えないこと")
+        XCTAssertEqual(deletedItems.value.count, 1, "非PiP時はdeleteItemが1回呼ばれること")
+        XCTAssertEqual(
+            deletedItems.value.first?.id, oldestItemID,
+            "追い出された最古のアイテムでdeleteItemが呼ばれること"
+        )
+    }
+
+    func testAddItem_piPActive_overflowSkipsDeleteItemAndBuffersItem() async {
+        let oldestItemID = UUID()
+        let oldestItem = ClipboardItem(
+            id: oldestItemID, content: "Oldest Item",
+            timestamp: Date(timeIntervalSince1970: 0)
+        )
+        var existing = (1...19).map { i in
+            ClipboardItem(id: UUID(), content: "Item \(i)",
+                          timestamp: Date(timeIntervalSince1970: Double(20 - i)))
+        }
+        existing.append(oldestItem)
+
+        let newItem = ClipboardItem(content: "New Item")
+        let initialState = ClipboardHistoryFeature.State(
+            items: existing, isPiPActive: true, isProUser: false
+        )
+        let deletedItems = LockIsolated<[ClipboardItem]>([])
+        let bufferedItems = LockIsolated<[ClipboardItem]>([])
+        let store = TestStore(initialState: initialState) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.clipboardRepository.deleteItem = { item in
+                deletedItems.withValue { $0.append(item) }
+            }
+            $0.pendingItemBuffer.append = { item in
+                bufferedItems.withValue { $0.append(item) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.addItem(newItem))
+        await store.finish()
+
+        XCTAssertEqual(store.state.items.count, 20, "PiP中でも上限を超えず縮むこと")
+        XCTAssertEqual(store.state.items.first?.id, newItem.id, "新アイテムが先頭に入ること")
+        XCTAssertTrue(
+            deletedItems.value.isEmpty,
+            "PiP中はCoreData書き込みを避けるためdeleteItemが呼ばれないこと"
+        )
+        XCTAssertEqual(bufferedItems.value.count, 1, "PiP中は新アイテムがpendingBufferに積まれること")
+        XCTAssertEqual(bufferedItems.value.first?.id, newItem.id)
+    }
+
     func testAddItem_incrementsCaptureCount() async {
         let item = ClipboardItem(content: "Test")
         var initialState = ClipboardHistoryFeature.State()

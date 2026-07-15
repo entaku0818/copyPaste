@@ -69,14 +69,23 @@ struct ClipboardItemRow: View {
         }
     }
 
+    /// テキストアイテムの表示文言を決定する純粋関数。
+    /// nil/空文字列の場合はプレースホルダーを返し、isEmptyをtrueにする。
+    static func displayText(for textContent: String?) -> (text: String, isEmpty: Bool) {
+        if let textContent, !textContent.isEmpty {
+            return (textContent, false)
+        }
+        return (String(localized: "item.text.empty"), true)
+    }
+
     @ViewBuilder
     private var itemContent: some View {
         switch item.type {
         case .text:
-            let text = item.textContent
-            Text(text?.isEmpty == false ? text! : String(localized: "item.text.empty"))
+            let display = Self.displayText(for: item.textContent)
+            Text(display.text)
                 .font(ClipKitFont.rowTitle)
-                .foregroundColor(text?.isEmpty == false ? ClipKitColor.textPrimary : ClipKitColor.textTertiary)
+                .foregroundColor(display.isEmpty ? ClipKitColor.textTertiary : ClipKitColor.textPrimary)
                 .lineLimit(2)
 
         case .image:
