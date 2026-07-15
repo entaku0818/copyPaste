@@ -90,7 +90,12 @@ final class PersistenceController {
         }
     }
 
-    init(useCloudKit: Bool = true, inMemory: Bool = false) {
+    /// - Parameters:
+    ///   - storeURL: テスト用途のフック。非nilの場合、App Groupコンテナのルックアップを
+    ///     スキップしてこのURLから直接ストアを構成する（例: 存在しないディレクトリを指す
+    ///     URLを渡すことで、ストア読み込み失敗を意図的に注入できる）。
+    ///     `inMemory: true`の場合はこのパラメータは無視される。
+    init(useCloudKit: Bool = true, inMemory: Bool = false, storeURL: URL? = nil) {
         if useCloudKit {
             container = NSPersistentCloudKitContainer(name: "ClipboardDataModel")
         } else {
@@ -99,6 +104,31 @@ final class PersistenceController {
 
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+        } else if let storeURL {
+            let description = NSPersistentStoreDescription(url: storeURL)
+
+            if useCloudKit {
+                description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(
+                    containerIdentifier: "iCloud.com.entaku.clipkit"
+                )
+            }
+
+            // 拡張機能がメインアプリの変更を受け取るために必要
+            description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+            description.setOption(
+                true as NSNumber,
+                forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey
+            )
+            // v1 → v2 自動マイグレーション（categoryRaw/ocrText フィールド追加）
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
+            // NSFileProtection: デバイスロック中でも拡張機能が読めるよう CompleteUnlessOpen を使用
+            description.setOption(
+                FileProtectionType.completeUnlessOpen as NSObject,
+                forKey: NSPersistentStoreFileProtectionKey
+            )
+
+            container.persistentStoreDescriptions = [description]
         } else {
             guard let groupURL = FileManager.default.containerURL(
                 forSecurityApplicationGroupIdentifier: SharedConstants.appGroupID
@@ -112,8 +142,8 @@ final class PersistenceController {
                 return
             }
 
-            let storeURL = groupURL.appendingPathComponent("ClipboardData.sqlite")
-            let description = NSPersistentStoreDescription(url: storeURL)
+            let groupStoreURL = groupURL.appendingPathComponent("ClipboardData.sqlite")
+            let description = NSPersistentStoreDescription(url: groupStoreURL)
 
             if useCloudKit {
                 description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(
