@@ -6,6 +6,7 @@
 
 - SwiftLint: `swiftlint lint`
 - iOS build/test: `xcodebuild test -project ios/copyPaste.xcodeproj -scheme ClipKit -destination "id=<SIMULATOR_UDID>" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""`
+  - 注意: `.github/workflows/ci.yml` は SwiftLint と Functions ビルドのみを実行し、iOS のビルド/テストは GitHub Actions では実行されない（Xcode Cloud 移行後もPRゲートとしての構成は未確認）。上記コマンドでのローカル/エージェントによる実行が現状唯一の検証手段
 - Functions lint: `cd functions && npm run lint`
 - Functions build (tsc): `cd functions && npm run build`
 
@@ -24,6 +25,7 @@
 - 実装は build / test / lint が緑になるまで自己修正する（コマンド: `swiftlint lint` / `xcodebuild test -project ios/copyPaste.xcodeproj -scheme ClipKit -destination "id=<SIMULATOR_UDID>" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""` / `cd functions && npm run lint && npm run build`）
 - **緑でない変更を main に入れない**。5回で緑にならなければブランチに残して報告
 - 完了報告には実行した検証コマンドと実出力を含める（「たぶん動く」は完了ではない）
+- `ios-test` の GitHub Actions ジョブは削除済み（commit `4e6cd3d`）。main へのマージは CI による iOS build/test の自動ゲートを受けないため、マージ前にローカルで `xcodebuild test` を回す自己修正ループがこの検証の唯一の担保であり、省略してはならない
 
 ### エスカレーション（諦め方の設計）
 - 同一 issue に2回挑戦して解けない → `loop-attempted` ラベルを付けて人間へ
