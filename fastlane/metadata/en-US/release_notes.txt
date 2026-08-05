@@ -1,9 +1,2 @@
-【New Features】
-· Keyboard extension is now free (3 items free, 10 with Pro)
-· Transform text and paste directly from the keyboard
-· Added snippets (canned text) feature
-· Redesigned every screen with the new "Indigo" design
-· Choose iCloud sync on/off from Settings
-
 【Improvements】
-· Stability improvements (fixed crashes and freezes)
+· Minor adjustments and internal improvements
