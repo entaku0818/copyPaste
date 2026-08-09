@@ -1,2 +1,4 @@
 【Improvements】
+· Revised when the app asks you to rate it
+· "Write a Review" in Settings now opens the App Store review page directly
 · Minor adjustments and internal improvements
