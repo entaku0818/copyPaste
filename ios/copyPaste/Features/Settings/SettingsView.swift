@@ -1,5 +1,4 @@
 import SwiftUI
-import StoreKit
 import ComposableArchitecture
 import GoogleMobileAds
 
@@ -11,7 +10,6 @@ struct SettingsView: View {
     @State private var showExportPicker = false
     @State private var exportURL: URL?
     @State private var syncMode: CloudKitSyncMode = CloudKitSyncMode.current
-    @Environment(\.requestReview) private var requestReview
 
     var body: some View {
         NavigationStack {
@@ -57,7 +55,9 @@ struct SettingsView: View {
                         }
                         CardDivider(leadingInset: 56)
                         settingsRow(icon: "star.fill", iconColor: ClipKitColor.favorite, title: "settings.writeReview") {
-                            requestReview()
+                            // 明示的に「書きに来た」最高意欲のユーザーには、Appleが表示を
+                            // 握り潰しうるシステムダイアログではなく投稿画面を直接開く
+                            AppReview.openWriteReviewPage()
                         }
                         CardDivider(leadingInset: 56)
                         settingsRow(icon: "envelope.fill", iconColor: Color(hex: 0x7B5BD6), title: "settings.contact") {

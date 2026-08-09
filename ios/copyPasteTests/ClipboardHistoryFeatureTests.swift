@@ -643,92 +643,176 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
 
     // MARK: - Review Request Tests
 
+    private static let reviewKeys = [
+        "clipkit.captureCount",
+        "clipkit.copyCount",
+        "clipkit.launchCount",
+        "clipkit.lastReviewPromptDate",
+        "clipkit.reviewPromptCount",
+        "clipkit.hasAnsweredReviewPositively",
+        // 旧実装のキー。残っていても新しい判定に影響しないことを担保するため掃除する
+        "clipkit.reviewMilestonesShown"
+    ]
+
     override func setUp() {
         super.setUp()
-        UserDefaults.standard.removeObject(forKey: "clipkit.captureCount")
-        UserDefaults.standard.removeObject(forKey: "clipkit.reviewMilestonesShown")
+        Self.reviewKeys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
     }
 
     override func tearDown() {
-        UserDefaults.standard.removeObject(forKey: "clipkit.captureCount")
-        UserDefaults.standard.removeObject(forKey: "clipkit.reviewMilestonesShown")
+        Self.reviewKeys.forEach { UserDefaults.standard.removeObject(forKey: $0) }
         super.tearDown()
     }
 
-    func testCheckReviewTrigger_showsPromptAtCapture5() async {
+    /// フォアグラウンド状態のStateを作るヘルパー
+    private func foregroundState() -> ClipboardHistoryFeature.State {
         var state = ClipboardHistoryFeature.State()
-        state.captureCount = 5
+        state.isAppActive = true
+        state.isPiPActive = false
+        return state
+    }
+
+    func testCheckReviewTrigger_showsPromptOnSecondLaunch() async {
+        var state = foregroundState()
+        state.launchCount = AppReview.Config.launchTrigger
         let store = TestStore(initialState: state) {
             ClipboardHistoryFeature()
         }
 
-        await store.send(.checkReviewTrigger) {
+        await store.send(.checkReviewTrigger(.launch)) {
+            $0.pendingReviewTrigger = .launch
             $0.showSatisfactionPrompt = true
         }
+    }
 
-        XCTAssertTrue(
-            (UserDefaults.standard.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []).contains("capture5"),
-            "capture5マイルストーンが記録されること"
+    func testCheckReviewTrigger_doesNotShowOnFirstLaunch() async {
+        var state = foregroundState()
+        state.launchCount = 1
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.launch))
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "初回起動では表示しないこと")
+    }
+
+    /// 旧実装の回帰テスト: PiPでのバックグラウンド監視中に条件が消費されないこと
+    func testCheckReviewTrigger_doesNotFireWhilePiPActive() async {
+        var state = foregroundState()
+        state.launchCount = AppReview.Config.launchTrigger
+        state.isPiPActive = true
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.launch))
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "PiP中は表示しないこと")
+        XCTAssertNil(
+            UserDefaults.standard.object(forKey: "clipkit.lastReviewPromptDate"),
+            "表示していない以上、表示日時が記録されてはならない"
         )
     }
 
-    func testCheckReviewTrigger_showsPromptAtCapture20() async {
-        UserDefaults.standard.set(["capture5"], forKey: "clipkit.reviewMilestonesShown")
-        var state = ClipboardHistoryFeature.State()
-        state.captureCount = 20
+    func testCheckReviewTrigger_doesNotFireWhileBackgrounded() async {
+        var state = foregroundState()
+        state.launchCount = AppReview.Config.launchTrigger
+        state.isAppActive = false
         let store = TestStore(initialState: state) {
             ClipboardHistoryFeature()
         }
 
-        await store.send(.checkReviewTrigger) {
+        await store.send(.checkReviewTrigger(.launch))
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "バックグラウンドでは表示しないこと")
+    }
+
+    func testCheckReviewTrigger_showsPromptAtCopyMilestone() async {
+        var state = foregroundState()
+        state.copyCount = AppReview.Config.copyInterval
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.copyMilestone)) {
+            $0.pendingReviewTrigger = .copyMilestone
             $0.showSatisfactionPrompt = true
         }
-
-        XCTAssertTrue(
-            (UserDefaults.standard.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []).contains("capture20"),
-            "capture20マイルストーンが記録されること"
-        )
     }
 
-    func testCheckReviewTrigger_showsPromptAtCapture50() async {
-        UserDefaults.standard.set(["capture5", "capture20"], forKey: "clipkit.reviewMilestonesShown")
-        var state = ClipboardHistoryFeature.State()
-        state.captureCount = 50
+    func testCheckReviewTrigger_doesNotShowBetweenCopyMilestones() async {
+        var state = foregroundState()
+        state.copyCount = AppReview.Config.copyInterval - 1
         let store = TestStore(initialState: state) {
             ClipboardHistoryFeature()
         }
 
-        await store.send(.checkReviewTrigger) {
+        await store.send(.checkReviewTrigger(.copyMilestone))
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "マイルストーン未達では表示しないこと")
+    }
+
+    func testCheckReviewTrigger_throttledAfterRecentPrompt() async {
+        UserDefaults.standard.set(Date(), forKey: "clipkit.lastReviewPromptDate")
+        var state = foregroundState()
+        state.copyCount = AppReview.Config.copyInterval
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.copyMilestone))
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "直近に表示済みならスロットルされること")
+    }
+
+    func testCheckReviewTrigger_neverShowsAfterAnsweredPositively() async {
+        UserDefaults.standard.set(true, forKey: "clipkit.hasAnsweredReviewPositively")
+        var state = foregroundState()
+        state.launchCount = AppReview.Config.launchTrigger
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.launch))
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "一度「満足」と答えた人には二度と出さないこと")
+    }
+
+    /// 判定時ではなく実際の表示時に記録されること（条件の焼き切れ防止の要）
+    func testSatisfactionPromptShown_recordsOnlyWhenDisplayed() async {
+        var state = foregroundState()
+        state.launchCount = AppReview.Config.launchTrigger
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.launch)) {
+            $0.pendingReviewTrigger = .launch
             $0.showSatisfactionPrompt = true
         }
-
-        XCTAssertTrue(
-            (UserDefaults.standard.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []).contains("capture50"),
-            "capture50マイルストーンが記録されること"
+        XCTAssertNil(
+            UserDefaults.standard.object(forKey: "clipkit.lastReviewPromptDate"),
+            "判定しただけでは記録されないこと"
         )
+
+        await store.send(.satisfactionPromptShown)
+        XCTAssertNotNil(
+            UserDefaults.standard.object(forKey: "clipkit.lastReviewPromptDate"),
+            "実際に表示された時点で記録されること"
+        )
+        XCTAssertEqual(UserDefaults.standard.integer(forKey: "clipkit.reviewPromptCount"), 1)
     }
 
-    func testCheckReviewTrigger_doesNotRepeatShownMilestone() async {
-        UserDefaults.standard.set(["capture5"], forKey: "clipkit.reviewMilestonesShown")
-        var state = ClipboardHistoryFeature.State()
-        state.captureCount = 5
+    func testAddItem_doesNotTriggerReview() async {
+        var state = foregroundState()
+        state.launchCount = AppReview.Config.launchTrigger
+        state.copyCount = AppReview.Config.copyInterval
         let store = TestStore(initialState: state) {
             ClipboardHistoryFeature()
         }
+        store.exhaustivity = .off
 
-        await store.send(.checkReviewTrigger)
-        XCTAssertFalse(store.state.showSatisfactionPrompt, "表示済みマイルストーンは再表示しないこと")
-    }
-
-    func testCheckReviewTrigger_doesNotShowBefore5Captures() async {
-        var state = ClipboardHistoryFeature.State()
-        state.captureCount = 4
-        let store = TestStore(initialState: state) {
-            ClipboardHistoryFeature()
-        }
-
-        await store.send(.checkReviewTrigger)
-        XCTAssertFalse(store.state.showSatisfactionPrompt, "5回未満では表示しないこと")
+        await store.send(.addItem(ClipboardItem(content: "Test")))
+        await store.finish()
+        XCTAssertFalse(
+            store.state.showSatisfactionPrompt,
+            "自動キャプチャはユーザー体験ではないためレビュー導線の起点にしないこと"
+        )
     }
 
     func testSatisfactionResponsePositive_sendsRequestReview() async {

@@ -159,6 +159,8 @@ struct ClipboardHistoryView: View {
                 onSatisfied: { store.send(.satisfactionResponsePositive) },
                 onUnsatisfied: { store.send(.satisfactionResponseNegative) }
             )
+            // 「表示した」記録は実際に画面に出たここで行う（判定時ではない）
+            .onAppear { store.send(.satisfactionPromptShown) }
         }
         .sheet(
             isPresented: Binding(

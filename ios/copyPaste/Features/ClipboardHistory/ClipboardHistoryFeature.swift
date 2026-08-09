@@ -28,6 +28,12 @@ struct ClipboardHistoryFeature {
         var captureCount: Int = UserDefaults.standard.integer(forKey: "clipkit.captureCount")
         var showSatisfactionPrompt: Bool = false
         var showFeedbackForm: Bool = false
+        /// 事前確認シートを出すきっかけになったトリガー（表示時のAnalytics記録に使う）
+        var pendingReviewTrigger: AppReview.Trigger?
+        /// 起動回数を二重にカウントしないためのフラグ（onAppearは複数回呼ばれうる）
+        var hasCountedLaunch: Bool = false
+        /// 今回の起動が通算何回目か（.onAppearでインクリメントされる）
+        var launchCount: Int = 0
 
         // 履歴件数制限（無料: 20件、Pro: 無制限）
         var maxHistoryCount: Int {
@@ -109,7 +115,8 @@ struct ClipboardHistoryFeature {
         case dismissPaywall
         case updateProStatus
         case requestReview
-        case checkReviewTrigger
+        case checkReviewTrigger(AppReview.Trigger)
+        case satisfactionPromptShown
         case satisfactionResponsePositive
         case satisfactionResponseNegative
         case dismissSatisfactionPrompt
@@ -177,7 +184,7 @@ struct ClipboardHistoryFeature {
                     // 自然にプルーニングされるため、ここでは明示的に削除しない。
                     // 本保存はPiP終了時（.flushPendingPiPItems）にまとめて行う。
                     pendingBuffer.append(newItem)
-                    return .merge(.send(.checkReviewTrigger), pipEffect)
+                    return pipEffect
                 }
 
                 let deleteOverflowEffect: Effect<Action> = overflowItem.map { removed in
@@ -192,7 +199,6 @@ struct ClipboardHistoryFeature {
 
                 return .merge(
                     .send(.saveItems),
-                    .send(.checkReviewTrigger),
                     .run { _ in
                         do {
                             try await repository.saveAndSync(newItem)
@@ -298,6 +304,8 @@ struct ClipboardHistoryFeature {
                 return .merge(
                     .send(.saveItems),
                     pipEffect,
+                    // 履歴から取り出して貼れた瞬間＝時短が成立した瞬間。ClipKitの中核体験
+                    .send(.checkReviewTrigger(.copyMilestone)),
                     .run { _ in await interstitialAd.onItemPasted(isProUser) }
                 )
 
@@ -511,13 +519,19 @@ struct ClipboardHistoryFeature {
                 return .none
                 
             case .onAppear:
-                return .merge(
+                var effects: [Effect<Action>] = [
                     .send(.updateProStatus),
                     .send(.loadItems),
                     .send(.loadTrash),
-                    .send(.loadSnippets),
-                    .send(.checkReviewTrigger)
-                )
+                    .send(.loadSnippets)
+                ]
+                // 起動回数のカウントは1起動につき1回だけ
+                if !state.hasCountedLaunch {
+                    state.hasCountedLaunch = true
+                    state.launchCount = AppReview.incrementLaunchCount()
+                    effects.append(.send(.checkReviewTrigger(.launch)))
+                }
+                return .merge(effects)
 
             case .requestClipboardPermission:
                 state.showPermissionAlert = false
@@ -631,7 +645,9 @@ struct ClipboardHistoryFeature {
                 Self.logger.info("Pro status updated: \(newProStatus)")
                 var effects: [Effect<Action>] = []
                 if becamePro {
-                    effects.append(.send(.requestReview))
+                    // 満足度確認を挟まず直接システムダイアログを出していたが、
+                    // Appleの年3回枠を★1リスクごと消費してしまうため他と同じ導線に揃える
+                    effects.append(.send(.checkReviewTrigger(.proPurchase)))
                 }
                 if !newProStatus {
                     // 無料ユーザーのみインタースティシャル広告をプリロード
@@ -697,42 +713,41 @@ struct ClipboardHistoryFeature {
 
             case .requestReview:
                 return .run { _ in
-                    await MainActor.run {
-                        guard let scene = UIApplication.shared.connectedScenes
-                            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else { return }
-                        AppStore.requestReview(in: scene)
-                    }
+                    await AppReview.requestSystemReview()
                 }
 
-            case .checkReviewTrigger:
-                let defaults = UserDefaults.standard
-                let shown = defaults.stringArray(forKey: "clipkit.reviewMilestonesShown") ?? []
-                let count = state.captureCount
-                // クリップボード保存回数のマイルストーンで満足度プロンプトを表示
-                // 5回: アプリを試し始めたタイミング
-                // 20回: 継続的に利用しているタイミング
-                // 50回: ヘビーユーザーのタイミング
-                if count >= 50 && !shown.contains("capture50") {
-                    defaults.set(shown + ["capture50"], forKey: "clipkit.reviewMilestonesShown")
-                    state.showSatisfactionPrompt = true
-                } else if count >= 20 && !shown.contains("capture20") {
-                    defaults.set(shown + ["capture20"], forKey: "clipkit.reviewMilestonesShown")
-                    state.showSatisfactionPrompt = true
-                } else if count >= 5 && !shown.contains("capture5") {
-                    defaults.set(shown + ["capture5"], forKey: "clipkit.reviewMilestonesShown")
-                    state.showSatisfactionPrompt = true
-                }
+            case let .checkReviewTrigger(trigger):
+                // 判定のみ。「表示した」記録は実際にシートが出た .satisfactionPromptShown で行う。
+                // ここで記録してしまうと、表示されないまま条件だけ消費される事故が起きる。
+                guard !state.showSatisfactionPrompt,
+                      AppReview.shouldPrompt(
+                        trigger: trigger,
+                        launchCount: state.launchCount,
+                        copyCount: state.copyCount,
+                        isForeground: state.isAppActive && !state.isPiPActive
+                      )
+                else { return .none }
+                state.pendingReviewTrigger = trigger
+                state.showSatisfactionPrompt = true
+                return .none
+
+            case .satisfactionPromptShown:
+                guard let trigger = state.pendingReviewTrigger else { return .none }
+                AppReview.markShown(trigger: trigger)
                 return .none
 
             case .satisfactionResponsePositive:
+                AppReview.markAnsweredPositively()
                 return .send(.requestReview)
 
             case .satisfactionResponseNegative:
+                AppReview.markAnsweredNegatively()
                 state.showFeedbackForm = true
                 return .none
 
             case .dismissSatisfactionPrompt:
                 state.showSatisfactionPrompt = false
+                state.pendingReviewTrigger = nil
                 return .none
 
             case .dismissFeedbackForm:
