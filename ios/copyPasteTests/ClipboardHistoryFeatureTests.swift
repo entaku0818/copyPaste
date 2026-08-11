@@ -835,6 +835,40 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
     }
 
+    /// モーダル化にともない、閉じる責務がViewのdismissからReducerへ移った。
+    /// 回答したらモーダルが必ず閉じることを検証する。
+    func testSatisfactionResponsePositive_closesPrompt() async {
+        var initialState = ClipboardHistoryFeature.State()
+        initialState.showSatisfactionPrompt = true
+        initialState.pendingReviewTrigger = .launch
+        let store = TestStore(initialState: initialState) {
+            ClipboardHistoryFeature()
+        }
+        store.exhaustivity = .off
+
+        await store.send(.satisfactionResponsePositive)
+
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "回答したらモーダルが閉じること")
+        XCTAssertNil(store.state.pendingReviewTrigger, "トリガーの記録がクリアされること")
+        await store.receive(\.requestReview)
+    }
+
+    func testSatisfactionResponseNegative_closesPromptAndOpensFeedbackForm() async {
+        var initialState = ClipboardHistoryFeature.State()
+        initialState.showSatisfactionPrompt = true
+        initialState.pendingReviewTrigger = .copyMilestone
+        let store = TestStore(initialState: initialState) {
+            ClipboardHistoryFeature()
+        }
+        store.exhaustivity = .off
+
+        await store.send(.satisfactionResponseNegative)
+
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "回答したらモーダルが閉じること")
+        XCTAssertNil(store.state.pendingReviewTrigger)
+        XCTAssertTrue(store.state.showFeedbackForm, "フィードバックフォームへ誘導されること")
+    }
+
     func testCopyItem_copyCountIncrementsEachTime() async {
         let item = ClipboardItem(content: "Test")
         let store = TestStore(

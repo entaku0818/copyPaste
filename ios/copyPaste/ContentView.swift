@@ -48,6 +48,25 @@ public struct ContentView: View {
             .tag(4)
         }
         .tint(ClipKitColor.indigo)
+        // レビュー事前確認は画面中央のモーダルで出す。
+        //
+        // fullScreenCover は presentation style が .fullScreen のため、
+        // presentationBackground(.clear) にしても背面が描画されず画面全体が
+        // 黒くなる（UIKitが presenting view を外すため）。
+        // .overFullScreen 相当をSwiftUIから指定できないので、
+        // TabViewの親であるここにoverlayとして重ねてタブバーごと覆う。
+        .overlay {
+            if store.showSatisfactionPrompt {
+                SatisfactionPromptView(
+                    onSatisfied: { store.send(.satisfactionResponsePositive) },
+                    onUnsatisfied: { store.send(.satisfactionResponseNegative) }
+                )
+                // 「表示した」記録は実際に画面に出たここで行う（判定時ではない）
+                .onAppear { store.send(.satisfactionPromptShown) }
+                .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: store.showSatisfactionPrompt)
     }
 }
 

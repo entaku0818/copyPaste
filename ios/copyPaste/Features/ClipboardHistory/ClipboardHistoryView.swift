@@ -149,19 +149,9 @@ struct ClipboardHistoryView: View {
         ) {
             PaywallView()
         }
-        .sheet(
-            isPresented: Binding(
-                get: { store.showSatisfactionPrompt },
-                set: { if !$0 { store.send(.dismissSatisfactionPrompt) } }
-            )
-        ) {
-            SatisfactionPromptView(
-                onSatisfied: { store.send(.satisfactionResponsePositive) },
-                onUnsatisfied: { store.send(.satisfactionResponseNegative) }
-            )
-            // 「表示した」記録は実際に画面に出たここで行う（判定時ではない）
-            .onAppear { store.send(.satisfactionPromptShown) }
-        }
+        // レビュー事前確認はボトムシートではなく画面中央のモーダルで出す。
+        // タブバーごと覆う必要があるため、presentationではなく
+        // ContentView（TabViewの親）側のoverlayで描画している。
         .sheet(
             isPresented: Binding(
                 get: { store.showFeedbackForm },

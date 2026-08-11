@@ -797,12 +797,18 @@ struct ClipboardHistoryFeature {
                 AppReview.markShown(trigger: trigger)
                 return .none
 
+            // モーダル化にともない、閉じる責務をViewのdismissからReducerへ移した。
+            // 回答したら必ずモーダルを閉じる（状態の持ち主を1つにする）。
             case .satisfactionResponsePositive:
                 AppReview.markAnsweredPositively()
+                state.showSatisfactionPrompt = false
+                state.pendingReviewTrigger = nil
                 return .send(.requestReview)
 
             case .satisfactionResponseNegative:
                 AppReview.markAnsweredNegatively()
+                state.showSatisfactionPrompt = false
+                state.pendingReviewTrigger = nil
                 state.showFeedbackForm = true
                 return .none
 
