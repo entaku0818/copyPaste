@@ -111,6 +111,10 @@ struct ClipboardHistoryFeature {
         case loadItems
         case itemsLoaded([ClipboardItem])
         case saveItems
+        /// CloudKitのリモート変更通知の購読を開始する（issue #102）
+        case observeRemoteChanges
+        /// 他端末の変更が取り込まれた。少し待ってから履歴を再読込する（issue #102）
+        case remoteChangeDetected
         case showPaywall
         case dismissPaywall
         case updateProStatus
@@ -142,7 +146,12 @@ struct ClipboardHistoryFeature {
     @Dependency(\.snippetRepository) var snippetRepository
     @Dependency(\.interstitialAd) var interstitialAd
     @Dependency(\.pendingItemBuffer) var pendingBuffer
-    private enum CancelID { case monitoring }
+    @Dependency(\.remoteChange) var remoteChange
+    private enum CancelID { case monitoring, remoteChangeObservation, remoteChangeReload }
+
+    /// CloudKitの初期インポート時はリモート変更通知がバースト的に飛ぶため、
+    /// 最後の通知からこの時間だけ待ってから1回だけ再読込する。
+    private static let remoteChangeReloadDebounce: Duration = .milliseconds(500)
 
     private static let logger = Logger(subsystem: "com.clipkit", category: "Clipboard")
 
@@ -166,10 +175,18 @@ struct ClipboardHistoryFeature {
             case let .addItem(item):
                 state.items.insert(item, at: 0)
                 // 履歴件数制限を適用（無料版: 20件、Pro: 無制限）
+                //
+                // あふれた分は「新しい順に上限件数だけ残す」という端末に依存しない規則で
+                // 決まるため、複数端末が同じ同期済みデータから同じ結論に収束する。
+                // 削除は必ず対象IDを指定して行う（issue #102）。
+                // 他端末から一度に多数のアイテムが同期されてくると1件では足りないので、
+                // 超過分すべてを対象にする。
                 let limit = min(state.maxHistoryCount, state.maxItems)
-                var overflowItem: ClipboardItem?
+                var overflowItems: [ClipboardItem] = []
                 if state.items.count > limit {
-                    overflowItem = state.items.removeLast()
+                    let overflowCount = state.items.count - limit
+                    overflowItems = Array(state.items.suffix(overflowCount))
+                    state.items.removeLast(overflowCount)
                 }
                 state.captureCount += 1
                 UserDefaults.standard.set(state.captureCount, forKey: "clipkit.captureCount")
@@ -187,15 +204,15 @@ struct ClipboardHistoryFeature {
                     return pipEffect
                 }
 
-                let deleteOverflowEffect: Effect<Action> = overflowItem.map { removed in
-                    .run { _ in
+                let deleteOverflowEffect: Effect<Action> = overflowItems.isEmpty ? .none : .run { _ in
+                    for removed in overflowItems {
                         do {
                             try await repository.deleteItem(removed)
                         } catch {
                             Self.logger.error("Failed to delete overflow item: \(error.localizedDescription)")
                         }
                     }
-                } ?? .none
+                }
 
                 return .merge(
                     .send(.saveItems),
@@ -523,7 +540,8 @@ struct ClipboardHistoryFeature {
                     .send(.updateProStatus),
                     .send(.loadItems),
                     .send(.loadTrash),
-                    .send(.loadSnippets)
+                    .send(.loadSnippets),
+                    .send(.observeRemoteChanges)
                 ]
                 // 起動回数のカウントは1起動につき1回だけ
                 if !state.hasCountedLaunch {
@@ -561,6 +579,7 @@ struct ClipboardHistoryFeature {
 
                 let existingIDs = Set(state.items.map(\.id))
                 let newOnes = pending.filter { !existingIDs.contains($0.id) }
+                var overflowItems: [ClipboardItem] = []
                 if !newOnes.isEmpty {
                     state.items.insert(contentsOf: newOnes, at: 0)
                     state.items.sort { lhs, rhs in
@@ -569,14 +588,29 @@ struct ClipboardHistoryFeature {
                     }
                     let limit = min(state.maxHistoryCount, state.maxItems)
                     if state.items.count > limit {
-                        state.items.removeLast(state.items.count - limit)
+                        let overflowCount = state.items.count - limit
+                        overflowItems = Array(state.items.suffix(overflowCount))
+                        state.items.removeLast(overflowCount)
                     }
                 }
                 pendingBuffer.clear()
 
+                // 保存が非破壊になったため、あふれた分はここでも明示的に削除する
+                // （issue #102。以前は保存側が「配列に無いもの」を消していた）
+                let deleteOverflowEffect: Effect<Action> = overflowItems.isEmpty ? .none : .run { _ in
+                    for removed in overflowItems {
+                        do {
+                            try await repository.deleteItem(removed)
+                        } catch {
+                            Self.logger.error("Failed to delete overflow item: \(error.localizedDescription)")
+                        }
+                    }
+                }
+
                 let latestItems = Array(state.items.prefix(5))
                 return .merge(
                     .send(.saveItems),
+                    deleteOverflowEffect,
                     .run { _ in await pip.updateItems(latestItems) }
                 )
 
@@ -627,6 +661,24 @@ struct ClipboardHistoryFeature {
                         Self.logger.error("Failed to save items: \(error.localizedDescription)")
                     }
                 }
+
+            case .observeRemoteChanges:
+                // 同じ購読が二重に走らないよう cancelInFlight で置き換える
+                return .run { send in
+                    for await _ in remoteChange.changes() {
+                        await send(.remoteChangeDetected)
+                    }
+                }
+                .cancellable(id: CancelID.remoteChangeObservation, cancelInFlight: true)
+
+            case .remoteChangeDetected:
+                // バーストをまとめるため、最後の通知から一定時間待ってから再読込する
+                return .run { send in
+                    try await clock.sleep(for: Self.remoteChangeReloadDebounce)
+                    await send(.loadItems)
+                    await send(.loadTrash)
+                }
+                .cancellable(id: CancelID.remoteChangeReload, cancelInFlight: true)
 
             case .showPaywall:
                 Analytics.logEvent("show_paywall", parameters: nil)

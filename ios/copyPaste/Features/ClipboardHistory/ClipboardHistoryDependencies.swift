@@ -1,4 +1,5 @@
 import Foundation
+import CoreData
 import ComposableArchitecture
 
 // MARK: - PiPClient
@@ -170,5 +171,51 @@ extension DependencyValues {
     var pendingItemBuffer: PendingItemBufferClient {
         get { self[PendingItemBufferClient.self] }
         set { self[PendingItemBufferClient.self] = newValue }
+    }
+}
+
+// MARK: - RemoteChangeClient
+
+// CloudKit（NSPersistentCloudKitContainer）が他端末の変更を取り込んだことを
+// 通知する `.NSPersistentStoreRemoteChange` を購読するためのDependency（issue #102）。
+//
+// PersistenceController は以前からこの通知を「投げる」設定
+// （NSPersistentStoreRemoteChangeNotificationPostOptionKey）にしていたが、
+// 購読側が存在しなかったため、他端末で追加されたアイテムがアプリ起動中は
+// state.items に反映されなかった。その状態で保存が走ると、state.items に
+// 無いアイテムが「削除された」と誤認されて消える事故につながっていた。
+struct RemoteChangeClient {
+    var changes: @Sendable () -> AsyncStream<Void>
+}
+
+extension RemoteChangeClient: DependencyKey {
+    static let liveValue = RemoteChangeClient(
+        changes: {
+            AsyncStream { continuation in
+                let task = Task {
+                    for await _ in NotificationCenter.default.notifications(
+                        named: .NSPersistentStoreRemoteChange
+                    ) {
+                        continuation.yield(())
+                    }
+                    continuation.finish()
+                }
+                continuation.onTermination = { _ in task.cancel() }
+            }
+        }
+    )
+
+    // テストでは即座に終了するストリームを返す。
+    // 終了しないストリームにすると TestStore.finish() が
+    // 「エフェクトがまだ実行中」で失敗してしまうため。
+    static let testValue = RemoteChangeClient(
+        changes: { AsyncStream { $0.finish() } }
+    )
+}
+
+extension DependencyValues {
+    var remoteChange: RemoteChangeClient {
+        get { self[RemoteChangeClient.self] }
+        set { self[RemoteChangeClient.self] = newValue }
     }
 }

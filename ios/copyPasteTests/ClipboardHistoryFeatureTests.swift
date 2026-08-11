@@ -1041,4 +1041,116 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         state.searchText = "存在しないテキスト"
         XCTAssertEqual(state.filteredItems.count, 0)
     }
+
+    // MARK: - CloudKit リモート変更の取り込み（issue #102）
+
+    /// 他端末の変更通知を受けたら、デバウンス経過後に履歴とゴミ箱を再読込すること。
+    /// これがないと、CloudKitで届いたアイテムがアプリ起動中は state.items に反映されない。
+    func testRemoteChangeDetected_reloadsHistoryAfterDebounce() async {
+        let clock = TestClock()
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+        }
+        store.exhaustivity = .off
+
+        await store.send(.remoteChangeDetected)
+        await clock.advance(by: .milliseconds(500))
+
+        await store.receive(\.loadItems)
+        await store.receive(\.loadTrash)
+        await store.finish()
+    }
+
+    /// CloudKitの初期インポートでは通知がバースト的に飛ぶため、
+    /// 連続した通知が1回の再読込にまとめられること。
+    func testRemoteChangeDetected_burstIsCollapsedIntoSingleReload() async {
+        let clock = TestClock()
+        let loadCallCount = LockIsolated(0)
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.clipboardRepository.load = {
+                loadCallCount.withValue { $0 += 1 }
+                return []
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.remoteChangeDetected)
+        await store.send(.remoteChangeDetected)
+        await store.send(.remoteChangeDetected)
+        await clock.advance(by: .milliseconds(500))
+        await store.finish()
+
+        XCTAssertEqual(
+            loadCallCount.value, 1,
+            "バーストした通知は1回の再読込にまとめられること"
+        )
+    }
+
+    /// リモート変更ストリームの各通知が `.remoteChangeDetected` に変換されること。
+    func testObserveRemoteChanges_sendsRemoteChangeDetectedPerNotification() async {
+        let clock = TestClock()
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.remoteChange.changes = {
+                AsyncStream { continuation in
+                    continuation.yield(())
+                    continuation.finish()
+                }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.observeRemoteChanges)
+        await store.receive(\.remoteChangeDetected)
+
+        // デバウンス中のエフェクトを完了させてからテストを終える
+        await clock.advance(by: .milliseconds(500))
+        await store.finish()
+    }
+
+    /// 他端末から一度に多数のアイテムが同期されてきた場合でも、
+    /// 上限超過分すべてが明示的に削除されること（1件だけでは足りない）。
+    func testAddItem_freeUser_deletesEveryOverflowItem() async {
+        // 上限20件に対して25件ある状態（他端末から同期されて増えた想定）
+        let existing = (1...25).map { i in
+            ClipboardItem(
+                id: UUID(), content: "Item \(i)",
+                timestamp: Date(timeIntervalSince1970: Double(100 - i))
+            )
+        }
+        let newItem = ClipboardItem(content: "New Item")
+        let deletedItems = LockIsolated<[ClipboardItem]>([])
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(
+                items: existing, isPiPActive: false, isProUser: false
+            )
+        ) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.clipboardRepository.deleteItem = { item in
+                deletedItems.withValue { $0.append(item) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.addItem(newItem))
+        await store.finish()
+
+        XCTAssertEqual(store.state.items.count, 20, "上限まで縮むこと")
+        XCTAssertEqual(
+            deletedItems.value.count, 6,
+            "26件から20件へ縮む際、あふれた6件すべてでdeleteItemが呼ばれること"
+        )
+        XCTAssertEqual(
+            store.state.items.first?.id, newItem.id,
+            "新アイテムが先頭に入ること"
+        )
+    }
 }
