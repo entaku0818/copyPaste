@@ -491,7 +491,11 @@ struct ClipboardHistoryFeature {
 
                 // URLをチェック
                 if let url = UIPasteboard.general.url {
-                    Self.logger.info("Got URL: \(url.absoluteString)")
+                    // URLそのものはログに残さない（issue #69）。
+                    // .info はシステムログに永続化され、Macに接続したデバイスから
+                    // log collect / Console.app で読めるため、URLに含まれる
+                    // トークンやセッションIDが漏れる経路になっていた。
+                    Self.logger.info("Got URL from clipboard")
                     if let lastItem = state.items.first,
                        lastItem.type == .url,
                        lastItem.url == url {
@@ -505,8 +509,9 @@ struct ClipboardHistoryFeature {
 
                 // テキストをチェック
                 if let content = UIPasteboard.general.string {
-                    let preview = String(content.prefix(50))
-                    Self.logger.info("Got text content: \(preview)...")
+                    // 本文はログに残さず、診断に必要な長さだけを残す（issue #69）。
+                    // クリップボードにはパスワード・2FAコード・APIトークンが入りうる。
+                    Self.logger.info("Got text content from clipboard (\(content.count) chars)")
                     if let lastItem = state.items.first,
                        lastItem.type == .text,
                        lastItem.textContent == content {

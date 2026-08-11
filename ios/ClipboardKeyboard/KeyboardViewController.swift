@@ -271,7 +271,8 @@ class KeyboardViewController: UIInputViewController {
               let snippet = snippets.first(where: { $0.id == uuid }) else { return }
         // {日付} {時刻} 等のプレースホルダを貼り付け時点の値に展開する
         textDocumentProxy.insertText(SnippetVariableExpander.expand(snippet.content))
-        KeyboardLogger.log(.paste, "snippet(\(snippet.displayTitle.prefix(20)))")
+        // スニペットのタイトルもユーザーが入力した内容なのでログに残さない（issue #69）
+        KeyboardLogger.log(.paste, "snippet")
     }
 
     private func makeHistoryCard(_ item: ClipboardItem) -> UIView {
@@ -532,21 +533,26 @@ class KeyboardViewController: UIInputViewController {
 
     private func insertItem(_ item: ClipboardItem) {
         switch item.type {
+        // クリップボードの中身そのものはログに残さない（issue #69）。
+        // KeyboardLoggerはApp GroupのUserDefaults（ディスク上のplist）へ
+        // 平文で最大200件永続化されるため、パスワードや2FAコードが
+        // バックアップやフォレンジックで読める状態になっていた。
+        // 診断に必要な「種別」と「長さ」だけを残す。
         case .text:
             if let text = item.textContent {
-                KeyboardLogger.log(.paste, "text(\(text.prefix(30)))")
+                KeyboardLogger.log(.paste, "text(\(text.count)chars)")
                 textDocumentProxy.insertText(text)
             }
         case .url:
             if let url = item.url {
-                KeyboardLogger.log(.paste, "url(\(url.host ?? url.absoluteString))")
+                KeyboardLogger.log(.paste, "url")
                 textDocumentProxy.insertText(url.absoluteString)
             }
         case .image:
             break
         case .file:
             if let fileName = item.fileName {
-                KeyboardLogger.log(.paste, "file(\(fileName))")
+                KeyboardLogger.log(.paste, "file")
                 textDocumentProxy.insertText(fileName)
             }
         }
