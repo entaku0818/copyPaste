@@ -9,6 +9,9 @@ struct SettingsView: View {
     @State private var showTrash = false
     @State private var showExportPicker = false
     @State private var exportURL: URL?
+    /// 共有シートを閉じたあとに削除する対象（issue #80）
+    @State private var sharedExportURL: URL?
+    @State private var showExportFailure = false
     @State private var syncMode: CloudKitSyncMode = CloudKitSyncMode.current
     @State private var lastSyncedAt: Date? = CloudKitSyncStatus.lastSyncedAt
 
@@ -197,21 +200,55 @@ struct SettingsView: View {
             .sheet(isPresented: $showTrash) {
                 TrashView(store: store)
             }
-            .sheet(item: $exportURL) { url in
+            .sheet(item: $exportURL, onDismiss: {
+                // 共有が終わった一時ファイルを残置しない（issue #80）
+                if let url = sharedExportURL {
+                    ExportManager.cleanUp(url)
+                    sharedExportURL = nil
+                }
+            }) { url in
                 ShareSheet(url: url)
+            }
+            .alert("export.failed", isPresented: $showExportFailure) {
+                Button("button.ok", role: .cancel) {}
             }
             .confirmationDialog("export.formatPicker", isPresented: $showExportPicker, titleVisibility: .visible) {
                 Button("CSV") {
-                    exportURL = ExportManager.export(store.items, format: .csv)
+                    export(format: .csv)
                 }
                 Button("Markdown") {
-                    exportURL = ExportManager.export(store.items, format: .markdown)
+                    export(format: .markdown)
                 }
                 Button("button.cancel", role: .cancel) {}
             }
             .onAppear {
                 // 設定画面を開くたびに最新の同期時刻を読み直す
                 lastSyncedAt = CloudKitSyncStatus.lastSyncedAt
+            }
+        }
+    }
+
+    // MARK: - Export
+
+    /// エクスポートをメインスレッドから外して実行する（issue #79）。
+    ///
+    /// 以前はボタンのアクションから直接同期的に呼んでいたため、履歴件数が多いと
+    /// 文字列構築とファイルI/OでUIが固まる作りだった。
+    /// 書き込み失敗時はnilが返るので、その場合はエラーを出す（issue #72）。
+    private func export(format: ExportFormat) {
+        let items = store.items
+        Task {
+            let url = await Task.detached(priority: .userInitiated) {
+                ExportManager.export(items, format: format)
+            }.value
+
+            await MainActor.run {
+                if let url {
+                    sharedExportURL = url
+                    exportURL = url
+                } else {
+                    showExportFailure = true
+                }
             }
         }
     }

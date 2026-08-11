@@ -8,6 +8,29 @@ enum ClipboardItemType: String, Codable {
     case file
 }
 
+/// サムネイルのデコード結果をアイテムIDでキャッシュする（issue #70）。
+///
+/// `thumbnail` は計算プロパティなので、リストのセル再利用のたびに
+/// `UIImage(data:)` でビットマップデコードが走り、スクロール時のフレーム落ちの
+/// 原因になっていた。1アイテムの画像は変化しないためIDをキーにできる。
+/// NSCacheはスレッドセーフで、メモリ圧迫時にOSが自動で破棄する。
+private enum ThumbnailCache {
+    private static let cache: NSCache<NSUUID, UIImage> = {
+        let cache = NSCache<NSUUID, UIImage>()
+        cache.countLimit = 200
+        return cache
+    }()
+
+    /// `data` はキャッシュヒット時に評価しないようautoclosureで受け取る
+    static func image(for id: UUID, data: @autoclosure () -> Data?) -> UIImage? {
+        let key = id as NSUUID
+        if let cached = cache.object(forKey: key) { return cached }
+        guard let data = data(), let image = UIImage(data: data) else { return nil }
+        cache.setObject(image, forKey: key)
+        return image
+    }
+}
+
 struct ClipboardItem: Identifiable, Codable, Equatable {
     let id: UUID
     var timestamp: Date
@@ -58,10 +81,9 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         return fileSize ?? 0
     }
 
-    // サムネイル画像取得
+    // サムネイル画像取得（デコード結果はIDでキャッシュする）
     var thumbnail: UIImage? {
-        guard let data = imageThumbnailData ?? imageData else { return nil }
-        return UIImage(data: data)
+        ThumbnailCache.image(for: id, data: imageThumbnailData ?? imageData)
     }
 
     // テキスト用の便利なイニシャライザ（後方互換性）

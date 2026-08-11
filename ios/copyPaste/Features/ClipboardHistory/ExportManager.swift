@@ -7,6 +7,13 @@ enum ExportFormat {
 
 enum ExportManager {
 
+    /// 履歴を書き出して一時ファイルのURLを返す。書き込みに失敗したらnilを返す。
+    ///
+    /// 以前は `try?` で書き込みエラーを握り潰して常に非nilのURLを返していたため、
+    /// 呼び出し元が存在しないファイルでShareSheetを開いてしまっていた（issue #72）。
+    ///
+    /// 文字列の構築とファイルI/Oを含むため、メインスレッドを塞がないよう
+    /// 呼び出し側から非同期に呼ぶ（issue #79）。
     static func export(_ items: [ClipboardItem], format: ExportFormat) -> URL? {
         let (content, fileName): (String, String)
         switch format {
@@ -18,8 +25,20 @@ enum ExportManager {
             fileName = "clipkit_export.md"
         }
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
-        try? content.write(to: url, atomically: true, encoding: .utf8)
+        do {
+            try content.write(to: url, atomically: true, encoding: .utf8)
+        } catch {
+            return nil
+        }
         return url
+    }
+
+    /// 共有が終わったエクスポートファイルを削除する（issue #80）。
+    ///
+    /// 履歴にはパスワードや個人情報が含まれうるため、共有後に平文のまま
+    /// 一時ディレクトリへ残置しない。
+    static func cleanUp(_ url: URL) {
+        try? FileManager.default.removeItem(at: url)
     }
 
     // MARK: - CSV

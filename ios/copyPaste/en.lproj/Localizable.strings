@@ -77,7 +77,7 @@
 "permission.message" = "This app requires clipboard access to save clipboard history.\n\niOS 16 and later will show a system prompt on first access. Please select 'Allow'.";
 
 /* Settings */
-"settings.proDescription" = "3-month history · Favorites · Widget";
+"settings.proDescription" = "Unlimited history · Favorites · Widget";
 "settings.howToUse" = "How to Use";
 "settings.writeReview" = "Write a Review";
 "settings.contact" = "Contact Us";
@@ -148,3 +148,72 @@
 "transform.removeMarkdown" = "Remove Markdown";
 "transform.urlEncode" = "URL Encode";
 "transform.urlDecode" = "URL Decode";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Unlock every feature";
+"paywall.feature.history.title" = "Unlimited history";
+"paywall.feature.history.description" = "Free plan keeps the last 3 days, up to 20 items";
+"paywall.feature.favorites.title" = "Favorites";
+"paywall.feature.favorites.description" = "Pin the items that matter";
+"paywall.feature.widget.title" = "Home screen widgets";
+"paywall.feature.widget.description" = "Three widget sizes";
+"paywall.feature.keyboard.title" = "Full keyboard history";
+"paywall.feature.keyboard.description" = "Show 10 items on the keyboard (3 on the free plan)";
+"paywall.feature.icloud.title" = "iCloud sync";
+"paywall.feature.icloud.description" = "Share history across your devices";
+"paywall.feature.export.title" = "Export history";
+"paywall.feature.export.description" = "Write out as CSV or Markdown";
+"paywall.feature.transform.title" = "Advanced text transforms";
+"paywall.feature.transform.description" = "Case, full/half width, URL encoding and more";
+"paywall.loadingPlans" = "Loading plans...";
+"paywall.loadFailed" = "Couldn't load the plans";
+"paywall.retry" = "Retry";
+"paywall.purchase" = "Buy";
+"paywall.tryFree" = "Try free (%@)";
+"paywall.startNow" = "Get started";
+"paywall.restore" = "Restore purchase";
+"paywall.note.lifetime" = "• One purchase, yours forever";
+"paywall.note.billedToAppleID" = "• Billed to your Apple ID account";
+"paywall.note.trial" = "• %@ free trial";
+"paywall.note.autoRenew" = "• Renews automatically every %@";
+"paywall.note.cancelAnytime" = "• Cancel anytime";
+"paywall.terms" = "Terms of Use";
+"paywall.privacyPolicy" = "Privacy Policy";
+"paywall.close" = "Close";
+"paywall.errorTitle" = "Error";
+"paywall.successTitle" = "Purchase complete";
+"paywall.successMessage" = "Welcome to ClipKit Pro!\nEvery feature is now available.";
+"paywall.monthlyEquivalentLabel" = "%@ / month";
+"paywall.monthlyEquivalent" = "about %@";
+"paywall.error.unknown" = "Something went wrong";
+"paywall.error.noRestorable" = "No purchases available to restore";
+"paywall.package.monthly" = "Monthly";
+"paywall.package.annual" = "Yearly";
+"paywall.package.lifetime" = "Lifetime";
+"paywall.renewal.lifetime" = "One purchase, yours forever";
+"paywall.renewal.monthly" = "Renews every month";
+"paywall.renewal.annual" = "Renews every year";
+"paywall.renewal.days" = "Renews every %d days";
+"paywall.renewal.weeks" = "Renews every %d weeks";
+"paywall.renewal.months" = "Renews every %d months";
+"paywall.renewal.years" = "Renews every %d years";
+"paywall.trial.days" = "%d days";
+"paywall.trial.weeks" = "%d weeks";
+"paywall.trial.months" = "%d months";
+"paywall.trial.years" = "%d years";
+"paywall.period.oneMonth" = "month";
+"paywall.period.oneYear" = "year";
+"paywall.period.days" = "%d days";
+"paywall.period.weeks" = "%d weeks";
+"paywall.period.months" = "%d months";
+"paywall.period.years" = "%d years";
+"paywall.intro.days" = "%d-day free trial";
+"paywall.intro.weeks" = "%d-week free trial";
+"paywall.intro.months" = "%d-month free trial";
+"paywall.intro.years" = "%d-year free trial";
+"paywall.intro.freeTrial" = "Includes a free trial";
+"paywall.discount.format" = "Save %d%%";
+"export.failed" = "Export failed";
+"button.ok" = "OK";

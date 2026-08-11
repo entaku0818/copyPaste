@@ -6,12 +6,20 @@ enum ClipboardItemAnalyzer {
 
     // MARK: - Category detection
 
+    /// カテゴリ判定用のNSDataDetector。
+    ///
+    /// 内部で正規表現をコンパイルするため初期化コストが高い（issue #71）。
+    /// クリップボードをキャプチャするたびに生成・破棄していたため、
+    /// PiP中の1秒ポーリングで毎回そのコストを払っていた。
+    /// スレッドセーフかつイミュータブルなのでstaticに保持して使い回す。
+    private static let detector = try? NSDataDetector(types:
+        NSTextCheckingResult.CheckingType.link.rawValue |
+        NSTextCheckingResult.CheckingType.phoneNumber.rawValue |
+        NSTextCheckingResult.CheckingType.address.rawValue
+    )
+
     static func category(for text: String) -> ItemCategory {
-        let detector = try? NSDataDetector(types:
-            NSTextCheckingResult.CheckingType.link.rawValue |
-            NSTextCheckingResult.CheckingType.phoneNumber.rawValue |
-            NSTextCheckingResult.CheckingType.address.rawValue
-        )
+        let detector = Self.detector
         let range = NSRange(text.startIndex..., in: text)
         let matches = detector?.matches(in: text, options: [], range: range) ?? []
 

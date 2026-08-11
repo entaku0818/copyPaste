@@ -34,7 +34,7 @@ struct PaywallView: View {
                             .font(.system(size: 26, weight: .heavy))
                             .foregroundColor(ClipKitColor.textOnDark)
 
-                        Text("すべての機能を解放")
+                        Text(NSLocalizedString("paywall.subtitle", value: "すべての機能を解放", comment: ""))
                             .font(.system(size: 14))
                             .foregroundColor(ClipKitColor.textOnDarkSecondary)
                     }
@@ -44,50 +44,50 @@ struct PaywallView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         FeatureRow(
                             icon: "calendar",
-                            title: "3ヶ月履歴",
-                            description: "過去3ヶ月分の履歴を保存・閲覧",
+                            title: NSLocalizedString("paywall.feature.history.title", value: "履歴を無制限に保存", comment: ""),
+                            description: NSLocalizedString("paywall.feature.history.description", value: "無料版は直近3日・20件まで", comment: ""),
                             color: ClipKitColor.indigoLight
                         )
 
                         FeatureRow(
                             icon: "star.fill",
-                            title: "お気に入り機能",
-                            description: "重要な項目をピン留め",
+                            title: NSLocalizedString("paywall.feature.favorites.title", value: "お気に入り機能", comment: ""),
+                            description: NSLocalizedString("paywall.feature.favorites.description", value: "重要な項目をピン留め", comment: ""),
                             color: ClipKitColor.favorite
                         )
 
                         FeatureRow(
                             icon: "app.badge",
-                            title: "ホーム画面ウィジェット",
-                            description: "3サイズのウィジェット",
+                            title: NSLocalizedString("paywall.feature.widget.title", value: "ホーム画面ウィジェット", comment: ""),
+                            description: NSLocalizedString("paywall.feature.widget.description", value: "3サイズのウィジェット", comment: ""),
                             color: ClipKitColor.success
                         )
 
                         FeatureRow(
                             icon: "keyboard",
-                            title: "キーボードフル表示",
-                            description: "キーボードに履歴10件を表示（無料版は3件）",
+                            title: NSLocalizedString("paywall.feature.keyboard.title", value: "キーボードフル表示", comment: ""),
+                            description: NSLocalizedString("paywall.feature.keyboard.description", value: "キーボードに履歴10件を表示（無料版は3件）", comment: ""),
                             color: Color(hex: 0x6F9BFF)
                         )
 
                         FeatureRow(
                             icon: "icloud",
-                            title: "iCloud同期",
-                            description: "複数デバイスで履歴を共有",
+                            title: NSLocalizedString("paywall.feature.icloud.title", value: "iCloud同期", comment: ""),
+                            description: NSLocalizedString("paywall.feature.icloud.description", value: "複数デバイスで履歴を共有", comment: ""),
                             color: Color(hex: 0x3AA3FF)
                         )
 
                         FeatureRow(
                             icon: "square.and.arrow.up",
-                            title: "履歴エクスポート",
-                            description: "CSV / Markdown 形式で書き出し",
+                            title: NSLocalizedString("paywall.feature.export.title", value: "履歴エクスポート", comment: ""),
+                            description: NSLocalizedString("paywall.feature.export.description", value: "CSV / Markdown 形式で書き出し", comment: ""),
                             color: Color(hex: 0x4FD0C8)
                         )
 
                         FeatureRow(
                             icon: "wand.and.stars",
-                            title: "高度なテキスト変換",
-                            description: "ケース変換・全角半角・URLエンコード等",
+                            title: NSLocalizedString("paywall.feature.transform.title", value: "高度なテキスト変換", comment: ""),
+                            description: NSLocalizedString("paywall.feature.transform.description", value: "ケース変換・全角半角・URLエンコード等", comment: ""),
                             color: ClipKitColor.badgePurple.foreground
                         )
 
@@ -112,13 +112,13 @@ struct PaywallView: View {
                         }
                         .padding(.horizontal)
                     } else if isLoadingOfferings {
-                        ProgressView("プランを読み込み中...")
+                        ProgressView(NSLocalizedString("paywall.loadingPlans", value: "プランを読み込み中...", comment: ""))
                             .padding()
                     } else if offeringsLoadFailed {
                         VStack(spacing: 12) {
-                            Text("プランの読み込みに失敗しました")
+                            Text(NSLocalizedString("paywall.loadFailed", value: "プランの読み込みに失敗しました", comment: ""))
                                 .foregroundColor(.secondary)
-                            Button("再試行") {
+                            Button(NSLocalizedString("paywall.retry", value: "再試行", comment: "")) {
                                 Task { await loadOfferings() }
                             }
                             .buttonStyle(.bordered)
@@ -137,13 +137,13 @@ struct PaywallView: View {
                                 ProgressView()
                                     .tint(.white)
                             } else if selectedPackage?.packageType == .lifetime {
-                                Text("購入する")
+                                Text(NSLocalizedString("paywall.purchase", value: "購入する", comment: ""))
                                     .fontWeight(.semibold)
                             } else if let trialText = selectedPackageTrialText {
-                                Text("無料で試す（\(trialText)）")
+                                Text(String(format: NSLocalizedString("paywall.tryFree", value: "無料で試す（%@）", comment: ""), trialText))
                                     .fontWeight(.semibold)
                             } else {
-                                Text("今すぐ始める")
+                                Text(NSLocalizedString("paywall.startNow", value: "今すぐ始める", comment: ""))
                                     .fontWeight(.semibold)
                             }
                         }
@@ -172,7 +172,7 @@ struct PaywallView: View {
                             if isRestoring {
                                 ProgressView()
                             } else {
-                                Text("購入を復元")
+                                Text(NSLocalizedString("paywall.restore", value: "購入を復元", comment: ""))
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -184,27 +184,27 @@ struct PaywallView: View {
                     // 注意事項・リンク
                     VStack(spacing: 8) {
                         if selectedPackage?.packageType == .lifetime {
-                            Text("• 一度の購入で永久に利用できます")
-                            Text("• Apple IDアカウントに課金されます")
+                            Text(NSLocalizedString("paywall.note.lifetime", value: "• 一度の購入で永久に利用できます", comment: ""))
+                            Text(NSLocalizedString("paywall.note.billedToAppleID", value: "• Apple IDアカウントに課金されます", comment: ""))
                         } else {
                             if let trialText = selectedPackageTrialText {
-                                Text("• \(trialText)の無料トライアル")
+                                Text(String(format: NSLocalizedString("paywall.note.trial", value: "• %@の無料トライアル", comment: ""), trialText))
                             }
                             if let periodText = selectedPackagePeriodText {
-                                Text("• \(periodText)ごとに自動更新")
+                                Text(String(format: NSLocalizedString("paywall.note.autoRenew", value: "• %@ごとに自動更新", comment: ""), periodText))
                             }
-                            Text("• いつでもキャンセル可能")
-                            Text("• Apple IDアカウントに課金されます")
+                            Text(NSLocalizedString("paywall.note.cancelAnytime", value: "• いつでもキャンセル可能", comment: ""))
+                            Text(NSLocalizedString("paywall.note.billedToAppleID", value: "• Apple IDアカウントに課金されます", comment: ""))
                         }
                     }
                     .font(.caption)
                     .foregroundColor(.secondary)
 
                     HStack(spacing: 20) {
-                        Link("利用規約", destination: URL(string: "https://clipkit-entaku.web.app/terms.html")!)
+                        Link(NSLocalizedString("paywall.terms", value: "利用規約", comment: ""), destination: URL(string: "https://clipkit-entaku.web.app/terms.html")!)
                             .underline()
                         Text("·")
-                        Link("プライバシーポリシー", destination: URL(string: "https://clipkit-entaku.web.app/privacy-policy.html")!)
+                        Link(NSLocalizedString("paywall.privacyPolicy", value: "プライバシーポリシー", comment: ""), destination: URL(string: "https://clipkit-entaku.web.app/privacy-policy.html")!)
                             .underline()
                     }
                     .font(.footnote)
@@ -218,26 +218,26 @@ struct PaywallView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("閉じる") {
+                    Button(NSLocalizedString("paywall.close", value: "閉じる", comment: "")) {
                         dismiss()
                     }
                     .tint(ClipKitColor.accentOnDark)
                 }
             }
             .preferredColorScheme(.dark)
-            .alert("エラー", isPresented: $showError) {
+            .alert(NSLocalizedString("paywall.errorTitle", value: "エラー", comment: ""), isPresented: $showError) {
                 Button("OK") {
                     showError = false
                 }
             } message: {
                 Text(errorMessage ?? NSLocalizedString("paywall.error.unknown", value: "不明なエラーが発生しました", comment: ""))
             }
-            .alert("購入完了", isPresented: $showSuccess) {
+            .alert(NSLocalizedString("paywall.successTitle", value: "購入完了", comment: ""), isPresented: $showSuccess) {
                 Button("OK") {
                     dismiss()
                 }
             } message: {
-                Text("ClipKit Proへようこそ！\nすべての機能が使えるようになりました。")
+                Text(NSLocalizedString("paywall.successMessage", value: "ClipKit Proへようこそ！\nすべての機能が使えるようになりました。", comment: ""))
             }
         }
         .presentationDetents([.large])
@@ -424,7 +424,7 @@ struct PackageButton: View {
 
                     if package.packageType == .annual,
                        let monthlyPrice = monthlyEquivalentPrice {
-                        Text("月額換算 \(monthlyPrice)")
+                        Text(String(format: NSLocalizedString("paywall.monthlyEquivalentLabel", value: "月額換算 %@", comment: ""), monthlyPrice))
                             .font(.caption)
                             .foregroundColor(ClipKitColor.textOnDarkSecondary)
                     }
