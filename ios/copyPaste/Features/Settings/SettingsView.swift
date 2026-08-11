@@ -10,6 +10,7 @@ struct SettingsView: View {
     @State private var showExportPicker = false
     @State private var exportURL: URL?
     @State private var syncMode: CloudKitSyncMode = CloudKitSyncMode.current
+    @State private var lastSyncedAt: Date? = CloudKitSyncStatus.lastSyncedAt
 
     var body: some View {
         NavigationStack {
@@ -101,10 +102,18 @@ struct SettingsView: View {
                         }
                         .padding(.horizontal, ClipKitSpacing.screenPadding)
 
-                        Text("settings.iCloudSyncFooter")
-                            .font(.caption2)
-                            .foregroundColor(ClipKitColor.textTertiary)
-                            .padding(.horizontal, ClipKitSpacing.screenPadding + ClipKitSpacing.cardPadding)
+                        VStack(alignment: .leading, spacing: 2) {
+                            // 同期が動いているかどうかをユーザーが確認できるようにする（issue #103）
+                            if syncMode.isEnabled {
+                                Text(lastSyncedDescription)
+                                    .font(.caption2)
+                                    .foregroundColor(ClipKitColor.textTertiary)
+                            }
+                            Text("settings.iCloudSyncFooter")
+                                .font(.caption2)
+                                .foregroundColor(ClipKitColor.textTertiary)
+                        }
+                        .padding(.horizontal, ClipKitSpacing.screenPadding + ClipKitSpacing.cardPadding)
                     }
 
                     // アプリ情報セクション
@@ -200,10 +209,25 @@ struct SettingsView: View {
                 }
                 Button("button.cancel", role: .cancel) {}
             }
+            .onAppear {
+                // 設定画面を開くたびに最新の同期時刻を読み直す
+                lastSyncedAt = CloudKitSyncStatus.lastSyncedAt
+            }
         }
     }
 
     // MARK: - Computed Properties
+
+    /// 「最終同期: 5分前」または「まだ同期していません」を返す（issue #103）
+    private var lastSyncedDescription: String {
+        guard let lastSyncedAt else {
+            return String(localized: "settings.iCloudSyncNeverSynced")
+        }
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        let relative = formatter.localizedString(for: lastSyncedAt, relativeTo: Date())
+        return String(format: String(localized: "settings.iCloudSyncLastSynced"), relative)
+    }
 
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"

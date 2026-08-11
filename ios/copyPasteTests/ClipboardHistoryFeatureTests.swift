@@ -1063,6 +1063,30 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         await store.finish()
     }
 
+    /// 他端末の変更を取り込んだら「最終同期」として記録すること（issue #103）。
+    /// 設定画面がこの記録を読んで同期状態を表示する。
+    func testRemoteChangeDetected_recordsLastSyncedAt() async {
+        let clock = TestClock()
+        let recordedCount = LockIsolated(0)
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.syncStatus.recordSync = { recordedCount.withValue { $0 += 1 } }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.remoteChangeDetected)
+
+        XCTAssertEqual(
+            recordedCount.value, 1,
+            "リモート変更の受信時点で最終同期時刻が記録されること（デバウンス完了を待たない）"
+        )
+
+        await clock.advance(by: .milliseconds(500))
+        await store.finish()
+    }
+
     /// CloudKitの初期インポートでは通知がバースト的に飛ぶため、
     /// 連続した通知が1回の再読込にまとめられること。
     func testRemoteChangeDetected_burstIsCollapsedIntoSingleReload() async {

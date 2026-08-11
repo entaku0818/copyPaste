@@ -85,6 +85,8 @@
 "settings.iCloudSync" = "iCloud Sync";
 "settings.iCloudSyncPicker" = "Sync";
 "settings.iCloudSyncFooter" = "Changes take effect the next time the app is launched.";
+"settings.iCloudSyncLastSynced" = "Last synced: %@";
+"settings.iCloudSyncNeverSynced" = "No sync from other devices yet";
 "cloudKitSync.disabled" = "Don't Sync";
 "cloudKitSync.all" = "Sync";
 "settings.appInfo" = "App Info";

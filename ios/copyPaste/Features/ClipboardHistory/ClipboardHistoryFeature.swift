@@ -147,6 +147,7 @@ struct ClipboardHistoryFeature {
     @Dependency(\.interstitialAd) var interstitialAd
     @Dependency(\.pendingItemBuffer) var pendingBuffer
     @Dependency(\.remoteChange) var remoteChange
+    @Dependency(\.syncStatus) var syncStatus
     private enum CancelID { case monitoring, remoteChangeObservation, remoteChangeReload }
 
     /// CloudKitの初期インポート時はリモート変更通知がバースト的に飛ぶため、
@@ -677,6 +678,9 @@ struct ClipboardHistoryFeature {
                 .cancellable(id: CancelID.remoteChangeObservation, cancelInFlight: true)
 
             case .remoteChangeDetected:
+                // 他端末の変更が届いた＝同期が動いている証拠なので、
+                // 設定画面に出す「最終同期」として記録する（issue #103）
+                syncStatus.recordSync()
                 // バーストをまとめるため、最後の通知から一定時間待ってから再読込する
                 return .run { send in
                     try await clock.sleep(for: Self.remoteChangeReloadDebounce)

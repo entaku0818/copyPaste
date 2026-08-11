@@ -85,6 +85,8 @@
 "settings.iCloudSync" = "iCloud同期";
 "settings.iCloudSyncPicker" = "同期";
 "settings.iCloudSyncFooter" = "変更は次回アプリ起動時に反映されます。";
+"settings.iCloudSyncLastSynced" = "最終同期: %@";
+"settings.iCloudSyncNeverSynced" = "他の端末からの同期はまだありません";
 "cloudKitSync.disabled" = "同期しない";
 "cloudKitSync.all" = "同期する";
 "settings.appInfo" = "アプリ情報";

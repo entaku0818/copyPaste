@@ -219,3 +219,28 @@ extension DependencyValues {
         set { self[RemoteChangeClient.self] = newValue }
     }
 }
+
+// MARK: - SyncStatusClient
+
+// 「最後に他端末の変更を取り込んだ時刻」の記録をDependency化する（issue #103）。
+// テストでは実UserDefaultsに触れない。
+struct SyncStatusClient {
+    var recordSync: @Sendable () -> Void
+}
+
+extension SyncStatusClient: DependencyKey {
+    static let liveValue = SyncStatusClient(
+        recordSync: { CloudKitSyncStatus.lastSyncedAt = Date() }
+    )
+
+    static let testValue = SyncStatusClient(
+        recordSync: {}
+    )
+}
+
+extension DependencyValues {
+    var syncStatus: SyncStatusClient {
+        get { self[SyncStatusClient.self] }
+        set { self[SyncStatusClient.self] = newValue }
+    }
+}
