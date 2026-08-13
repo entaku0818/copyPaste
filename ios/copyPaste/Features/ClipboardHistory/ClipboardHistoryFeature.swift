@@ -549,10 +549,12 @@ struct ClipboardHistoryFeature {
                     .send(.loadSnippets),
                     .send(.observeRemoteChanges)
                 ]
-                // 起動回数のカウントは1起動につき1回だけ
+                // 起動回数のカウント自体は AppDelegate（プロセス起動時に1回）で行う。
+                // ここではその値を読むだけにする。onAppearは複数のタブから
+                // 複数回送られてくるため、ここで数えると二重計上になる（issue #105）。
                 if !state.hasCountedLaunch {
                     state.hasCountedLaunch = true
-                    state.launchCount = AppReview.incrementLaunchCount()
+                    state.launchCount = AppReview.launchCount()
                     effects.append(.send(.checkReviewTrigger(.launch)))
                 }
                 return .merge(effects)

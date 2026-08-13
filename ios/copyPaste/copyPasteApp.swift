@@ -15,6 +15,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
     Analytics.logEvent(AnalyticsEventAppOpen, parameters: nil)
+    // 起動回数はここで数える。プロセス起動につき必ず1回しか呼ばれないため。
+    // 以前はViewの .onAppear を起点にしていたが、TabViewが複数タブの onAppear を
+    // 発火させるため1回の起動で2回数えられ、「初回は聞かない」はずのレビュー事前確認が
+    // 初回起動で出ていた（issue #105）。
+    AppReview.incrementLaunchCount()
     return true
   }
 }

@@ -58,6 +58,8 @@ enum AppReview {
         static let lastPromptDate = "clipkit.lastReviewPromptDate"
         static let promptCount = "clipkit.reviewPromptCount"
         static let answeredPositively = "clipkit.hasAnsweredReviewPositively"
+        /// launchトリガーを一度使い切ったか（issue #105）
+        static let launchTriggerConsumed = "clipkit.launchTriggerConsumed"
     }
 
     /// ClipKitのApp Store ID（`?action=write-review` ディープリンク用）
@@ -69,12 +71,43 @@ enum AppReview {
 
     // MARK: - 起動回数
 
-    /// 起動回数をインクリメントして新しい値を返す。アプリ起動ごとに1回だけ呼ぶこと。
+    /// 起動回数をインクリメントして新しい値を返す。
+    ///
+    /// **1プロセスにつき必ず1回だけ**呼ぶ必要がある。
+    /// 以前はViewの `.onAppear` を起点に呼んでおり、TabViewが複数のタブの
+    /// `onAppear` を発火させる（MonitoringViewとClipboardHistoryViewの2箇所が
+    /// `.onAppear` を送る）ため、1回の起動で2回カウントされていた（issue #105）。
+    /// その結果 `launchCount == launchTrigger(2)` が**初回起動で成立**し、
+    /// 「初回は聞かない」という設計意図が壊れていた。
+    ///
+    /// 呼び出し箇所をプロセス起動時（AppDelegate）に移したうえで、
+    /// ここでもstaticフラグで二重呼び出しを防ぐ二重の安全弁を置く。
+    private static let incrementLock = NSLock()
+    private static var hasIncrementedThisProcess = false
+
     @discardableResult
     static func incrementLaunchCount(defaults: UserDefaults = .standard) -> Int {
+        incrementLock.lock()
+        defer { incrementLock.unlock() }
+        guard !hasIncrementedThisProcess else {
+            return defaults.integer(forKey: Key.launchCount)
+        }
+        hasIncrementedThisProcess = true
         let next = defaults.integer(forKey: Key.launchCount) + 1
         defaults.set(next, forKey: Key.launchCount)
         return next
+    }
+
+    /// 記録済みの起動回数を読むだけ（インクリメントしない）
+    static func launchCount(defaults: UserDefaults = .standard) -> Int {
+        defaults.integer(forKey: Key.launchCount)
+    }
+
+    /// テスト用: プロセス内の二重呼び出し防止フラグを戻す
+    static func resetProcessStateForTesting() {
+        incrementLock.lock()
+        defer { incrementLock.unlock() }
+        hasIncrementedThisProcess = false
     }
 
     // MARK: - 発火判定
@@ -110,7 +143,11 @@ enum AppReview {
 
         switch trigger {
         case .launch:
-            return launchCount == Config.launchTrigger
+            // 等値比較(== 2)だと、何らかの理由でカウントが飛んだユーザーは
+            // 二度とこのトリガーに当たらなくなる（issue #105 で実際に起きた）。
+            // 「しきい値以上」かつ「まだ一度も使っていない」に変える。
+            guard !defaults.bool(forKey: Key.launchTriggerConsumed) else { return false }
+            return launchCount >= Config.launchTrigger
         case .copyMilestone:
             return copyCount > 0 && copyCount % Config.copyInterval == 0
         case .proPurchase:
@@ -143,6 +180,10 @@ enum AppReview {
     ) {
         defaults.set(defaults.integer(forKey: Key.promptCount) + 1, forKey: Key.promptCount)
         defaults.set(now, forKey: Key.lastPromptDate)
+        // launchトリガーは一度出したら使い切る（issue #105）
+        if trigger == .launch {
+            defaults.set(true, forKey: Key.launchTriggerConsumed)
+        }
         Analytics.logEvent("review_request_shown", parameters: ["trigger": trigger.rawValue])
     }
 

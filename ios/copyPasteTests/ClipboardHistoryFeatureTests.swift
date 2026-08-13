@@ -650,6 +650,10 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         "clipkit.lastReviewPromptDate",
         "clipkit.reviewPromptCount",
         "clipkit.hasAnsweredReviewPositively",
+        // launchトリガーの使い切りフラグ（issue #105）。
+        // 掃除対象に入れないと、markShownを呼ぶテストの後続テストが
+        // 「launchトリガーは消費済み」と判定されて落ちる
+        "clipkit.launchTriggerConsumed",
         // 旧実装のキー。残っていても新しい判定に影響しないことを担保するため掃除する
         "clipkit.reviewMilestonesShown"
     ]
