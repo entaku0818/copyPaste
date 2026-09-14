@@ -162,6 +162,14 @@ final class AppOpenAdManager: NSObject, ObservableObject {
         ad = nil
         loadedAt = nil
     }
+
+    #if DEBUG
+    /// E2Eテスト用。フォアグラウンド回数と在庫を初期化する
+    func resetForTesting() {
+        UserDefaults.standard.removeObject(forKey: Key.foregroundCount)
+        discardAd()
+    }
+    #endif
 }
 
 // MARK: - FullScreenContentDelegate

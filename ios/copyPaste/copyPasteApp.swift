@@ -20,6 +20,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     // 発火させるため1回の起動で2回数えられ、「初回は聞かない」はずのレビュー事前確認が
     // 初回起動で出ていた（issue #105）。
     AppReview.incrementLaunchCount()
+    #if DEBUG
+    // 広告のE2Eテストを毎回同じ状態から始められるようにする。
+    // 表示回数・クールダウンはUserDefaultsに永続化しているため、
+    // これが無いとアプリを入れ直さない限りテストが再現しない。
+    if ProcessInfo.processInfo.arguments.contains("--reset-ad-state") {
+      FullScreenAdCoordinator.shared.resetForTesting()
+      AppOpenAdManager.shared.resetForTesting()
+      InterstitialAdManager.shared.resetForTesting()
+    }
+    #endif
     return true
   }
 }

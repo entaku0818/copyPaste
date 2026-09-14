@@ -65,6 +65,14 @@ final class FullScreenAdCoordinator {
         isPresenting = false
     }
 
+    #if DEBUG
+    /// E2Eテスト用。永続化した表示履歴を消す
+    func resetForTesting() {
+        isPresenting = false
+        defaults.removeObject(forKey: Key.lastPresentedAt)
+    }
+    #endif
+
     /// 実際に広告を載せられる最前面のVCを返す（シートやフルスクリーンカバーを考慮）
     func topViewController() -> UIViewController? {
         let root = UIApplication.shared.connectedScenes

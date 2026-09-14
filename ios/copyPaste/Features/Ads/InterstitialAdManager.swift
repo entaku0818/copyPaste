@@ -135,6 +135,14 @@ final class InterstitialAdManager: NSObject, ObservableObject {
         interstitial = nil
         loadedAt = nil
     }
+
+    #if DEBUG
+    /// E2Eテスト用。コピー回数と在庫を初期化する
+    func resetForTesting() {
+        UserDefaults.standard.removeObject(forKey: Key.copyCount)
+        discardAd()
+    }
+    #endif
 }
 
 // MARK: - FullScreenContentDelegate
