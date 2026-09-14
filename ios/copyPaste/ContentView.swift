@@ -48,6 +48,9 @@ public struct ContentView: View {
             .tag(4)
         }
         .tint(ClipKitColor.indigo)
+        .onChange(of: selectedTab) { _, _ in
+            store.send(.tabChanged)
+        }
         // レビュー事前確認は画面中央のモーダルで出す。
         //
         // fullScreenCover は presentation style が .fullScreen のため、

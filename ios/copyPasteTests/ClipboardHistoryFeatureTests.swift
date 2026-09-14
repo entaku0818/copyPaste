@@ -970,6 +970,45 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         XCTAssertEqual(pastedCalls.value, [false], "pasteItemでonItemPastedが呼ばれること")
     }
 
+    func testTabChanged_freeUser_showsPendingInterstitialAd() async {
+        let shownCalls = LockIsolated<[Bool]>([])
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(isProUser: false)
+        ) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.interstitialAd.showPendingAd = { isProUser in
+                shownCalls.withValue { $0.append(isProUser) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.tabChanged)
+        await store.finish()
+
+        XCTAssertEqual(shownCalls.value, [false], "タブ切り替えでshowPendingAdが呼ばれること")
+    }
+
+    func testCopyItem_doesNotShowInterstitialAdImmediately() async {
+        let item = ClipboardItem(content: "Test")
+        let shownCalls = LockIsolated<[Bool]>([])
+        let store = TestStore(
+            initialState: ClipboardHistoryFeature.State(items: [item], isProUser: false)
+        ) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.interstitialAd.showPendingAd = { isProUser in
+                shownCalls.withValue { $0.append(isProUser) }
+            }
+        }
+        store.exhaustivity = .off
+
+        await store.send(.copyItem(item))
+        await store.finish()
+
+        XCTAssertTrue(shownCalls.value.isEmpty, "コピー直後は全画面広告を出さないこと（他アプリへ移る動線を塞がない）")
+    }
+
     // MARK: - Duplicate detection tests
 
     func testCheckClipboard_duplicateText_stateHasCorrectFirst() {

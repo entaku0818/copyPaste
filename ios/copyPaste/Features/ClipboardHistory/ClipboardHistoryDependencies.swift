@@ -114,10 +114,14 @@ extension DependencyValues {
 // インタースティシャル広告をDependency化する（issue #90）。
 // 本体アプリのcopy/paste系actionからのみ配線する（キーボード拡張は本Reducerを
 // 使わないため、キーボードからの貼付けでは表示されない）。
+// コピー直後は他アプリへ移る瞬間なので表示せず、カウントのみ行う。実際の表示は
+// tabChangedからshowPendingAdを呼ぶ。
 // テストでは実AdMob SDKを触らないno-op実装を使う。
 struct InterstitialAdClient {
     var loadAd: @Sendable () async -> Void
     var onItemPasted: @Sendable (_ isProUser: Bool) async -> Void
+    /// タブ切り替えなど「操作を邪魔しない自然な遷移点」で呼ぶ。表示可否はManager側が判定する
+    var showPendingAd: @Sendable (_ isProUser: Bool) async -> Void
 }
 
 extension InterstitialAdClient: DependencyKey {
@@ -127,12 +131,16 @@ extension InterstitialAdClient: DependencyKey {
         },
         onItemPasted: { isProUser in
             await InterstitialAdManager.shared.onItemPasted(isProUser: isProUser)
+        },
+        showPendingAd: { isProUser in
+            await InterstitialAdManager.shared.showPendingAd(isProUser: isProUser)
         }
     )
 
     static let testValue = InterstitialAdClient(
         loadAd: {},
-        onItemPasted: { _ in }
+        onItemPasted: { _ in },
+        showPendingAd: { _ in }
     )
 }
 

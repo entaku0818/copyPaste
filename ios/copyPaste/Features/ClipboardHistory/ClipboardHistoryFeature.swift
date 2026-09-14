@@ -138,6 +138,8 @@ struct ClipboardHistoryFeature {
         case updateSnippet(Snippet)
         case deleteSnippets(IndexSet)
         case moveSnippets(IndexSet, Int)
+        /// タブが切り替わった。全画面広告を出すならこの自然な遷移点で出す
+        case tabChanged
     }
 
     @Dependency(\.continuousClock) var clock
@@ -336,6 +338,12 @@ struct ClipboardHistoryFeature {
                 Analytics.logEvent("transform_copy", parameters: ["transform": transform.rawValue])
                 let isProUser = state.isProUser
                 return .run { _ in await interstitialAd.onItemPasted(isProUser) }
+
+            case .tabChanged:
+                // コピー直後（＝他アプリへ移る瞬間）を塞がないよう、全画面広告は
+                // タブ切り替えという自然な遷移点まで保留してからここで出す
+                let isProUser = state.isProUser
+                return .run { _ in await interstitialAd.showPendingAd(isProUser) }
 
             case let .pasteItem(item):
                 switch item.type {
