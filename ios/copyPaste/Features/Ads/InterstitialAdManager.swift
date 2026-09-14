@@ -10,6 +10,7 @@ import UIKit
 ///   ここを全画面広告で塞ぐとClipKitの中核体験（時短）を壊す。
 /// - コピー回数は永続カウントし、閾値を超えたら「保留中」にするだけ。
 ///   実際の表示は `showPendingAd(isProUser:)` を呼ぶ自然な遷移点（タブ切り替え）に任せる。
+/// - 表示可否は `FullScreenAdCoordinator` を通す。app_openと2枚続けて出ないようにするため。
 ///
 /// 過去の不具合（30日で576リクエスト / 表示0件）:
 /// コピー直後に keyWindow の rootViewController から present していたため、
@@ -24,12 +25,12 @@ final class InterstitialAdManager: NSObject, ObservableObject {
 
     private enum Key {
         static let copyCount = "clipkit.interstitial.copyCount"
-        static let lastShownAt = "clipkit.interstitial.lastShownAt"
     }
 
     /// 広告を保留状態にするまでに必要なコピー回数
     private let showInterval = 5
-    /// 前回表示からの最低間隔（連続して出さないためのクールダウン）
+    /// 前回の全画面広告（app_open含む・フォーマット問わず）からの最低間隔。
+    /// 起動直後のapp_openとタブ切替のinterstitialが2枚続けて出る事故をここで塞ぐ
     private let minimumInterval: TimeInterval = 30 * 60
     /// AdMobのインタースティシャルは約1時間で期限切れになる
     private let adLifetime: TimeInterval = 55 * 60
@@ -38,6 +39,7 @@ final class InterstitialAdManager: NSObject, ObservableObject {
         AdManager.interstitialAdUnitID
     }
 
+    private let coordinator: FullScreenAdCoordinator
     private var interstitial: InterstitialAd?
     private var loadedAt: Date?
     private var isLoading = false
@@ -45,11 +47,6 @@ final class InterstitialAdManager: NSObject, ObservableObject {
     private var copyCount: Int {
         get { UserDefaults.standard.integer(forKey: Key.copyCount) }
         set { UserDefaults.standard.set(newValue, forKey: Key.copyCount) }
-    }
-
-    private var lastShownAt: Date? {
-        get { UserDefaults.standard.object(forKey: Key.lastShownAt) as? Date }
-        set { UserDefaults.standard.set(newValue, forKey: Key.lastShownAt) }
     }
 
     /// 閾値に達していて、あとは自然な遷移点を待つだけの状態か
@@ -62,7 +59,8 @@ final class InterstitialAdManager: NSObject, ObservableObject {
         return Date().timeIntervalSince(loadedAt) > adLifetime
     }
 
-    private override init() {
+    init(coordinator: FullScreenAdCoordinator = .shared) {
+        self.coordinator = coordinator
         super.init()
     }
 
@@ -97,7 +95,9 @@ final class InterstitialAdManager: NSObject, ObservableObject {
     func showPendingAd(isProUser: Bool) {
         guard !isProUser, isPending else { return }
 
-        if let lastShownAt, Date().timeIntervalSince(lastShownAt) < minimumInterval {
+        // app_openを含むすべての全画面広告と相互排他。直前に他の広告が出ていたら見送る
+        guard coordinator.canPresent(minimumGap: minimumInterval) else {
+            Self.logger.info("InterstitialAd skipped: another full screen ad was shown recently")
             return
         }
 
@@ -113,7 +113,7 @@ final class InterstitialAdManager: NSObject, ObservableObject {
             return
         }
 
-        guard let presenter = topViewController() else {
+        guard let presenter = coordinator.topViewController() else {
             Self.logger.error("InterstitialAd: no presentable view controller")
             return
         }
@@ -126,6 +126,8 @@ final class InterstitialAdManager: NSObject, ObservableObject {
             return
         }
 
+        // デリゲート通知が返るまでの間にapp_openが割り込まないよう先に押さえる
+        coordinator.markPresentAttempt()
         interstitial.present(from: presenter)
     }
 
@@ -133,44 +135,29 @@ final class InterstitialAdManager: NSObject, ObservableObject {
         interstitial = nil
         loadedAt = nil
     }
-
-    /// 実際に広告を載せられる最前面のVCを返す（シートやフルスクリーンカバーを考慮）
-    private func topViewController() -> UIViewController? {
-        let root = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .filter { $0.activationState == .foregroundActive }
-            .flatMap(\.windows)
-            .first { $0.isKeyWindow }?
-            .rootViewController
-        var top = root
-        while let presented = top?.presentedViewController {
-            top = presented
-        }
-        // 画面遷移の途中で present するとSDK側で失敗するので見送る
-        guard let top, !top.isBeingDismissed, !top.isBeingPresented else { return nil }
-        return top
-    }
 }
 
 // MARK: - FullScreenContentDelegate
 
 extension InterstitialAdManager: FullScreenContentDelegate {
     func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {
-        // 表示できた時点でカウンタとクールダウンをリセットする
+        // 表示できた時点でカウンタをリセットし、全画面広告の表示時刻を共有の調停役へ記録する
         copyCount = 0
-        lastShownAt = Date()
+        coordinator.markPresented()
     }
 
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         Self.logger.error(
             "InterstitialAd failed to present: \(error.localizedDescription, privacy: .public)"
         )
+        coordinator.markPresentFailed()
         // 表示に失敗した広告は再利用できないため捨てて取り直す
         discardAd()
         Task { await loadAd() }
     }
 
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
+        coordinator.markDismissed()
         discardAd()
         Task { await loadAd() }
     }

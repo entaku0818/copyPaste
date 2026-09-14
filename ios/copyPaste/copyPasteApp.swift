@@ -43,6 +43,9 @@ struct ClipKitApp: App {
 
     private var mainView: some View {
         ContentView(store: store)
+            // オンボーディング中やスクリーンショットモードでは出さないため、
+            // 本編のViewにだけ紐づける
+            .appOpenAdLifecycle()
     }
 
     var body: some Scene {

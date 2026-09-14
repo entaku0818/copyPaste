@@ -10,6 +10,8 @@
 	<string>$(BANNER_AD_UNIT_ID)</string>
 	<key>INTERSTITIAL_AD_UNIT_ID</key>
 	<string>$(INTERSTITIAL_AD_UNIT_ID)</string>
+	<key>APP_OPEN_AD_UNIT_ID</key>
+	<string>$(APP_OPEN_AD_UNIT_ID)</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

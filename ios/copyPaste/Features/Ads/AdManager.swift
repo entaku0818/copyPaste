@@ -16,6 +16,12 @@ final class AdManager {
         Bundle.main.infoDictionary?["INTERSTITIAL_AD_UNIT_ID"] as? String ?? ""
     }
 
+    /// アプリ起動（App Open）広告のAd Unit ID。
+    /// 空文字の間はApp Open広告を一切ロード・表示しない（本番IDが未発行のため）
+    static var appOpenAdUnitID: String {
+        Bundle.main.infoDictionary?["APP_OPEN_AD_UNIT_ID"] as? String ?? ""
+    }
+
     private init() {}
 
     /// AdMobの初期化
