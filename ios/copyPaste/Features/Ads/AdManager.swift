@@ -17,7 +17,7 @@ final class AdManager {
     }
 
     /// アプリ起動（App Open）広告のAd Unit ID。
-    /// 空文字の間はApp Open広告を一切ロード・表示しない（本番IDが未発行のため）
+    /// 空文字の場合はApp Open広告を一切ロード・表示しない（xcconfig未設定時の保険）
     static var appOpenAdUnitID: String {
         Bundle.main.infoDictionary?["APP_OPEN_AD_UNIT_ID"] as? String ?? ""
     }
