@@ -106,6 +106,10 @@
 		61BB48CE2DCA3ED700EFE195 /* Exceptions for "copyPaste" folder in "ClipKit" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Config/Debug.xcconfig,
+				Config/Debug.xcconfig.template,
+				Config/Release.xcconfig,
+				Config/Release.xcconfig.template,
 				Info.plist,
 			);
 			target = 61B4C3882DC4A60F00E59DE3 /* ClipKit */;
