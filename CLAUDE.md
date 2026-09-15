@@ -2,6 +2,19 @@
 
 バックグラウンドでもクリップボードを監視し、コピーした内容を自動的に保存するiOSアプリ（PiPモードでバックグラウンド制限を回避）。
 
+## Setup
+
+clone 直後は `ios/copyPaste/Config/` に xcconfig が無いので、先にテンプレートからコピーする。
+
+```bash
+cd ios/copyPaste/Config
+cp Debug.xcconfig.template Debug.xcconfig      # AdMobのテストIDが入っているのでそのまま使える
+cp Release.xcconfig.template Release.xcconfig  # 本番の広告ユニットIDは各自で埋める
+```
+
+実体の xcconfig は `.gitignore` 済み（本番の広告ユニットIDが入るため）。
+コピーせずにビルドすると広告IDが空のまま通ってしまい、広告が出ないだけで気づきにくい。
+
 ## Common Commands
 
 - SwiftLint: `swiftlint lint`

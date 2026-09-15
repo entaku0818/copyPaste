@@ -99,9 +99,12 @@ iOSInjectionProject/
 # Firebase
 .firebase/
 
-# xcconfig (contains sensitive keys)
-copyPaste/Config/Debug.xcconfig
-copyPaste/Config/Release.xcconfig
+# xcconfig（本番の広告ユニットIDが入る。テンプレートだけをコミットする）
+# ディレクトリ再編で追従漏れしないよう、パスを固定せず ** で書く。
+# 以前は copyPaste/Config/... を指していたが実体は ios/copyPaste/Config/ 配下にあり、
+# パターンがルート固定で解釈されるためマッチせず、本番IDがコミットされていた。
+**/Config/Debug.xcconfig
+**/Config/Release.xcconfig
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
