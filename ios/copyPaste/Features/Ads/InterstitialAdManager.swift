@@ -142,6 +142,14 @@ final class InterstitialAdManager: NSObject, ObservableObject {
         UserDefaults.standard.removeObject(forKey: Key.copyCount)
         discardAd()
     }
+
+    /// E2Eテスト用。コピー回数を閾値まで進めて「保留中」にし、在庫を先読みする。
+    /// 履歴にアイテムを入れるにはクリップボード監視が要るが、監視を動かすと
+    /// XCUITestのidle待ちが終わらなくなるため、コピー操作を迂回するための入り口。
+    func seedPendingForTesting() {
+        copyCount = showInterval
+        Task { await loadAd() }
+    }
     #endif
 }
 

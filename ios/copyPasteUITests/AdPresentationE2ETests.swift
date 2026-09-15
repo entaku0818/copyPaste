@@ -24,11 +24,22 @@ final class AdPresentationE2ETests: XCTestCase {
         )
     }
 
-    private func makeApp() -> XCUIApplication {
+    /// - Parameters:
+    ///   - resetAdState: 表示回数・クールダウンを初期化するか。
+    ///     永続化しているので、前の状態を引き継ぎたい時だけfalseにする。
+    ///   - seedInterstitial: コピー5回ぶんを仕込んで、タブ切替だけで
+    ///     インタースティシャルを出せる状態にするか。
+    private func makeApp(resetAdState: Bool = true, seedInterstitial: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         // オンボーディングを飛ばす（NSArgumentDomain経由でUserDefaultsを上書き）
-        // オンボーディングを飛ばし、広告の表示回数・クールダウンを毎回初期化する
-        app.launchArguments = ["-hasCompletedOnboarding", "YES", "--reset-ad-state"]
+        var args = ["-hasCompletedOnboarding", "YES"]
+        if resetAdState {
+            args.append("--reset-ad-state")
+        }
+        if seedInterstitial {
+            args.append("--seed-interstitial-ready")
+        }
+        app.launchArguments = args
         return app
     }
 
@@ -40,63 +51,23 @@ final class AdPresentationE2ETests: XCTestCase {
         add(attachment)
     }
 
-    /// 全画面広告が画面を覆っているか。
-    /// 覆われるとアプリ自身のタブバーが操作不能になるので、それを判定に使う。
+    /// 全画面広告が出ているか。
+    ///
+    /// 出方がフォーマットで違う:
+    /// - App Open はアプリの上に乗るので、タブバーは階層に残ったまま操作不能になる
+    /// - インタースティシャルは画面ごと置き換えるので、タブバーが階層から消える
+    ///
+    /// どちらも「アプリのタブバーが叩けない」で捉えられる。`exists` を条件に入れると
+    /// インタースティシャルを取りこぼすので見ない（実際にそれで偽陰性を出した）。
     private func fullScreenAdIsVisible(_ app: XCUIApplication) -> Bool {
-        let tab = app.tabBars.buttons["履歴"]
-        return tab.exists && !tab.isHittable
+        !app.tabBars.buttons["履歴"].isHittable
     }
 
     private func report(_ app: XCUIApplication, _ tag: String) {
         attach(app, tag)
         let tab = app.tabBars.buttons["履歴"]
-        print("E2E_STATE \(tag) webViews=\(app.webViews.count) " +
+        print("E2E_STATE \(tag) webViews=\(app.webViews.count) tabExists=\(tab.exists) " +
               "tabHittable=\(tab.isHittable) adVisible=\(fullScreenAdIsVisible(app))")
-    }
-
-    /// クリップボード監視を動かして履歴に1件入れ、そのあと監視を止める。
-    ///
-    /// 監視タイマーが回っているとXCUITestの「アプリのidle待ち」が終わらず
-    /// UIクエリがタイムアウトするため、アイテムを入れたら必ず止める。
-    /// 権限アラートは「許可する」を押す（放っておくとXCUITestの既定処理が
-    /// 「後で」を押してしまい、履歴に何も入らない）。
-    @discardableResult
-    private func seedHistoryItemWithMonitoring(_ app: XCUIApplication) throws -> String {
-        // 常時起動タブを開くと MonitoringView.onAppear が startMonitoring を送る
-        app.tabBars.buttons["常時起動"].tap()
-
-        let allow = app.buttons["許可する"].firstMatch
-        if allow.waitForExistence(timeout: 10) {
-            allow.tap()
-        }
-        sleep(2)
-
-        let text = "E2E-\(UUID().uuidString.prefix(6))"
-        UIPasteboard.general.string = text
-        sleep(6)
-
-        // 監視を止めてアプリをidleにする
-        let stopButton = app.buttons["Stop"].firstMatch
-        if stopButton.waitForExistence(timeout: 10) {
-            stopButton.tap()
-        }
-        sleep(2)
-
-        app.tabBars.buttons["履歴"].tap()
-        sleep(2)
-
-        let row = app.staticTexts[text]
-        XCTAssertTrue(row.waitForExistence(timeout: 20), "クリップボード監視が履歴にアイテムを取り込むこと")
-        return text
-    }
-
-    /// 詳細シートを開いてコピーする
-    private func copyItem(_ app: XCUIApplication, labelled text: String) {
-        app.staticTexts[text].firstMatch.tap()
-        let copyButton = app.buttons["コピー"].firstMatch
-        XCTAssertTrue(copyButton.waitForExistence(timeout: 10), "詳細シートのコピーボタンが出ること")
-        copyButton.tap()
-        sleep(1)
     }
 
     // MARK: - App Open
@@ -126,20 +97,68 @@ final class AdPresentationE2ETests: XCTestCase {
         XCTAssertTrue(fullScreenAdIsVisible(app), "5回目のフォアグラウンドでApp Open広告が画面に出ること")
     }
 
-    // MARK: - Interstitial（未カバー）
+    // MARK: - Interstitial
 
-    // インタースティシャルの実表示はXCUITestからは駆動できていない。
-    // 履歴にアイテムを入れるにはクリップボード監視を動かす必要があるが、
-    // 監視を始めるとXCUITestの「アプリのidle待ち」が終わらなくなり
-    // （実測: 「許可する」タップ後のidle待ちに68秒、以降のUIクエリは
-    //  31秒×3リトライで全てタイムアウト）、コピー操作まで到達できない。
-    //
-    // 現状インタースティシャルについて分かっていること:
-    // - 表示判定は ClipboardHistoryFeatureTests / FullScreenAdCoordinatorTests でカバー済み
-    // - present経路（topViewController解決 → canPresent → present → markPresented）は
-    //   App Openと同じコードを共有しており、上のテストで実際に画面に出ることを確認済み
-    // - 未確認なのは「コピー5回 → タブ切替」というトリガー経路のみ
-    //
-    // 進めるなら、監視を止めた状態で履歴へ直接アイテムを流し込むデバッグ用の
-    // 起動引数を足すのが現実的。
+    /// コピー回数が閾値に達している状態でタブを切り替えると、
+    /// インタースティシャルが実際に画面へ出ること。
+    ///
+    /// `ContentView` の `.onChange(of: selectedTab)` → `.tabChanged` →
+    /// `showPendingAd` という、ユニットテストからは触れないSwiftUIの配線を通す。
+    @MainActor
+    func testInterstitialAppearsOnTabSwitch() throws {
+        let app = makeApp(seedInterstitial: true)
+        app.launch()
+        _ = app.wait(for: .runningForeground, timeout: 20)
+        sleep(6)
+        report(app, "inter_before_tab_switch")
+        XCTAssertFalse(fullScreenAdIsVisible(app), "タブを切り替えるまでは出さないこと")
+
+        app.tabBars.buttons["お気に入り"].tap()
+        sleep(8)
+        report(app, "inter_after_tab_switch")
+
+        XCTAssertTrue(
+            fullScreenAdIsVisible(app),
+            "タブ切り替えでインタースティシャルが画面に出ること"
+        )
+    }
+
+    // MARK: - 相互排他
+
+    /// App Open広告を出した直後は、条件が揃っていてもタブ切り替えで
+    /// インタースティシャルを出さないこと（2枚続けて出る事故の回帰テスト）
+    @MainActor
+    func testInterstitialIsSuppressedRightAfterAppOpenAd() throws {
+        // まずApp Open広告を出す
+        let app = makeApp(seedInterstitial: true)
+        app.launch()
+        _ = app.wait(for: .runningForeground, timeout: 20)
+        sleep(3)
+        for _ in 1...4 {
+            XCUIDevice.shared.press(.home)
+            sleep(2)
+            app.activate()
+            _ = app.wait(for: .runningForeground, timeout: 20)
+            sleep(6)
+        }
+        report(app, "mutex_appopen_shown")
+        XCTAssertTrue(fullScreenAdIsVisible(app), "前提: App Open広告が出ていること")
+
+        // 広告を閉じる代わりに入れ直さず再起動する。
+        // 表示時刻はUserDefaultsに残るので、相互排他の条件はそのまま効く
+        app.terminate()
+        let relaunched = makeApp(resetAdState: false, seedInterstitial: true)
+        relaunched.launch()
+        _ = relaunched.wait(for: .runningForeground, timeout: 20)
+        sleep(6)
+
+        relaunched.tabBars.buttons["お気に入り"].tap()
+        sleep(8)
+        report(relaunched, "mutex_after_tab_switch")
+
+        XCTAssertFalse(
+            fullScreenAdIsVisible(relaunched),
+            "App Open広告の直後はインタースティシャルを出さないこと（2枚続けて出る事故の防止）"
+        )
+    }
 }

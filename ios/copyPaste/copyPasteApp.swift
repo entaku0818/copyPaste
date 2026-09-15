@@ -29,6 +29,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
       AppOpenAdManager.shared.resetForTesting()
       InterstitialAdManager.shared.resetForTesting()
     }
+    // コピー5回ぶんを仕込んで、タブ切替だけでインタースティシャルを出せる状態にする
+    if ProcessInfo.processInfo.arguments.contains("--seed-interstitial-ready") {
+      InterstitialAdManager.shared.seedPendingForTesting()
+    }
     #endif
     return true
   }
