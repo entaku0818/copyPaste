@@ -1,11 +1,5 @@
-【Important fixes】
-· Fixed history from one device being deleted by activity on another device when iCloud sync is on
-· Items copied on another device now show up in your history without reopening the app
+【Notice】
+· The free version may now show a full-screen ad when you open the app. Upgrading to Pro removes all ads.
 
-【Improvements】
-· Settings now shows when your history last synced
-· Fixed the Pro screen appearing in Japanese on English devices
-· Copied content is no longer written to logs
-· History export now reports failures, and the temporary file is removed after sharing
-· Lighter work during background monitoring, plus faster list scrolling and category detection
-· The rating request is now a centered dialog
+【Fixes】
+· Fixed an issue where ads were not displayed correctly
