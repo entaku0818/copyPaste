@@ -17,6 +17,7 @@
 //
 
 import Foundation
+import OSLog
 import StoreKit
 import UIKit
 import FirebaseAnalytics
@@ -52,6 +53,34 @@ enum AppReview {
         /// Proへのアップグレードが成立
         case proPurchase = "pro_purchase"
     }
+
+    /// 事前確認を見送った理由。ログとAnalyticsに出して「なぜ出なかったか」を
+    /// 実機のログだけで切り分けられるようにする（issue #105）。
+    enum SkipReason: String, Equatable, Sendable {
+        /// バックグラウンドまたはPiP中で、そもそも画面に出せない
+        case notForeground = "not_foreground"
+        /// すでに「満足」と答えている
+        case answeredPositively = "answered_positively"
+        /// 前回表示から minimumDaysBetweenPrompts 日経っていない
+        case throttled = "throttled"
+        /// launchトリガーは一度出して使い切っている
+        case launchTriggerConsumed = "launch_trigger_consumed"
+        /// 起動回数がまだ launchTrigger に届いていない
+        case launchCountBelowThreshold = "launch_count_below_threshold"
+        /// コピー回数が copyInterval の倍数に達していない
+        case copyCountNotAtMilestone = "copy_count_not_at_milestone"
+    }
+
+    /// 発火判定の結果。Boolだけだと「出なかった理由」が消えるため、
+    /// 理由まで含めて返す（`shouldPrompt` はこれを畳んだ薄いラッパ）。
+    enum Decision: Equatable, Sendable {
+        case prompt
+        case skip(SkipReason)
+
+        var shouldPrompt: Bool { self == .prompt }
+    }
+
+    private static let logger = Logger(subsystem: "com.entaku.clipkit", category: "AppReview")
 
     private enum Key {
         static let launchCount = "clipkit.launchCount"
@@ -89,12 +118,16 @@ enum AppReview {
     static func incrementLaunchCount(defaults: UserDefaults = .standard) -> Int {
         incrementLock.lock()
         defer { incrementLock.unlock() }
+        let current = defaults.integer(forKey: Key.launchCount)
         guard !hasIncrementedThisProcess else {
-            return defaults.integer(forKey: Key.launchCount)
+            // ここに来る＝1プロセス内で2回目以降の呼び出し。二重計上を握り潰した記録を残す。
+            logger.error("launchCount: 同一プロセス内で2回目のincrementを抑止した (count=\(current, privacy: .public))")
+            return current
         }
         hasIncrementedThisProcess = true
-        let next = defaults.integer(forKey: Key.launchCount) + 1
+        let next = current + 1
         defaults.set(next, forKey: Key.launchCount)
+        logger.info("launchCount: \(current, privacy: .public) -> \(next, privacy: .public)")
         return next
     }
 
@@ -127,31 +160,98 @@ enum AppReview {
         defaults: UserDefaults = .standard,
         now: Date = Date()
     ) -> Bool {
+        decide(
+            trigger: trigger,
+            launchCount: launchCount,
+            copyCount: copyCount,
+            isForeground: isForeground,
+            defaults: defaults,
+            now: now
+        ).shouldPrompt
+    }
+
+    /// `shouldPrompt` の本体。出す／出さないに加えて「出さない理由」を返す。
+    ///
+    /// #105 の調査で一番困ったのが「シートが出ない」という結果だけが観測でき、
+    /// どの条件で落ちたのかが実機ログから分からなかったこと。
+    /// 判定結果は必ずここで os_log に出すので、以後は
+    /// `xcrun simctl spawn <udid> log stream --predicate 'category == "AppReview"'`
+    /// だけで空振りの原因を切り分けられる。
+    static func decide(
+        trigger: Trigger,
+        launchCount: Int = 0,
+        copyCount: Int = 0,
+        isForeground: Bool,
+        defaults: UserDefaults = .standard,
+        now: Date = Date()
+    ) -> Decision {
+        let decision = Self.evaluate(
+            trigger: trigger,
+            launchCount: launchCount,
+            copyCount: copyCount,
+            context: Context(isForeground: isForeground, defaults: defaults, now: now)
+        )
+        let outcome: String
+        switch decision {
+        case .prompt:
+            outcome = "出す"
+        case let .skip(reason):
+            outcome = "見送り reason=\(reason.rawValue)"
+        }
+        let message = "decide(\(trigger.rawValue)): \(outcome)"
+            + " launchCount=\(launchCount) copyCount=\(copyCount)"
+        logger.info("\(message, privacy: .public)")
+        return decision
+    }
+
+    /// 判定に必要な「トリガー以外の状況」をまとめたもの
+    private struct Context {
+        let isForeground: Bool
+        let defaults: UserDefaults
+        let now: Date
+    }
+
+    private static func evaluate(
+        trigger: Trigger,
+        launchCount: Int,
+        copyCount: Int,
+        context: Context
+    ) -> Decision {
+        let defaults = context.defaults
+
         // 画面に出せない状況では判定自体を行わない。
         // ここで見送っても何も記録しないので、次の機会にそのまま持ち越される。
-        guard isForeground else { return false }
+        guard context.isForeground else { return .skip(.notForeground) }
 
         // 一度「満足」と答えた人には二度と出さない
-        guard !defaults.bool(forKey: Key.answeredPositively) else { return false }
+        guard !defaults.bool(forKey: Key.answeredPositively) else { return .skip(.answeredPositively) }
 
         // 全トリガー共通のスロットル
         guard !isThrottled(
             minimumDays: Config.minimumDaysBetweenPrompts,
             defaults: defaults,
-            now: now
-        ) else { return false }
+            now: context.now
+        ) else { return .skip(.throttled) }
 
         switch trigger {
         case .launch:
             // 等値比較(== 2)だと、何らかの理由でカウントが飛んだユーザーは
             // 二度とこのトリガーに当たらなくなる（issue #105 で実際に起きた）。
             // 「しきい値以上」かつ「まだ一度も使っていない」に変える。
-            guard !defaults.bool(forKey: Key.launchTriggerConsumed) else { return false }
-            return launchCount >= Config.launchTrigger
+            guard !defaults.bool(forKey: Key.launchTriggerConsumed) else {
+                return .skip(.launchTriggerConsumed)
+            }
+            guard launchCount >= Config.launchTrigger else {
+                return .skip(.launchCountBelowThreshold)
+            }
+            return .prompt
         case .copyMilestone:
-            return copyCount > 0 && copyCount % Config.copyInterval == 0
+            guard copyCount > 0, copyCount % Config.copyInterval == 0 else {
+                return .skip(.copyCountNotAtMilestone)
+            }
+            return .prompt
         case .proPurchase:
-            return true
+            return .prompt
         }
     }
 
@@ -165,7 +265,12 @@ enum AppReview {
             return false
         }
         let days = Calendar.current.dateComponents([.day], from: lastDate, to: now).day ?? 0
-        return days < minimumDays
+        // 端末の時計が巻き戻された／バックアップ復元で未来の日付が入った場合、
+        // days は負になる。素直に `days < minimumDays` と比べると永久にtrue＝
+        // 二度と事前確認を出せない状態に固定されてしまう。
+        // 窓を超える未来日付は値そのものが壊れているとみなして無視する
+        // （数日ぶんの軽微なズレはそのままスロットルを効かせる）。
+        return abs(days) < minimumDays
     }
 
     // MARK: - 記録
@@ -184,6 +289,9 @@ enum AppReview {
         if trigger == .launch {
             defaults.set(true, forKey: Key.launchTriggerConsumed)
         }
+        let promptCount = defaults.integer(forKey: Key.promptCount)
+        let message = "markShown(\(trigger.rawValue)): シートが画面に出た (promptCount=\(promptCount))"
+        logger.info("\(message, privacy: .public)")
         Analytics.logEvent("review_request_shown", parameters: ["trigger": trigger.rawValue])
     }
 

@@ -142,4 +142,55 @@ final class AppReviewLaunchTriggerTests: XCTestCase {
             "フォアグラウンドでないときは判定自体を行わないこと"
         )
     }
+
+    // MARK: - #105 の再現シナリオ
+
+    /// issue #105 のタイトルそのままの回帰テスト:
+    /// 「2回しか起動していないのに launchCount が 3 になる」。
+    ///
+    /// 旧実装は `.onAppear` 起点で数えており、ContentView の TabView が
+    /// MonitoringView と ClipboardHistoryView の2つの `.onAppear` を送るため、
+    /// 1回の起動で2回 `incrementLaunchCount` が呼ばれていた。
+    /// 「起動2回 × タブ2枚 = 4回呼ばれる」状況を再現し、それでも
+    /// launchCount が起動回数ぶん（=2）にしかならないことを固定する。
+    ///
+    /// 修正前（プロセス内ガードなし）の実装ではここが 4 になって落ちる。
+    func testLaunchCount_doesNotInflateWhenOnAppearFiresFromMultipleTabs() {
+        // 1回目の起動: 2つのタブが .onAppear を送る
+        AppReview.incrementLaunchCount(defaults: defaults)
+        AppReview.incrementLaunchCount(defaults: defaults)
+        XCTAssertEqual(
+            AppReview.launchCount(defaults: defaults), 1,
+            "1回の起動でタブが2枚 .onAppear を送っても、起動回数は1のままであること"
+        )
+
+        // 2回目の起動（別プロセス）: 同じく2つのタブが .onAppear を送る
+        AppReview.resetProcessStateForTesting()
+        AppReview.incrementLaunchCount(defaults: defaults)
+        AppReview.incrementLaunchCount(defaults: defaults)
+
+        XCTAssertEqual(
+            AppReview.launchCount(defaults: defaults), 2,
+            "2回しか起動していないなら launchCount は 2 であること（#105 は 3 以上になっていた）"
+        )
+    }
+
+    /// 二重計上したカウントでも launch トリガーを取りこぼさないこと。
+    ///
+    /// 旧実装は `launchCount == Config.launchTrigger` の等値比較だったため、
+    /// カウントが飛んだユーザーは**二度と**このトリガーに当たらなかった。
+    /// 上の二重計上を直したうえで、なお飛んだ場合の保険も効いていることを固定する。
+    func testShouldPrompt_isNotLostEvenIfLaunchCountWasInflated() {
+        // すでに二重計上でカウントが 3 まで進んでしまっている端末を想定
+        defaults.set(3, forKey: "clipkit.launchCount")
+
+        XCTAssertTrue(
+            AppReview.shouldPrompt(
+                trigger: .launch,
+                launchCount: AppReview.launchCount(defaults: defaults),
+                isForeground: true, defaults: defaults
+            ),
+            "カウントが3まで進んだ既存ユーザーにも、まだ一度も出していないなら出すこと"
+        )
+    }
 }
