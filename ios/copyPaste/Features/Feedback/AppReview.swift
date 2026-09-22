@@ -326,9 +326,30 @@ enum AppReview {
     /// ClipKitはPiPを使うのでシーンが複数ある場面があり、実際に
     /// 「満足している」を押した81人に対して評価が2件しか付いていなかった（issue #106）。
     static func presentationScene(from scenes: [UIScene]) -> UIWindowScene? {
-        scenes
-            .compactMap { $0 as? UIWindowScene }
-            .first { $0.activationState == .foregroundActive }
+        selectScene(
+            from: scenes,
+            narrow: { $0 as? UIWindowScene },
+            isForegroundActive: { $0.activationState == .foregroundActive }
+        )
+    }
+
+    /// 「型で絞ってから状態で探す」という**選び方そのもの**を、UIKitに依存しない形で切り出したもの。
+    ///
+    /// #106 の原因は `.first(where: 状態) as? 型` と書いていたこと。この順序だと
+    /// 状態の合う要素を1つ引いてから型変換するため、引いたものが目的の型でなければ
+    /// nil になって無言終了する。`connectedScenes` は `Set` で順序が不定なので、
+    /// どちらが引かれるかは実行環境次第だった。
+    ///
+    /// 非 `UIWindowScene` な `UIScene` はテスト内で生成できず、
+    /// `presentationScene` だけではこの取り違えを再現できない。
+    /// そこで選び方をここに分離し、フェイクで順序を固定してテストする
+    /// （`AppReviewSceneSelectionTests`）。
+    static func selectScene<Candidate, Narrowed>(
+        from candidates: [Candidate],
+        narrow: (Candidate) -> Narrowed?,
+        isForegroundActive: (Narrowed) -> Bool
+    ) -> Narrowed? {
+        candidates.compactMap(narrow).first(where: isForegroundActive)
     }
 
     /// 実際のシステムレビューダイアログを呼び出す。
