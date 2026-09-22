@@ -822,6 +822,9 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
     func testSatisfactionResponsePositive_sendsRequestReview() async {
         let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
             ClipboardHistoryFeature()
+        } withDependencies: {
+            // requestReview はオーバーレイの閉じ待ちで clock を使う（issue #106）
+            $0.continuousClock = ImmediateClock()
         }
         store.exhaustivity = .off
 
@@ -847,6 +850,8 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         initialState.pendingReviewTrigger = .launch
         let store = TestStore(initialState: initialState) {
             ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.continuousClock = ImmediateClock()
         }
         store.exhaustivity = .off
 
@@ -855,6 +860,74 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         XCTAssertFalse(store.state.showSatisfactionPrompt, "回答したらモーダルが閉じること")
         XCTAssertNil(store.state.pendingReviewTrigger, "トリガーの記録がクリアされること")
         await store.receive(\.requestReview)
+    }
+
+    // MARK: - システムダイアログの呼び出し順（issue #106）
+
+    /// 「満足している」を押した81人に対して評価が2件しか付いていなかった原因のひとつ。
+    ///
+    /// オーバーレイを閉じるアニメーション（0.2秒）の最中に `AppStore.requestReview` を
+    /// 呼ぶとOSがダイアログを無言で握り潰す。**閉じ終わるまで待ってから呼ぶ**ことを固定する。
+    /// 待ちを外すと「進める前に呼ばれている」でこのテストが落ちる。
+    func testRequestReview_waitsForOverlayDismissalBeforeCallingSystemDialog() async {
+        let clock = TestClock()
+        let requested = LockIsolated(false)
+        let store = TestStore(initialState: ClipboardHistoryFeature.State()) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.systemReview = SystemReviewClient(
+                request: {
+                    requested.setValue(true)
+                    return true
+                }
+            )
+        }
+        store.exhaustivity = .off
+
+        await store.send(.requestReview)
+
+        // 待ち時間の直前まで進めても、まだ呼ばれていないこと
+        await clock.advance(by: AppReview.Config.systemDialogDelay - .milliseconds(1))
+        XCTAssertFalse(
+            requested.value,
+            "オーバーレイが閉じきる前にrequestReviewを呼んではいけない（OSに握り潰される）"
+        )
+
+        // 待ち時間を過ぎたら呼ばれること
+        await clock.advance(by: .milliseconds(1))
+        await store.finish()
+        XCTAssertTrue(requested.value, "待ち時間の経過後はシステムダイアログを呼ぶこと")
+    }
+
+    /// 「満足」の回答からシステムダイアログ呼び出しまで一本で繋がっていること。
+    func testSatisfactionResponsePositive_reachesSystemDialog() async {
+        let clock = TestClock()
+        let requested = LockIsolated(false)
+        var initialState = ClipboardHistoryFeature.State()
+        initialState.showSatisfactionPrompt = true
+        initialState.pendingReviewTrigger = .launch
+        let store = TestStore(initialState: initialState) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+            $0.systemReview = SystemReviewClient(
+                request: {
+                    requested.setValue(true)
+                    return true
+                }
+            )
+        }
+        store.exhaustivity = .off
+
+        await store.send(.satisfactionResponsePositive)
+        await clock.advance(by: AppReview.Config.systemDialogDelay)
+        await store.finish()
+
+        XCTAssertTrue(
+            requested.value,
+            "「満足している」を押したらシステムダイアログまで到達すること"
+        )
     }
 
     func testSatisfactionResponseNegative_closesPromptAndOpensFeedbackForm() async {

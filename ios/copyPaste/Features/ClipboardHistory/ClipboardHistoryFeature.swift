@@ -147,6 +147,7 @@ struct ClipboardHistoryFeature {
     @Dependency(\.clipboardRepository) var repository
     @Dependency(\.snippetRepository) var snippetRepository
     @Dependency(\.interstitialAd) var interstitialAd
+    @Dependency(\.systemReview) var systemReview
     @Dependency(\.pendingItemBuffer) var pendingBuffer
     @Dependency(\.remoteChange) var remoteChange
     @Dependency(\.syncStatus) var syncStatus
@@ -784,7 +785,10 @@ struct ClipboardHistoryFeature {
 
             case .requestReview:
                 return .run { _ in
-                    await AppReview.requestSystemReview()
+                    // 事前確認オーバーレイが閉じるアニメーションの最中に呼ぶと、
+                    // OSがダイアログを無言で握り潰す。消えきるまで待つ（issue #106）。
+                    try? await clock.sleep(for: AppReview.Config.systemDialogDelay)
+                    _ = await systemReview.request()
                 }
 
             case let .checkReviewTrigger(trigger):

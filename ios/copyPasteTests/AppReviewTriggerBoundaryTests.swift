@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 @testable import ClipKit
 
 /// レビュー事前確認の発火条件を**境界値で固定する**テスト（issue #105）。
@@ -215,6 +216,46 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
         XCTAssertEqual(defaults.integer(forKey: "clipkit.reviewPromptCount"), 1)
         XCTAssertEqual(defaults.object(forKey: "clipkit.lastReviewPromptDate") as? Date, now)
         XCTAssertTrue(defaults.bool(forKey: "clipkit.launchTriggerConsumed"))
+    }
+
+    // MARK: - システムダイアログの提示先シーン（issue #106）
+
+    /// 旧実装は
+    /// `.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene`
+    /// と書いていた。`connectedScenes` は `Set<UIScene>` で順序が不定なので、
+    /// foregroundActive なシーンが複数あって先に引いたものが UIWindowScene でないと
+    /// キャストに失敗して nil になり、ダイアログを出さずに無言終了していた。
+    /// 「型で絞ってから状態で探す」ことを固定する。
+    func testPresentationScene_findsForegroundWindowSceneFromRealScenes() {
+        let scenes = Array(UIApplication.shared.connectedScenes)
+        XCTAssertFalse(scenes.isEmpty, "テストホストアプリのシーンが取得できていること")
+
+        let scene = AppReview.presentationScene(from: scenes)
+
+        XCTAssertNotNil(
+            scene,
+            "foregroundActiveなUIWindowSceneがあるなら必ず見つけること（ここがnilだとダイアログが出ない）"
+        )
+        XCTAssertEqual(
+            scene?.activationState, .foregroundActive,
+            "foregroundActiveなシーンを返すこと"
+        )
+    }
+
+    /// シーンの並び順に依存しないこと（`Set` の順序は不定なので順序に依存してはいけない）。
+    func testPresentationScene_isOrderIndependent() {
+        let scenes = Array(UIApplication.shared.connectedScenes)
+
+        XCTAssertEqual(
+            AppReview.presentationScene(from: scenes)?.activationState,
+            AppReview.presentationScene(from: scenes.reversed())?.activationState,
+            "並び順を変えても同じ状態のシーンを選ぶこと"
+        )
+    }
+
+    /// 出せるシーンが無いときは nil を返す（呼び出し側がAnalyticsに記録する分岐）。
+    func testPresentationScene_returnsNilWhenNoScenes() {
+        XCTAssertNil(AppReview.presentationScene(from: []))
     }
 
     // MARK: - shouldPrompt と decide が食い違わないこと

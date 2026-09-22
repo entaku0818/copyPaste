@@ -42,6 +42,14 @@ enum AppReview {
         /// 全トリガー共通の頻度制御: 前回の事前確認表示から最低何日空けるか。
         /// これがないとヘビーユーザーほど短期間に何度も同じシートを見ることになる。
         static let minimumDaysBetweenPrompts = 30
+
+        /// 「満足している」を押してから `AppStore.requestReview` を呼ぶまでの待ち時間。
+        ///
+        /// 事前確認オーバーレイは `.easeInOut(duration: 0.2)` で閉じるため、
+        /// 押した直後に呼ぶと**画面遷移の最中に requestReview を呼ぶ**ことになり、
+        /// OSがダイアログを無言で握り潰す（issue #106）。
+        /// オーバーレイが消えきってから呼ぶために余裕を持って待つ。
+        static let systemDialogDelay: Duration = .milliseconds(600)
     }
 
     /// どのトリガーで事前確認が出たかを識別する。Analyticsのパラメータにも使う。
@@ -308,12 +316,43 @@ enum AppReview {
 
     // MARK: - システムダイアログ
 
+    /// システムレビューダイアログの提示先シーンを選ぶ。
+    ///
+    /// **型で絞ってから状態で探すこと。** 旧実装は
+    /// `.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene`
+    /// と書いていたが、`connectedScenes` は `Set<UIScene>` で順序が不定なため、
+    /// foregroundActive なシーンが複数あって先に引いたものが `UIWindowScene` でないと
+    /// キャストに失敗して nil になり、**ダイアログを出さずに無言終了**していた。
+    /// ClipKitはPiPを使うのでシーンが複数ある場面があり、実際に
+    /// 「満足している」を押した81人に対して評価が2件しか付いていなかった（issue #106）。
+    static func presentationScene(from scenes: [UIScene]) -> UIWindowScene? {
+        scenes
+            .compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive }
+    }
+
     /// 実際のシステムレビューダイアログを呼び出す。
+    ///
+    /// 呼べた／呼べなかったを必ず記録する。#106 の調査で困ったのが
+    /// 「`review_request_accepted` の後に何が起きたか分からない」ことだったため、
+    /// シーンが取れずに見送ったケースを区別してログとAnalyticsに残す。
+    /// なお `AppStore.requestReview` 自体は呼んでも実際に表示されるとは限らない
+    /// （Appleが年3回までに制限しており、アプリ側からは検知できない）。
     @MainActor
-    static func requestSystemReview() {
-        guard let scene = UIApplication.shared.connectedScenes
-            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else { return }
+    @discardableResult
+    static func requestSystemReview() -> Bool {
+        guard let scene = presentationScene(from: Array(UIApplication.shared.connectedScenes)) else {
+            logger.error("requestSystemReview: foregroundActiveなUIWindowSceneが無く呼び出せなかった")
+            Analytics.logEvent(
+                "review_system_dialog_skipped",
+                parameters: ["reason": "no_foreground_window_scene"]
+            )
+            return false
+        }
         AppStore.requestReview(in: scene)
+        logger.info("requestSystemReview: AppStore.requestReview を呼び出した")
+        Analytics.logEvent("review_system_dialog_requested", parameters: nil)
+        return true
     }
 
     /// App Storeのレビュー投稿画面を直接開く。

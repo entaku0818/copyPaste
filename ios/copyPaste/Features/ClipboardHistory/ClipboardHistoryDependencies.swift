@@ -151,6 +151,35 @@ extension DependencyValues {
     }
 }
 
+// MARK: - SystemReviewClient
+
+// システムレビューダイアログの呼び出しをDependency化する（issue #106）。
+// 「満足している」を押してから実際に呼べたのかがテストからも実機ログからも
+// 分からなかったのが #106 の調査を難しくした原因なので、呼び出しを差し替え可能にして
+// 「オーバーレイが閉じるまで待ってから呼ぶ」という順序をテストで固定できるようにする。
+// テストでは実際のダイアログを出さない実装を使う。
+struct SystemReviewClient {
+    /// 呼び出せたらtrue。foregroundActiveなUIWindowSceneが無ければfalse
+    var request: @Sendable () async -> Bool
+}
+
+extension SystemReviewClient: DependencyKey {
+    static let liveValue = SystemReviewClient(
+        request: { await AppReview.requestSystemReview() }
+    )
+
+    static let testValue = SystemReviewClient(
+        request: { true }
+    )
+}
+
+extension DependencyValues {
+    var systemReview: SystemReviewClient {
+        get { self[SystemReviewClient.self] }
+        set { self[SystemReviewClient.self] = newValue }
+    }
+}
+
 // MARK: - PendingItemBufferClient
 
 // PiP中の軽量チェックポイント（App Group UserDefaults）をDependency化する。
