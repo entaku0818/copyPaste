@@ -1,5 +1,5 @@
-【Notice】
-· The free version may now show a full-screen ad when you open the app. Upgrading to Pro removes all ads.
+【Improvements】
+· ClipKit now speaks English throughout — onboarding, Pro upgrade, widgets and the keyboard
 
 【Fixes】
-· Fixed an issue where ads were not displayed correctly
+· Fixed a case where the review prompt did not appear correctly
