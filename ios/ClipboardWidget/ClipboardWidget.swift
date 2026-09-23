@@ -45,8 +45,8 @@ private struct WidgetItem: Identifiable, Decodable {
         switch type {
         case "text": return textContent ?? ""
         case "url": return url?.host ?? url?.absoluteString ?? ""
-        case "image": return "画像"
-        case "file": return fileName ?? "ファイル"
+        case "image": return String(localized: "item.image")
+        case "file": return fileName ?? String(localized: "item.file")
         default: return ""
         }
     }
@@ -104,9 +104,9 @@ struct ClipboardWidgetProvider: TimelineProvider {
     }
     private func sampleItems() -> [WidgetItem] {
         [
-            WidgetItem(id: UUID(), timestamp: Date(), type: "text", textContent: "サンプルテキスト", isFavorite: true),
+            WidgetItem(id: UUID(), timestamp: Date(), type: "text", textContent: String(localized: "widget.sample.first"), isFavorite: true),
             WidgetItem(id: UUID(), timestamp: Date().addingTimeInterval(-60), type: "url", url: URL(string: "https://apple.com")),
-            WidgetItem(id: UUID(), timestamp: Date().addingTimeInterval(-120), type: "text", textContent: "別のテキスト"),
+            WidgetItem(id: UUID(), timestamp: Date().addingTimeInterval(-120), type: "text", textContent: String(localized: "widget.sample.second")),
         ]
     }
 }
@@ -133,8 +133,8 @@ struct ClipboardWidgetEntryView: View {
                 Image(systemName: "crown.fill")
                     .font(.title)
                     .foregroundStyle(LinearGradient(colors: [.yellow, .orange], startPoint: .topLeading, endPoint: .bottomTrailing))
-                Text("Pro限定機能").font(.caption).fontWeight(.bold)
-                Text("アプリでアップグレード").font(.caption2).foregroundColor(.secondary)
+                Text("widget.proOnly").font(.caption).fontWeight(.bold)
+                Text("widget.upgradeInApp").font(.caption2).foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -163,7 +163,7 @@ struct SmallWidgetView: View {
                 }
             } else {
                 Spacer()
-                Text("履歴がありません").font(.caption2).foregroundColor(.secondary)
+                Text("widget.empty").font(.caption2).foregroundColor(.secondary)
                 Spacer()
             }
             Spacer()
@@ -184,7 +184,7 @@ struct MediumWidgetView: View {
             }
             if entry.items.isEmpty {
                 Spacer()
-                HStack { Spacer(); Text("履歴がありません").font(.caption).foregroundColor(.secondary); Spacer() }
+                HStack { Spacer(); Text("widget.empty").font(.caption).foregroundColor(.secondary); Spacer() }
                 Spacer()
             } else {
                 ForEach(Array(entry.items.prefix(3))) { item in
@@ -213,12 +213,12 @@ struct LargeWidgetView: View {
                 Image(systemName: "doc.on.clipboard").foregroundColor(.blue)
                 Text("ClipKit").font(.headline)
                 Spacer()
-                Text("\(entry.items.count)件").font(.caption).foregroundColor(.secondary)
+                Text(String(format: String(localized: "widget.itemCount %lld"), entry.items.count)).font(.caption).foregroundColor(.secondary)
             }
             Divider()
             if entry.items.isEmpty {
                 Spacer()
-                HStack { Spacer(); Text("履歴がありません").font(.caption).foregroundColor(.secondary); Spacer() }
+                HStack { Spacer(); Text("widget.empty").font(.caption).foregroundColor(.secondary); Spacer() }
                 Spacer()
             } else {
                 ForEach(Array(entry.items.prefix(6))) { item in
@@ -258,13 +258,13 @@ private func typeIcon(_ item: WidgetItem) -> some View {
 private func widgetTimestamp(_ date: Date) -> String {
     let weekAgo = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date()) ?? Date()
     if date < weekAgo {
-        return date.formatted(.dateTime.year().month().day().locale(Locale(identifier: "ja_JP")))
+        return date.formatted(.dateTime.year().month().day().locale(Locale.current))
     }
     let components = Calendar.current.dateComponents([.minute, .hour, .day], from: date, to: Date())
-    if let day = components.day, day > 0 { return "\(day)日前" }
-    if let hour = components.hour, hour > 0 { return "\(hour)時間前" }
-    if let minute = components.minute, minute > 0 { return "\(minute)分前" }
-    return "たった今"
+    if let day = components.day, day > 0 { return String(format: String(localized: "time.days %lld"), day) }
+    if let hour = components.hour, hour > 0 { return String(format: String(localized: "time.hours %lld"), hour) }
+    if let minute = components.minute, minute > 0 { return String(format: String(localized: "time.minutes %lld"), minute) }
+    return String(localized: "time.justnow")
 }
 
 private func typeColor(_ item: WidgetItem) -> Color {
@@ -285,7 +285,7 @@ struct ClipboardWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("ClipKit")
-        .description("クリップボードの履歴をすぐ確認。")
+        .description(Text("widget.description"))
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

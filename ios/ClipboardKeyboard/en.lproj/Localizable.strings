@@ -1,0 +1,29 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "History";
+"keyboard.tab.snippets" = "Snippets";
+"keyboard.history.empty" = "No history";
+"keyboard.snippets.empty" = "No snippets";
+"keyboard.upgrade.unlimited" = "See more\nUnlimited with Pro";
+"item.image" = "Image";
+"item.file" = "File";
+"transform.menu.paste" = "Transform & Paste";
+"keyboard.upgrade.tenItems" = "See more\n10 items with Pro";
+"transform.uppercase" = "Uppercase";
+"transform.lowercase" = "Lowercase";
+"transform.removeLineBreaks" = "Remove Line Breaks";
+"transform.trimWhitespace" = "Trim Whitespace";
+"transform.snakeCase" = "Convert to snake_case";
+"transform.camelCase" = "Convert to camelCase";
+"transform.fullWidth" = "Convert to Full-width";
+"transform.halfWidth" = "Convert to Half-width";
+"transform.removeMarkdown" = "Remove Markdown";
+"transform.urlEncode" = "URL Encode";
+"transform.urlDecode" = "URL Decode";
+"category.url" = "URL";
+"category.email" = "Email";
+"category.phone" = "Phone";
+"category.code" = "Code";
+"category.address" = "Address";
+"category.text" = "Text";

@@ -31,7 +31,7 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
         title.translatesAutoresizingMaskIntoConstraints = false
 
         let hint = UILabel()
-        hint.text = "クリップボード履歴"
+        hint.text = String(localized: "pip.hint")
         hint.font = .systemFont(ofSize: 9)
         hint.textColor = .secondaryLabel
         hint.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +50,7 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
         tableView.backgroundColor = .systemBackground
 
         emptyLabel = UILabel()
-        emptyLabel.text = "履歴なし"
+        emptyLabel.text = String(localized: "pip.empty")
         emptyLabel.font = .systemFont(ofSize: 12)
         emptyLabel.textColor = .secondaryLabel
         emptyLabel.textAlignment = .center
@@ -117,13 +117,13 @@ extension ClipboardPiPViewController: UITableViewDataSource {
         case .url:
             config.text = item.url?.absoluteString.prefix(60).description ?? ""
         case .image:
-            config.text = "📷 画像"
+            config.text = "📷 " + String(localized: "item.image")
             if let thumb = item.thumbnail {
                 config.image = thumb
                 config.imageProperties.maximumSize = CGSize(width: 24, height: 24)
             }
         case .file:
-            config.text = "📄 \(item.fileName ?? "ファイル")"
+            config.text = "📄 " + (item.fileName ?? String(localized: "item.file"))
         }
 
         cell.contentConfiguration = config

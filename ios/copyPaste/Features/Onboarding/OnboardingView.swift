@@ -7,24 +7,24 @@ struct OnboardingView: View {
     private let pages: [OnboardingPage] = [
         OnboardingPage(
             systemImage: "doc.on.clipboard.fill",
-            title: "ClipKitへようこそ",
-            description: "コピーしたテキスト・URL・画像を自動で記録。\nいつでも履歴から取り出せます。"
+            titleKey: "onboarding.welcome.title",
+            descriptionKey: "onboarding.welcome.description"
         ),
         OnboardingPage(
             systemImage: "play.circle.fill",
-            title: "常時起動で自動記録",
-            description: "「常時起動」タブでモニタリングを開始すると、コピーした内容を自動で保存します。"
+            titleKey: "onboarding.monitoring.title",
+            descriptionKey: "onboarding.monitoring.description"
         ),
         OnboardingPage(
             systemImage: "clipboard",
-            title: "ペースト許可の設定",
-            description: "毎回ダイアログが出ないよう、\niOSの設定から許可しておくと便利です。",
+            titleKey: "onboarding.paste.title",
+            descriptionKey: "onboarding.paste.description",
             hasSettingsButton: true
         ),
         OnboardingPage(
             systemImage: "checkmark.circle.fill",
-            title: "準備完了！",
-            description: "さっそく使ってみましょう。"
+            titleKey: "onboarding.ready.title",
+            descriptionKey: "onboarding.ready.description"
         )
     ]
 
@@ -57,7 +57,7 @@ struct OnboardingView: View {
                     onComplete()
                 }
             } label: {
-                Text(currentPage < pages.count - 1 ? "次へ" : "はじめる")
+                Text(currentPage < pages.count - 1 ? "onboarding.next" : "onboarding.start")
             }
             .buttonStyle(PrimaryGradientButtonStyle())
             .padding(.horizontal, 24)
@@ -82,12 +82,12 @@ struct OnboardingView: View {
             }
 
             VStack(spacing: 12) {
-                Text(page.title)
+                Text(page.titleKey)
                     .font(.system(size: 27, weight: .heavy))
                     .foregroundColor(ClipKitColor.textPrimary)
                     .multilineTextAlignment(.center)
 
-                Text(page.description)
+                Text(page.descriptionKey)
                     .font(.system(size: 15))
                     .foregroundColor(ClipKitColor.textSecondary)
                     .multilineTextAlignment(.center)
@@ -97,10 +97,10 @@ struct OnboardingView: View {
 
             if page.hasSettingsButton {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("設定 → プライバシーとセキュリティ → ペースト → ClipKit")
+                    Text("onboarding.paste.path")
                         .font(.subheadline)
                         .foregroundColor(ClipKitColor.textSecondary)
-                    Text("「他のAppからペースト」を **許可** に変更")
+                    Text("onboarding.paste.instruction")
                         .font(.subheadline)
                         .foregroundColor(ClipKitColor.textPrimary)
 
@@ -109,7 +109,7 @@ struct OnboardingView: View {
                             UIApplication.shared.open(url)
                         }
                     } label: {
-                        Label("設定を開く", systemImage: "arrow.up.right.square")
+                        Label("onboarding.paste.openSettings", systemImage: "arrow.up.right.square")
                             .font(.subheadline)
                             .foregroundColor(ClipKitColor.indigo)
                             .padding(.top, 4)
@@ -129,7 +129,7 @@ struct OnboardingView: View {
 
 private struct OnboardingPage {
     let systemImage: String
-    let title: String
-    let description: String
+    let titleKey: LocalizedStringKey
+    let descriptionKey: LocalizedStringKey
     var hasSettingsButton: Bool = false
 }

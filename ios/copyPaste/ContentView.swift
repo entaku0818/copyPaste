@@ -11,7 +11,7 @@ public struct ContentView: View {
                 MonitoringView(store: store)
             }
             .tabItem {
-                Label("常時起動", systemImage: "play.circle.fill")
+                Label("tab.monitoring", systemImage: "play.circle.fill")
             }
             .tag(0)
 
@@ -19,7 +19,7 @@ public struct ContentView: View {
                 ClipboardHistoryView(store: store)
             }
             .tabItem {
-                Label("履歴", systemImage: "clock.fill")
+                Label("tab.history", systemImage: "clock.fill")
             }
             .tag(1)
 
@@ -27,7 +27,7 @@ public struct ContentView: View {
                 FavoritesView(store: store)
             }
             .tabItem {
-                Label("お気に入り", systemImage: "star.fill")
+                Label("tab.favorites", systemImage: "star.fill")
             }
             .tag(2)
 
@@ -43,7 +43,7 @@ public struct ContentView: View {
                 SettingsView(store: store)
             }
             .tabItem {
-                Label("設定", systemImage: "gearshape.fill")
+                Label("tab.settings", systemImage: "gearshape.fill")
             }
             .tag(4)
         }

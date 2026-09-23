@@ -171,7 +171,7 @@ class KeyboardViewController: UIInputViewController {
     private func refreshHistoryCards() {
         if clipboardItems.isEmpty {
             let label = UILabel()
-            label.text = "履歴なし"
+            label.text = String(localized: "keyboard.history.empty")
             label.textColor = .secondaryLabel
             label.font = .systemFont(ofSize: 14)
             stackView.addArrangedSubview(label)
@@ -192,7 +192,7 @@ class KeyboardViewController: UIInputViewController {
     private func refreshSnippetCards() {
         if snippets.isEmpty {
             let label = UILabel()
-            label.text = "定型文なし"
+            label.text = String(localized: "keyboard.snippets.empty")
             label.textColor = .secondaryLabel
             label.font = .systemFont(ofSize: 14)
             stackView.addArrangedSubview(label)
@@ -204,7 +204,7 @@ class KeyboardViewController: UIInputViewController {
         }
 
         if !isProUser && snippets.count > maxVisibleSnippets {
-            stackView.addArrangedSubview(makeUpgradeCard(message: "もっと見る\nProで無制限"))
+            stackView.addArrangedSubview(makeUpgradeCard(message: String(localized: "keyboard.upgrade.unlimited")))
         }
     }
 
@@ -327,11 +327,11 @@ class KeyboardViewController: UIInputViewController {
         case .image:
             iconImageView.image = UIImage(systemName: "photo")
             iconImageView.tintColor = KeyboardColor.badgeAmberFg
-            textLabel.text = "画像"
+            textLabel.text = String(localized: "item.image")
         case .file:
             iconImageView.image = UIImage(systemName: "doc")
             iconImageView.tintColor = .secondaryLabel
-            textLabel.text = item.fileName ?? "ファイル"
+            textLabel.text = item.fileName ?? String(localized: "item.file")
         }
 
         vStack.addArrangedSubview(iconImageView)
@@ -432,7 +432,7 @@ class KeyboardViewController: UIInputViewController {
     // MARK: - Free: アップグレードカード
 
     /// 無料版のカード列末尾に表示する「もっと見る」カード
-    private func makeUpgradeCard(message: String = "もっと見る\nProで10件表示") -> UIView {
+    private func makeUpgradeCard(message: String = String(localized: "keyboard.upgrade.tenItems")) -> UIView {
         let card = UIButton(type: .system)
         card.backgroundColor = UIColor.systemBackground
         card.layer.cornerRadius = 8

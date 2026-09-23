@@ -152,3 +152,115 @@
 /* Export / 汎用（SwiftUIのLocalizedStringKeyで参照するためja側にも必要） */
 "export.failed" = "エクスポートに失敗しました";
 "button.ok" = "OK";
+
+/* Onboarding */
+"onboarding.welcome.title" = "ClipKitへようこそ";
+"onboarding.welcome.description" = "コピーしたテキスト・URL・画像を自動で記録。\nいつでも履歴から取り出せます。";
+"onboarding.monitoring.title" = "常時起動で自動記録";
+"onboarding.monitoring.description" = "「常時起動」タブでモニタリングを開始すると、コピーした内容を自動で保存します。";
+"onboarding.paste.title" = "ペースト許可の設定";
+"onboarding.paste.description" = "毎回ダイアログが出ないよう、\niOSの設定から許可しておくと便利です。";
+"onboarding.paste.path" = "設定 → プライバシーとセキュリティ → ペースト → ClipKit";
+"onboarding.paste.instruction" = "「他のAppからペースト」を **許可** に変更";
+"onboarding.paste.openSettings" = "設定を開く";
+"onboarding.ready.title" = "準備完了！";
+"onboarding.ready.description" = "さっそく使ってみましょう。";
+"onboarding.next" = "次へ";
+"onboarding.start" = "はじめる";
+
+/* Tab bar */
+"tab.monitoring" = "常時起動";
+"tab.history" = "履歴";
+"tab.favorites" = "お気に入り";
+"tab.settings" = "設定";
+
+/* Trash */
+"trash.deletedAt %@" = "削除: %@";
+"trash.swipeHint" = "左スワイプで復元・右スワイプで完全削除";
+
+/* Picture in Picture */
+"pip.hint" = "クリップボード履歴";
+"pip.empty" = "履歴なし";
+
+/* Widget */
+"widget.proOnly" = "Pro限定機能";
+"widget.proOnlyDescription" = "ウィジェットはPro版限定です";
+"widget.upgradeInApp" = "アプリでアップグレード";
+"widget.empty" = "履歴がありません";
+"widget.itemCount %lld" = "%lld件";
+"widget.description" = "クリップボードの履歴をすぐ確認。";
+"widget.sample.first" = "サンプルテキスト";
+"widget.sample.second" = "別のテキスト";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "履歴";
+"keyboard.tab.snippets" = "定型文";
+"keyboard.history.empty" = "履歴なし";
+"keyboard.snippets.empty" = "定型文なし";
+"keyboard.upgrade.unlimited" = "もっと見る\nProで無制限";
+"keyboard.upgrade.tenItems" = "もっと見る\nProで10件表示";
+
+/* Paywall */
+"paywall.subtitle" = "すべての機能を解放";
+"paywall.feature.history.title" = "履歴を無制限に保存";
+"paywall.feature.history.description" = "無料版は直近3日・20件まで";
+"paywall.feature.favorites.title" = "お気に入り機能";
+"paywall.feature.favorites.description" = "重要な項目をピン留め";
+"paywall.feature.widget.title" = "ホーム画面ウィジェット";
+"paywall.feature.widget.description" = "3サイズのウィジェット";
+"paywall.feature.keyboard.title" = "キーボードフル表示";
+"paywall.feature.keyboard.description" = "キーボードに履歴10件を表示（無料版は3件）";
+"paywall.feature.icloud.title" = "iCloud同期";
+"paywall.feature.icloud.description" = "複数デバイスで履歴を共有";
+"paywall.feature.export.title" = "履歴エクスポート";
+"paywall.feature.export.description" = "CSV / Markdown 形式で書き出し";
+"paywall.feature.transform.title" = "高度なテキスト変換";
+"paywall.feature.transform.description" = "ケース変換・全角半角・URLエンコード等";
+"paywall.loadingPlans" = "プランを読み込み中...";
+"paywall.loadFailed" = "プランの読み込みに失敗しました";
+"paywall.retry" = "再試行";
+"paywall.purchase" = "購入する";
+"paywall.tryFree" = "無料で試す（%@）";
+"paywall.startNow" = "今すぐ始める";
+"paywall.restore" = "購入を復元";
+"paywall.note.lifetime" = "• 一度の購入で永久に利用できます";
+"paywall.note.billedToAppleID" = "• Apple IDアカウントに課金されます";
+"paywall.note.trial" = "• %@の無料トライアル";
+"paywall.note.autoRenew" = "• %@ごとに自動更新";
+"paywall.note.cancelAnytime" = "• いつでもキャンセル可能";
+"paywall.terms" = "利用規約";
+"paywall.privacyPolicy" = "プライバシーポリシー";
+"paywall.close" = "閉じる";
+"paywall.errorTitle" = "エラー";
+"paywall.error.unknown" = "不明なエラーが発生しました";
+"paywall.successTitle" = "購入完了";
+"paywall.successMessage" = "ClipKit Proへようこそ！\nすべての機能が使えるようになりました。";
+"paywall.trial.days" = "%d日間";
+"paywall.trial.weeks" = "%d週間";
+"paywall.trial.months" = "%dヶ月間";
+"paywall.trial.years" = "%d年間";
+"paywall.period.oneMonth" = "1ヶ月";
+"paywall.period.oneYear" = "1年";
+"paywall.period.days" = "%d日";
+"paywall.period.weeks" = "%d週";
+"paywall.period.months" = "%dヶ月";
+"paywall.period.years" = "%d年";
+"paywall.discount.format" = "%d%%お得";
+"paywall.error.noRestorable" = "復元可能な購入が見つかりませんでした";
+"paywall.monthlyEquivalentLabel" = "月額換算 %@";
+"paywall.package.monthly" = "月間プラン";
+"paywall.package.annual" = "年間プラン";
+"paywall.package.lifetime" = "買い切りプラン";
+"paywall.renewal.lifetime" = "一度の購入で永久に利用可能";
+"paywall.renewal.monthly" = "1ヶ月ごとに自動更新";
+"paywall.renewal.annual" = "1年ごとに自動更新";
+"paywall.renewal.days" = "%d日ごとに自動更新";
+"paywall.renewal.weeks" = "%d週ごとに自動更新";
+"paywall.renewal.months" = "%dヶ月ごとに自動更新";
+"paywall.renewal.years" = "%d年ごとに自動更新";
+"paywall.intro.days" = "%d日間無料トライアル";
+"paywall.intro.weeks" = "%d週間無料トライアル";
+"paywall.intro.months" = "%dヶ月間無料トライアル";
+"paywall.intro.years" = "%d年間無料トライアル";
+"paywall.intro.freeTrial" = "無料トライアル付き";
+"paywall.monthlyEquivalent" = "約%@";

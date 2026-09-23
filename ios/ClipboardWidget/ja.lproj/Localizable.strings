@@ -1,0 +1,16 @@
+/* ClipboardWidget extension — mirrored from copyPaste/ja.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"item.image" = "画像";
+"item.file" = "ファイル";
+"widget.sample.first" = "サンプルテキスト";
+"widget.sample.second" = "別のテキスト";
+"widget.proOnly" = "Pro限定機能";
+"widget.upgradeInApp" = "アプリでアップグレード";
+"widget.empty" = "履歴がありません";
+"widget.itemCount %lld" = "%lld件";
+"time.days %lld" = "%lld日前";
+"time.hours %lld" = "%lld時間前";
+"time.minutes %lld" = "%lld分前";
+"time.justnow" = "たった今";
+"widget.description" = "クリップボードの履歴をすぐ確認。";

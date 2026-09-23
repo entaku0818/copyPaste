@@ -33,7 +33,7 @@ struct TrashView: View {
                                 VStack(alignment: .leading, spacing: 3) {
                                     itemContent(for: item)
                                     if let deletedAt = item.deletedAt {
-                                        Text("削除: \(deletedAt.formatted(.dateTime.year().month().day().locale(Locale.current)))")
+                                        Text(String(format: String(localized: "trash.deletedAt %@"), deletedAt.formatted(.dateTime.year().month().day().locale(Locale.current))))
                                             .font(.system(size: 11.5))
                                             .foregroundColor(ClipKitColor.textTertiary)
                                     }
@@ -63,7 +63,7 @@ struct TrashView: View {
                             }
                         }
 
-                        Text("左スワイプで復元・右スワイプで完全削除")
+                        Text("trash.swipeHint")
                             .font(.system(size: 12))
                             .foregroundColor(ClipKitColor.textTertiary)
                             .frame(maxWidth: .infinity)

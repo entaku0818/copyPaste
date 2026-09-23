@@ -217,3 +217,50 @@
 "paywall.discount.format" = "Save %d%%";
 "export.failed" = "Export failed";
 "button.ok" = "OK";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Welcome to ClipKit";
+"onboarding.welcome.description" = "Text, links and images you copy are saved automatically.\nPull any of them back out of your history whenever you need them.";
+"onboarding.monitoring.title" = "Capture everything automatically";
+"onboarding.monitoring.description" = "Start monitoring from the Always On tab and ClipKit saves whatever you copy.";
+"onboarding.paste.title" = "Allow pasting";
+"onboarding.paste.description" = "Grant permission once in iOS Settings\nso you don't get a dialog every time.";
+"onboarding.paste.path" = "Settings → Privacy & Security → Paste from Other Apps → ClipKit";
+"onboarding.paste.instruction" = "Set \"Paste from Other Apps\" to **Allow**";
+"onboarding.paste.openSettings" = "Open Settings";
+"onboarding.ready.title" = "You're all set!";
+"onboarding.ready.description" = "Go ahead and give it a try.";
+"onboarding.next" = "Next";
+"onboarding.start" = "Get Started";
+
+/* Tab bar */
+"tab.monitoring" = "Always On";
+"tab.history" = "History";
+"tab.favorites" = "Favorites";
+"tab.settings" = "Settings";
+
+/* Trash */
+"trash.deletedAt %@" = "Deleted: %@";
+"trash.swipeHint" = "Swipe left to restore, swipe right to delete permanently";
+
+/* Picture in Picture */
+"pip.hint" = "Clipboard History";
+"pip.empty" = "No history";
+
+/* Widget */
+"widget.proOnly" = "Pro feature";
+"widget.proOnlyDescription" = "Widgets are available on the Pro plan";
+"widget.upgradeInApp" = "Upgrade in the app";
+"widget.empty" = "No history yet";
+"widget.itemCount %lld" = "%lld items";
+"widget.description" = "Check your clipboard history at a glance.";
+"widget.sample.first" = "Sample text";
+"widget.sample.second" = "Another snippet";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "History";
+"keyboard.tab.snippets" = "Snippets";
+"keyboard.history.empty" = "No history";
+"keyboard.snippets.empty" = "No snippets";
+"keyboard.upgrade.unlimited" = "See more\nUnlimited with Pro";
+"keyboard.upgrade.tenItems" = "See more\n10 items with Pro";

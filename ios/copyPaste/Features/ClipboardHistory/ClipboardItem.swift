@@ -63,11 +63,11 @@ struct ClipboardItem: Identifiable, Codable, Equatable {
         case .text:
             return textContent ?? ""
         case .image:
-            return "画像"
+            return String(localized: "item.image")
         case .url:
             return url?.absoluteString ?? ""
         case .file:
-            return fileName ?? "ファイル"
+            return fileName ?? String(localized: "item.file")
         }
     }
 

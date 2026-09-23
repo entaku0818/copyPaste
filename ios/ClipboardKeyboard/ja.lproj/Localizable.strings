@@ -1,0 +1,29 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/ja.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "履歴";
+"keyboard.tab.snippets" = "定型文";
+"keyboard.history.empty" = "履歴なし";
+"keyboard.snippets.empty" = "定型文なし";
+"keyboard.upgrade.unlimited" = "もっと見る\nProで無制限";
+"item.image" = "画像";
+"item.file" = "ファイル";
+"transform.menu.paste" = "変換して貼付け";
+"keyboard.upgrade.tenItems" = "もっと見る\nProで10件表示";
+"transform.uppercase" = "大文字に変換";
+"transform.lowercase" = "小文字に変換";
+"transform.removeLineBreaks" = "改行を除去";
+"transform.trimWhitespace" = "前後の空白を除去";
+"transform.snakeCase" = "snake_caseに変換";
+"transform.camelCase" = "camelCaseに変換";
+"transform.fullWidth" = "全角に変換";
+"transform.halfWidth" = "半角に変換";
+"transform.removeMarkdown" = "Markdownを除去";
+"transform.urlEncode" = "URLエンコード";
+"transform.urlDecode" = "URLデコード";
+"category.url" = "URL";
+"category.email" = "メール";
+"category.phone" = "電話";
+"category.code" = "コード";
+"category.address" = "住所";
+"category.text" = "テキスト";

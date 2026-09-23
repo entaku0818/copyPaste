@@ -137,11 +137,11 @@ struct SmallWidgetView: View {
                     )
                 )
 
-            Text("Pro機能")
+            Text("widget.proOnly")
                 .font(.caption)
                 .fontWeight(.bold)
 
-            Text("ウィジェットはPro版限定です")
+            Text("widget.proOnlyDescription")
                 .font(.caption2)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -258,11 +258,11 @@ struct MediumWidgetView: View {
                 )
 
             VStack(spacing: 4) {
-                Text("Pro機能")
+                Text("widget.proOnly")
                     .font(.headline)
                     .fontWeight(.bold)
 
-                Text("ウィジェットはPro版限定です")
+                Text("widget.proOnlyDescription")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -450,16 +450,16 @@ struct LargeWidgetView: View {
                 )
 
             VStack(spacing: 8) {
-                Text("Pro機能")
+                Text("widget.proOnly")
                     .font(.title3)
                     .fontWeight(.bold)
 
-                Text("ウィジェットはPro版限定です")
+                Text("widget.proOnlyDescription")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
 
-                Text("アプリでアップグレード")
+                Text("widget.upgradeInApp")
                     .font(.caption2)
                     .foregroundColor(.blue)
             }
@@ -479,7 +479,7 @@ struct ClipboardWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("ClipKit")
-        .description("クリップボードの履歴をすぐ確認。")
+        .description(Text("widget.description"))
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
