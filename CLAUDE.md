@@ -19,7 +19,8 @@ cp Release.xcconfig.template Release.xcconfig  # 本番の広告ユニットID�
 
 - SwiftLint: `swiftlint lint`
 - iOS build/test: `xcodebuild test -project ios/copyPaste.xcodeproj -scheme ClipKit -destination "id=<SIMULATOR_UDID>" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""`
-  - 注意: `.github/workflows/ci.yml` は SwiftLint と Functions ビルドのみを実行し、iOS のビルド/テストは GitHub Actions では実行されない（Xcode Cloud 移行後もPRゲートとしての構成は未確認）。上記コマンドでのローカル/エージェントによる実行が現状唯一の検証手段
+  - iOS の build/test は `.github/workflows/ios-ci.yml` が GitHub Actions の **self-hosted runner**（entaku の Mac・labels `self-hosted, macOS, xcode27`）で push / PR ごとに実行する（Xcode Cloud は廃止）。GitHub-hosted の macOS ランナー（課金）は使わない＝self-hosted のみ可。`.github/workflows/ci.yml` は ubuntu 上で SwiftLint と Functions ビルドを実行する
+  - CI は gitignore 済みの xcconfig をテンプレートから、`GoogleService-Info.plist` をダミー値で生成し、専用シミュレータ `CI-copyPaste`（iOS 27.0）で Debug 構成の build/test を回す。本番の秘密情報は CI に置かない
 - Functions lint: `cd functions && npm run lint`
 - Functions build (tsc): `cd functions && npm run build`
 
@@ -38,7 +39,7 @@ cp Release.xcconfig.template Release.xcconfig  # 本番の広告ユニットID�
 - 実装は build / test / lint が緑になるまで自己修正する（コマンド: `swiftlint lint` / `xcodebuild test -project ios/copyPaste.xcodeproj -scheme ClipKit -destination "id=<SIMULATOR_UDID>" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""` / `cd functions && npm run lint && npm run build`）
 - **緑でない変更を main に入れない**。5回で緑にならなければブランチに残して報告
 - 完了報告には実行した検証コマンドと実出力を含める（「たぶん動く」は完了ではない）
-- `ios-test` の GitHub Actions ジョブは削除済み（commit `4e6cd3d`）。main へのマージは CI による iOS build/test の自動ゲートを受けないため、マージ前にローカルで `xcodebuild test` を回す自己修正ループがこの検証の唯一の担保であり、省略してはならない
+- iOS build/test の CI ゲートは `ios-ci.yml`（self-hosted runner）。ただし runner は entaku の Mac なので、Mac がオフラインだとジョブが待機したままになる。マージ前にローカルで `xcodebuild test` を回す自己修正ループは引き続き省略しない
 
 ### エスカレーション（諦め方の設計）
 - 同一 issue に2回挑戦して解けない → `loop-attempted` ラベルを付けて人間へ

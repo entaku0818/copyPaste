@@ -1,0 +1,116 @@
+name: iOS CI
+
+# iOS の build/test は entaku の Mac に登録した self-hosted runner で回す。
+# GitHub-hosted の macOS ランナー（課金）は使わない。self-hosted のみ可。
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROJECT: ios/copyPaste.xcodeproj
+  SCHEME: ClipKit
+  SIM_NAME: CI-copyPaste
+  SIM_RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-27-0
+  SIM_DEVICE_TYPE: com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro
+  DERIVED_DATA: ${{ github.workspace }}/.build/DerivedData
+  RESULT_BUNDLE: ${{ github.workspace }}/.build/TestResults.xcresult
+
+jobs:
+  build-and-test:
+    name: Build & Test (Xcode 27)
+    # public リポジトリなのでフォークからの PR では self-hosted runner を動かさない
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, macOS, xcode27]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      # 実体の xcconfig は .gitignore 済み。CI は Debug 構成なのでテンプレート（AdMob のテストID）をそのまま使う
+      - name: Generate xcconfig from templates
+        run: |
+          cd ios/copyPaste/Config
+          cp Debug.xcconfig.template Debug.xcconfig
+          cp Release.xcconfig.template Release.xcconfig
+
+      # GoogleService-Info.plist も .gitignore 済み。FirebaseApp.configure() が通る形式のダミーを置く（本物は使わない）
+      - name: Generate dummy GoogleService-Info.plist
+        run: |
+          cat > ios/copyPaste/GoogleService-Info.plist <<'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key><string>AIzaSy000000000000000000000000000000000</string>
+            <key>GCM_SENDER_ID</key><string>000000000000</string>
+            <key>PLIST_VERSION</key><string>1</string>
+            <key>BUNDLE_ID</key><string>com.entaku.clipkit</string>
+            <key>PROJECT_ID</key><string>clipkit-ci-dummy</string>
+            <key>STORAGE_BUCKET</key><string>clipkit-ci-dummy.appspot.com</string>
+            <key>IS_ADS_ENABLED</key><false/>
+            <key>IS_ANALYTICS_ENABLED</key><false/>
+            <key>IS_APPINVITE_ENABLED</key><false/>
+            <key>IS_GCM_ENABLED</key><false/>
+            <key>IS_SIGNIN_ENABLED</key><false/>
+            <key>GOOGLE_APP_ID</key><string>1:000000000000:ios:0000000000000000000000</string>
+          </dict>
+          </plist>
+          EOF
+          plutil -lint ios/copyPaste/GoogleService-Info.plist
+
+      # 他リポジトリの runner とシミュレータを取り合わないよう、このリポジトリ専用の端末を使う
+      - name: Prepare dedicated simulator
+        run: |
+          UDID=$(xcrun simctl list devices -j | /usr/bin/python3 -c '
+          import json, os, sys
+          devices = json.load(sys.stdin)["devices"].get(os.environ["SIM_RUNTIME"], [])
+          print(next((d["udid"] for d in devices if d["name"] == os.environ["SIM_NAME"] and d["isAvailable"]), ""))
+          ')
+          if [ -z "$UDID" ]; then
+            UDID=$(xcrun simctl create "$SIM_NAME" "$SIM_DEVICE_TYPE" "$SIM_RUNTIME")
+          fi
+          echo "SIM_UDID=$UDID" >> "$GITHUB_ENV"
+          # 高負荷時に初回テストがランナー接続タイムアウトになるので、boot 済みにしてから test する
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild build-for-testing \
+            -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
+            -destination "id=$SIM_UDID" \
+            -derivedDataPath "$DERIVED_DATA" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+
+      - name: Test
+        run: |
+          set -o pipefail
+          rm -rf "$RESULT_BUNDLE"
+          xcodebuild test-without-building \
+            -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
+            -destination "id=$SIM_UDID" \
+            -derivedDataPath "$DERIVED_DATA" \
+            -resultBundlePath "$RESULT_BUNDLE" \
+            -parallel-testing-enabled NO \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+
+      - name: Upload xcresult
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-${{ github.run_id }}
+          path: .build/TestResults.xcresult
+          retention-days: 7

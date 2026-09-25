@@ -921,6 +921,9 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         store.exhaustivity = .off
 
         await store.send(.satisfactionResponsePositive)
+        // .requestReview の effect が clock.sleep に入る前に advance すると、sleep の期限が
+        // 進めた後の時刻から数えられて永久に起きない（CI で1件578秒かかった）。受信してから進める
+        await store.receive(\.requestReview)
         await clock.advance(by: AppReview.Config.systemDialogDelay)
         await store.finish()
 
