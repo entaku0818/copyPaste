@@ -171,12 +171,10 @@
 "paywall.loadFailed" = "Couldn't load the plans";
 "paywall.retry" = "Retry";
 "paywall.purchase" = "Buy";
-"paywall.tryFree" = "Try free (%@)";
 "paywall.startNow" = "Get started";
 "paywall.restore" = "Restore purchase";
 "paywall.note.lifetime" = "• One purchase, yours forever";
 "paywall.note.billedToAppleID" = "• Billed to your Apple ID account";
-"paywall.note.trial" = "• %@ free trial";
 "paywall.note.autoRenew" = "• Renews automatically every %@";
 "paywall.note.cancelAnytime" = "• Cancel anytime";
 "paywall.terms" = "Terms of Use";
@@ -209,12 +207,13 @@
 "paywall.period.weeks" = "%d weeks";
 "paywall.period.months" = "%d months";
 "paywall.period.years" = "%d years";
-"paywall.intro.days" = "%d-day free trial";
-"paywall.intro.weeks" = "%d-week free trial";
-"paywall.intro.months" = "%d-month free trial";
-"paywall.intro.years" = "%d-year free trial";
-"paywall.intro.freeTrial" = "Includes a free trial";
 "paywall.discount.format" = "Save %d%%";
+"paywall.trialThenPrice" = "%1$@ free, then %2$@";
+"paywall.note.trialAutoRenew" = "• After the free trial (%1$@) ends, your subscription renews automatically at %2$@";
+"paywall.note.trialCancel" = "• Cancel at least 24 hours before the trial ends and you won't be charged";
+"paywall.tryFreeCTA" = "Try it free";
+"paywall.perPeriod.month" = "month";
+"paywall.perPeriod.year" = "year";
 "export.failed" = "Export failed";
 "button.ok" = "OK";
 

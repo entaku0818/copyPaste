@@ -106,7 +106,8 @@ struct PaywallView: View {
                                     onTap: {
                                         selectedPackage = package
                                     },
-                                    discountLabel: discountLabel(for: package, monthlyPrice: monthlyPrice)
+                                    discountLabel: discountLabel(for: package, monthlyPrice: monthlyPrice),
+                                    trialThenPriceLine: offerCopy(for: package).trialThenPriceLine
                                 )
                             }
                         }
@@ -136,14 +137,9 @@ struct PaywallView: View {
                             if isPurchasing {
                                 ProgressView()
                                     .tint(.white)
-                            } else if selectedPackage?.packageType == .lifetime {
-                                Text(NSLocalizedString("paywall.purchase", value: "購入する", comment: ""))
-                                    .fontWeight(.semibold)
-                            } else if let trialText = selectedPackageTrialText {
-                                Text(String(format: NSLocalizedString("paywall.tryFree", value: "無料で試す（%@）", comment: ""), trialText))
-                                    .fontWeight(.semibold)
                             } else {
-                                Text(NSLocalizedString("paywall.startNow", value: "今すぐ始める", comment: ""))
+                                Text(selectedOfferCopy?.callToActionTitle
+                                     ?? NSLocalizedString("paywall.startNow", value: "今すぐ始める", comment: ""))
                                     .fontWeight(.semibold)
                             }
                         }
@@ -183,20 +179,12 @@ struct PaywallView: View {
 
                     // 注意事項・リンク
                     VStack(spacing: 8) {
-                        if selectedPackage?.packageType == .lifetime {
-                            Text(NSLocalizedString("paywall.note.lifetime", value: "• 一度の購入で永久に利用できます", comment: ""))
-                            Text(NSLocalizedString("paywall.note.billedToAppleID", value: "• Apple IDアカウントに課金されます", comment: ""))
-                        } else {
-                            if let trialText = selectedPackageTrialText {
-                                Text(String(format: NSLocalizedString("paywall.note.trial", value: "• %@の無料トライアル", comment: ""), trialText))
-                            }
-                            if let periodText = selectedPackagePeriodText {
-                                Text(String(format: NSLocalizedString("paywall.note.autoRenew", value: "• %@ごとに自動更新", comment: ""), periodText))
-                            }
-                            Text(NSLocalizedString("paywall.note.cancelAnytime", value: "• いつでもキャンセル可能", comment: ""))
-                            Text(NSLocalizedString("paywall.note.billedToAppleID", value: "• Apple IDアカウントに課金されます", comment: ""))
+                        ForEach(selectedOfferCopy?.notes ?? [], id: \.self) { note in
+                            Text(note)
                         }
                     }
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
                     .font(.caption)
                     .foregroundColor(.secondary)
 
@@ -252,33 +240,28 @@ struct PaywallView: View {
         }
     }
 
-    private var selectedPackageTrialText: String? {
-        guard let intro = selectedPackage?.storeProduct.introductoryDiscount,
-              intro.paymentMode == .freeTrial else { return nil }
-        let p = intro.subscriptionPeriod
-        switch p.unit {
-        case .day:   return String(format: NSLocalizedString("paywall.trial.days", value: "%d日間", comment: ""), p.value)
-        case .week:  return String(format: NSLocalizedString("paywall.trial.weeks", value: "%d週間", comment: ""), p.value)
-        case .month: return String(format: NSLocalizedString("paywall.trial.months", value: "%dヶ月間", comment: ""), p.value)
-        case .year:  return String(format: NSLocalizedString("paywall.trial.years", value: "%d年間", comment: ""), p.value)
-        @unknown default: return nil
-        }
+    private var selectedOfferCopy: TrialOfferCopy? {
+        selectedPackage.map(offerCopy(for:))
     }
 
-    private var selectedPackagePeriodText: String? {
-        guard let period = selectedPackage?.storeProduct.subscriptionPeriod else { return nil }
-        switch (period.unit, period.value) {
-        case (.month, 1): return NSLocalizedString("paywall.period.oneMonth", value: "1ヶ月", comment: "")
-        case (.year, 1):  return NSLocalizedString("paywall.period.oneYear", value: "1年", comment: "")
-        default:
-            switch period.unit {
-            case .day:   return String(format: NSLocalizedString("paywall.period.days", value: "%d日", comment: ""), period.value)
-            case .week:  return String(format: NSLocalizedString("paywall.period.weeks", value: "%d週", comment: ""), period.value)
-            case .month: return String(format: NSLocalizedString("paywall.period.months", value: "%dヶ月", comment: ""), period.value)
-            case .year:  return String(format: NSLocalizedString("paywall.period.years", value: "%d年", comment: ""), period.value)
-            @unknown default: return nil
-            }
+    /// 適格ユーザーにだけトライアルを訴求する（判定前・判定不能は非適格扱い）
+    private func offerCopy(for package: Package) -> TrialOfferCopy {
+        let product = package.storeProduct
+        let eligibility: TrialOfferCopy.Eligibility
+        switch revenueCat.introEligibility[product.productIdentifier] {
+        case .eligible: eligibility = .eligible
+        case .ineligible: eligibility = .ineligible
+        default: eligibility = .unknown
         }
+        let freeTrialPeriod = product.introductoryDiscount
+            .flatMap { $0.paymentMode == .freeTrial ? TrialOfferCopy.Period($0.subscriptionPeriod) : nil }
+        return TrialOfferCopy.make(
+            isLifetime: package.packageType == .lifetime,
+            freeTrialPeriod: freeTrialPeriod,
+            eligibility: eligibility,
+            localizedPrice: product.localizedPriceString,
+            renewalPeriod: product.subscriptionPeriod.flatMap(TrialOfferCopy.Period.init)
+        )
     }
 
     private func loadOfferings() async {
@@ -286,6 +269,7 @@ struct PaywallView: View {
             if selectedPackage == nil {
                 selectedPackage = PackageSelector.defaultPackage(from: current.availablePackages)
             }
+            await revenueCat.fetchIntroEligibility(for: current.availablePackages.map(\.storeProduct))
             return
         }
         isLoadingOfferings = true
@@ -294,6 +278,7 @@ struct PaywallView: View {
         isLoadingOfferings = false
         if let packages = revenueCat.offerings?.current?.availablePackages {
             selectedPackage = PackageSelector.defaultPackage(from: packages)
+            await revenueCat.fetchIntroEligibility(for: packages.map(\.storeProduct))
         } else {
             offeringsLoadFailed = true
         }
@@ -385,6 +370,8 @@ struct PackageButton: View {
     let isSelected: Bool
     let onTap: () -> Void
     var discountLabel: String? = nil
+    /// 適格ユーザーにだけ渡される「7日間無料、その後 ¥300/月」
+    var trialThenPriceLine: String?
 
     var body: some View {
         Button(action: onTap) {
@@ -415,7 +402,7 @@ struct PackageButton: View {
                         .font(.caption)
                         .foregroundColor(ClipKitColor.textOnDarkSecondary)
 
-                    if let trial = introductoryOfferText {
+                    if let trial = trialThenPriceLine {
                         Text(trial)
                             .font(.caption)
                             .fontWeight(.semibold)
@@ -481,25 +468,26 @@ struct PackageButton: View {
         }
     }
 
-    private var introductoryOfferText: String? {
-        guard let intro = package.storeProduct.introductoryDiscount,
-              intro.paymentMode == .freeTrial else { return nil }
-        let p = intro.subscriptionPeriod
-        switch p.unit {
-        case .day:   return String(format: NSLocalizedString("paywall.intro.days", value: "%d日間無料トライアル", comment: ""), p.value)
-        case .week:  return String(format: NSLocalizedString("paywall.intro.weeks", value: "%d週間無料トライアル", comment: ""), p.value)
-        case .month: return String(format: NSLocalizedString("paywall.intro.months", value: "%dヶ月間無料トライアル", comment: ""), p.value)
-        case .year:  return String(format: NSLocalizedString("paywall.intro.years", value: "%d年間無料トライアル", comment: ""), p.value)
-        @unknown default: return NSLocalizedString("paywall.intro.freeTrial", value: "無料トライアル付き", comment: "")
-        }
-    }
-
     private var monthlyEquivalentPrice: String? {
         let product = package.storeProduct
         let rawMonthly = product.price / 12 as NSDecimalNumber
         let rounded = NSDecimalNumber(value: rawMonthly.doubleValue.rounded())
         guard let price = product.priceFormatter?.string(from: rounded) else { return nil }
         return String(format: NSLocalizedString("paywall.monthlyEquivalent", value: "約%@", comment: ""), price)
+    }
+}
+
+extension TrialOfferCopy.Period {
+    init?(_ period: SubscriptionPeriod) {
+        let unit: Unit
+        switch period.unit {
+        case .day: unit = .day
+        case .week: unit = .week
+        case .month: unit = .month
+        case .year: unit = .year
+        @unknown default: return nil
+        }
+        self.init(unit: unit, value: period.value)
     }
 }
 

@@ -12,6 +12,8 @@ final class RevenueCatManager: NSObject, ObservableObject {
     @Published private(set) var customerInfo: CustomerInfo?
     @Published private(set) var offerings: Offerings?
     @Published private(set) var isProUser = false
+    /// 商品ID → 導入オファー（無料トライアル）の適格状態
+    @Published private(set) var introEligibility: [String: IntroEligibilityStatus] = [:]
 
     // Entitlement ID（App Store Connectで設定するEntitlement ID）
     private let proEntitlementID = "pro"
@@ -64,6 +66,16 @@ final class RevenueCatManager: NSObject, ObservableObject {
         } catch {
             logger.error("Failed to fetch offerings: \(error.localizedDescription)")
         }
+    }
+
+    /// 導入オファー（無料トライアル）の適格判定。
+    /// 判定できなかった商品は辞書に入らない＝ペイウォールでは非適格扱い（トライアルを訴求しない）
+    func fetchIntroEligibility(for products: [StoreProduct]) async {
+        let productIDs = products.filter { $0.subscriptionPeriod != nil }.map(\.productIdentifier)
+        guard !productIDs.isEmpty else { return }
+        let result = await Purchases.shared.checkTrialOrIntroDiscountEligibility(productIdentifiers: productIDs)
+        introEligibility.merge(result.mapValues { $0.status }) { _, new in new }
+        logger.info("Intro eligibility fetched: \(result.mapValues { $0.status.rawValue })")
     }
 
     /// サブスクリプション購入

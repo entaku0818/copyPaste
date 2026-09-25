@@ -220,12 +220,10 @@
 "paywall.loadFailed" = "プランの読み込みに失敗しました";
 "paywall.retry" = "再試行";
 "paywall.purchase" = "購入する";
-"paywall.tryFree" = "無料で試す（%@）";
 "paywall.startNow" = "今すぐ始める";
 "paywall.restore" = "購入を復元";
 "paywall.note.lifetime" = "• 一度の購入で永久に利用できます";
 "paywall.note.billedToAppleID" = "• Apple IDアカウントに課金されます";
-"paywall.note.trial" = "• %@の無料トライアル";
 "paywall.note.autoRenew" = "• %@ごとに自動更新";
 "paywall.note.cancelAnytime" = "• いつでもキャンセル可能";
 "paywall.terms" = "利用規約";
@@ -246,6 +244,12 @@
 "paywall.period.months" = "%dヶ月";
 "paywall.period.years" = "%d年";
 "paywall.discount.format" = "%d%%お得";
+"paywall.trialThenPrice" = "%1$@無料、その後 %2$@";
+"paywall.note.trialAutoRenew" = "• %1$@の無料トライアル終了後、%2$@で自動更新されます";
+"paywall.note.trialCancel" = "• トライアル終了の24時間前までにキャンセルすれば料金はかかりません";
+"paywall.tryFreeCTA" = "無料で試す";
+"paywall.perPeriod.month" = "月";
+"paywall.perPeriod.year" = "年";
 "paywall.error.noRestorable" = "復元可能な購入が見つかりませんでした";
 "paywall.monthlyEquivalentLabel" = "月額換算 %@";
 "paywall.package.monthly" = "月間プラン";
@@ -258,9 +262,4 @@
 "paywall.renewal.weeks" = "%d週ごとに自動更新";
 "paywall.renewal.months" = "%dヶ月ごとに自動更新";
 "paywall.renewal.years" = "%d年ごとに自動更新";
-"paywall.intro.days" = "%d日間無料トライアル";
-"paywall.intro.weeks" = "%d週間無料トライアル";
-"paywall.intro.months" = "%dヶ月間無料トライアル";
-"paywall.intro.years" = "%d年間無料トライアル";
-"paywall.intro.freeTrial" = "無料トライアル付き";
 "paywall.monthlyEquivalent" = "約%@";
