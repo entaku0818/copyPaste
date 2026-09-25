@@ -33,7 +33,7 @@ jobs:
     runs-on: [self-hosted, macOS, xcode27]
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Show Xcode version
         run: xcodebuild -version
@@ -109,8 +109,20 @@ jobs:
 
       - name: Upload xcresult
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: TestResults-${{ github.run_id }}
           path: .build/TestResults.xcresult
           retention-days: 7
+
+      # self-hosted runner のディスクが逼迫するので、ジョブごとの DerivedData / xcresult を必ず消す。
+      # 失敗時の xcresult upload より後に置くこと。専用シミュレータは次回再利用するので削除せず shutdown のみ。
+      # SPM のキャッシュ（~/Library/Caches/org.swift.swiftpm）は全リポジトリ共有なので消さない。
+      - name: Clean up
+        if: always()
+        run: |
+          rm -rf "$DERIVED_DATA" "$RESULT_BUNDLE"
+          rmdir "${{ github.workspace }}/.build" 2>/dev/null || true
+          if [ -n "${SIM_UDID:-}" ]; then
+            xcrun simctl shutdown "$SIM_UDID" || true
+          fi
