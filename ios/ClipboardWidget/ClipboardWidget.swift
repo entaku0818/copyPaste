@@ -126,6 +126,10 @@ struct ClipboardWidgetEntryView: View {
             case .accessoryCircular: SmallWidgetView(entry: entry)
             case .accessoryRectangular: SmallWidgetView(entry: entry)
             case .accessoryInline: SmallWidgetView(entry: entry)
+            // Xcode 27 (Swift 6.4) の SDK で iOS に追加されたケース。26.5 SDK では iOS unavailable なのでガードする
+            #if compiler(>=6.4)
+            case .systemExtraLargePortrait: LargeWidgetView(entry: entry)
+            #endif
             @unknown default: SmallWidgetView(entry: entry)
             }
         } else {

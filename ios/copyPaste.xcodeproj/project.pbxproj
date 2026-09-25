@@ -1007,7 +1007,7 @@
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.59.0;
+				minimumVersion = 5.78.0;
 			};
 		};
 		61CC8CC32F51F16F00ED729F /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
