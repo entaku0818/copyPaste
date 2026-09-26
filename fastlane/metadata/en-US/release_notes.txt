@@ -1,5 +1,2 @@
-【New】
-· ClipKit Pro monthly and yearly plans now come with a 7-day free trial. If you're new to Pro, try every feature for free. The subscription renews automatically after the trial, and you can cancel anytime
-
 【Improvements】
-· The Pro upgrade screen now clearly shows the price after the trial and how auto-renewal works
+· Updated the App Store description to match the current features and plans (7-day free trial, keyboard available on the free plan, and more)
