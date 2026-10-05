@@ -115,7 +115,10 @@ struct ClipboardHistoryFeature {
         case observeRemoteChanges
         /// 他端末の変更が取り込まれた。少し待ってから履歴を再読込する（issue #102）
         case remoteChangeDetected
-        case showPaywall
+        /// 課金画面を出す。sourceは計測用（issue #109）
+        case showPaywall(PaywallSource)
+        /// View側の@Stateシートで課金画面を出したときの計測だけを行う（issue #109）
+        case paywallShownLocally(PaywallSource)
         case dismissPaywall
         case updateProStatus
         case requestReview
@@ -151,6 +154,7 @@ struct ClipboardHistoryFeature {
     @Dependency(\.pendingItemBuffer) var pendingBuffer
     @Dependency(\.remoteChange) var remoteChange
     @Dependency(\.syncStatus) var syncStatus
+    @Dependency(\.paywallAnalytics) var paywallAnalytics
     private enum CancelID { case monitoring, remoteChangeObservation, remoteChangeReload }
 
     /// CloudKitの初期インポート時はリモート変更通知がバースト的に飛ぶため、
@@ -369,7 +373,7 @@ struct ClipboardHistoryFeature {
                     let isCurrentlyFavorite = state.items.first(where: { $0.id == item.id })?.isFavorite ?? false
                     // 解除は常に可能。追加は10件未満のときのみ
                     if !isCurrentlyFavorite && currentFavoriteCount >= 10 {
-                        return .send(.showPaywall)
+                        return .send(.showPaywall(.favoriteLimit))
                     }
                 }
 
@@ -700,9 +704,13 @@ struct ClipboardHistoryFeature {
                 }
                 .cancellable(id: CancelID.remoteChangeReload, cancelInFlight: true)
 
-            case .showPaywall:
-                Analytics.logEvent("show_paywall", parameters: nil)
+            case let .showPaywall(source):
+                paywallAnalytics.logShown(source)
                 state.showPaywall = true
+                return .none
+
+            case let .paywallShownLocally(source):
+                paywallAnalytics.logShown(source)
                 return .none
 
             case .dismissPaywall:
@@ -879,7 +887,7 @@ struct ClipboardHistoryFeature {
             case let .addSnippet(title, content):
                 // 無料ユーザーは3件まで
                 guard state.canAddSnippet else {
-                    return .send(.showPaywall)
+                    return .send(.showPaywall(.snippetLimit))
                 }
                 let snippet = Snippet(
                     title: title,

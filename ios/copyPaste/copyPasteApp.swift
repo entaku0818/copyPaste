@@ -76,7 +76,7 @@ struct ClipKitApp: App {
                 mainView
                     .onOpenURL { url in
                         if url.scheme == "clipkit", url.host == "subscription" {
-                            store.send(.showPaywall)
+                            store.send(.showPaywall(.keyboard))
                         }
                     }
             } else {
@@ -90,7 +90,7 @@ struct ClipKitApp: App {
                     .onOpenURL { url in
                         // clipkit://subscription → Paywall表示（キーボード拡張からの遷移）
                         if url.scheme == "clipkit", url.host == "subscription" {
-                            store.send(.showPaywall)
+                            store.send(.showPaywall(.keyboard))
                         }
                     }
             } else {

@@ -21,6 +21,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: ClipKitSpacing.sectionGap) {
                     // Pro ヒーローカード（ダークサーフェス）
                     Button {
+                        store.send(.paywallShownLocally(.settingsHero))
                         showPaywall = true
                     } label: {
                         DarkHeroCard {

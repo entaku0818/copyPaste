@@ -71,7 +71,7 @@ struct ClipboardHistoryView: View {
             // 無料版: Pro誘導バナー
             if !store.isProUser {
                 Button {
-                    store.send(.showPaywall)
+                    store.send(.showPaywall(.historyBanner))
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "crown.fill")
@@ -126,6 +126,9 @@ struct ClipboardHistoryView: View {
                 onCopyTransformed: { text, transform in
                     store.send(.copyTransformedText(text, transform))
                 },
+                onPaywallShown: {
+                    store.send(.paywallShownLocally(.textTransform))
+                },
                 onPaywallDismiss: {
                     store.send(.updateProStatus)
                 }
@@ -177,6 +180,8 @@ struct ClipboardItemDetailView: View {
     let onCopy: () -> Void
     let onToggleFavorite: () -> Void
     let onCopyTransformed: (String, TextTransform) -> Void
+    /// Pro限定の変換から課金画面を開いたときに呼ぶ（計測用・issue #109）
+    let onPaywallShown: () -> Void
     let onPaywallDismiss: () -> Void
     @Environment(\.dismiss) private var dismiss
     @State private var copied = false
@@ -290,6 +295,7 @@ struct ClipboardItemDetailView: View {
             ForEach(TextTransform.allCases, id: \.self) { transform in
                 Button {
                     if transform.requiresPro && !isProUser {
+                        onPaywallShown()
                         showTransformPaywall = true
                     } else {
                         onCopyTransformed(transform.apply(to: sourceText), transform)

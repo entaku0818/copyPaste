@@ -57,6 +57,7 @@ struct SnippetsView: View {
                     if store.canAddSnippet {
                         showAddSheet = true
                     } else {
+                        store.send(.paywallShownLocally(.snippetsAddButton))
                         showPaywall = true
                     }
                 } label: {

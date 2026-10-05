@@ -60,6 +60,7 @@ struct FavoritesView: View {
             if !store.isProUser {
                 VStack(spacing: 0) {
                     Button {
+                        store.send(.paywallShownLocally(.favoritesBanner))
                         showPaywall = true
                     } label: {
                         HStack(spacing: 10) {
@@ -106,6 +107,9 @@ struct FavoritesView: View {
                 },
                 onCopyTransformed: { text, transform in
                     store.send(.copyTransformedText(text, transform))
+                },
+                onPaywallShown: {
+                    store.send(.paywallShownLocally(.textTransform))
                 },
                 onPaywallDismiss: {
                     store.send(.updateProStatus)
