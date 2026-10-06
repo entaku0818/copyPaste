@@ -180,6 +180,32 @@ extension DependencyValues {
     }
 }
 
+// MARK: - AppOpenAdClient
+
+// コールドスタートでApp Open広告を出したかをレビュー依頼の起動時判定に渡すためのDependency。
+// 全画面広告の上に満足度の確認を被せないよう、結果が確定するまで待ってから判定する。
+struct AppOpenAdClient {
+    /// コールドスタートで広告を出したらtrue。確定するまで待つ
+    var coldStartDidShowAd: @Sendable () async -> Bool
+}
+
+extension AppOpenAdClient: DependencyKey {
+    static let liveValue = AppOpenAdClient(
+        coldStartDidShowAd: { await AppOpenAdManager.shared.coldStartDidShowAd() }
+    )
+
+    static let testValue = AppOpenAdClient(
+        coldStartDidShowAd: { false }
+    )
+}
+
+extension DependencyValues {
+    var appOpenAd: AppOpenAdClient {
+        get { self[AppOpenAdClient.self] }
+        set { self[AppOpenAdClient.self] = newValue }
+    }
+}
+
 // MARK: - PendingItemBufferClient
 
 // PiP中の軽量チェックポイント（App Group UserDefaults）をDependency化する。

@@ -66,6 +66,8 @@ enum AppReview {
     enum SkipReason: String, Equatable, Sendable {
         /// バックグラウンドまたはPiP中で、そもそも画面に出せない
         case notForeground = "not_foreground"
+        /// この起動でApp Open広告を出した。全画面広告の上に被せない（ナレーターと同じ）
+        case appOpenAdShown = "app_open_ad_shown"
         /// 前回表示から minimumDaysBetweenPrompts 日経っていない
         case throttled = "throttled"
         /// 起動回数がまだ launchTrigger に届いていない
@@ -149,10 +151,12 @@ enum AppReview {
     ///   - trigger: 発火元
     ///   - launchCount: `.launch` の判定に使う起動回数（インクリメント済みの最新値）
     ///   - isForeground: アプリがフォアグラウンドかつPiP中でないか。falseなら常に見送る
+    ///   - didShowAppOpenAd: この起動でApp Open広告を出したか。trueなら見送る（次の起動に持ち越し）
     static func shouldPrompt(
         trigger: Trigger,
         launchCount: Int = 0,
         isForeground: Bool,
+        didShowAppOpenAd: Bool = false,
         defaults: UserDefaults = .standard,
         now: Date = Date()
     ) -> Bool {
@@ -160,6 +164,7 @@ enum AppReview {
             trigger: trigger,
             launchCount: launchCount,
             isForeground: isForeground,
+            didShowAppOpenAd: didShowAppOpenAd,
             defaults: defaults,
             now: now
         ).shouldPrompt
@@ -176,13 +181,19 @@ enum AppReview {
         trigger: Trigger,
         launchCount: Int = 0,
         isForeground: Bool,
+        didShowAppOpenAd: Bool = false,
         defaults: UserDefaults = .standard,
         now: Date = Date()
     ) -> Decision {
         let decision = Self.evaluate(
             trigger: trigger,
             launchCount: launchCount,
-            context: Context(isForeground: isForeground, defaults: defaults, now: now)
+            context: Context(
+                isForeground: isForeground,
+                didShowAppOpenAd: didShowAppOpenAd,
+                defaults: defaults,
+                now: now
+            )
         )
         let outcome: String
         switch decision {
@@ -200,6 +211,7 @@ enum AppReview {
     /// 判定に必要な「トリガー以外の状況」をまとめたもの
     private struct Context {
         let isForeground: Bool
+        let didShowAppOpenAd: Bool
         let defaults: UserDefaults
         let now: Date
     }
@@ -214,6 +226,9 @@ enum AppReview {
         // 画面に出せない状況では判定自体を行わない。
         // ここで見送っても何も記録しないので、次の機会にそのまま持ち越される。
         guard context.isForeground else { return .skip(.notForeground) }
+
+        // App Open広告を出した起動では被せない。何も記録しないので次の起動に持ち越される
+        guard !context.didShowAppOpenAd else { return .skip(.appOpenAdShown) }
 
         // 「満足」と答えた人にも、90日空けば再度聞く（ナレーターと同じ）。
         // Appleの年3回枠はOS側で守られるため、アプリ側は間隔だけを管理する。

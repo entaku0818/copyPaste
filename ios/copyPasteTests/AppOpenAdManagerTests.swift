@@ -54,4 +54,39 @@ final class AppOpenAdManagerTests: XCTestCase {
         )
         defaults.removeObject(forKey: appOpenKey)
     }
+
+    // MARK: - コールドスタートの結果（レビュー依頼の起動時判定で使う）
+
+    /// 結果が確定する前に呼ばれたら、確定するまで待ってその値を返すこと。
+    /// レビュー依頼の判定がApp Open広告の判断より先に走ると、全画面広告の上に被さる。
+    func testColdStartDidShowAd_waitsUntilResolved() async {
+        let manager = AppOpenAdManager(coordinator: FullScreenAdCoordinator())
+        let waiter = Task { await manager.coldStartDidShowAd() }
+        await Task.yield()
+
+        manager.resolveColdStartForTesting(true)
+
+        let result = await waiter.value
+        XCTAssertTrue(result, "確定した値（広告を出した）が待っていた側に返ること")
+    }
+
+    /// 最初の結果だけが有効で、以後の復帰（2回目以降のフォアグラウンド）で上書きされないこと。
+    func testColdStartDidShowAd_keepsFirstResult() async {
+        let manager = AppOpenAdManager(coordinator: FullScreenAdCoordinator())
+        manager.resolveColdStartForTesting(false)
+        manager.resolveColdStartForTesting(true)
+
+        let result = await manager.coldStartDidShowAd()
+        XCTAssertFalse(result, "コールドスタートの結果は最初の1回で確定すること")
+    }
+
+    /// Proユーザーは広告を出さないので、即座に「出していない」で確定すること。
+    func testHandleForeground_proUserResolvesColdStartAsNotShown() async {
+        let manager = AppOpenAdManager(coordinator: FullScreenAdCoordinator())
+        let didShow = await manager.handleForeground(isProUser: true)
+
+        XCTAssertFalse(didShow)
+        let result = await manager.coldStartDidShowAd()
+        XCTAssertFalse(result, "Proユーザーの起動ではレビュー判定を止めないこと")
+    }
 }

@@ -34,12 +34,14 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
         _ trigger: AppReview.Trigger,
         launchCount: Int = 0,
         isForeground: Bool = true,
+        didShowAppOpenAd: Bool = false,
         now: Date? = nil
     ) -> AppReview.Decision {
         AppReview.decide(
             trigger: trigger,
             launchCount: launchCount,
             isForeground: isForeground,
+            didShowAppOpenAd: didShowAppOpenAd,
             defaults: defaults,
             now: now ?? self.now
         )
@@ -165,6 +167,30 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
         XCTAssertEqual(decide(.launch, launchCount: 4), .prompt)
     }
 
+    // MARK: - App Open広告との排他（ナレーターと同じ）
+
+    /// App Open広告を出した起動では、全画面広告の上に被せないよう見送ること。
+    func testAppOpenAdShown_skipsLaunchPrompt() {
+        XCTAssertEqual(
+            decide(.launch, launchCount: 2, didShowAppOpenAd: true), .skip(.appOpenAdShown)
+        )
+        XCTAssertEqual(
+            decide(.launch, launchCount: 2, didShowAppOpenAd: false), .prompt,
+            "広告を出していない起動では通常どおり出すこと"
+        )
+    }
+
+    /// 広告で見送った起動は何も記録しない＝次の起動に持ち越されること。
+    func testAppOpenAdShown_doesNotRecordAndCarriesOver() {
+        _ = decide(.launch, launchCount: 2, didShowAppOpenAd: true)
+
+        XCTAssertNil(defaults.object(forKey: "clipkit.lastReviewPromptDate"))
+        XCTAssertEqual(
+            decide(.launch, launchCount: 3), .prompt,
+            "次の起動（広告なし）では出すこと"
+        )
+    }
+
     // MARK: - 見送り理由の優先順位
 
     /// 「出せない状況」の判定が最優先であること。
@@ -247,6 +273,7 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
         let trigger: AppReview.Trigger
         let launchCount: Int
         let isForeground: Bool
+        var didShowAppOpenAd = false
     }
 
     func testShouldPromptMatchesDecide() {
@@ -255,19 +282,22 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
             Scenario(trigger: .launch, launchCount: 1, isForeground: true),
             Scenario(trigger: .launch, launchCount: 2, isForeground: true),
             Scenario(trigger: .launch, launchCount: 2, isForeground: false),
-            Scenario(trigger: .launch, launchCount: 50, isForeground: true)
+            Scenario(trigger: .launch, launchCount: 50, isForeground: true),
+            Scenario(trigger: .launch, launchCount: 2, isForeground: true, didShowAppOpenAd: true)
         ]
 
         for scenario in scenarios {
             let expected = decide(
                 scenario.trigger,
                 launchCount: scenario.launchCount,
-                isForeground: scenario.isForeground
+                isForeground: scenario.isForeground,
+                didShowAppOpenAd: scenario.didShowAppOpenAd
             ).shouldPrompt
             let actual = AppReview.shouldPrompt(
                 trigger: scenario.trigger,
                 launchCount: scenario.launchCount,
                 isForeground: scenario.isForeground,
+                didShowAppOpenAd: scenario.didShowAppOpenAd,
                 defaults: defaults,
                 now: now
             )

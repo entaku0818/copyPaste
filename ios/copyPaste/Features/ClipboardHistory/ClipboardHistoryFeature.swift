@@ -122,7 +122,8 @@ struct ClipboardHistoryFeature {
         case dismissPaywall
         case updateProStatus
         case requestReview
-        case checkReviewTrigger(AppReview.Trigger)
+        /// 起動時のレビュー判定。App Open広告の結果を待ってから送る
+        case checkReviewTrigger(AppReview.Trigger, didShowAppOpenAd: Bool = false)
         case satisfactionPromptShown
         case satisfactionResponsePositive
         case satisfactionResponseNegative
@@ -151,6 +152,7 @@ struct ClipboardHistoryFeature {
     @Dependency(\.snippetRepository) var snippetRepository
     @Dependency(\.interstitialAd) var interstitialAd
     @Dependency(\.systemReview) var systemReview
+    @Dependency(\.appOpenAd) var appOpenAd
     @Dependency(\.pendingItemBuffer) var pendingBuffer
     @Dependency(\.remoteChange) var remoteChange
     @Dependency(\.syncStatus) var syncStatus
@@ -566,7 +568,11 @@ struct ClipboardHistoryFeature {
                 if !state.hasCountedLaunch {
                     state.hasCountedLaunch = true
                     state.launchCount = AppReview.launchCount()
-                    effects.append(.send(.checkReviewTrigger(.launch)))
+                    // App Open広告を出すかどうかが確定してから判定する（全画面広告の上に被せない）
+                    effects.append(.run { send in
+                        let didShowAppOpenAd = await appOpenAd.coldStartDidShowAd()
+                        await send(.checkReviewTrigger(.launch, didShowAppOpenAd: didShowAppOpenAd))
+                    })
                 }
                 return .merge(effects)
 
@@ -791,14 +797,15 @@ struct ClipboardHistoryFeature {
                     _ = await systemReview.request()
                 }
 
-            case let .checkReviewTrigger(trigger):
+            case let .checkReviewTrigger(trigger, didShowAppOpenAd):
                 // 判定のみ。「表示した」記録は実際にシートが出た .satisfactionPromptShown で行う。
                 // ここで記録してしまうと、表示されないまま条件だけ消費される事故が起きる。
                 guard !state.showSatisfactionPrompt,
                       AppReview.shouldPrompt(
                         trigger: trigger,
                         launchCount: state.launchCount,
-                        isForeground: state.isAppActive && !state.isPiPActive
+                        isForeground: state.isAppActive && !state.isPiPActive,
+                        didShowAppOpenAd: didShowAppOpenAd
                       )
                 else { return .none }
                 state.pendingReviewTrigger = trigger

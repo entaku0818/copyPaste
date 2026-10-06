@@ -789,6 +789,38 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
     }
 
+    /// App Open広告を出した起動では、満足度の確認を被せないこと（ナレーターと同じ）
+    func testCheckReviewTrigger_doesNotShowWhenAppOpenAdShown() async {
+        var state = foregroundState()
+        state.launchCount = AppReview.Config.launchTrigger
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.launch, didShowAppOpenAd: true))
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "App Open広告の上に被せないこと")
+        XCTAssertNil(
+            UserDefaults.standard.object(forKey: "clipkit.lastReviewPromptDate"),
+            "見送った起動では表示日時を記録しないこと（次の起動に持ち越す）"
+        )
+    }
+
+    /// onAppear は App Open広告の結果を待ってから起動時判定を送ること。
+    func testOnAppear_passesAppOpenAdResultToLaunchCheck() async {
+        UserDefaults.standard.set(AppReview.Config.launchTrigger, forKey: "clipkit.launchCount")
+        let store = TestStore(initialState: foregroundState()) {
+            ClipboardHistoryFeature()
+        } withDependencies: {
+            $0.appOpenAd = AppOpenAdClient(coldStartDidShowAd: { true })
+        }
+        store.exhaustivity = .off
+
+        await store.send(.onAppear)
+        await store.receive(\.checkReviewTrigger)
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "広告を出した起動では出さないこと")
+        await store.finish()
+    }
+
     /// 判定時ではなく実際の表示時に記録されること（条件の焼き切れ防止の要）
     func testSatisfactionPromptShown_recordsOnlyWhenDisplayed() async {
         var state = foregroundState()

@@ -16,6 +16,9 @@ import UIKit
 /// - **Proユーザーには出さない**。
 /// - **表示されうるユーザーにだけプリロードする**。次のフォアグラウンドが表示回になる時だけ先読みする。
 /// - **他の全画面広告との相互排他**は `FullScreenAdCoordinator` に集約している。
+/// - **コールドスタートで出したかどうかをレビュー依頼に渡す**。全画面広告の上に満足度の確認を
+///   被せないよう、レビュー依頼の起動時判定は `coldStartDidShowAd()` の結果を待ってから行う
+///   （読み上げナレーターと同じ方式）。
 @MainActor
 final class AppOpenAdManager: NSObject, ObservableObject {
     static let shared = AppOpenAdManager()
@@ -44,6 +47,11 @@ final class AppOpenAdManager: NSObject, ObservableObject {
     private var ad: AppOpenAd?
     private var loadedAt: Date?
     private var isLoading = false
+    /// コールドスタート（このプロセスで最初のフォアグラウンド）で広告を出したか。未確定ならnil
+    private var coldStartResult: Bool?
+    private var coldStartWaiters: [CheckedContinuation<Bool, Never>] = []
+    /// `handleForeground` が呼ばれないまま待ち続けないための上限（ロード待ち4秒＋余裕）
+    private let coldStartWaitTimeout: Duration = .seconds(6)
 
     init(coordinator: FullScreenAdCoordinator = .shared) {
         self.coordinator = coordinator
@@ -71,29 +79,39 @@ final class AppOpenAdManager: NSObject, ObservableObject {
     }
 
     /// アプリがフォアグラウンドになった時に呼ぶ（コールドスタート含む）
-    func handleForeground(isProUser: Bool) async {
+    /// - Returns: 広告を表示したらtrue
+    @discardableResult
+    func handleForeground(isProUser: Bool) async -> Bool {
+        let didShow = await showIfEligible(isProUser: isProUser)
+        resolveColdStart(didShow)
+        return didShow
+    }
+
+    private func showIfEligible(isProUser: Bool) async -> Bool {
         // Proユーザーには出さないし、ロードもしない
-        guard !isProUser else { return }
-        guard !adUnitID.isEmpty else { return }
+        guard !isProUser else { return false }
+        guard !adUnitID.isEmpty else { return false }
 
         // 広告を閉じた直後の復帰でもう1枚出さない
-        guard !coordinator.isPresenting else { return }
+        guard !coordinator.isPresenting else { return false }
 
         foregroundCount += 1
         let count = foregroundCount
 
         guard Self.isShowOpportunity(count: count) else {
+            // 出さないことはここで確定する。先読みの完了を待たせずにレビュー依頼へ伝える
+            resolveColdStart(false)
             // 表示されうるユーザーにだけプリロードする（無駄打ちを避ける）
             if Self.shouldPreload(after: count), coordinator.canPresent(minimumGap: minimumGapFromOtherAd) {
                 await loadAd()
             }
-            return
+            return false
         }
 
         // 直前に他の全画面広告（interstitial）を出していたら見送る
         guard coordinator.canPresent(minimumGap: minimumGapFromOtherAd) else {
             Self.logger.info("AppOpenAd skipped: another full screen ad was shown recently")
-            return
+            return false
         }
 
         if isExpired {
@@ -105,7 +123,30 @@ final class AppOpenAdManager: NSObject, ObservableObject {
             await loadAdWaitingForCompletion()
         }
 
-        showAdIfPossible()
+        return showAdIfPossible()
+    }
+
+    // MARK: - コールドスタートの結果（レビュー依頼の起動時判定で使う）
+
+    /// コールドスタートで広告を出したかを返す。確定するまで待つ（最大 coldStartWaitTimeout）。
+    /// 2回目以降の呼び出しや確定後は即座に返る。
+    func coldStartDidShowAd() async -> Bool {
+        if let coldStartResult { return coldStartResult }
+        let timeout = coldStartWaitTimeout
+        Task { [weak self] in
+            try? await Task.sleep(for: timeout)
+            self?.resolveColdStart(false)
+        }
+        return await withCheckedContinuation { coldStartWaiters.append($0) }
+    }
+
+    /// 最初の1回だけ結果を確定させ、待っている呼び出し元に返す
+    private func resolveColdStart(_ didShow: Bool) {
+        guard coldStartResult == nil else { return }
+        coldStartResult = didShow
+        let waiters = coldStartWaiters
+        coldStartWaiters.removeAll()
+        waiters.forEach { $0.resume(returning: didShow) }
     }
 
     /// 広告をプリロード（ロード済みならスキップ）
@@ -138,24 +179,25 @@ final class AppOpenAdManager: NSObject, ObservableObject {
         }
     }
 
-    private func showAdIfPossible() {
+    private func showAdIfPossible() -> Bool {
         guard let ad else {
             Self.logger.info("AppOpenAd not ready within \(self.loadTimeout, privacy: .public)s")
-            return
+            return false
         }
         guard let presenter = coordinator.topViewController() else {
             Self.logger.error("AppOpenAd: no presentable view controller")
-            return
+            return false
         }
         do {
             try ad.canPresent(from: presenter)
         } catch {
             Self.logger.error("AppOpenAd cannot present: \(error.localizedDescription, privacy: .public)")
-            return
+            return false
         }
         // デリゲート通知が返るまでの間に他の全画面広告が割り込まないよう先に押さえる
         coordinator.markPresentAttempt()
         ad.present(from: presenter)
+        return true
     }
 
     private func discardAd() {
@@ -168,6 +210,13 @@ final class AppOpenAdManager: NSObject, ObservableObject {
     func resetForTesting() {
         UserDefaults.standard.removeObject(forKey: Key.foregroundCount)
         discardAd()
+    }
+    #endif
+
+    #if DEBUG
+    /// ユニットテスト用。コールドスタートの結果を外から確定させる
+    func resolveColdStartForTesting(_ didShow: Bool) {
+        resolveColdStart(didShow)
     }
     #endif
 }
