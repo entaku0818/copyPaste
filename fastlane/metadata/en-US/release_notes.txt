@@ -1,2 +1,3 @@
 【Improvements】
-· Updated the App Store description to match the current features and plans (7-day free trial, keyboard available on the free plan, and more)
+· Adjusted when we ask for your feedback, so the prompt appears less often
+· The feedback prompt no longer overlaps with the ad shown at launch
