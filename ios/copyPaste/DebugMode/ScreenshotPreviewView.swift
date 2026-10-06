@@ -278,71 +278,6 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .japanese: return "完了"
         }
     }
-
-    var historyTitle: String {
-        switch self {
-        case .english: return "History"
-        case .japanese: return "履歴"
-        }
-    }
-
-    var proUpgradeTitle: String {
-        switch self {
-        case .english: return "Upgrade to ClipKit Pro"
-        case .japanese: return "ClipKit Proにアップグレード"
-        }
-    }
-
-    var proUpgradeDescription: String {
-        switch self {
-        case .english: return "Browse history older than 3 days"
-        case .japanese: return "3日以上前の履歴も検索・閲覧できます"
-        }
-    }
-
-    var searchPrompt: String {
-        switch self {
-        case .english: return "Search history..."
-        case .japanese: return "履歴を検索..."
-        }
-    }
-
-    func sampleText(_ index: Int) -> String {
-        switch self {
-        case .english:
-            return [
-                "Hello World! This is a sample text for clipboard testing.",
-                "https://www.apple.com",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                "Important: Meeting at 3 PM tomorrow",
-                "Quick note: Buy groceries",
-                "Sample email: user@example.com",
-                "Phone: +1 (555) 123-4567",
-                "Code snippet: func test() { print(\"Hello\") }",
-                "https://github.com/entaku0818/copyPaste",
-                "Remember to call back later"
-            ][index % 10]
-        case .japanese:
-            return [
-                "こんにちは世界！これはクリップボードテスト用のサンプルテキストです。",
-                "https://www.apple.com/jp/",
-                "吾輩は猫である。名前はまだ無い。",
-                "重要：明日の午後3時にミーティング",
-                "メモ：買い物に行く",
-                "メール例：user@example.com",
-                "電話：090-1234-5678",
-                "コード例：func test() { print(\"こんにちは\") }",
-                "https://github.com/entaku0818/copyPaste",
-                "後で電話をかけ直すこと"
-            ][index % 10]
-        }
-    }
-
-    func sampleTime(_ index: Int) -> String {
-        let times = ["1 min ago", "5 min ago", "10 min ago", "30 min ago", "1 hour ago", "2 hours ago", "3 hours ago", "5 hours ago", "1 day ago", "2 days ago"]
-        let timesJa = ["1分前", "5分前", "10分前", "30分前", "1時間前", "2時間前", "3時間前", "5時間前", "1日前", "2日前"]
-        return self == .english ? times[index % 10] : timesJa[index % 10]
-    }
 }
 
 // MARK: - Screenshot Screen Enum
@@ -355,6 +290,7 @@ enum ScreenshotScreen: String, CaseIterable {
     case keyboardSetup
     case favorites
     case widget
+    case snippets
 }
 
 // MARK: - ScreenshotScreen captions & backgrounds
@@ -373,10 +309,12 @@ extension ScreenshotScreen {
         case (.imagePreview,    .english):   return "Images saved\nautomatically"
         case (.keyboardSetup,   .japanese):  return "どのアプリでも、\n使えるキーボード"
         case (.keyboardSetup,   .english):   return "Works in\nevery app"
-        case (.favorites,       .japanese):  return "よく使う文章を、\nお気に入りに"
-        case (.favorites,       .english):   return "Save your\nfrequent texts"
+        case (.favorites,       .japanese):  return "大事なコピーは、\nお気に入りに"
+        case (.favorites,       .english):   return "Keep important\nclips at hand"
         case (.widget,          .japanese):  return "ホーム画面に、\nクリップボードを"
         case (.widget,          .english):   return "Your clipboard,\non the home screen"
+        case (.snippets, .japanese):  return "よく使う文章は、\n定型文でワンタップ"
+        case (.snippets, .english):   return "Your go-to phrases,\none tap away"
         }
     }
 
@@ -409,6 +347,10 @@ extension ScreenshotScreen {
         case .favorites:
             return AnyView(LinearGradient(
                 colors: [Color(red: 0.20, green: 0.14, blue: 0.04), Color(red: 0.30, green: 0.20, blue: 0.06)],
+                startPoint: .topLeading, endPoint: .bottomTrailing))
+        case .snippets:
+            return AnyView(LinearGradient(
+                colors: [Color(red: 0.10, green: 0.08, blue: 0.30), Color(red: 0.24, green: 0.20, blue: 0.62)],
                 startPoint: .topLeading, endPoint: .bottomTrailing))
         case .widget:
             return AnyView(LinearGradient(
@@ -481,27 +423,6 @@ struct AppStoreScreenshotView<Content: View>: View {
 }
 
 // MARK: - Status Bar (ImageRenderer safe, no UIKit)
-struct MockCategoryChip: View {
-    let label: String
-    let icon: String
-    let isSelected: Bool
-
-    var body: some View {
-        HStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.caption2)
-            Text(label)
-                .font(.caption)
-                .fontWeight(isSelected ? .semibold : .regular)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-        .background(isSelected ? Color.accentColor : Color(UIColor.systemGray5))
-        .foregroundStyle(isSelected ? Color.white : Color.primary)
-        .clipShape(Capsule())
-    }
-}
-
 struct MockStatusBar: View {
     var foreground: Color = Color(red: 0.1, green: 0.1, blue: 0.1)
 
@@ -524,284 +445,6 @@ struct MockStatusBar: View {
 }
 
 // MARK: - Mock Views
-struct MockClipboardHistoryView: View {
-    let language: AppLanguage
-
-    var body: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 0) {
-                MockStatusBar()
-                HStack {
-                    Text(language.historyTitle)
-                        .font(.largeTitle).bold()
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 6)
-            }
-            .background(Color.white)
-
-            // Search bar
-            HStack(spacing: 8) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(Color(red: 0.55, green: 0.55, blue: 0.57))
-                    .font(.system(size: 14))
-                Text(language.searchPrompt)
-                    .font(.subheadline)
-                    .foregroundColor(Color(red: 0.55, green: 0.55, blue: 0.57))
-                Spacer()
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(Color(red: 0.90, green: 0.90, blue: 0.92))
-            .cornerRadius(10)
-            .padding(.horizontal, 12)
-            .padding(.bottom, 6)
-            .background(Color.white)
-
-            // Category filter bar
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    MockCategoryChip(label: language == .japanese ? "すべて" : "All", icon: "tray.2", isSelected: false)
-                    MockCategoryChip(label: "URL", icon: "link", isSelected: true)
-                    MockCategoryChip(label: language == .japanese ? "テキスト" : "Text", icon: "doc.text", isSelected: false)
-                    MockCategoryChip(label: language == .japanese ? "メール" : "Email", icon: "envelope", isSelected: false)
-                    MockCategoryChip(label: language == .japanese ? "コード" : "Code", icon: "chevron.left.forwardslash.chevron.right", isSelected: false)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-            }
-            .background(Color(UIColor.systemBackground).opacity(0.95))
-
-            // Clip rows
-            VStack(spacing: 0) {
-                ForEach(0..<8) { index in
-                    clipRow(index: index)
-                    if index < 7 {
-                        Divider().padding(.leading, 72)
-                    }
-                }
-                // Pro upgrade row (hidden for App Store screenshots)
-                HStack(spacing: 12) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(LinearGradient(colors: [.yellow, .orange],
-                                                 startPoint: .topLeading, endPoint: .bottomTrailing))
-                            .frame(width: 44, height: 44)
-                        Image(systemName: "crown.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(.white)
-                    }
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(language.proUpgradeTitle)
-                            .font(.subheadline).bold()
-                        Text(language.proUpgradeDescription)
-                            .font(.caption)
-                            .foregroundColor(Color(red: 0.55, green: 0.55, blue: 0.57))
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(Color(red: 0.55, green: 0.55, blue: 0.57))
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(Color.yellow.opacity(0.06))
-                .hidden()
-            }
-            .background(Color.white)
-
-            Spacer()
-
-            // Custom tab bar
-            Rectangle()
-                .fill(Color(red: 0.85, green: 0.85, blue: 0.87))
-                .frame(height: 0.5)
-            HStack(spacing: 0) {
-                tabItem(icon: "play.circle.fill",
-                        label: language == .japanese ? "常時起動" : "Always On",
-                        selected: false)
-                tabItem(icon: "clock.fill", label: language.historyTitle, selected: true)
-                tabItem(icon: "star.fill",
-                        label: language == .japanese ? "お気に入り" : "Favorites",
-                        selected: false)
-                tabItem(icon: "gearshape.fill", label: language.settings, selected: false)
-            }
-            .frame(height: 50)
-            .background(Color.white)
-        }
-        .background(Color(red: 0.95, green: 0.95, blue: 0.97))
-    }
-
-    private func clipRow(index: Int) -> some View {
-        HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(itemIconColor(for: index).opacity(0.15))
-                    .frame(width: 44, height: 44)
-                Image(systemName: itemIconName(for: index))
-                    .font(.system(size: 18))
-                    .foregroundColor(itemIconColor(for: index))
-            }
-            VStack(alignment: .leading, spacing: 3) {
-                HStack(spacing: 5) {
-                    Text(language.sampleText(index))
-                        .font(.subheadline)
-                        .lineLimit(2)
-                    if index == 0 {
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 10))
-                            .foregroundColor(.yellow)
-                    }
-                }
-                Text(language.sampleTime(index))
-                    .font(.caption)
-                    .foregroundColor(Color(red: 0.55, green: 0.55, blue: 0.57))
-            }
-            Spacer()
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(Color.white)
-    }
-
-    private func tabItem(icon: String, label: String, selected: Bool) -> some View {
-        VStack(spacing: 3) {
-            Image(systemName: icon)
-                .font(.system(size: 22))
-                .foregroundColor(selected ? .blue : Color(red: 0.6, green: 0.6, blue: 0.62))
-            Text(label)
-                .font(.system(size: 9))
-                .foregroundColor(selected ? .blue : Color(red: 0.6, green: 0.6, blue: 0.62))
-        }
-        .frame(maxWidth: .infinity)
-    }
-
-    private func itemIconName(for index: Int) -> String {
-        switch index {
-        case 1, 8: return "link"
-        case 4:    return "photo"
-        case 6:    return "doc"
-        default:   return "doc.text"
-        }
-    }
-
-    private func itemIconColor(for index: Int) -> Color {
-        switch index {
-        case 1, 8: return .purple
-        case 4:    return .green
-        case 6:    return .orange
-        default:   return .blue
-        }
-    }
-}
-
-struct MockKeyboardPreviewView: View {
-    let language: AppLanguage
-
-    var body: some View {
-        VStack(spacing: 0) {
-            // Notes app area
-            VStack(alignment: .leading, spacing: 0) {
-                MockStatusBar()
-                HStack {
-                    Text(language == .japanese ? "メモ" : "Notes")
-                        .font(.title).bold()
-                    Spacer()
-                    Image(systemName: "square.and.pencil")
-                        .font(.system(size: 20))
-                        .foregroundColor(.orange)
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(language == .japanese ? "今日やること" : "Today's Tasks")
-                        .font(.subheadline).bold()
-                        .foregroundColor(Color(red: 0.55, green: 0.55, blue: 0.57))
-                    ForEach(language == .japanese
-                        ? ["• スーパーで買い物（牛乳・卵・パン）",
-                           "• 午後3時 チームミーティング",
-                           "• メールを返信する",
-                           "• 請求書を確認する"]
-                        : ["• Buy groceries (milk, eggs, bread)",
-                           "• Team meeting at 3 PM",
-                           "• Reply to pending emails",
-                           "• Review monthly invoices"],
-                        id: \.self) { line in
-                        Text(line).font(.body)
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 10)
-
-                Spacer()
-            }
-            .frame(maxHeight: .infinity)
-            .background(Color.white)
-
-            // ClipKit extension: clip cards (2 rows)
-            VStack(spacing: 0) {
-                ForEach(0..<2) { row in
-                    HStack(spacing: 8) {
-                        ForEach(0..<4) { col in
-                            let index = row * 4 + col
-                            VStack(alignment: .leading, spacing: 4) {
-                                HStack(spacing: 4) {
-                                    Image(systemName: kbIconName(for: index))
-                                        .font(.system(size: 10))
-                                        .foregroundColor(kbIconColor(for: index))
-                                    Spacer()
-                                }
-                                Text(language.sampleText(index))
-                                    .font(.system(size: 10))
-                                    .lineLimit(2)
-                                    .foregroundColor(Color(red: 0.1, green: 0.1, blue: 0.1))
-                            }
-                            .padding(8)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 76)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
-                        }
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.top, 8)
-                }
-                .padding(.bottom, 8)
-            }
-            .background(Color(red: 0.90, green: 0.91, blue: 0.93))
-
-            // Control bar
-            HStack(spacing: 0) {
-                Image(systemName: "line.3.horizontal")
-                    .font(.system(size: 20))
-                    .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
-                    .frame(width: 44, height: 44)
-                    .background(Color(red: 0.90, green: 0.91, blue: 0.93))
-                    .cornerRadius(8)
-                Spacer()
-                Image(systemName: "globe")
-                    .font(.system(size: 22))
-                    .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(Color.white)
-        }
-        .background(Color.white)
-    }
-
-    private func kbIconName(for index: Int) -> String {
-        ["doc.text", "link", "photo", "envelope"][index % 4]
-    }
-
-    private func kbIconColor(for index: Int) -> Color {
-        [Color.blue, .green, .orange, .purple][index % 4]
-    }
-}
-
 struct MockPiPMonitoringView: View {
     let language: AppLanguage
 
@@ -1140,189 +783,6 @@ struct MockKeyboardSetupView: View {
     }
 }
 
-struct MockFavoritesView: View {
-    let language: AppLanguage
-
-    private var title: String { language == .english ? "Favorites" : "お気に入り" }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 0) {
-                MockStatusBar()
-                HStack {
-                    Text(title)
-                        .font(.largeTitle).bold()
-                    Spacer()
-                    Image(systemName: "pencil")
-                        .font(.system(size: 18))
-                        .foregroundColor(.blue)
-                        .frame(width: 44, height: 44)
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 6)
-            }
-            .background(Color.white)
-
-            Rectangle()
-                .fill(Color(red: 0.85, green: 0.85, blue: 0.87))
-                .frame(height: 0.5)
-
-            // Rows (8 items fills the screen nicely)
-            VStack(spacing: 0) {
-                ForEach(0..<8) { index in
-                    HStack(spacing: 12) {
-                        ZStack {
-                            Circle()
-                                .fill(favIconColor(for: index).opacity(0.18))
-                                .frame(width: 44, height: 44)
-                            Image(systemName: favIconName(for: index))
-                                .font(.system(size: 18))
-                                .foregroundColor(favIconColor(for: index))
-                        }
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(language.sampleText(index))
-                                .font(.subheadline)
-                                .lineLimit(2)
-                            Text(language.sampleTime(index))
-                                .font(.caption)
-                                .foregroundColor(Color(red: 0.55, green: 0.55, blue: 0.57))
-                        }
-                        Spacer()
-                        Image(systemName: "star.fill")
-                            .foregroundColor(.yellow)
-                            .font(.system(size: 16))
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(Color.white)
-                    if index < 7 {
-                        Divider().padding(.leading, 72)
-                    }
-                }
-            }
-            .background(Color.white)
-
-            Spacer()
-        }
-        .background(Color(red: 0.95, green: 0.95, blue: 0.97))
-    }
-
-    private func favIconName(for index: Int) -> String {
-        ["doc.text", "link", "photo", "doc.text", "link"][index % 5]
-    }
-
-    private func favIconColor(for index: Int) -> Color {
-        [Color.blue, .green, .orange, .blue, .green][index % 5]
-    }
-}
-
-// MockWidgetView is a thin wrapper using AppStoreScreenshotView + MockWidgetHomeContent.
-struct MockWidgetView: View {
-    let language: AppLanguage
-
-    var body: some View {
-        AppStoreScreenshotView(
-            caption: ScreenshotScreen.widget.caption(language: language),
-            background: ScreenshotScreen.widget.screenshotBackground
-        ) {
-            MockWidgetHomeContent(language: language)
-        }
-    }
-}
-
-// MARK: - Widget Home Screen Content (phone content only)
-struct MockWidgetHomeContent: View {
-    let language: AppLanguage
-
-    private var recentLabel: String { language == .english ? "Recent Clips" : "最近のクリップ" }
-    private var tapToCopyLabel: String { language == .english ? "Tap to copy" : "タップしてコピー" }
-
-    var body: some View {
-        ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.12, green: 0.22, blue: 0.75),
-                    Color(red: 0.38, green: 0.12, blue: 0.72),
-                    Color(red: 0.65, green: 0.15, blue: 0.55)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-
-            VStack(spacing: 0) {
-                MockStatusBar(foreground: .white)
-                mediumWidget
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                Spacer().frame(height: 20)
-                smallWidget
-                Spacer()
-            }
-        }
-    }
-
-    // MARK: - Widget Views
-
-    private var smallWidget: some View {
-        RoundedRectangle(cornerRadius: 20)
-            .fill(Color(red: 0.10, green: 0.12, blue: 0.28))
-            .frame(width: 160, height: 160)
-            .overlay(
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 5) {
-                        Image(systemName: "doc.on.clipboard.fill")
-                            .foregroundColor(.white)
-                            .font(.caption)
-                        Text("ClipKit")
-                            .font(.caption2).bold().foregroundColor(.white)
-                    }
-                    Spacer()
-                    Text(language.sampleText(0))
-                        .font(.caption2)
-                        .lineLimit(3)
-                        .foregroundColor(.white.opacity(0.9))
-                    Text(tapToCopyLabel)
-                        .font(.system(size: 9))
-                        .foregroundColor(.white.opacity(0.6))
-                }
-                .padding(12)
-            )
-            .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 4)
-    }
-
-    private var mediumWidget: some View {
-        RoundedRectangle(cornerRadius: 20)
-            .fill(Color(red: 0.10, green: 0.12, blue: 0.28))
-            .frame(height: 160)
-            .overlay(
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "doc.on.clipboard.fill")
-                            .foregroundColor(.white)
-                            .font(.caption)
-                        Text(recentLabel)
-                            .font(.caption).bold().foregroundColor(.white)
-                    }
-                    ForEach(0..<3) { i in
-                        HStack(spacing: 8) {
-                            Image(systemName: i == 1 ? "link" : "doc.text")
-                                .font(.system(size: 11))
-                                .foregroundColor(.white.opacity(0.7))
-                            Text(language.sampleText(i))
-                                .font(.system(size: 11))
-                                .lineLimit(1)
-                                .foregroundColor(.white.opacity(0.9))
-                        }
-                    }
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            )
-            .shadow(color: .black.opacity(0.25), radius: 12, x: 0, y: 4)
-    }
-
-}
-
 // MARK: - Helper Views
 struct ScreenshotFeatureRow: View {
     let icon: String
@@ -1382,14 +842,15 @@ struct SetupStepRow: View {
 @ViewBuilder
 func screenshotContent(for screen: ScreenshotScreen, language: AppLanguage) -> some View {
     switch screen {
-    case .clipboardHistory: MockClipboardHistoryView(language: language)
-    case .keyboardPreview:  MockKeyboardPreviewView(language: language)
+    case .clipboardHistory: RealScaleScreen { StoreShotHistoryView(language: language) }
+    case .keyboardPreview:  RealScaleScreen { StoreShotKeyboardView(language: language) }
     case .pipMonitoring:    MockPiPMonitoringView(language: language)
     case .settings:         MockSettingsView(language: language)
     case .imagePreview:     MockImagePreviewView(language: language)
     case .keyboardSetup:    MockKeyboardSetupView(language: language)
-    case .favorites:        MockFavoritesView(language: language)
-    case .widget:           MockWidgetHomeContent(language: language)
+    case .favorites:        RealScaleScreen { StoreShotFavoritesView(language: language) }
+    case .widget:           RealScaleScreen { StoreShotWidgetView(language: language) }
+    case .snippets:         RealScaleScreen { StoreShotSnippetsView(language: language) }
     }
 }
 

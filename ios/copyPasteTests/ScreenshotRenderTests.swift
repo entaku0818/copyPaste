@@ -28,7 +28,7 @@ final class ScreenshotRenderTests: XCTestCase {
         .keyboardPreview,
         .widget,
         .favorites,
-        .keyboardSetup,
+        .snippets,
     ]
 
     func testRenderAllScreenshots() throws {
