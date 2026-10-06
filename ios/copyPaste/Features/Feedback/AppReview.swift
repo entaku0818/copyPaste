@@ -15,6 +15,11 @@
 //    1. 発火判定は必ずフォアグラウンドのユーザー操作を起点にする
 //    2. 「表示した」記録は実際にシートが画面に出た時点で行う（markShown）
 //
+//  発火条件は読み上げナレーター（VoiceYourText の ReviewRequestPrompt）と同じ方式にそろえている:
+//  「2回目以降の起動ごとに判定し、前回表示から90日空いていれば出す」。
+//  コピー10回ごと・Pro購入直後のトリガーと、launchトリガーの使い切り・
+//  「満足」回答者への永久停止は廃止した（entaku判断 2026-10-07）。
+//
 
 import Foundation
 import OSLog
@@ -30,18 +35,15 @@ enum AppReview {
     /// アプリ側の役割は「ポジティブ体験の直後」に事前確認を出すタイミングを選ぶことと、
     /// 同じユーザーに何度も事前確認シートを見せすぎないよう独自に間隔を空けることの2点。
     enum Config {
-        /// 何回目の起動で初回の事前確認を検討するか。
+        /// 何回目の起動から事前確認を検討するか（以降は毎起動が判定対象）。
         /// 起動イベントは必ずフォアグラウンドで起きるため、バックグラウンド発火で
         /// 条件が焼き切れる心配がない。
         static let launchTrigger = 2
 
-        /// 履歴からコピー（＝時短が成立した瞬間）が何回ごとに事前確認を検討するか。
-        /// 初回起動トリガーを逃した／スロットル中だったユーザーの受け皿になる。
-        static let copyInterval = 10
-
-        /// 全トリガー共通の頻度制御: 前回の事前確認表示から最低何日空けるか。
-        /// これがないとヘビーユーザーほど短期間に何度も同じシートを見ることになる。
-        static let minimumDaysBetweenPrompts = 30
+        /// 頻度制御: 前回の事前確認表示から最低何日空けるか。
+        /// 毎起動で判定するため、これが唯一の間引き。Appleの年3回枠を
+        /// 使い込んだ時期にも残しておくため約3ヶ月にする（ナレーターと同じ）。
+        static let minimumDaysBetweenPrompts = 90
 
         /// 「満足している」を押してから `AppStore.requestReview` を呼ぶまでの待ち時間。
         ///
@@ -53,13 +55,10 @@ enum AppReview {
     }
 
     /// どのトリガーで事前確認が出たかを識別する。Analyticsのパラメータにも使う。
-    enum Trigger: String, Equatable, Sendable {
-        /// 2回目の起動
-        case launch = "launch"
-        /// 履歴からのコピーがcopyIntervalの倍数に到達
-        case copyMilestone = "copy_milestone"
-        /// Proへのアップグレードが成立
-        case proPurchase = "pro_purchase"
+    /// 現在は起動時判定のみ（copy_milestone / pro_purchase は廃止）。
+    enum Trigger: String, Equatable, Sendable, CaseIterable {
+        /// 2回目以降の起動
+        case launch
     }
 
     /// 事前確認を見送った理由。ログとAnalyticsに出して「なぜ出なかったか」を
@@ -67,16 +66,10 @@ enum AppReview {
     enum SkipReason: String, Equatable, Sendable {
         /// バックグラウンドまたはPiP中で、そもそも画面に出せない
         case notForeground = "not_foreground"
-        /// すでに「満足」と答えている
-        case answeredPositively = "answered_positively"
         /// 前回表示から minimumDaysBetweenPrompts 日経っていない
         case throttled = "throttled"
-        /// launchトリガーは一度出して使い切っている
-        case launchTriggerConsumed = "launch_trigger_consumed"
         /// 起動回数がまだ launchTrigger に届いていない
         case launchCountBelowThreshold = "launch_count_below_threshold"
-        /// コピー回数が copyInterval の倍数に達していない
-        case copyCountNotAtMilestone = "copy_count_not_at_milestone"
     }
 
     /// 発火判定の結果。Boolだけだと「出なかった理由」が消えるため、
@@ -94,9 +87,6 @@ enum AppReview {
         static let launchCount = "clipkit.launchCount"
         static let lastPromptDate = "clipkit.lastReviewPromptDate"
         static let promptCount = "clipkit.reviewPromptCount"
-        static let answeredPositively = "clipkit.hasAnsweredReviewPositively"
-        /// launchトリガーを一度使い切ったか（issue #105）
-        static let launchTriggerConsumed = "clipkit.launchTriggerConsumed"
     }
 
     /// ClipKitのApp Store ID（`?action=write-review` ディープリンク用）
@@ -158,12 +148,10 @@ enum AppReview {
     /// - Parameters:
     ///   - trigger: 発火元
     ///   - launchCount: `.launch` の判定に使う起動回数（インクリメント済みの最新値）
-    ///   - copyCount: `.copyMilestone` の判定に使うコピー回数（インクリメント済みの最新値）
     ///   - isForeground: アプリがフォアグラウンドかつPiP中でないか。falseなら常に見送る
     static func shouldPrompt(
         trigger: Trigger,
         launchCount: Int = 0,
-        copyCount: Int = 0,
         isForeground: Bool,
         defaults: UserDefaults = .standard,
         now: Date = Date()
@@ -171,7 +159,6 @@ enum AppReview {
         decide(
             trigger: trigger,
             launchCount: launchCount,
-            copyCount: copyCount,
             isForeground: isForeground,
             defaults: defaults,
             now: now
@@ -188,7 +175,6 @@ enum AppReview {
     static func decide(
         trigger: Trigger,
         launchCount: Int = 0,
-        copyCount: Int = 0,
         isForeground: Bool,
         defaults: UserDefaults = .standard,
         now: Date = Date()
@@ -196,7 +182,6 @@ enum AppReview {
         let decision = Self.evaluate(
             trigger: trigger,
             launchCount: launchCount,
-            copyCount: copyCount,
             context: Context(isForeground: isForeground, defaults: defaults, now: now)
         )
         let outcome: String
@@ -207,7 +192,7 @@ enum AppReview {
             outcome = "見送り reason=\(reason.rawValue)"
         }
         let message = "decide(\(trigger.rawValue)): \(outcome)"
-            + " launchCount=\(launchCount) copyCount=\(copyCount)"
+            + " launchCount=\(launchCount)"
         logger.info("\(message, privacy: .public)")
         return decision
     }
@@ -222,7 +207,6 @@ enum AppReview {
     private static func evaluate(
         trigger: Trigger,
         launchCount: Int,
-        copyCount: Int,
         context: Context
     ) -> Decision {
         let defaults = context.defaults
@@ -231,10 +215,8 @@ enum AppReview {
         // ここで見送っても何も記録しないので、次の機会にそのまま持ち越される。
         guard context.isForeground else { return .skip(.notForeground) }
 
-        // 一度「満足」と答えた人には二度と出さない
-        guard !defaults.bool(forKey: Key.answeredPositively) else { return .skip(.answeredPositively) }
-
-        // 全トリガー共通のスロットル
+        // 「満足」と答えた人にも、90日空けば再度聞く（ナレーターと同じ）。
+        // Appleの年3回枠はOS側で守られるため、アプリ側は間隔だけを管理する。
         guard !isThrottled(
             minimumDays: Config.minimumDaysBetweenPrompts,
             defaults: defaults,
@@ -245,20 +227,10 @@ enum AppReview {
         case .launch:
             // 等値比較(== 2)だと、何らかの理由でカウントが飛んだユーザーは
             // 二度とこのトリガーに当たらなくなる（issue #105 で実際に起きた）。
-            // 「しきい値以上」かつ「まだ一度も使っていない」に変える。
-            guard !defaults.bool(forKey: Key.launchTriggerConsumed) else {
-                return .skip(.launchTriggerConsumed)
-            }
+            // 「しきい値以上」にして、2回目以降の起動を毎回判定対象にする。
             guard launchCount >= Config.launchTrigger else {
                 return .skip(.launchCountBelowThreshold)
             }
-            return .prompt
-        case .copyMilestone:
-            guard copyCount > 0, copyCount % Config.copyInterval == 0 else {
-                return .skip(.copyCountNotAtMilestone)
-            }
-            return .prompt
-        case .proPurchase:
             return .prompt
         }
     }
@@ -285,7 +257,7 @@ enum AppReview {
 
     /// 事前確認シートが実際に画面に出た時点で呼ぶ。
     /// 判定時ではなく表示時に記録することで、表示されないまま条件が
-    /// 消費されてしまう事故を防ぐ。
+    /// 消費されてしまう事故を防ぐ（ナレーターは判定時に記録しているが、ここは持ち込まない）。
     static func markShown(
         trigger: Trigger,
         defaults: UserDefaults = .standard,
@@ -293,19 +265,15 @@ enum AppReview {
     ) {
         defaults.set(defaults.integer(forKey: Key.promptCount) + 1, forKey: Key.promptCount)
         defaults.set(now, forKey: Key.lastPromptDate)
-        // launchトリガーは一度出したら使い切る（issue #105）
-        if trigger == .launch {
-            defaults.set(true, forKey: Key.launchTriggerConsumed)
-        }
         let promptCount = defaults.integer(forKey: Key.promptCount)
         let message = "markShown(\(trigger.rawValue)): シートが画面に出た (promptCount=\(promptCount))"
         logger.info("\(message, privacy: .public)")
         Analytics.logEvent("review_request_shown", parameters: ["trigger": trigger.rawValue])
     }
 
-    /// 「満足」が選ばれた際に呼ぶ。以降このユーザーには事前確認を出さない。
-    static func markAnsweredPositively(defaults: UserDefaults = .standard) {
-        defaults.set(true, forKey: Key.answeredPositively)
+    /// 「満足」が選ばれた際に呼ぶ。システムダイアログの呼び出しは呼び出し側の責務。
+    /// 以後も出し続けるかはスロットル（90日）だけで決める。
+    static func markAnsweredPositively() {
         Analytics.logEvent("review_request_accepted", parameters: nil)
     }
 

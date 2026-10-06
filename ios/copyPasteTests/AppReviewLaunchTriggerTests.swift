@@ -95,39 +95,30 @@ final class AppReviewLaunchTriggerTests: XCTestCase {
         )
     }
 
-    // MARK: - 使い切り
+    // MARK: - 2回目以降の起動ごとに判定（ナレーター方式）
 
-    func testShouldPrompt_launchTriggerIsConsumedAfterShown() {
-        XCTAssertTrue(
-            AppReview.shouldPrompt(
-                trigger: .launch, launchCount: 2,
-                isForeground: true, defaults: defaults
-            )
-        )
+    /// launchトリガーは使い切りにしない。表示後90日以内の起動では出さず、
+    /// 90日経った後の起動でまた出すこと。
+    func testShouldPrompt_firesAgainOnLaunchAfterCooldown() {
+        let shownAt = Date()
+        AppReview.markShown(trigger: .launch, defaults: defaults, now: shownAt)
 
-        AppReview.markShown(trigger: .launch, defaults: defaults)
-
-        // スロットルの影響を除くため、31日後を現在時刻として判定する
-        let later = Date().addingTimeInterval(60 * 60 * 24 * 31)
+        let within = Calendar.current.date(byAdding: .day, value: 89, to: shownAt) ?? shownAt
         XCTAssertFalse(
             AppReview.shouldPrompt(
-                trigger: .launch, launchCount: 9,
-                isForeground: true, defaults: defaults, now: later
+                trigger: .launch, launchCount: 3,
+                isForeground: true, defaults: defaults, now: within
             ),
-            "launchトリガーは一度出したら使い切られること（毎起動出さない）"
+            "表示から90日以内の起動では出さないこと"
         )
-    }
 
-    func testMarkShown_copyMilestoneDoesNotConsumeLaunchTrigger() {
-        AppReview.markShown(trigger: .copyMilestone, defaults: defaults)
-
-        let later = Date().addingTimeInterval(60 * 60 * 24 * 31)
+        let after = Calendar.current.date(byAdding: .day, value: 90, to: shownAt) ?? shownAt
         XCTAssertTrue(
             AppReview.shouldPrompt(
-                trigger: .launch, launchCount: 2,
-                isForeground: true, defaults: defaults, now: later
+                trigger: .launch, launchCount: 9,
+                isForeground: true, defaults: defaults, now: after
             ),
-            "copyMilestoneでの表示はlaunchトリガーを消費しないこと"
+            "90日経った後の起動ではまた出すこと（launchトリガーは使い切りではない）"
         )
     }
 

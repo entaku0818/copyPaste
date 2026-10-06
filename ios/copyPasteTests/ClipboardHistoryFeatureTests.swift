@@ -649,12 +649,9 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         "clipkit.launchCount",
         "clipkit.lastReviewPromptDate",
         "clipkit.reviewPromptCount",
+        // 以下は旧実装のキー。残っていても新しい判定に影響しないことを担保するため掃除する
         "clipkit.hasAnsweredReviewPositively",
-        // launchトリガーの使い切りフラグ（issue #105）。
-        // 掃除対象に入れないと、markShownを呼ぶテストの後続テストが
-        // 「launchトリガーは消費済み」と判定されて落ちる
         "clipkit.launchTriggerConsumed",
-        // 旧実装のキー。残っていても新しい判定に影響しないことを担保するため掃除する
         "clipkit.reviewMilestonesShown"
     ]
 
@@ -729,44 +726,40 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         XCTAssertFalse(store.state.showSatisfactionPrompt, "バックグラウンドでは表示しないこと")
     }
 
-    func testCheckReviewTrigger_showsPromptAtCopyMilestone() async {
+    /// コピー10回ごとのトリガーは廃止した。旧マイルストーン（10回目）に達するコピーでも出さないこと。
+    func testCopyItem_doesNotTriggerReviewAtFormerMilestone() async {
+        let item = ClipboardItem(content: "Test")
         var state = foregroundState()
-        state.copyCount = AppReview.Config.copyInterval
+        state.items = [item]
+        state.copyCount = 9
+        state.launchCount = AppReview.Config.launchTrigger
         let store = TestStore(initialState: state) {
             ClipboardHistoryFeature()
         }
+        store.exhaustivity = .off
 
-        await store.send(.checkReviewTrigger(.copyMilestone)) {
-            $0.pendingReviewTrigger = .copyMilestone
-            $0.showSatisfactionPrompt = true
-        }
+        await store.send(.copyItem(item))
+        await store.finish()
+        XCTAssertEqual(store.state.copyCount, 10)
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "コピーではレビュー導線を出さないこと")
     }
 
-    func testCheckReviewTrigger_doesNotShowBetweenCopyMilestones() async {
+    /// Pro購入直後のトリガーは廃止した。課金状態の更新では出さないこと。
+    func testUpdateProStatus_doesNotTriggerReview() async {
         var state = foregroundState()
-        state.copyCount = AppReview.Config.copyInterval - 1
+        state.launchCount = AppReview.Config.launchTrigger
         let store = TestStore(initialState: state) {
             ClipboardHistoryFeature()
         }
+        store.exhaustivity = .off
 
-        await store.send(.checkReviewTrigger(.copyMilestone))
-        XCTAssertFalse(store.state.showSatisfactionPrompt, "マイルストーン未達では表示しないこと")
+        await store.send(.updateProStatus)
+        await store.finish()
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "課金状態の更新ではレビュー導線を出さないこと")
     }
 
     func testCheckReviewTrigger_throttledAfterRecentPrompt() async {
         UserDefaults.standard.set(Date(), forKey: "clipkit.lastReviewPromptDate")
-        var state = foregroundState()
-        state.copyCount = AppReview.Config.copyInterval
-        let store = TestStore(initialState: state) {
-            ClipboardHistoryFeature()
-        }
-
-        await store.send(.checkReviewTrigger(.copyMilestone))
-        XCTAssertFalse(store.state.showSatisfactionPrompt, "直近に表示済みならスロットルされること")
-    }
-
-    func testCheckReviewTrigger_neverShowsAfterAnsweredPositively() async {
-        UserDefaults.standard.set(true, forKey: "clipkit.hasAnsweredReviewPositively")
         var state = foregroundState()
         state.launchCount = AppReview.Config.launchTrigger
         let store = TestStore(initialState: state) {
@@ -774,7 +767,26 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
         }
 
         await store.send(.checkReviewTrigger(.launch))
-        XCTAssertFalse(store.state.showSatisfactionPrompt, "一度「満足」と答えた人には二度と出さないこと")
+        XCTAssertFalse(store.state.showSatisfactionPrompt, "直近に表示済みならスロットルされること")
+    }
+
+    /// 旧実装の「満足」フラグが残っている端末でも、90日空いていれば再び聞くこと（ナレーターと同じ）。
+    func testCheckReviewTrigger_showsAgainForSatisfiedUserAfterCooldown() async {
+        UserDefaults.standard.set(true, forKey: "clipkit.hasAnsweredReviewPositively")
+        UserDefaults.standard.set(
+            Date().addingTimeInterval(-60 * 60 * 24 * 91),
+            forKey: "clipkit.lastReviewPromptDate"
+        )
+        var state = foregroundState()
+        state.launchCount = 5
+        let store = TestStore(initialState: state) {
+            ClipboardHistoryFeature()
+        }
+
+        await store.send(.checkReviewTrigger(.launch)) {
+            $0.pendingReviewTrigger = .launch
+            $0.showSatisfactionPrompt = true
+        }
     }
 
     /// 判定時ではなく実際の表示時に記録されること（条件の焼き切れ防止の要）
@@ -805,7 +817,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
     func testAddItem_doesNotTriggerReview() async {
         var state = foregroundState()
         state.launchCount = AppReview.Config.launchTrigger
-        state.copyCount = AppReview.Config.copyInterval
+        state.copyCount = 10
         let store = TestStore(initialState: state) {
             ClipboardHistoryFeature()
         }
@@ -936,7 +948,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
     func testSatisfactionResponseNegative_closesPromptAndOpensFeedbackForm() async {
         var initialState = ClipboardHistoryFeature.State()
         initialState.showSatisfactionPrompt = true
-        initialState.pendingReviewTrigger = .copyMilestone
+        initialState.pendingReviewTrigger = .launch
         let store = TestStore(initialState: initialState) {
             ClipboardHistoryFeature()
         }

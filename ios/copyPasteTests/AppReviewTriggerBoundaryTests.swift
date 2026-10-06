@@ -5,7 +5,7 @@ import UIKit
 /// レビュー事前確認の発火条件を**境界値で固定する**テスト（issue #105）。
 ///
 /// #105 の本質は「条件が1つでもズレるとシートが永久に出なくなる」こと。
-/// 実機で空振りしても気づけないため、しきい値・スロットル・使い切りの
+/// 実機で空振りしても気づけないため、しきい値・スロットルの
 /// 境界をここで数値ごと固定し、定数を触ったら必ずテストが落ちるようにする。
 ///
 /// 判定は `AppReview.decide` を使い、出ない場合は「なぜ出ないか」まで突き合わせる。
@@ -33,14 +33,12 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
     private func decide(
         _ trigger: AppReview.Trigger,
         launchCount: Int = 0,
-        copyCount: Int = 0,
         isForeground: Bool = true,
         now: Date? = nil
     ) -> AppReview.Decision {
         AppReview.decide(
             trigger: trigger,
             launchCount: launchCount,
-            copyCount: copyCount,
             isForeground: isForeground,
             defaults: defaults,
             now: now ?? self.now
@@ -55,9 +53,15 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
 
     /// 定数を変えたらこのテストが落ちる。以下の境界テストは全てこの値が前提。
     func testConfigValues() {
-        XCTAssertEqual(AppReview.Config.launchTrigger, 2, "初回トリガーは「2回目の起動」")
-        XCTAssertEqual(AppReview.Config.copyInterval, 10, "コピー10回ごと")
-        XCTAssertEqual(AppReview.Config.minimumDaysBetweenPrompts, 30, "前回表示から30日")
+        XCTAssertEqual(AppReview.Config.launchTrigger, 2, "トリガーは「2回目以降の起動」")
+        XCTAssertEqual(AppReview.Config.minimumDaysBetweenPrompts, 90, "前回表示から90日")
+    }
+
+    /// コピー10回ごと（copy_milestone）とPro購入直後（pro_purchase）は廃止した。
+    /// トリガーを足したらここが落ちる＝仕様変更として意識して足すこと。
+    func testOnlyLaunchTriggerExists() {
+        XCTAssertEqual(AppReview.Trigger.allCases, [.launch])
+        XCTAssertEqual(AppReview.Trigger.launch.rawValue, "launch", "Analyticsのtrigger値")
     }
 
     // MARK: - 起動回数の境界（launchTrigger = 2）
@@ -85,99 +89,80 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
         )
     }
 
-    // MARK: - スロットルの境界（minimumDaysBetweenPrompts = 30）
+    // MARK: - スロットルの境界（minimumDaysBetweenPrompts = 90）
 
     func testThrottleBoundary() {
-        for days in [0, 1, 29] {
+        for days in [0, 1, 30, 89] {
             defaults.set(daysAgo(days), forKey: "clipkit.lastReviewPromptDate")
             XCTAssertEqual(
-                decide(.proPurchase), .skip(.throttled),
-                "前回表示から\(days)日では見送ること（30日未満）"
+                decide(.launch, launchCount: 3), .skip(.throttled),
+                "前回表示から\(days)日では見送ること（90日未満）"
             )
         }
 
-        for days in [30, 31, 365] {
+        for days in [90, 91, 365] {
             defaults.set(daysAgo(days), forKey: "clipkit.lastReviewPromptDate")
             XCTAssertEqual(
-                decide(.proPurchase), .prompt,
-                "前回表示から\(days)日経っていれば出すこと（30日以上）"
+                decide(.launch, launchCount: 3), .prompt,
+                "前回表示から\(days)日経っていれば出すこと（90日以上）"
             )
         }
     }
 
     func testThrottle_noRecordMeansNotThrottled() {
         XCTAssertFalse(
-            AppReview.isThrottled(minimumDays: 30, defaults: defaults, now: now),
+            AppReview.isThrottled(minimumDays: 90, defaults: defaults, now: now),
             "一度も表示していないユーザーはスロットルされないこと"
         )
     }
 
     /// 時計の巻き戻し／バックアップ復元で `lastReviewPromptDate` が未来になると、
-    /// 素朴な `days < 30` 比較では永久にスロットルされ二度と出せなくなる。
+    /// 素朴な `days < 90` 比較では永久にスロットルされ二度と出せなくなる。
     func testThrottle_futureDateDoesNotLockOutForever() {
         let farFuture = Calendar.current.date(byAdding: .day, value: 365, to: now) ?? now
         defaults.set(farFuture, forKey: "clipkit.lastReviewPromptDate")
         XCTAssertEqual(
-            decide(.proPurchase), .prompt,
+            decide(.launch, launchCount: 3), .prompt,
             "窓を超える未来日付は壊れた値とみなして無視すること（永久ロックアウト防止）"
         )
 
         let nearFuture = Calendar.current.date(byAdding: .day, value: 1, to: now) ?? now
         defaults.set(nearFuture, forKey: "clipkit.lastReviewPromptDate")
         XCTAssertEqual(
-            decide(.proPurchase), .skip(.throttled),
+            decide(.launch, launchCount: 3), .skip(.throttled),
             "数日ぶんの軽微なズレではスロットルを効かせたままにすること"
         )
     }
 
-    // MARK: - コピーマイルストーンの境界（copyInterval = 10）
+    // MARK: - 繰り返し・打ち切り条件（ナレーター方式）
 
-    func testCopyMilestoneBoundary() {
-        for count in [0, 1, 9, 11, 19] {
-            XCTAssertEqual(
-                decide(.copyMilestone, copyCount: count), .skip(.copyCountNotAtMilestone),
-                "コピー\(count)回では出さないこと"
-            )
-        }
-
-        for count in [10, 20, 100] {
-            XCTAssertEqual(
-                decide(.copyMilestone, copyCount: count), .prompt,
-                "コピー\(count)回（10の倍数）では出すこと"
-            )
-        }
-    }
-
-    /// copyCount = 0 は「10の倍数」だが、まだ一度もコピーしていないので出してはいけない。
-    func testCopyMilestone_zeroIsNotAMilestone() {
-        XCTAssertEqual(decide(.copyMilestone, copyCount: 0), .skip(.copyCountNotAtMilestone))
-    }
-
-    // MARK: - 使い切り・打ち切り条件
-
-    func testLaunchTriggerIsConsumedOnlyOnce() {
+    /// launchトリガーは使い切りではない。表示後は90日のスロットルだけで間引き、
+    /// 明けた後の起動でまた出す。
+    func testLaunchTriggerRepeatsAfterCooldown() {
         XCTAssertEqual(decide(.launch, launchCount: 2), .prompt)
 
         AppReview.markShown(trigger: .launch, defaults: defaults, now: now)
 
-        // スロットルの影響を外して、使い切りフラグ単体の効果を見る
-        let later = Calendar.current.date(byAdding: .day, value: 400, to: now) ?? now
+        let within = Calendar.current.date(byAdding: .day, value: 89, to: now) ?? now
         XCTAssertEqual(
-            decide(.launch, launchCount: 5, now: later), .skip(.launchTriggerConsumed),
-            "launchトリガーは一度出したら二度と使わないこと（毎起動出さない）"
+            decide(.launch, launchCount: 5, now: within), .skip(.throttled),
+            "90日以内の起動では出さないこと"
         )
+        let after = Calendar.current.date(byAdding: .day, value: 90, to: now) ?? now
         XCTAssertEqual(
-            decide(.copyMilestone, copyCount: 10, now: later), .prompt,
-            "launchの使い切りは他のトリガーを止めないこと"
+            decide(.launch, launchCount: 5, now: after), .prompt,
+            "90日後の起動ではまた出すこと"
         )
     }
 
-    func testAnsweredPositively_stopsEveryTrigger() {
-        AppReview.markAnsweredPositively(defaults: defaults)
+    /// 「満足」と答えた人も永久停止しない。90日空けば再び聞く（ナレーターと同じ）。
+    func testAnsweredPositively_doesNotStopFuturePrompts() {
+        AppReview.markShown(trigger: .launch, defaults: defaults, now: daysAgo(90))
+        AppReview.markAnsweredPositively()
+        // 旧実装で保存された「満足」フラグが残っている端末も同じ扱いにする
+        defaults.set(true, forKey: "clipkit.hasAnsweredReviewPositively")
 
-        XCTAssertEqual(decide(.launch, launchCount: 2), .skip(.answeredPositively))
-        XCTAssertEqual(decide(.copyMilestone, copyCount: 10), .skip(.answeredPositively))
-        XCTAssertEqual(decide(.proPurchase), .skip(.answeredPositively))
+        XCTAssertEqual(decide(.launch, launchCount: 4), .prompt)
     }
 
     // MARK: - 見送り理由の優先順位
@@ -188,9 +173,10 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
         XCTAssertEqual(
             decide(.launch, launchCount: 2, isForeground: false), .skip(.notForeground)
         )
+        defaults.set(daysAgo(1), forKey: "clipkit.lastReviewPromptDate")
         XCTAssertEqual(
-            decide(.proPurchase, isForeground: false), .skip(.notForeground),
-            "無条件で出すproPurchaseでも、画面に出せないなら見送ること"
+            decide(.launch, launchCount: 2, isForeground: false), .skip(.notForeground),
+            "スロットル中でも、まず画面に出せないことを理由にすること"
         )
     }
 
@@ -202,10 +188,6 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
             defaults.object(forKey: "clipkit.lastReviewPromptDate"),
             "見送りで表示日時が記録されてはならない"
         )
-        XCTAssertFalse(
-            defaults.bool(forKey: "clipkit.launchTriggerConsumed"),
-            "見送りでlaunchトリガーが消費されてはならない"
-        )
         XCTAssertEqual(defaults.integer(forKey: "clipkit.reviewPromptCount"), 0)
     }
 
@@ -215,7 +197,6 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
 
         XCTAssertEqual(defaults.integer(forKey: "clipkit.reviewPromptCount"), 1)
         XCTAssertEqual(defaults.object(forKey: "clipkit.lastReviewPromptDate") as? Date, now)
-        XCTAssertTrue(defaults.bool(forKey: "clipkit.launchTriggerConsumed"))
     }
 
     // MARK: - システムダイアログの提示先シーン（issue #106）
@@ -265,31 +246,27 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
     private struct Scenario {
         let trigger: AppReview.Trigger
         let launchCount: Int
-        let copyCount: Int
         let isForeground: Bool
     }
 
     func testShouldPromptMatchesDecide() {
         let scenarios = [
-            Scenario(trigger: .launch, launchCount: 1, copyCount: 0, isForeground: true),
-            Scenario(trigger: .launch, launchCount: 2, copyCount: 0, isForeground: true),
-            Scenario(trigger: .launch, launchCount: 2, copyCount: 0, isForeground: false),
-            Scenario(trigger: .copyMilestone, launchCount: 0, copyCount: 9, isForeground: true),
-            Scenario(trigger: .copyMilestone, launchCount: 0, copyCount: 10, isForeground: true),
-            Scenario(trigger: .proPurchase, launchCount: 0, copyCount: 0, isForeground: true)
+            Scenario(trigger: .launch, launchCount: 0, isForeground: true),
+            Scenario(trigger: .launch, launchCount: 1, isForeground: true),
+            Scenario(trigger: .launch, launchCount: 2, isForeground: true),
+            Scenario(trigger: .launch, launchCount: 2, isForeground: false),
+            Scenario(trigger: .launch, launchCount: 50, isForeground: true)
         ]
 
         for scenario in scenarios {
             let expected = decide(
                 scenario.trigger,
                 launchCount: scenario.launchCount,
-                copyCount: scenario.copyCount,
                 isForeground: scenario.isForeground
             ).shouldPrompt
             let actual = AppReview.shouldPrompt(
                 trigger: scenario.trigger,
                 launchCount: scenario.launchCount,
-                copyCount: scenario.copyCount,
                 isForeground: scenario.isForeground,
                 defaults: defaults,
                 now: now
@@ -299,7 +276,7 @@ final class AppReviewTriggerBoundaryTests: XCTestCase {
                 """
                 shouldPromptとdecideが一致すること \
                 (trigger=\(scenario.trigger.rawValue) launch=\(scenario.launchCount) \
-                copy=\(scenario.copyCount) fg=\(scenario.isForeground))
+                fg=\(scenario.isForeground))
                 """
             )
         }

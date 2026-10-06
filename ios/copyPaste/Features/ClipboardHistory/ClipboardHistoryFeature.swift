@@ -329,8 +329,6 @@ struct ClipboardHistoryFeature {
                 return .merge(
                     .send(.saveItems),
                     pipEffect,
-                    // 履歴から取り出して貼れた瞬間＝時短が成立した瞬間。ClipKitの中核体験
-                    .send(.checkReviewTrigger(.copyMilestone)),
                     .run { _ in await interstitialAd.onItemPasted(isProUser) }
                 )
 
@@ -720,15 +718,9 @@ struct ClipboardHistoryFeature {
 
             case .updateProStatus:
                 let newProStatus = RevenueCatManager.shared.hasProAccess()
-                let becamePro = !state.isProUser && newProStatus
                 state.isProUser = newProStatus
                 Self.logger.info("Pro status updated: \(newProStatus)")
                 var effects: [Effect<Action>] = []
-                if becamePro {
-                    // 満足度確認を挟まず直接システムダイアログを出していたが、
-                    // Appleの年3回枠を★1リスクごと消費してしまうため他と同じ導線に揃える
-                    effects.append(.send(.checkReviewTrigger(.proPurchase)))
-                }
                 if !newProStatus {
                     // 無料ユーザーのみインタースティシャル広告をプリロード
                     // （ロード済みならInterstitialAdManager側でスキップされる）
@@ -806,7 +798,6 @@ struct ClipboardHistoryFeature {
                       AppReview.shouldPrompt(
                         trigger: trigger,
                         launchCount: state.launchCount,
-                        copyCount: state.copyCount,
                         isForeground: state.isAppActive && !state.isPiPActive
                       )
                 else { return .none }
