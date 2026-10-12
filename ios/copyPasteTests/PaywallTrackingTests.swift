@@ -39,7 +39,9 @@ final class PaywallTrackingTests: XCTestCase {
                 "widget",
                 "settings_trash",
                 "settings_export",
-                "settings_icloud"
+                "settings_icloud",
+                "onboarding_trial",
+                "monthly_prompt"
             ]
         )
     }

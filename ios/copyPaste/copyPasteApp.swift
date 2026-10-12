@@ -77,6 +77,8 @@ struct ClipKitApp: App {
                     .onOpenURL(perform: handleOpenURL)
             } else {
                 OnboardingView {
+                    // 本編に入った直後に1回だけトライアル案内を出す（issue #115）
+                    AutoPaywallStorage.markOnboardingCompleted()
                     hasCompletedOnboarding = true
                 }
             }
@@ -86,6 +88,8 @@ struct ClipKitApp: App {
                     .onOpenURL(perform: handleOpenURL)
             } else {
                 OnboardingView {
+                    // 本編に入った直後に1回だけトライアル案内を出す（issue #115）
+                    AutoPaywallStorage.markOnboardingCompleted()
                     hasCompletedOnboarding = true
                 }
             }

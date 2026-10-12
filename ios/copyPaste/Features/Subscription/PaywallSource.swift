@@ -30,6 +30,10 @@ enum PaywallSource: String, CaseIterable, Equatable, Sendable {
     case settingsExport = "settings_export"
     /// 設定のiCloud同期（無料はロック表示, issue #116）
     case settingsICloud = "settings_icloud"
+    /// オンボーディング完了直後に1回だけ出すトライアル案内（issue #115）
+    case onboardingTrial = "onboarding_trial"
+    /// 非課金ユーザーに30日に1回出す課金案内（issue #115）
+    case monthlyPrompt = "monthly_prompt"
 
     /// アプリを開いたURL（clipkit://subscription）から入口を決める。
     /// キーボード拡張は source を付けずに開く旧形式もあるので、無い・不明なら keyboard とみなす。

@@ -23,6 +23,8 @@ struct ClipboardHistoryFeature {
         var showPaywall: Bool = false
         /// storeのシートで出すペイウォールの入口。購入・閉じるの計測に載せる（issue #114）
         var paywallSource: PaywallSource = .historyBanner
+        /// クリップボード許可アラートと重なるため自動の課金案内を見送った。閉じたら判定し直す（issue #115）
+        var isAutoPaywallDeferred: Bool = false
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
         var snippets: [Snippet] = []
@@ -126,6 +128,9 @@ struct ClipboardHistoryFeature {
         case requestReview
         /// 起動時のレビュー判定。App Open広告の結果を待ってから送る
         case checkReviewTrigger(AppReview.Trigger, didShowAppOpenAd: Bool = false)
+        /// 自動の課金案内の判定（issue #115）。起動時はこの後にレビュー判定へ進む
+        /// - thenCheckReview: 出さなかったときにレビュー判定へ進むか（起動時のみ true）
+        case checkAutoPaywall(didShowAppOpenAd: Bool, lastFullScreenAdAt: Date?, thenCheckReview: Bool)
         case satisfactionPromptShown
         case satisfactionResponsePositive
         case satisfactionResponseNegative
@@ -159,6 +164,8 @@ struct ClipboardHistoryFeature {
     @Dependency(\.remoteChange) var remoteChange
     @Dependency(\.syncStatus) var syncStatus
     @Dependency(\.paywallAnalytics) var paywallAnalytics
+    @Dependency(\.autoPaywall) var autoPaywall
+    @Dependency(\.date) var date
     private enum CancelID { case monitoring, remoteChangeObservation, remoteChangeReload }
 
     /// CloudKitの初期インポート時はリモート変更通知がバースト的に飛ぶため、
@@ -166,6 +173,22 @@ struct ClipboardHistoryFeature {
     private static let remoteChangeReloadDebounce: Duration = .milliseconds(500)
 
     private static let logger = Logger(subsystem: "com.clipkit", category: "Clipboard")
+
+    /// クリップボード許可アラートを閉じたあと、見送っていた自動の課金案内を判定し直す
+    /// （issue #115）。アラートが閉じきってから出すため少し待つ
+    private func recheckDeferredAutoPaywall(_ state: inout State) -> Effect<Action> {
+        guard state.isAutoPaywallDeferred else { return .none }
+        state.isAutoPaywallDeferred = false
+        return .run { send in
+            try await clock.sleep(for: .seconds(1))
+            let lastFullScreenAdAt = await autoPaywall.lastFullScreenAdAt()
+            await send(.checkAutoPaywall(
+                didShowAppOpenAd: false,
+                lastFullScreenAdAt: lastFullScreenAdAt,
+                thenCheckReview: false
+            ))
+        }
+    }
 
     // 並び替え・削除後にsortOrderをインデックスで振り直す
     private static func renumberSnippets(_ snippets: inout [Snippet]) {
@@ -570,10 +593,18 @@ struct ClipboardHistoryFeature {
                 if !state.hasCountedLaunch {
                     state.hasCountedLaunch = true
                     state.launchCount = AppReview.launchCount()
-                    // App Open広告を出すかどうかが確定してから判定する（全画面広告の上に被せない）
+                    // 月1課金案内の猶予期間の起点（issue #115）
+                    autoPaywall.recordFirstSeenIfNeeded()
+                    // App Open広告を出すかどうかが確定してから判定する（全画面広告の上に被せない）。
+                    // 課金案内 → 出さなければレビュー依頼、の順に1起動で1つだけ出す
                     effects.append(.run { send in
                         let didShowAppOpenAd = await appOpenAd.coldStartDidShowAd()
-                        await send(.checkReviewTrigger(.launch, didShowAppOpenAd: didShowAppOpenAd))
+                        let lastFullScreenAdAt = await autoPaywall.lastFullScreenAdAt()
+                        await send(.checkAutoPaywall(
+                            didShowAppOpenAd: didShowAppOpenAd,
+                            lastFullScreenAdAt: lastFullScreenAdAt,
+                            thenCheckReview: true
+                        ))
                     })
                 }
                 return .merge(effects)
@@ -586,13 +617,50 @@ struct ClipboardHistoryFeature {
                 // クリップボードアクセスを試みて、システムの確認ダイアログを表示
                 if let content = UIPasteboard.general.string {
                     let item = ClipboardItem(content: content)
-                    return .send(.addItem(item))
+                    return .merge(.send(.addItem(item)), recheckDeferredAutoPaywall(&state))
                 }
-                return .none
+                return recheckDeferredAutoPaywall(&state)
 
             case .dismissPermissionAlert:
                 state.showPermissionAlert = false
-                return .none
+                return recheckDeferredAutoPaywall(&state)
+
+            case let .checkAutoPaywall(didShowAppOpenAd, lastFullScreenAdAt, thenCheckReview):
+                let reviewEffect: Effect<Action> = thenCheckReview
+                    ? .send(.checkReviewTrigger(.launch, didShowAppOpenAd: didShowAppOpenAd))
+                    : .none
+                let record = autoPaywall.load()
+                // 何も記録が無ければ出ないことが確定しているので時計を読まない
+                guard record.onboardingTrialPending || record.firstSeenAt != nil else { return reviewEffect }
+                // クリップボード許可アラート（未回答なら起動のたびに、履歴の読込後に出る）と重ねない。
+                // 閉じたあとに判定し直す。判定し直す回（起動時以外）は「後で」を選んで閉じた後なので
+                // 未回答でもアラートは出ていない
+                let isLaunchCheck = thenCheckReview
+                let isPermissionAlertPending = state.showPermissionAlert
+                    || (isLaunchCheck && !state.hasRequestedPermission)
+                let hasCompetingPrompt = state.showPaywall
+                    || state.showSatisfactionPrompt
+                    || isPermissionAlertPending
+                let now = date.now
+                let decision = AutoPaywallPolicy.decide(
+                    now: now,
+                    isPro: state.isProUser,
+                    isForeground: state.isAppActive && !state.isPiPActive,
+                    hasCompetingPrompt: hasCompetingPrompt,
+                    didShowAppOpenAd: didShowAppOpenAd,
+                    lastFullScreenAdAt: lastFullScreenAdAt,
+                    record: record
+                )
+                Self.logger.info("Auto paywall decision: \(String(describing: decision))")
+                state.isAutoPaywallDeferred = decision == .skip(.competingPrompt) && isPermissionAlertPending
+                // オンボーディング直後のトライアル案内は1回だけ。許可アラート待ち以外は出しても見送っても消す
+                if record.onboardingTrialPending, decision != .skip(.competingPrompt) {
+                    autoPaywall.clearOnboardingTrial()
+                }
+                guard case let .show(source) = decision else { return reviewEffect }
+                autoPaywall.markShown(now)
+                // 課金案内を出した起動ではレビュー依頼を重ねない
+                return .send(.showPaywall(source))
 
             case let .pipStateChanged(isActive):
                 Self.logger.info("PiP state changed: \(isActive)")
