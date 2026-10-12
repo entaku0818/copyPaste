@@ -270,3 +270,4 @@
 
 /* Pro-only settings rows (issue #116) */
 "settings.proOnly" = "Pro only";
+"settings.iCloudSyncAll" = "iCloud sync (all items)";

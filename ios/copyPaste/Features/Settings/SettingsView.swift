@@ -87,7 +87,8 @@ struct SettingsView: View {
                                 store.send(.showPaywall(.settingsExport))
                             }
                             CardDivider(leadingInset: 56)
-                            settingsRow(icon: "icloud.fill", iconColor: Color(hex: 0x3AA3FF), title: "settings.iCloudSync", isLocked: true) {
+                            // 無料でも20件までは同期されているので「同期」そのものではなく「全件同期」をPro機能として見せる
+                            settingsRow(icon: "icloud.fill", iconColor: Color(hex: 0x3AA3FF), title: "settings.iCloudSyncAll", isLocked: true) {
                                 store.send(.showPaywall(.settingsICloud))
                             }
                         }

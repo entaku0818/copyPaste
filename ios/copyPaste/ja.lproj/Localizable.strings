@@ -270,3 +270,4 @@
 
 /* 設定のPro限定項目（issue #116） */
 "settings.proOnly" = "Pro限定";
+"settings.iCloudSyncAll" = "iCloud同期（全件）";
