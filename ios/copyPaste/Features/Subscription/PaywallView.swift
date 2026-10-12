@@ -58,8 +58,8 @@ struct PaywallView: View {
 
                         FeatureRow(
                             icon: "star.fill",
-                            title: NSLocalizedString("paywall.feature.favorites.title", value: "お気に入り機能", comment: ""),
-                            description: NSLocalizedString("paywall.feature.favorites.description", value: "重要な項目をピン留め", comment: ""),
+                            title: NSLocalizedString("paywall.feature.favorites.title", value: "お気に入り無制限", comment: ""),
+                            description: NSLocalizedString("paywall.feature.favorites.description", value: "無料版は10件まで", comment: ""),
                             color: ClipKitColor.favorite
                         )
 

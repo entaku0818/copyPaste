@@ -155,8 +155,8 @@
 "paywall.subtitle" = "Unlock every feature";
 "paywall.feature.history.title" = "Unlimited history";
 "paywall.feature.history.description" = "Free plan keeps the last 3 days, up to 20 items";
-"paywall.feature.favorites.title" = "Favorites";
-"paywall.feature.favorites.description" = "Pin the items that matter";
+"paywall.feature.favorites.title" = "Unlimited favorites";
+"paywall.feature.favorites.description" = "Free plan keeps up to 10";
 "paywall.feature.widget.title" = "Home screen widgets";
 "paywall.feature.widget.description" = "Three widget sizes";
 "paywall.feature.keyboard.title" = "Full keyboard history";

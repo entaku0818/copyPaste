@@ -204,8 +204,8 @@
 "paywall.subtitle" = "すべての機能を解放";
 "paywall.feature.history.title" = "履歴を無制限に保存";
 "paywall.feature.history.description" = "無料版は直近3日・20件まで";
-"paywall.feature.favorites.title" = "お気に入り機能";
-"paywall.feature.favorites.description" = "重要な項目をピン留め";
+"paywall.feature.favorites.title" = "お気に入り無制限";
+"paywall.feature.favorites.description" = "無料版は10件まで";
 "paywall.feature.widget.title" = "ホーム画面ウィジェット";
 "paywall.feature.widget.description" = "3サイズのウィジェット";
 "paywall.feature.keyboard.title" = "キーボードフル表示";
