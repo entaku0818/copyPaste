@@ -34,6 +34,8 @@ enum PaywallSource: String, CaseIterable, Equatable, Sendable {
     case onboardingTrial = "onboarding_trial"
     /// 非課金ユーザーに30日に1回出す課金案内（issue #115）
     case monthlyPrompt = "monthly_prompt"
+    /// キーボードの長押し変換でPro限定の変換を選んだ（clipkit://subscription?source=keyboard_transform, issue #117）
+    case keyboardTransform = "keyboard_transform"
 
     /// アプリを開いたURL（clipkit://subscription）から入口を決める。
     /// キーボード拡張は source を付けずに開く旧形式もあるので、無い・不明なら keyboard とみなす。

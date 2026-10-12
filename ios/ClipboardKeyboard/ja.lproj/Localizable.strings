@@ -27,3 +27,6 @@
 "category.code" = "コード";
 "category.address" = "住所";
 "category.text" = "テキスト";
+
+/* 長押し変換のPro限定（issue #117） */
+"keyboard.transform.proOnly" = "Pro限定・タップでアップグレード";

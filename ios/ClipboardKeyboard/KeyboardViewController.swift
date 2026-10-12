@@ -364,7 +364,19 @@ class KeyboardViewController: UIInputViewController {
         guard let sourceText, !sourceText.isEmpty else { return nil }
 
         let actions = TextTransform.allCases.map { transform in
-            UIAction(
+            // Pro限定の変換は無料では王冠を付け、選ぶとアプリのペイウォールへ（issue #117）。
+            // 以前はアプリ内では Pro 限定なのに、キーボードの長押しからは無料で使えていた
+            if transform.requiresPro && !isProUser {
+                return UIAction(
+                    title: transform.displayName,
+                    subtitle: String(localized: "keyboard.transform.proOnly", defaultValue: "Pro限定・タップでアップグレード"),
+                    image: UIImage(systemName: "crown.fill")?.withTintColor(KeyboardColor.crown, renderingMode: .alwaysOriginal)
+                ) { [weak self] _ in
+                    KeyboardLogger.log(.paste, "transform_locked(\(transform.rawValue))")
+                    self?.openContainingApp(Self.upgradeURL(source: "keyboard_transform"))
+                }
+            }
+            return UIAction(
                 title: transform.displayName,
                 image: UIImage(systemName: transform.systemImageName)
             ) { [weak self] _ in
@@ -483,16 +495,32 @@ class KeyboardViewController: UIInputViewController {
     }
 
     @objc private func upgradeButtonTapped() {
-        guard let url = URL(string: "clipkit://subscription") else { return }
-        let selector = NSSelectorFromString("openURL:")
+        openContainingApp(Self.upgradeURL(source: "keyboard"))
+    }
+
+    /// アプリのペイウォールを開くURL。source はアプリ側の PaywallSource の rawValue
+    static func upgradeURL(source: String) -> URL {
+        URL(string: "clipkit://subscription?source=\(source)")!
+    }
+
+    /// キーボード拡張から本体アプリを開く（issue #117）。
+    ///
+    /// 拡張からは UIApplication.shared を使えないので、レスポンダーチェーンを辿って
+    /// UIApplication を見つける。以前は `openURL:`（単引数・iOS 10で非推奨）を
+    /// perform していたが、iOS 18 からこれは何もせず false を返すようになり
+    /// アップグレードカードを押しても何も起きなかった。`open(_:options:completionHandler:)` を使う。
+    private func openContainingApp(_ url: URL) {
         var responder: UIResponder? = self
-        while let r = responder {
-            if r.responds(to: selector) {
-                r.perform(selector, with: url)
-                break
+        while let current = responder {
+            if let application = current as? UIApplication {
+                application.open(url, options: [:]) { success in
+                    KeyboardLogger.log(.launch, "openContainingApp success=\(success)")
+                }
+                return
             }
-            responder = r.next
+            responder = current.next
         }
+        KeyboardLogger.log(.error, "openContainingApp: UIApplication not found in responder chain")
     }
 
     // MARK: - Clipboard History Load

@@ -41,7 +41,8 @@ final class PaywallTrackingTests: XCTestCase {
                 "settings_export",
                 "settings_icloud",
                 "onboarding_trial",
-                "monthly_prompt"
+                "monthly_prompt",
+                "keyboard_transform"
             ]
         )
     }
@@ -226,6 +227,14 @@ final class PaywallTrackingTests: XCTestCase {
         // 旧バージョンのキーボード拡張は source を付けずに開く
         XCTAssertEqual(PaywallSource.fromDeepLink(URL(string: "clipkit://subscription")!), .keyboard)
         XCTAssertEqual(PaywallSource.fromDeepLink(URL(string: "clipkit://subscription?source=unknown")!), .keyboard)
+    }
+
+    func testDeepLink_keyboardTransformSource() {
+        // キーボードの長押しでPro変換を選んだとき（issue #117）
+        XCTAssertEqual(
+            PaywallSource.fromDeepLink(URL(string: "clipkit://subscription?source=keyboard_transform")!),
+            .keyboardTransform
+        )
     }
 
     func testDeepLink_otherURLsAreIgnored() {

@@ -27,3 +27,6 @@
 "category.code" = "Code";
 "category.address" = "Address";
 "category.text" = "Text";
+
+/* Pro-only transforms in the long-press menu (issue #117) */
+"keyboard.transform.proOnly" = "Pro only · Tap to upgrade";
