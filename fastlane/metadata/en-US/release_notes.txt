@@ -1,3 +1,10 @@
 【Improvements】
-· Adjusted when we ask for your feedback, so the prompt appears less often
-· The feedback prompt no longer overlaps with the ad shown at launch
+· Cancelling a purchase no longer shows an error
+· If a purchase is waiting for approval, we now let you know
+· Settings now shows Pro features such as Trash and Export
+· Pro users no longer see the Pro banner in Settings
+· Pro transforms in the keyboard's long-press menu are now marked with a crown
+
+【Bug Fixes】
+· Fixed an issue where the keyboard sometimes couldn't open the app
+· Tapping the widget now opens the Pro information screen
