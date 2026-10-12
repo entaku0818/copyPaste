@@ -21,6 +21,8 @@ struct ClipboardHistoryFeature {
         var searchText: String = ""
         var selectedCategory: ItemCategory? = nil
         var showPaywall: Bool = false
+        /// storeのシートで出すペイウォールの入口。購入・閉じるの計測に載せる（issue #114）
+        var paywallSource: PaywallSource = .historyBanner
         var isProUser: Bool = false
         var trashedItems: [ClipboardItem] = []
         var snippets: [Snippet] = []
@@ -710,6 +712,7 @@ struct ClipboardHistoryFeature {
 
             case let .showPaywall(source):
                 paywallAnalytics.logShown(source)
+                state.paywallSource = source
                 state.showPaywall = true
                 return .none
 

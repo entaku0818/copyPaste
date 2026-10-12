@@ -96,7 +96,7 @@ struct SnippetsView: View {
             }
         }
         .sheet(isPresented: $showPaywall) {
-            PaywallView()
+            PaywallView(source: .snippetsAddButton)
         }
     }
 }

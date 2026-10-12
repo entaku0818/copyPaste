@@ -196,7 +196,7 @@ struct SettingsView: View {
                 }
             }
             .sheet(isPresented: $showPaywall) {
-                PaywallView()
+                PaywallView(source: .settingsHero)
             }
             .sheet(isPresented: $showTrash) {
                 TrashView(store: store)

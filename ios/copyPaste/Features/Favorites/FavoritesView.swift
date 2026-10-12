@@ -82,7 +82,7 @@ struct FavoritesView: View {
                         .padding(.top, 12)
                     }
                     .sheet(isPresented: $showPaywall) {
-                        PaywallView()
+                        PaywallView(source: .favoritesBanner)
                     }
                     BannerAdView()
                         .frame(height: BannerAdView.adaptiveHeight)

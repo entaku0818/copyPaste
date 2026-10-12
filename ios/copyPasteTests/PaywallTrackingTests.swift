@@ -53,6 +53,7 @@ final class PaywallTrackingTests: XCTestCase {
 
         await store.send(.toggleFavorite(newItem))
         await store.receive(\.showPaywall) {
+            $0.paywallSource = .favoriteLimit
             $0.showPaywall = true
         }
 
@@ -84,6 +85,7 @@ final class PaywallTrackingTests: XCTestCase {
             let store = makeStore(ClipboardHistoryFeature.State(isProUser: false), logged: logged)
 
             await store.send(.showPaywall(source)) {
+                $0.paywallSource = source
                 $0.showPaywall = true
             }
 
@@ -117,5 +119,66 @@ final class PaywallTrackingTests: XCTestCase {
         await store.skipReceivedActions()
 
         XCTAssertEqual(logged.value, [.historyBanner], "閉じたときは送らないこと")
+    }
+
+    // MARK: - 購入・復元・閉じるのイベント（issue #114）
+
+    func testPaywallEventNames_matchEventSpec() {
+        // GA4に送るイベント名。変えると時系列が途切れるので固定する
+        XCTAssertEqual(
+            PaywallEvent.allCases.map(\.rawValue),
+            [
+                "paywall_purchase_started",
+                "paywall_purchase_completed",
+                "paywall_purchase_pending",
+                "paywall_purchase_cancelled",
+                "paywall_purchase_failed",
+                "paywall_restore_started",
+                "paywall_restore_completed",
+                "paywall_restore_failed",
+                "paywall_dismissed"
+            ]
+        )
+    }
+
+    func testPurchaseOutcome_mapsToEvent() {
+        XCTAssertEqual(PaywallEvent.forPurchase(.completed), .purchaseCompleted)
+        XCTAssertEqual(PaywallEvent.forPurchase(.pending), .purchasePending)
+        // キャンセルは失敗として数えない（シンプル録音で cancelled が0件・failed に混ざっていた）
+        XCTAssertEqual(PaywallEvent.forPurchase(.cancelled), .purchaseCancelled)
+        XCTAssertEqual(PaywallEvent.forPurchase(.failed(message: "x")), .purchaseFailed)
+    }
+
+    func testEventParameters_includeSourcePlanAndTrial() {
+        let params = PaywallEventParameters(source: .keyboard, plan: .annual, trialEligible: true)
+        XCTAssertEqual(params.dictionary, [
+            "source": "keyboard",
+            "plan": "annual",
+            "trial_eligible": "true"
+        ])
+    }
+
+    func testEventParameters_omitUnknownValues() {
+        // プラン未読込のまま閉じた場合など。空文字を送らずキーごと省く
+        var params = PaywallEventParameters(source: .settingsHero)
+        params.purchased = false
+        XCTAssertEqual(params.dictionary, [
+            "source": "settings_hero",
+            "purchased": "false"
+        ])
+    }
+
+    func testEventParameters_lifetimeIsNotTrial() {
+        let params = PaywallEventParameters(source: .historyBanner, plan: .lifetime, trialEligible: false)
+        XCTAssertEqual(params.dictionary["plan"], "lifetime")
+        XCTAssertEqual(params.dictionary["trial_eligible"], "false")
+    }
+
+    func testShowPaywall_remembersSourceForPurchaseEvents() async {
+        let store = makeStore(ClipboardHistoryFeature.State(isProUser: false), logged: LockIsolated([]))
+        await store.send(.showPaywall(.keyboard)) {
+            $0.paywallSource = .keyboard
+            $0.showPaywall = true
+        }
     }
 }

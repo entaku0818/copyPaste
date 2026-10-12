@@ -164,6 +164,7 @@ final class ClipboardHistoryFeatureTests: XCTestCase {
 
         await store.send(.toggleFavorite(newItem))
         await store.receive(\.showPaywall) {
+            $0.paywallSource = .favoriteLimit
             $0.showPaywall = true
         }
     }

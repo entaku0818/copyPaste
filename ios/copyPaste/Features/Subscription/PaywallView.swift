@@ -2,6 +2,9 @@ import SwiftUI
 import RevenueCat
 
 struct PaywallView: View {
+    /// どこから開いたか。購入・閉じるの各イベントに載せる（issue #114）
+    let source: PaywallSource
+
     @StateObject private var revenueCat = RevenueCatManager.shared
     @Environment(\.dismiss) private var dismiss
 
@@ -15,6 +18,8 @@ struct PaywallView: View {
     @State private var showSuccess = false
     /// 承認待ち（保留）。購入完了とは別に案内する（issue #113）
     @State private var showPending = false
+    /// このペイウォールで購入・復元が完了したか（paywall_dismissed に載せる）
+    @State private var didPurchase = false
 
     var body: some View {
         NavigationStack {
@@ -241,12 +246,26 @@ struct PaywallView: View {
         .task {
             await loadOfferings()
         }
+        .onDisappear {
+            var params = eventParameters
+            params.purchased = didPurchase
+            PaywallAnalyticsClient.log(.dismissed, params)
+        }
         .onChange(of: revenueCat.offerings) { _, newOfferings in
             if selectedPackage == nil,
                let packages = newOfferings?.current?.availablePackages {
                 selectedPackage = PackageSelector.defaultPackage(from: packages)
             }
         }
+    }
+
+    /// 選択中のプランとトライアル表示を載せたイベントパラメータ（issue #114）
+    private var eventParameters: PaywallEventParameters {
+        PaywallEventParameters(
+            source: source,
+            plan: selectedPackage.map { PaywallPlan($0.packageType) },
+            trialEligible: selectedOfferCopy?.showsTrial
+        )
     }
 
     private var selectedOfferCopy: TrialOfferCopy? {
@@ -307,7 +326,13 @@ struct PaywallView: View {
         isPurchasing = true
         defer { isPurchasing = false }
 
-        switch await revenueCat.purchase(package: package) {
+        let params = eventParameters
+        PaywallAnalyticsClient.log(.purchaseStarted, params)
+        let outcome = await revenueCat.purchase(package: package)
+        PaywallAnalyticsClient.log(.forPurchase(outcome), params)
+        if outcome == .completed { didPurchase = true }
+
+        switch outcome {
         case .completed:
             showSuccess = true
         case .pending:
@@ -325,15 +350,21 @@ struct PaywallView: View {
         isRestoring = true
         defer { isRestoring = false }
 
+        let params = eventParameters
+        PaywallAnalyticsClient.log(.restoreStarted, params)
         do {
             let info = try await revenueCat.restorePurchases()
             if info.entitlements.active.isEmpty {
+                PaywallAnalyticsClient.log(.restoreFailed, params)
                 errorMessage = NSLocalizedString("paywall.error.noRestorable", value: "復元可能な購入が見つかりませんでした", comment: "")
                 showError = true
             } else {
+                PaywallAnalyticsClient.log(.restoreCompleted, params)
+                didPurchase = true
                 dismiss()
             }
         } catch {
+            PaywallAnalyticsClient.log(.restoreFailed, params)
             errorMessage = error.localizedDescription
             showError = true
         }
@@ -505,6 +536,17 @@ extension TrialOfferCopy.Period {
     }
 }
 
+extension PaywallPlan {
+    init(_ packageType: PackageType) {
+        switch packageType {
+        case .monthly: self = .monthly
+        case .annual: self = .annual
+        case .lifetime: self = .lifetime
+        default: self = .other
+        }
+    }
+}
+
 #Preview {
-    PaywallView()
+    PaywallView(source: .historyBanner)
 }

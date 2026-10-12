@@ -35,7 +35,7 @@ final class TrialPaywallSnapshotTests: XCTestCase {
         window.windowLevel = .alert + 1
         // プラン選択と注意事項まで1枚に収めるため縦に伸ばす
         window.frame = CGRect(x: 0, y: 0, width: scene.screen.bounds.width, height: 1_900)
-        window.rootViewController = UIHostingController(rootView: PaywallView())
+        window.rootViewController = UIHostingController(rootView: PaywallView(source: .historyBanner))
         window.makeKeyAndVisible()
         defer { window.isHidden = true }
 

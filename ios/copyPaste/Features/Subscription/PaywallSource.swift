@@ -50,3 +50,66 @@ extension DependencyValues {
         set { self[PaywallAnalyticsClient.self] = newValue }
     }
 }
+
+// MARK: - 購入・復元・閉じるの計測（issue #114）
+
+/// ペイウォール上で起きたこと。GA4のイベント名になるので rawValue は変えないこと。
+/// 以前は show_paywall しか無く、入口別の購入率もキャンセル数も測れなかった。
+enum PaywallEvent: String, CaseIterable, Equatable, Sendable {
+    case purchaseStarted = "paywall_purchase_started"
+    case purchaseCompleted = "paywall_purchase_completed"
+    /// 承認待ち（保留）。完了とは分けて数える
+    case purchasePending = "paywall_purchase_pending"
+    case purchaseCancelled = "paywall_purchase_cancelled"
+    case purchaseFailed = "paywall_purchase_failed"
+    case restoreStarted = "paywall_restore_started"
+    case restoreCompleted = "paywall_restore_completed"
+    /// 復元できる購入が無かった・エラーになった
+    case restoreFailed = "paywall_restore_failed"
+    /// ペイウォールが閉じられた（購入の有無は purchased パラメータ）
+    case dismissed = "paywall_dismissed"
+
+    /// 購入結果に対応するイベント
+    static func forPurchase(_ outcome: PurchaseOutcome) -> PaywallEvent {
+        switch outcome {
+        case .completed: return .purchaseCompleted
+        case .pending: return .purchasePending
+        case .cancelled: return .purchaseCancelled
+        case .failed: return .purchaseFailed
+        }
+    }
+}
+
+/// どのプランを選んでいたか。`plan` パラメータの値
+enum PaywallPlan: String, Equatable, Sendable {
+    case monthly
+    case annual
+    case lifetime
+    case other
+}
+
+/// イベントに載せるパラメータ。RevenueCat の型に依存させずテストで固定する
+struct PaywallEventParameters: Equatable {
+    let source: PaywallSource
+    /// 選択中のプラン（プラン未読込なら nil）
+    var plan: PaywallPlan?
+    /// 選択中のプランが無料トライアルの対象として表示されていたか
+    var trialEligible: Bool?
+    /// paywall_dismissed のみ: このペイウォールで購入（または復元）が完了したか
+    var purchased: Bool?
+
+    var dictionary: [String: String] {
+        var params = ["source": source.rawValue]
+        if let plan { params["plan"] = plan.rawValue }
+        if let trialEligible { params["trial_eligible"] = trialEligible ? "true" : "false" }
+        if let purchased { params["purchased"] = purchased ? "true" : "false" }
+        return params
+    }
+}
+
+extension PaywallAnalyticsClient {
+    /// ペイウォール内のイベントを送る（View から直接呼ぶ）
+    static func log(_ event: PaywallEvent, _ parameters: PaywallEventParameters) {
+        Analytics.logEvent(event.rawValue, parameters: parameters.dictionary)
+    }
+}

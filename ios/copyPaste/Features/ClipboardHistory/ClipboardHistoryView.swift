@@ -150,7 +150,7 @@ struct ClipboardHistoryView: View {
                 set: { if !$0 { store.send(.dismissPaywall) } }
             )
         ) {
-            PaywallView()
+            PaywallView(source: store.paywallSource)
         }
         // レビュー事前確認はボトムシートではなく画面中央のモーダルで出す。
         // タブバーごと覆う必要があるため、presentationではなく
@@ -285,7 +285,7 @@ struct ClipboardItemDetailView: View {
             }
         }
         .sheet(isPresented: $showTransformPaywall, onDismiss: onPaywallDismiss) {
-            PaywallView()
+            PaywallView(source: .textTransform)
         }
     }
 
