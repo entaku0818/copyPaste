@@ -141,6 +141,8 @@ struct ClipboardWidgetEntryView: View {
                 Text("widget.upgradeInApp").font(.caption2).foregroundColor(.secondary)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // タップでアプリのペイウォールへ（以前はアプリが開くだけで行き止まりだった, issue #116）
+            .widgetURL(URL(string: "clipkit://subscription?source=widget"))
         }
     }
 }

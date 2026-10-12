@@ -74,11 +74,7 @@ struct ClipKitApp: App {
                 screenshotView(for: screen, language: .japanese)
             } else if hasCompletedOnboarding {
                 mainView
-                    .onOpenURL { url in
-                        if url.scheme == "clipkit", url.host == "subscription" {
-                            store.send(.showPaywall(.keyboard))
-                        }
-                    }
+                    .onOpenURL(perform: handleOpenURL)
             } else {
                 OnboardingView {
                     hasCompletedOnboarding = true
@@ -87,12 +83,7 @@ struct ClipKitApp: App {
             #else
             if hasCompletedOnboarding {
                 mainView
-                    .onOpenURL { url in
-                        // clipkit://subscription → Paywall表示（キーボード拡張からの遷移）
-                        if url.scheme == "clipkit", url.host == "subscription" {
-                            store.send(.showPaywall(.keyboard))
-                        }
-                    }
+                    .onOpenURL(perform: handleOpenURL)
             } else {
                 OnboardingView {
                     hasCompletedOnboarding = true
@@ -101,6 +92,14 @@ struct ClipKitApp: App {
             #endif
             }
             .tint(ClipKitColor.indigo)
+        }
+    }
+
+    /// clipkit://subscription（キーボード拡張・ウィジェットから）→ ペイウォール。
+    /// source クエリで入口を区別する（issue #116）
+    private func handleOpenURL(_ url: URL) {
+        if let source = PaywallSource.fromDeepLink(url) {
+            store.send(.showPaywall(source))
         }
     }
 

@@ -10,7 +10,6 @@ struct FavoritesView: View {
         store.items.filter { $0.isFavorite }
     }
 
-    @State private var showPaywall = false
 
     var body: some View {
         Group {
@@ -60,8 +59,8 @@ struct FavoritesView: View {
             if !store.isProUser {
                 VStack(spacing: 0) {
                     Button {
-                        store.send(.paywallShownLocally(.favoritesBanner))
-                        showPaywall = true
+                        // store のシートで開くと閉じたときに Pro 状態が更新される（issue #116）
+                        store.send(.showPaywall(.favoritesBanner))
                     } label: {
                         HStack(spacing: 10) {
                             Image(systemName: "crown.fill")
@@ -80,9 +79,6 @@ struct FavoritesView: View {
                         .clipShape(RoundedRectangle(cornerRadius: ClipKitRadius.control, style: .continuous))
                         .padding(.horizontal, ClipKitSpacing.screenPadding)
                         .padding(.top, 12)
-                    }
-                    .sheet(isPresented: $showPaywall) {
-                        PaywallView(source: .favoritesBanner)
                     }
                     BannerAdView()
                         .frame(height: BannerAdView.adaptiveHeight)

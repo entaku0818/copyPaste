@@ -144,25 +144,8 @@ struct ClipboardHistoryView: View {
                 ImagePreviewView(item: imageItem)
             }
         }
-        .sheet(
-            isPresented: Binding(
-                get: { store.showPaywall },
-                set: { if !$0 { store.send(.dismissPaywall) } }
-            )
-        ) {
-            PaywallView(source: store.paywallSource)
-        }
-        // レビュー事前確認はボトムシートではなく画面中央のモーダルで出す。
-        // タブバーごと覆う必要があるため、presentationではなく
-        // ContentView（TabViewの親）側のoverlayで描画している。
-        .sheet(
-            isPresented: Binding(
-                get: { store.showFeedbackForm },
-                set: { if !$0 { store.send(.dismissFeedbackForm) } }
-            )
-        ) {
-            FeedbackFormView()
-        }
+        // store のペイウォール・フィードバックフォームのシートは ContentView（TabViewの親）に付けている。
+        // ここに付けていた頃は履歴タブ以外を表示中に開いても出なかった（issue #116）
         .safeAreaInset(edge: .bottom) {
             if !store.isProUser {
                 BannerAdView()

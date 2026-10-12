@@ -35,7 +35,11 @@ final class PaywallTrackingTests: XCTestCase {
                 "text_transform",
                 "snippets_add_button",
                 "settings_hero",
-                "favorites_banner"
+                "favorites_banner",
+                "widget",
+                "settings_trash",
+                "settings_export",
+                "settings_icloud"
             ]
         )
     }
@@ -96,9 +100,9 @@ final class PaywallTrackingTests: XCTestCase {
     // MARK: - View側の@Stateシートで開く入口
 
     func testPaywallShownLocally_logsWithoutPresentingStoreSheet() async {
-        // 設定・お気に入り・スニペットタブ・テキスト変換はView側のシートで開くので、
+        // テキスト変換は項目詳細シートの上にView側のシートで開くので、
         // storeのシート状態は触らず計測だけ行う（二重に課金画面が出ないこと）
-        for source in [PaywallSource.textTransform, .snippetsAddButton, .settingsHero, .favoritesBanner] {
+        for source in [PaywallSource.textTransform] {
             let logged = LockIsolated<[PaywallSource]>([])
             let store = makeStore(ClipboardHistoryFeature.State(isProUser: false), logged: logged)
 
@@ -180,5 +184,50 @@ final class PaywallTrackingTests: XCTestCase {
             $0.paywallSource = .keyboard
             $0.showPaywall = true
         }
+    }
+
+    // MARK: - store のシートで開く入口（issue #116: どのタブでも出す・閉じたら Pro 状態を更新）
+
+    func testTabEntryPoints_presentStoreSheetWithSource() async {
+        // 設定・お気に入り・スニペットタブの入口は store のシート（ContentView に付いている）で開く
+        for source in [PaywallSource.settingsHero, .favoritesBanner, .snippetsAddButton,
+                       .settingsTrash, .settingsExport, .settingsICloud, .widget] {
+            let logged = LockIsolated<[PaywallSource]>([])
+            let store = makeStore(ClipboardHistoryFeature.State(isProUser: false), logged: logged)
+
+            await store.send(.showPaywall(source)) {
+                $0.paywallSource = source
+                $0.showPaywall = true
+            }
+            XCTAssertEqual(logged.value, [source])
+        }
+    }
+
+    func testDismissPaywall_refreshesProStatus() async {
+        let store = makeStore(ClipboardHistoryFeature.State(isProUser: false), logged: LockIsolated([]))
+        store.exhaustivity = .off
+
+        await store.send(.showPaywall(.settingsHero))
+        await store.send(.dismissPaywall) {
+            $0.showPaywall = false
+        }
+        await store.receive(\.updateProStatus)
+    }
+
+    // MARK: - clipkit://subscription の入口判定（issue #116）
+
+    func testDeepLink_widgetSource() {
+        XCTAssertEqual(PaywallSource.fromDeepLink(URL(string: "clipkit://subscription?source=widget")!), .widget)
+    }
+
+    func testDeepLink_withoutSourceIsKeyboard() {
+        // 旧バージョンのキーボード拡張は source を付けずに開く
+        XCTAssertEqual(PaywallSource.fromDeepLink(URL(string: "clipkit://subscription")!), .keyboard)
+        XCTAssertEqual(PaywallSource.fromDeepLink(URL(string: "clipkit://subscription?source=unknown")!), .keyboard)
+    }
+
+    func testDeepLink_otherURLsAreIgnored() {
+        XCTAssertNil(PaywallSource.fromDeepLink(URL(string: "clipkit://history")!))
+        XCTAssertNil(PaywallSource.fromDeepLink(URL(string: "https://subscription")!))
     }
 }

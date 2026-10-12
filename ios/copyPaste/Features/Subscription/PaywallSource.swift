@@ -1,3 +1,4 @@
+import Foundation
 import ComposableArchitecture
 import FirebaseAnalytics
 
@@ -21,6 +22,24 @@ enum PaywallSource: String, CaseIterable, Equatable, Sendable {
     case settingsHero = "settings_hero"
     /// お気に入りタブのPro誘導バナー
     case favoritesBanner = "favorites_banner"
+    /// ウィジェットの無料表示（clipkit://subscription?source=widget, issue #116）
+    case widget = "widget"
+    /// 設定のゴミ箱（無料はロック表示, issue #116）
+    case settingsTrash = "settings_trash"
+    /// 設定のエクスポート（無料はロック表示, issue #116）
+    case settingsExport = "settings_export"
+    /// 設定のiCloud同期（無料はロック表示, issue #116）
+    case settingsICloud = "settings_icloud"
+
+    /// アプリを開いたURL（clipkit://subscription）から入口を決める。
+    /// キーボード拡張は source を付けずに開く旧形式もあるので、無い・不明なら keyboard とみなす。
+    /// ペイウォールを開くURLでなければ nil
+    static func fromDeepLink(_ url: URL) -> PaywallSource? {
+        guard url.scheme == "clipkit", url.host == "subscription" else { return nil }
+        let value = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+            .queryItems?.first(where: { $0.name == "source" })?.value
+        return value.flatMap(PaywallSource.init(rawValue:)) ?? .keyboard
+    }
 }
 
 // MARK: - PaywallAnalyticsClient

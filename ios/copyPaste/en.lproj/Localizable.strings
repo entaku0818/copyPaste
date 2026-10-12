@@ -267,3 +267,6 @@
 /* Purchase pending approval (issue #113) */
 "paywall.pendingTitle" = "Purchase Pending";
 "paywall.pendingMessage" = "Pro will be unlocked automatically once the purchase is approved.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Pro only";

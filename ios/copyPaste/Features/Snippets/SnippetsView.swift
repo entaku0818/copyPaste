@@ -6,7 +6,6 @@ struct SnippetsView: View {
     let store: StoreOf<ClipboardHistoryFeature>
     @State private var showAddSheet = false
     @State private var editingSnippet: Snippet?
-    @State private var showPaywall = false
 
     var body: some View {
         Group {
@@ -57,8 +56,7 @@ struct SnippetsView: View {
                     if store.canAddSnippet {
                         showAddSheet = true
                     } else {
-                        store.send(.paywallShownLocally(.snippetsAddButton))
-                        showPaywall = true
+                        store.send(.showPaywall(.snippetsAddButton))
                     }
                 } label: {
                     Image(systemName: "plus")
@@ -94,9 +92,6 @@ struct SnippetsView: View {
                 updated.content = content
                 store.send(.updateSnippet(updated))
             }
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(source: .snippetsAddButton)
         }
     }
 }

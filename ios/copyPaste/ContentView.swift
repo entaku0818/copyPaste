@@ -70,6 +70,26 @@ public struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: store.showSatisfactionPrompt)
+        // store 経由のペイウォールはどのタブを表示中でも出せるよう TabView の親に付ける。
+        // 以前は履歴タブにしか付いておらず、設定タブ表示中にキーボードやウィジェットから
+        // clipkit://subscription で開いても何も出なかった（issue #116）
+        .sheet(
+            isPresented: Binding(
+                get: { store.showPaywall },
+                set: { if !$0 { store.send(.dismissPaywall) } }
+            )
+        ) {
+            PaywallView(source: store.paywallSource)
+        }
+        // 設定の「お問い合わせ」からも開くので同じ理由でここに置く
+        .sheet(
+            isPresented: Binding(
+                get: { store.showFeedbackForm },
+                set: { if !$0 { store.send(.dismissFeedbackForm) } }
+            )
+        ) {
+            FeedbackFormView()
+        }
     }
 }
 

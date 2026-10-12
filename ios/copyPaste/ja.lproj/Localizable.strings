@@ -267,3 +267,6 @@
 /* 購入の承認待ち（issue #113） */
 "paywall.pendingTitle" = "購入の承認待ちです";
 "paywall.pendingMessage" = "購入が承認されると、自動でProが使えるようになります。";
+
+/* 設定のPro限定項目（issue #116） */
+"settings.proOnly" = "Pro限定";
