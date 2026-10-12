@@ -13,6 +13,8 @@ struct PaywallView: View {
     @State private var errorMessage: String?
     @State private var showError = false
     @State private var showSuccess = false
+    /// 承認待ち（保留）。購入完了とは別に案内する（issue #113）
+    @State private var showPending = false
 
     var body: some View {
         NavigationStack {
@@ -227,6 +229,13 @@ struct PaywallView: View {
             } message: {
                 Text(NSLocalizedString("paywall.successMessage", value: "ClipKit Proへようこそ！\nすべての機能が使えるようになりました。", comment: ""))
             }
+            .alert(NSLocalizedString("paywall.pendingTitle", value: "購入の承認待ちです", comment: ""), isPresented: $showPending) {
+                Button("OK") {
+                    dismiss()
+                }
+            } message: {
+                Text(NSLocalizedString("paywall.pendingMessage", value: "購入が承認されると、自動でProが使えるようになります。", comment: ""))
+            }
         }
         .presentationDetents([.large])
         .task {
@@ -298,11 +307,16 @@ struct PaywallView: View {
         isPurchasing = true
         defer { isPurchasing = false }
 
-        do {
-            _ = try await revenueCat.purchase(package: package)
+        switch await revenueCat.purchase(package: package) {
+        case .completed:
             showSuccess = true
-        } catch {
-            errorMessage = error.localizedDescription
+        case .pending:
+            showPending = true
+        case .cancelled:
+            // 自分でキャンセルしただけなので何も出さない（issue #113）
+            break
+        case let .failed(message):
+            errorMessage = message
             showError = true
         }
     }

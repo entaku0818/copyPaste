@@ -78,8 +78,9 @@ final class RevenueCatManager: NSObject, ObservableObject {
         logger.info("Intro eligibility fetched: \(result.mapValues { $0.status.rawValue })")
     }
 
-    /// サブスクリプション購入
-    func purchase(package: Package) async throws -> CustomerInfo {
+    /// サブスクリプション購入。エラーは投げずに結果を分類して返す（issue #113）。
+    /// キャンセルは `.cancelled`、承認待ちは `.pending` になり、どちらも失敗扱いしない。
+    func purchase(package: Package) async -> PurchaseOutcome {
         do {
             let result = try await Purchases.shared.purchase(package: package)
             let info = result.customerInfo
@@ -90,11 +91,13 @@ final class RevenueCatManager: NSObject, ObservableObject {
             // Pro状態をApp Group UserDefaultsに保存
             saveProStatusToAppGroup(newProStatus)
 
-            logger.info("Purchase successful. Pro status: \(self.isProUser)")
-            return info
+            let outcome = PurchaseOutcome.fromResult(userCancelled: result.userCancelled, isProActive: newProStatus)
+            logger.info("Purchase finished: \(String(describing: outcome)). Pro status: \(self.isProUser)")
+            return outcome
         } catch {
-            logger.error("Purchase failed: \(error.localizedDescription)")
-            throw error
+            let outcome = PurchaseOutcome.fromError(error)
+            logger.error("Purchase did not complete: \(String(describing: outcome))")
+            return outcome
         }
     }
 

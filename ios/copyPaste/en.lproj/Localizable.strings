@@ -263,3 +263,7 @@
 "keyboard.snippets.empty" = "No snippets";
 "keyboard.upgrade.unlimited" = "See more\nUnlimited with Pro";
 "keyboard.upgrade.tenItems" = "See more\n10 items with Pro";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Purchase Pending";
+"paywall.pendingMessage" = "Pro will be unlocked automatically once the purchase is approved.";

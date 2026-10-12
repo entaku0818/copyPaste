@@ -263,3 +263,7 @@
 "paywall.renewal.months" = "%dヶ月ごとに自動更新";
 "paywall.renewal.years" = "%d年ごとに自動更新";
 "paywall.monthlyEquivalent" = "約%@";
+
+/* 購入の承認待ち（issue #113） */
+"paywall.pendingTitle" = "購入の承認待ちです";
+"paywall.pendingMessage" = "購入が承認されると、自動でProが使えるようになります。";
