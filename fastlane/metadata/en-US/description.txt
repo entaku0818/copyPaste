@@ -4,17 +4,24 @@ Automatically monitor your clipboard in the background. ClipKit saves everything
 • Background clipboard monitoring (using PiP technology)
 • Auto-save up to 20 items (last 3 days viewable)
 • Text, image & URL support
+• Search your history (including text inside images)
 • Auto-categorization (URL, Email, Phone, Code, Address, Text)
+• Up to 10 favorites
+• Text transforms (uppercase, lowercase, remove line breaks, trim whitespace)
+• Up to 3 snippets
+• Custom keyboard (shows 3 history items and 3 snippets)
 • iCloud sync (up to 20 items)
 • First-time onboarding guide
 
 [Pro Features (monthly, yearly or lifetime)]
 • Unlimited history (free plan: last 3 days, up to 20 items)
-• Advanced search + image OCR search
-• Favorites & pin (instantly access your most-used clips)
+• Unlimited favorites (free plan: 10)
+• Pro transforms: snake_case, camelCase, full-width/half-width, remove Markdown, URL encode/decode (also from a long press on the keyboard)
+• Unlimited snippets (free plan: 3)
 • Home screen widgets (3 sizes)
-• Show 10 items on the keyboard (3 on the free plan)
+• Show 10 history items and all snippets on the keyboard (3 each on the free plan)
 • iCloud sync (all items)
+• Trash (restore deleted items for 30 days)
 • Export history (CSV / Markdown)
 • 7-day free trial on monthly and yearly plans (first time only; renews automatically afterward, cancel anytime)
 
