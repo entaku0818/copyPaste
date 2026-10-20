@@ -297,10 +297,10 @@ enum ScreenshotScreen: String, CaseIterable {
 extension ScreenshotScreen {
     func caption(language: AppLanguage) -> String {
         switch (self, language) {
-        case (.clipboardHistory, .japanese): return "全コピー履歴が、\n手元に"
-        case (.clipboardHistory, .english):  return "Every copy, sorted\nand searchable"
-        case (.keyboardPreview, .japanese):  return "キーボードから、\nそのまま貼り付け"
-        case (.keyboardPreview, .english):   return "Paste directly\nfrom your keyboard"
+        case (.clipboardHistory, .japanese): return "コピーした文章を、\n履歴から探せる"
+        case (.clipboardHistory, .english):  return "Find copied text\nin your history"
+        case (.keyboardPreview, .japanese):  return "アプリを切り替えず、\n履歴から貼り付け"
+        case (.keyboardPreview, .english):   return "Paste from history.\nStay in your app."
         case (.pipMonitoring,   .japanese):  return "使いながら、\n監視を続ける"
         case (.pipMonitoring,   .english):   return "Monitor while\nusing other apps"
         case (.settings,        .japanese):  return "ClipKit Pro で、\nもっと便利に"
@@ -313,8 +313,8 @@ extension ScreenshotScreen {
         case (.favorites,       .english):   return "Keep important\nclips at hand"
         case (.widget,          .japanese):  return "ホーム画面に、\nクリップボードを"
         case (.widget,          .english):   return "Your clipboard,\non the home screen"
-        case (.snippets, .japanese):  return "よく使う文章は、\n定型文でワンタップ"
-        case (.snippets, .english):   return "Your go-to phrases,\none tap away"
+        case (.snippets, .japanese):  return "いつもの返信を、\n何度も打たない"
+        case (.snippets, .english):   return "Save your replies.\nSkip the retyping."
         }
     }
 
