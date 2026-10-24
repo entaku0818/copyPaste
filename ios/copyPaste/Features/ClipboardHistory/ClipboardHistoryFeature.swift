@@ -12,7 +12,9 @@ struct ClipboardHistoryFeature {
         var items: [ClipboardItem] = []
         let maxItems: Int = Int.max
         var isMonitoring: Bool = false
-        var lastChangeCount: Int = UIPasteboard.general.changeCount
+        // 起動前のコピーも初回の監視で取り込む。
+        var lastChangeCount: Int = -1
+        var clipboardReadFailed: Bool = false
         var isAppActive: Bool = true
         var isPiPActive: Bool = false
         var showPermissionAlert: Bool = false
@@ -501,21 +503,15 @@ struct ClipboardHistoryFeature {
 
                 Self.logger.info("Change detected! Count: \(currentChangeCount) (was: \(lastChangeCount))")
                 state.lastChangeCount = currentChangeCount
+                state.clipboardReadFailed = false
 
                 // 画像をチェック（優先度：高）
                 if let image = UIPasteboard.general.image {
                     Self.logger.info("Got image from clipboard")
-                    // 直前の画像と同じサイズなら重複とみなしてスキップ
-                    if let lastItem = state.items.first,
-                       lastItem.type == .image,
-                       let lastThumb = lastItem.thumbnail,
-                       lastThumb.size == image.size {
-                        Self.logger.debug("Skipping duplicate image")
-                        return .none
-                    }
+                    // changeCountで同じコピーの再取得を防ぐ。画像サイズだけでは同一性を判断できない。
                     let isPiPActive = state.isPiPActive
                     return .run { send in
-                        var item = await Self.createImageItem(from: image)
+                        let item = await Self.createImageItem(from: image)
                         await send(.addItem(item))
                         // PiP中はVisionによる重いOCR処理を避ける。背景実行のタイムアウトで
                         // プロセスごと強制終了されるのを防ぐため（OCR検索は次回起動時に取りこぼす）。
@@ -563,7 +559,8 @@ struct ClipboardHistoryFeature {
                 }
 
                 // iOS 16+: hasStringsでアクセス可否を確認
-                if UIPasteboard.general.hasStrings {
+                if UIPasteboard.general.hasStrings || UIPasteboard.general.hasImages || UIPasteboard.general.hasURLs {
+                    state.clipboardReadFailed = true
                     Self.logger.warning("Clipboard has strings but access denied")
                 } else {
                     Self.logger.debug("No content in clipboard")
@@ -577,6 +574,12 @@ struct ClipboardHistoryFeature {
                 
             case .appDidEnterBackground:
                 state.isAppActive = false
+                // 設定で許可を変更して戻った場合は同じコピーを再確認する。
+                // 毎秒のタイマーや許可ダイアログの復帰では再試行しない。
+                if state.clipboardReadFailed {
+                    state.lastChangeCount = -1
+                    state.clipboardReadFailed = false
+                }
                 return .none
                 
             case .onAppear:

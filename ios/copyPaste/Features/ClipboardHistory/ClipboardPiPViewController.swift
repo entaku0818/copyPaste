@@ -9,7 +9,7 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        preferredContentSize = CGSize(width: 240, height: 210)
+        preferredContentSize = CGSize(width: 240, height: 135)
         setupUI()
     }
 
@@ -109,7 +109,7 @@ extension ClipboardPiPViewController: UITableViewDataSource {
 
         var config = cell.defaultContentConfiguration()
         config.textProperties.font = .systemFont(ofSize: 11)
-        config.textProperties.numberOfLines = 2
+        config.textProperties.numberOfLines = 1
 
         switch item.type {
         case .text:
