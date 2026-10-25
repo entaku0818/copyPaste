@@ -219,9 +219,9 @@
 
 /* Onboarding */
 "onboarding.welcome.title" = "Welcome to ClipKit";
-"onboarding.welcome.description" = "Save copied text, links and images in your history.\nClipboard history from before installation cannot be recovered.";
-"onboarding.monitoring.title" = "When copies can be saved";
-"onboarding.monitoring.description" = "ClipKit checks copies while the app is open or its PiP window is displayed from the Always On tab. It cannot automatically save copies while both are closed.";
+"onboarding.welcome.description" = "Text, links and images you copy are saved automatically.\nPull any of them back out of your history whenever you need them.";
+"onboarding.monitoring.title" = "Capture everything automatically";
+"onboarding.monitoring.description" = "Start monitoring from the Always On tab and ClipKit saves whatever you copy.";
 "onboarding.paste.title" = "Allow pasting";
 "onboarding.paste.description" = "Grant permission once in iOS Settings\nso you don't get a dialog every time.";
 "onboarding.paste.path" = "Settings → Privacy & Security → Paste from Other Apps → ClipKit";
@@ -271,7 +271,5 @@
 /* Pro-only settings rows (issue #116) */
 "settings.proOnly" = "Pro only";
 "settings.iCloudSyncAll" = "iCloud sync (all items)";
-
-"monitoring.captureHelp" = "If copies are missing, allow pasting for ClipKit in iOS Settings, then reopen the app. Keep PiP displayed while using other apps. Earlier copies and content that was not captured cannot be recovered.";
 
 "monitoring.pipSizeHelp" = "Pinch the PiP window to resize it. iOS limits its minimum size and transparency.";

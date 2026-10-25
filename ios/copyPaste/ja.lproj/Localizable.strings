@@ -155,9 +155,9 @@
 
 /* Onboarding */
 "onboarding.welcome.title" = "ClipKitへようこそ";
-"onboarding.welcome.description" = "コピーしたテキスト・URL・画像を履歴に保存。\nインストール前のコピー履歴は復元できません。";
-"onboarding.monitoring.title" = "保存できるタイミング";
-"onboarding.monitoring.description" = "アプリを開いている間、または「常時起動」タブでPiPを表示している間にコピーを確認します。アプリを閉じ、PiPも表示していない間は自動保存できません。";
+"onboarding.welcome.description" = "コピーしたテキスト・URL・画像を自動で記録。\nいつでも履歴から取り出せます。";
+"onboarding.monitoring.title" = "常時起動で自動記録";
+"onboarding.monitoring.description" = "「常時起動」タブでモニタリングを開始すると、コピーした内容を自動で保存します。";
 "onboarding.paste.title" = "ペースト許可の設定";
 "onboarding.paste.description" = "毎回ダイアログが出ないよう、\niOSの設定から許可しておくと便利です。";
 "onboarding.paste.path" = "設定 → プライバシーとセキュリティ → ペースト → ClipKit";
@@ -271,7 +271,5 @@
 /* 設定のPro限定項目（issue #116） */
 "settings.proOnly" = "Pro限定";
 "settings.iCloudSyncAll" = "iCloud同期（全件）";
-
-"monitoring.captureHelp" = "保存されないときは、iOS設定でClipKitのペーストを許可してからアプリを開き直してください。他のアプリを使う間はPiPを表示してください。過去のコピーや、取得できなかった内容は復元できません。";
 
 "monitoring.pipSizeHelp" = "PiPはピンチ操作でサイズを調整できます。最小サイズと透明度はiOSにより制限されます。";

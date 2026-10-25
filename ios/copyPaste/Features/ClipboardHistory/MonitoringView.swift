@@ -94,10 +94,7 @@ struct MonitoringView: View {
                     }
                 }
                 .padding(.horizontal, ClipKitSpacing.screenPadding)
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("monitoring.captureHelp")
-                    Text("monitoring.pipSizeHelp")
-                }
+                Text("monitoring.pipSizeHelp")
                 .font(.footnote)
                 .foregroundColor(ClipKitColor.textSecondary)
                 .padding(.horizontal, ClipKitSpacing.screenPadding)
