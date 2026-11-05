@@ -3,6 +3,7 @@ import ComposableArchitecture
 
 struct MonitoringView: View {
     let store: StoreOf<ClipboardHistoryFeature>
+    @AppStorage("pipCompactMode") private var compactMode = false
 
     var body: some View {
         ScrollView {
@@ -10,18 +11,6 @@ struct MonitoringView: View {
                 // ヒーローカード（ダークサーフェス）
                 DarkHeroCard {
                     VStack(spacing: 16) {
-                        // PiP ソースビュー（非表示アンカー）
-                        PiPSourceView { sourceView in
-                            PiPManager.shared.setup(sourceView: sourceView)
-                            PiPManager.shared.onPiPStateChange = { isActive in
-                                store.send(.pipStateChanged(isActive))
-                            }
-                            // 既存のアイテムを PiP に反映
-                            PiPManager.shared.updateItems(store.items)
-                        }
-                        .frame(width: 1, height: 1)
-                        .opacity(0)
-
                         ZStack {
                             Circle()
                                 .fill(
@@ -94,6 +83,15 @@ struct MonitoringView: View {
                     }
                 }
                 .padding(.horizontal, ClipKitSpacing.screenPadding)
+                Toggle("monitoring.compactPiP", isOn: $compactMode)
+                    .padding(.horizontal, ClipKitSpacing.screenPadding)
+                    .onChange(of: compactMode) { _, value in
+                        PiPManager.shared.setCompactMode(value)
+                    }
+                Text("monitoring.shortcutHelp")
+                    .font(.footnote)
+                    .foregroundColor(ClipKitColor.textSecondary)
+                    .padding(.horizontal, ClipKitSpacing.screenPadding)
                 Text("monitoring.pipSizeHelp")
                 .font(.footnote)
                 .foregroundColor(ClipKitColor.textSecondary)

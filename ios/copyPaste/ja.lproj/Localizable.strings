@@ -6,7 +6,7 @@
 "trash.title" = "ゴミ箱";
 "image.preview.title" = "画像プレビュー";
 "monitoring.title" = "常時起動";
-"feedback.title" = "フィードバック";
+"feedback.title" = "お問い合わせ";
 
 /* Buttons */
 "button.close" = "閉じる";
@@ -97,15 +97,15 @@
 "settings.keyboardLogFooter" = "キーボードログはApp Groups経由でリアルタイム収集されます";
 
 /* Feedback */
-"feedback.category" = "カテゴリ";
-"feedback.content" = "内容";
-"feedback.email" = "メールアドレス（任意）";
-"feedback.emailPlaceholder" = "返信先メールアドレス";
-"feedback.send" = "送信";
-"feedback.success" = "送信しました";
-"feedback.successMessage" = "フィードバックありがとうございます。";
+"feedback.category" = "お問い合わせの種類";
+"feedback.content" = "お問い合わせ内容（必須）";
+"feedback.email" = "返信先メールアドレス（任意）";
+"feedback.emailPlaceholder" = "例：name@example.com";
+"feedback.send" = "送信する";
+"feedback.success" = "お問い合わせを受け付けました";
+"feedback.successMessage" = "ご連絡ありがとうございます。いただいた内容は、今後の改善や不具合の調査に活用します。";
 "feedback.failure" = "送信に失敗しました";
-"feedbackCategory.bug" = "バグ報告";
+"feedbackCategory.bug" = "不具合報告";
 "feedbackCategory.feature" = "機能要望";
 "feedbackCategory.other" = "その他";
 
@@ -272,4 +272,30 @@
 "settings.proOnly" = "Pro限定";
 "settings.iCloudSyncAll" = "iCloud同期（全件）";
 
-"monitoring.pipSizeHelp" = "PiPはピンチ操作でサイズを調整できます。最小サイズと透明度はiOSにより制限されます。";
+"monitoring.pipSizeHelp" = "コンパクト表示ではヘッダーを省き、縦幅を抑えた表示を指定します。実際のサイズはiOSが決定します。ピンチでサイズを調整したり、左右の画面端へドラッグして隠せます。ウィンドウの透明度は変更できません。";
+
+"feedback.introduction" = "ClipKitでお困りのことや、追加してほしい機能をお聞かせください。";
+
+"feedback.guidance.bug" = "何をしようとしたときに、何が起きましたか？操作の手順・期待した動作・実際の動作を、わかる範囲でご記入ください。";
+
+"feedback.guidance.feature" = "どんな場面で、何ができると便利ですか？現在困っていることもあわせてお聞かせください。";
+
+"feedback.guidance.other" = "ご質問やお気づきの点を、具体的にお聞かせください。";
+
+"feedback.emailHelp" = "返信をご希望の場合は、メールアドレスをご記入ください。空欄でも送信できます。";
+
+"feedback.deviceInfo" = "調査のため、アプリのバージョン・iOSのバージョン・端末モデルを自動で送信します。本文にはパスワードなどの機密情報を記入しないでください。";
+
+"feedback.failureMessage" = "入力内容はこの画面に残っています。通信状況を確認し、しばらくしてからもう一度送信してください。";
+
+"shortcut.openPiP" = "PiPを開く";
+
+"shortcut.openPiPDescription" = "ClipKitを開き、クリップボードの監視とPiP表示を開始します。";
+
+"monitoring.compactPiP" = "コンパクトなPiP表示";
+
+"monitoring.shortcutHelp" = "ショートカットアプリでClipKitの「PiPを開く」を追加できます。対応するiPhoneでは、そのショートカットをアクションボタンに割り当てられます。実行時はClipKitが開きます。";
+
+"pip.startFailure" = "PiPを開始できませんでした";
+
+"pip.startFailureHelp" = "ClipKitを画面に表示した状態で、「常時起動」タブの「PiPウィンドウを開く」からもう一度お試しください。";

@@ -6,7 +6,7 @@
 "trash.title" = "Trash";
 "image.preview.title" = "Image Preview";
 "monitoring.title" = "Always On";
-"feedback.title" = "Feedback";
+"feedback.title" = "Contact Us";
 
 /* Buttons */
 "button.close" = "Close";
@@ -97,13 +97,13 @@
 "settings.keyboardLogFooter" = "Keyboard logs are collected in real time via App Groups";
 
 /* Feedback */
-"feedback.category" = "Category";
-"feedback.content" = "Content";
-"feedback.email" = "Email Address (optional)";
-"feedback.emailPlaceholder" = "Reply email address";
+"feedback.category" = "Contact reason";
+"feedback.content" = "Message (required)";
+"feedback.email" = "Reply email address (optional)";
+"feedback.emailPlaceholder" = "e.g. name@example.com";
 "feedback.send" = "Send";
-"feedback.success" = "Sent";
-"feedback.successMessage" = "Thank you for your feedback.";
+"feedback.success" = "Message received";
+"feedback.successMessage" = "Thank you for contacting us. Your message will help us investigate issues and improve ClipKit.";
 "feedback.failure" = "Failed to send";
 "feedbackCategory.bug" = "Bug Report";
 "feedbackCategory.feature" = "Feature Request";
@@ -272,4 +272,30 @@
 "settings.proOnly" = "Pro only";
 "settings.iCloudSyncAll" = "iCloud sync (all items)";
 
-"monitoring.pipSizeHelp" = "Pinch the PiP window to resize it. iOS limits its minimum size and transparency.";
+"monitoring.pipSizeHelp" = "Compact mode hides the header and requests a shorter window. iOS determines the actual size. Pinch to resize, or drag the window off the left or right edge to hide it. Window transparency cannot be changed.";
+
+"feedback.introduction" = "Tell us what you need help with or what you would like to see in ClipKit.";
+
+"feedback.guidance.bug" = "What were you trying to do, and what happened? Include the steps, what you expected, and what actually happened, as far as you can.";
+
+"feedback.guidance.feature" = "What would you like to do, and when would it be useful? Tell us about any difficulties you currently face.";
+
+"feedback.guidance.other" = "Describe your question or feedback in as much detail as you can.";
+
+"feedback.emailHelp" = "Enter your email address if you would like a reply. You can also send without one.";
+
+"feedback.deviceInfo" = "Your app version, iOS version, and device model are sent automatically to help investigate issues. Do not include passwords or other sensitive information in your message.";
+
+"feedback.failureMessage" = "Your message is still here. Check your connection and try sending again in a little while.";
+
+"shortcut.openPiP" = "Open PiP";
+
+"shortcut.openPiPDescription" = "Open ClipKit and start clipboard monitoring with Picture in Picture.";
+
+"monitoring.compactPiP" = "Compact PiP";
+
+"monitoring.shortcutHelp" = "Add ClipKit’s Open PiP action in Shortcuts. On supported iPhones, assign that shortcut to the Action button. Running it opens ClipKit.";
+
+"pip.startFailure" = "Could not start PiP";
+
+"pip.startFailureHelp" = "Keep ClipKit on screen and try Open PiP again from the monitoring tab.";

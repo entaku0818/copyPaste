@@ -1,3 +1,3 @@
-Fixed issues that could prevent copied content from appearing in history.
-Fixed an issue where different images of the same size could be skipped.
-Made the PiP window layout more compact.
+Open Picture in Picture from Shortcuts, and assign the shortcut to the Action button on supported iPhones.
+Added a compact PiP mode that hides the header and requests a shorter window.
+Improved the contact form with category-specific guidance and clearer reply email instructions.

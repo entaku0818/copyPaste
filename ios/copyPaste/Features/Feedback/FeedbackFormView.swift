@@ -13,6 +13,14 @@ enum FeedbackCategory: String, CaseIterable {
         case .other: return String(localized: "feedbackCategory.other")
         }
     }
+
+    var guidance: String {
+        switch self {
+        case .bug: return String(localized: "feedback.guidance.bug")
+        case .feature: return String(localized: "feedback.guidance.feature")
+        case .other: return String(localized: "feedback.guidance.other")
+        }
+    }
 }
 
 struct FeedbackFormView: View {
@@ -23,7 +31,6 @@ struct FeedbackFormView: View {
     @State private var isSending = false
     @State private var showSuccessAlert = false
     @State private var showErrorAlert = false
-    @State private var errorMessage: String = ""
 
     private var canSubmit: Bool {
         !message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isSending
@@ -32,6 +39,11 @@ struct FeedbackFormView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Text("feedback.introduction")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
                 Section("feedback.category") {
                     Picker("feedback.category", selection: $category) {
                         ForEach(FeedbackCategory.allCases, id: \.self) { c in
@@ -40,15 +52,29 @@ struct FeedbackFormView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-                Section("feedback.content") {
+                Section {
                     TextEditor(text: $message)
-                        .frame(minHeight: 120)
+                        .frame(minHeight: 160)
+                        .accessibilityLabel(Text("feedback.content"))
+                } header: {
+                    Text("feedback.content")
+                } footer: {
+                    Text(category.guidance)
                 }
-                Section("feedback.email") {
+                Section {
                     TextField("feedback.emailPlaceholder", text: $email)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
+                } header: {
+                    Text("feedback.email")
+                } footer: {
+                    Text("feedback.emailHelp")
+                }
+                Section {
+                    Text("feedback.deviceInfo")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("feedback.title")
@@ -74,7 +100,7 @@ struct FeedbackFormView: View {
             .alert("feedback.failure", isPresented: $showErrorAlert) {
                 Button("OK") {}
             } message: {
-                Text(errorMessage)
+                Text("feedback.failureMessage")
             }
         }
     }
@@ -88,7 +114,6 @@ struct FeedbackFormView: View {
                 showSuccessAlert = true
             } catch {
                 isSending = false
-                errorMessage = error.localizedDescription
                 showErrorAlert = true
             }
         }

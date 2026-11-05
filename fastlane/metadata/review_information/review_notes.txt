@@ -1,20 +1,13 @@
-このアプリはPicture-in-Picture（PiP）機能を使用して、バックグラウンドでクリップボードを監視します。
-PiPビデオが表示されることでバックグラウンド動作が可能になります。
+ClipKit stores clipboard history and displays recent items in a Picture in Picture window while the user works in other apps. The PiP implementation uses AVPictureInPictureVideoCallViewController with a custom clipboard history view.
 
-【PiP機能について】
-ClipKitのPiP機能は「クリップボードビューア」として動作します。
-透明な動画（transparent_with_audio.mp4）をループ再生しながらPiPウィンドウを維持し、
-ユーザーが他のアプリを使用中でもクリップボードの内容をリアルタイムで確認・ペーストできます。
-これはAppleのPiP APIの正規の用途（メディア再生中のコンテキスト継続）に沿った実装です。
+Version 1.7.7 verification:
+1. Complete onboarding and open the monitoring tab (「常時起動」 in Japanese).
+2. Tap Open PiP to display the clipboard history window.
+3. Enable Compact PiP to hide the header and request a shorter window. iOS controls the final PiP window size; the app does not change system window transparency.
+4. In Apple's Shortcuts app, add ClipKit's Open PiP action. Running it opens ClipKit, starts monitoring, and requests PiP after the UI is ready. On supported iPhones, the shortcut can be assigned to the Action button.
+5. The contact form in Settings now includes category-specific guidance and an optional reply email address.
 
-サブスクリプションのテストにはSandboxテスターを使用してください。
-Sandbox環境では無料トライアルは3分間に短縮されます。
+No account is required to use the app. Subscription purchases can be tested in the App Store sandbox.
 
-【主な機能】
-- クリップボードの自動監視と履歴保存
-- Pro版: 無制限履歴、検索、お気に入り、ウィジェット、キーボード
-
-【Guideline 3.1.2(c) 対応】
-利用規約（EULA）: https://clipkit-entaku.web.app/terms.html
-プライバシーポリシー: https://clipkit-entaku.web.app/privacy-policy.html
-上記リンクはApp説明文内およびアプリ内のPaywall画面にも表示しています。
+Terms of Use: https://clipkit-entaku.web.app/terms.html
+Privacy Policy: https://clipkit-entaku.web.app/privacy-policy.html

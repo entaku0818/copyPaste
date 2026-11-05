@@ -4,6 +4,8 @@ import ComposableArchitecture
 public struct ContentView: View {
     let store: StoreOf<ClipboardHistoryFeature>
     @State private var selectedTab = 1
+    @StateObject private var pipManager = PiPManager.shared
+    @StateObject private var pipLaunchRequest = PiPLaunchRequest.shared
 
     public var body: some View {
         TabView(selection: $selectedTab) {
@@ -46,6 +48,27 @@ public struct ContentView: View {
                 Label("tab.settings", systemImage: "gearshape.fill")
             }
             .tag(4)
+        }
+        .background {
+            PiPSourceView { sourceView in
+                pipManager.onPiPStateChange = { store.send(.pipStateChanged($0)) }
+                pipManager.updateItems(store.items)
+                pipManager.setup(sourceView: sourceView)
+            }
+            .frame(width: 1, height: 1)
+            .allowsHitTesting(false)
+        }
+        .onChange(of: pipLaunchRequest.isPending, initial: true) { _, pending in
+            guard pending else { return }
+            pipLaunchRequest.consume()
+            selectedTab = 0
+            store.send(.startMonitoring)
+            pipManager.startPiP()
+        }
+        .alert("pip.startFailure", isPresented: $pipManager.showStartError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("pip.startFailureHelp")
         }
         .tint(ClipKitColor.indigo)
         .onChange(of: selectedTab) { _, _ in

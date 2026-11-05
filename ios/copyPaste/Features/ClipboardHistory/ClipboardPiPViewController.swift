@@ -3,20 +3,24 @@ import UIKit
 
 /// PiP ウィンドウに表示するカスタムコンテンツ
 final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewController {
+    private var headerHeight: NSLayoutConstraint?
+    private var headerView: UIView?
+    private(set) var isCompact = false
     private var tableView: UITableView!
     private var emptyLabel: UILabel!
     private(set) var items: [ClipboardItem] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        preferredContentSize = CGSize(width: 240, height: 135)
         setupUI()
+        setCompactMode(isCompact)
     }
 
     private func setupUI() {
         view.backgroundColor = UIColor.systemBackground
 
         let header = UIView()
+        headerView = header
         header.backgroundColor = UIColor.systemGray6
         header.translatesAutoresizingMaskIntoConstraints = false
 
@@ -61,11 +65,12 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
         view.addSubview(tableView)
         view.addSubview(emptyLabel)
 
+        headerHeight = header.heightAnchor.constraint(equalToConstant: 28)
+        headerHeight?.isActive = true
         NSLayoutConstraint.activate([
             header.topAnchor.constraint(equalTo: view.topAnchor),
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             header.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            header.heightAnchor.constraint(equalToConstant: 28),
 
             icon.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 8),
             icon.centerYAnchor.constraint(equalTo: header.centerYAnchor),
@@ -84,6 +89,14 @@ final class ClipboardPiPViewController: AVPictureInPictureVideoCallViewControlle
             emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyLabel.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
         ])
+    }
+
+    func setCompactMode(_ compact: Bool) {
+        isCompact = compact
+        // iOS chooses the final window size; the aspect ratio requests a shorter window.
+        preferredContentSize = CGSize(width: 240, height: compact ? 100 : 135)
+        headerView?.isHidden = compact
+        headerHeight?.constant = compact ? 0 : 28
     }
 
     func updateItems(_ newItems: [ClipboardItem]) {
