@@ -41,10 +41,24 @@ class KeyboardViewController: UIInputViewController {
         super.viewDidLoad()
         KeyboardLogger.log(.launch, "KeyboardViewController.viewDidLoad - Extension起動成功")
 
+        updatePrimaryLanguage()
+
         checkProStatus()
         setupUI()
         loadClipboardHistory()
         loadSnippets()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updatePrimaryLanguage()
+    }
+
+    /// The extension serves users in many languages, so report the host text
+    /// field's active input language instead of a Japanese-only plist value.
+    private func updatePrimaryLanguage() {
+        primaryLanguage = textDocumentProxy.documentInputMode?.primaryLanguage
+            ?? Locale.preferredLanguages.first
     }
 
     // MARK: - Pro Status

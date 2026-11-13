@@ -1,0 +1,25 @@
+/* ClipboardWidget extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"item.image" = "Bild";
+"item.file" = "Datei";
+"widget.sample.first" = "Beispieltext";
+"widget.sample.second" = "Noch ein Textbaustein";
+"widget.proOnly" = "Pro-Funktion";
+"widget.upgradeInApp" = "In der App upgraden";
+"widget.empty" = "Noch kein Verlauf";
+"widget.itemCount %lld" = "%lld Elemente";
+"time.days %lld" = "Vor %lld Tagen";
+"time.hours %lld" = "Vor %lld Std.";
+"time.minutes %lld" = "Vor %lld Min.";
+"time.justnow" = "Gerade eben";
+"widget.description" = "Behalten Sie Ihren Verlauf der Zwischenablage im Blick.";
+"widget.clipboardTitle" = "Zwischenablage";
+"widget.noItems" = "Keine Elemente";
+"widget.noClipboardItems" = "Keine Elemente in der Zwischenablage";
+
+/* Live Activity */
+"liveActivity.greeting" = "Hallo";
+"liveActivity.leading" = "Links";
+"liveActivity.trailing" = "Rechts";
+"liveActivity.bottom" = "Unten";

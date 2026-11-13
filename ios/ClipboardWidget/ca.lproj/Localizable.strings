@@ -1,0 +1,25 @@
+/* ClipboardWidget extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"item.image" = "Imatge";
+"item.file" = "Fitxer";
+"widget.sample.first" = "Text d’exemple";
+"widget.sample.second" = "Un altre fragment";
+"widget.proOnly" = "Funció Pro";
+"widget.upgradeInApp" = "Actualitza des de l’app";
+"widget.empty" = "Encara no hi ha historial";
+"widget.itemCount %lld" = "%lld elements";
+"time.days %lld" = "Fa %lld dies";
+"time.hours %lld" = "Fa %lld h";
+"time.minutes %lld" = "Fa %lld min";
+"time.justnow" = "Ara mateix";
+"widget.description" = "Consulta l’historial del porta-retalls d’un cop d’ull.";
+"widget.clipboardTitle" = "Porta-retalls";
+"widget.noItems" = "No hi ha elements";
+"widget.noClipboardItems" = "No hi ha elements al porta-retalls";
+
+/* Live Activity */
+"liveActivity.greeting" = "Hola";
+"liveActivity.leading" = "A l’esquerra";
+"liveActivity.trailing" = "A la dreta";
+"liveActivity.bottom" = "A baix";

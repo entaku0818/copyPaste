@@ -1,0 +1,29 @@
+Automatycznie monitoruj schowek w tle. ClipKit zapisuje kopiowane treści, aby można było szybko znaleźć teksty, łącza i obrazy w historii — w widżecie lub na niestandardowej klawiaturze.
+
+FUNKCJE BEZPŁATNE
+• Automatyczny zapis do 20 elementów (historia z ostatnich 3 dni)
+• Obsługa tekstu, obrazów i adresów URL
+• Wyszukiwanie w historii, także tekstu na obrazach
+• Automatyczne kategorie: URL, e-mail, telefon, kod, adres i tekst
+• Do 10 ulubionych elementów i 3 fragmentów tekstu
+• Zmiana wielkości liter, usuwanie podziałów wierszy i spacji na końcach
+• Synchronizacja do 20 elementów przez iCloud
+• Niestandardowa klawiatura do historii i fragmentów tekstu
+
+CLIPKIT PRO
+• Nieograniczona historia i ulubione
+• Wyszukiwanie i przeglądanie historii starszej niż 3 dni
+• Nieograniczona liczba fragmentów tekstu
+• Widżety ekranu początkowego w trzech rozmiarach
+• Więcej elementów historii i wszystkie fragmenty na klawiaturze
+• Synchronizacja wszystkich elementów przez iCloud
+• Przywracanie usuniętych elementów przez 30 dni
+• Eksport historii do CSV lub Markdown
+• Przekształcanie snake_case i camelCase, znaków pełnej i połowy szerokości, usuwanie Markdown oraz kodowanie i dekodowanie URL
+
+ClipKit korzysta z trybu obraz w obrazie, aby monitorować schowek podczas używania innych aplikacji. Włącz monitorowanie na karcie „Zawsze włączone” i zezwól na wklejanie z innych aplikacji w ustawieniach iOS.
+
+Nowi subskrybenci planów miesięcznych i rocznych otrzymują 7-dniowy bezpłatny okres próbny. Po jego zakończeniu subskrypcja odnawia się automatycznie. Możesz ją anulować w dowolnym momencie.
+
+Warunki korzystania: https://clipkit-entaku.web.app/terms.html
+Polityka prywatności: https://clipkit-entaku.web.app/privacy-policy.html

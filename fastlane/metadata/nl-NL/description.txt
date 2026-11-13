@@ -1,0 +1,30 @@
+ClipKit bewaart automatisch wat je kopieert. Zo vind je teksten, links en afbeeldingen terug wanneer je ze nodig hebt. Bekijk je geschiedenis via een widget of een eigen toetsenbord.
+
+GRATIS FUNCTIES
+• Bewaar automatisch maximaal 20 onderdelen (de laatste 3 dagen zijn zichtbaar)
+• Ondersteuning voor tekst, afbeeldingen en URL’s
+• Zoek in je geschiedenis, ook in tekst in afbeeldingen
+• Automatische indeling van URL’s, e-mailadressen, telefoonnummers, code, adressen en tekst
+• Maximaal 10 favorieten en 3 tekstfragmenten
+• Tekst aanpassen: hoofdletters, kleine letters, regeleinden en witruimte verwijderen
+• Synchroniseer maximaal 20 onderdelen via iCloud
+• Eigen toetsenbord met je geschiedenis en tekstfragmenten
+• Starthandleiding voor nieuwe gebruikers
+
+CLIPKIT PRO
+• Onbeperkte geschiedenis en favorieten
+• Zoek en bekijk geschiedenis van meer dan 3 dagen oud
+• Onbeperkt tekstfragmenten bewaren
+• Widgets voor het beginscherm in 3 formaten
+• Toon 10 geschiedenisitems en alle tekstfragmenten op het toetsenbord (gratis: 3 van elk)
+• Synchroniseer alle onderdelen via iCloud
+• Herstel verwijderde onderdelen tot 30 dagen lang
+• Exporteer de geschiedenis als CSV of Markdown
+• Pro-tekstbewerkingen: snake_case, camelCase, volledige en halve breedte, Markdown verwijderen en URL’s coderen of decoderen
+
+ClipKit gebruikt Picture in Picture om het klembord te blijven bewaken terwijl je andere apps gebruikt. Schakel bewaking in via het tabblad ‘Altijd aan’ en sta plakken vanuit andere apps toe in de iOS-instellingen.
+
+Maand- en jaarabonnementen hebben voor nieuwe abonnees een gratis proefperiode van 7 dagen. Daarna wordt het abonnement automatisch verlengd. Je kunt op elk moment opzeggen.
+
+Gebruiksvoorwaarden: https://clipkit-entaku.web.app/terms.html
+Privacybeleid: https://clipkit-entaku.web.app/privacy-policy.html

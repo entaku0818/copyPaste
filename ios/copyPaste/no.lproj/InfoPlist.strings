@@ -1,0 +1,2 @@
+/* Beskrivelse av tilgang til utklippstavlen */
+"NSPasteboardUsageDescription" = "ClipKit trenger tilgang til utklippstavlen for å lagre historikken.";

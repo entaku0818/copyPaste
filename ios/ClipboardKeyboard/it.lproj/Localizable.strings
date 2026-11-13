@@ -1,0 +1,32 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "Cronologia";
+"keyboard.tab.snippets" = "Frasi salvate";
+"keyboard.history.empty" = "Nessuna cronologia";
+"keyboard.snippets.empty" = "Nessuna frase salvata";
+"keyboard.upgrade.unlimited" = "Mostra altro\nIllimitata con Pro";
+"item.image" = "Immagine";
+"item.file" = "File allegato";
+"transform.menu.paste" = "Trasforma e incolla";
+"keyboard.upgrade.tenItems" = "Mostra altro\n10 elementi con Pro";
+"transform.uppercase" = "Converti in maiuscolo";
+"transform.lowercase" = "Converti in minuscolo";
+"transform.removeLineBreaks" = "Rimuovi interruzioni di riga";
+"transform.trimWhitespace" = "Rimuovi spazi iniziali e finali";
+"transform.snakeCase" = "Converti in snake_case";
+"transform.camelCase" = "Converti in camelCase";
+"transform.fullWidth" = "Converti in larghezza intera";
+"transform.halfWidth" = "Converti in mezza larghezza";
+"transform.removeMarkdown" = "Rimuovi Markdown";
+"transform.urlEncode" = "Codifica URL";
+"transform.urlDecode" = "Decodifica URL";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefono";
+"category.code" = "Codice";
+"category.address" = "Indirizzo";
+"category.text" = "Testo";
+
+/* Pro-only transforms in the long-press menu (issue #117) */
+"keyboard.transform.proOnly" = "Solo Pro · Tocca per effettuare l’upgrade";

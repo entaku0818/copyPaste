@@ -1,0 +1,4 @@
+Open het PiP-venster vanuit Opdrachten en koppel de opdracht aan de actieknop op ondersteunde iPhones.
+Nieuwe compacte PiP-modus die de kop verbergt en een kleiner venster aanvraagt.
+Verbeterd contactformulier met aanwijzingen per onderwerp en uitleg over het antwoordadres.
+De app, het toetsenbord en de widgets ondersteunen nu meer talen.

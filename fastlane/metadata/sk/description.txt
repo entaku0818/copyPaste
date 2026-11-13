@@ -1,0 +1,30 @@
+ClipKit automaticky ukladá všetko, čo skopírujete, aby ste k textom, odkazom a obrázkom mali prístup, keď ich potrebujete. Históriu otvoríte z widgetu alebo vlastnej klávesnice.
+
+BEZPLATNÉ FUNKCIE
+• Automatické ukladanie až 20 položiek (zobraziť možno posledné 3 dni)
+• Podpora textu, obrázkov a URL
+• Vyhľadávanie v histórii vrátane textu na obrázkoch
+• Automatické triedenie URL, e-mailov, telefónnych čísel, kódu, adries a textu
+• Až 10 obľúbených položiek a 3 textové úryvky
+• Úprava textu: veľké a malé písmená, odstránenie zalomení a medzier
+• Synchronizácia až 20 položiek s iCloudom
+• Vlastná klávesnica s prístupom k histórii a úryvkom
+• Sprievodca prvým nastavením
+
+CLIPKIT PRO
+• Neobmedzená história a obľúbené položky
+• Vyhľadávanie a zobrazenie histórie staršej ako 3 dni
+• Neobmedzený počet textových úryvkov
+• Widgety na ploche v 3 veľkostiach
+• Zobrazenie 10 položiek histórie a všetkých úryvkov na klávesnici (v bezplatnom pláne po 3)
+• Synchronizácia všetkých položiek s iCloudom
+• Obnovenie odstránených položiek počas 30 dní
+• Export histórie do CSV alebo Markdown
+• Úpravy Pro: snake_case, camelCase, plná a polovičná šírka, odstránenie Markdownu, kódovanie a dekódovanie URL
+
+Funkcia Obraz v obraze umožňuje ClipKitu sledovať schránku aj počas používania iných aplikácií. Zapnite monitorovanie na karte „Vždy zapnuté“ a v nastaveniach iOS povoľte vkladanie z iných aplikácií.
+
+Mesačné a ročné predplatné zahŕňa 7-dňové bezplatné skúšobné obdobie pre nových predplatiteľov. Potom sa predplatné automaticky obnovuje. Zrušiť ho môžete kedykoľvek.
+
+Podmienky používania: https://clipkit-entaku.web.app/terms.html
+Zásady ochrany súkromia: https://clipkit-entaku.web.app/privacy-policy.html

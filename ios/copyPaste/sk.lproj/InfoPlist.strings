@@ -1,0 +1,2 @@
+/* Opis prístupu k schránke */
+"NSPasteboardUsageDescription" = "ClipKit potrebuje prístup k schránke, aby mohol ukladať jej históriu.";

@@ -1,0 +1,32 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "Zgodovina";
+"keyboard.tab.snippets" = "Izseki";
+"keyboard.history.empty" = "Ni zgodovine";
+"keyboard.snippets.empty" = "Ni izsekov";
+"keyboard.upgrade.unlimited" = "Prikaži več\nNeomejeno s Pro";
+"item.image" = "Slika";
+"item.file" = "Datoteka";
+"transform.menu.paste" = "Pretvori in prilepi";
+"keyboard.upgrade.tenItems" = "Prikaži več\n10 elementov s Pro";
+"transform.uppercase" = "Pretvori v velike črke";
+"transform.lowercase" = "Pretvori v male črke";
+"transform.removeLineBreaks" = "Odstrani prelome vrstic";
+"transform.trimWhitespace" = "Odstrani presledke na začetku in koncu";
+"transform.snakeCase" = "Pretvori v snake_case";
+"transform.camelCase" = "Pretvori v camelCase";
+"transform.fullWidth" = "Pretvori v polno širino";
+"transform.halfWidth" = "Pretvori v polovično širino";
+"transform.removeMarkdown" = "Odstrani Markdown";
+"transform.urlEncode" = "Kodiraj URL";
+"transform.urlDecode" = "Dekodiraj URL";
+"category.url" = "URL";
+"category.email" = "E-pošta";
+"category.phone" = "Telefon";
+"category.code" = "Koda";
+"category.address" = "Naslov";
+"category.text" = "Besedilo";
+
+/* Pro-only transforms in the long-press menu (issue #117) */
+"keyboard.transform.proOnly" = "Samo Pro · Tapnite za nadgradnjo";

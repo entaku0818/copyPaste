@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "Historik";
+"detail.title" = "Detaljer";
+"settings.title" = "Inställningar";
+"favorites.title" = "Favoriter";
+"trash.title" = "Papperskorg";
+"image.preview.title" = "Förhandsvisning av bild";
+"monitoring.title" = "Alltid på";
+"feedback.title" = "Kontakta oss";
+
+/* Buttons */
+"button.close" = "Stäng";
+"button.cancel" = "Avbryt";
+"item.delete" = "Radera";
+"item.restore" = "Återställ";
+"item.deletePermanently" = "Radera permanent";
+"item.favorite" = "Lägg till i favoriter";
+"item.unfavorite" = "Ta bort från favoriter";
+"copy.action" = "Kopiera";
+"copy.done" = "Kopierat";
+
+/* Search */
+"search.placeholder" = "Sök i historiken…";
+"search.clear" = "Rensa";
+"search.results %lld" = "%lld resultat";
+
+/* Category filter */
+"category.all" = "Alla";
+"category.url" = "URL";
+"category.email" = "E-post";
+"category.phone" = "Telefon";
+"category.code" = "Kod";
+"category.address" = "Adress";
+"category.text" = "Text";
+
+/* Clipboard items */
+"item.image" = "Bild";
+"item.file" = "Fil";
+"item.text.empty" = "(Inget innehåll)";
+
+/* Time */
+"time.justnow" = "Just nu";
+"time.minutes %lld" = "För %lld min sedan";
+"time.hours %lld" = "För %lld tim sedan";
+"time.days %lld" = "För %lld dagar sedan";
+
+/* Trash */
+"trash.empty" = "Papperskorgen är tom";
+"trash.description" = "Raderade objekt sparas här i 30 dagar";
+"trash.deleteAll" = "Radera alla";
+
+/* Favorites */
+"favorites.empty" = "Inga favoriter";
+"favorites.emptyDescription" = "Svep ett objekt i historiken åt vänster för att lägga till det bland favoriterna";
+"favorites.unfavorite" = "Ta bort från favoriter";
+"favorites.proUpgrade %lld" = "Lägg till obegränsat med favoriter med Pro (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Uppgradera till ClipKit Pro";
+"upgrade.description" = "Sök och visa historik som är äldre än 3 dagar";
+
+/* Image */
+"image.loadError" = "Det går inte att läsa in bilden";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Övervakning i bakgrunden";
+"monitoring.pipDescription" = "Öppna PiP-fönstret för att övervaka urklippshistoriken medan du använder andra appar.";
+"monitoring.active" = "Övervakar i bakgrunden";
+"monitoring.inactive" = "Övervakning";
+"monitoring.controlSection" = "Övervakningskontroll";
+"monitoring.statusActive" = "Aktiv";
+"monitoring.statusStopped" = "Stoppad";
+"monitoring.openPiP" = "Öppna PiP-fönster";
+"permission.title" = "Tillåt åtkomst till urklipp";
+"permission.allow" = "Tillåt";
+"permission.later" = "Senare";
+"permission.message" = "ClipKit behöver åtkomst till urklipp för att spara urklippshistoriken.\n\nI iOS 16 och senare visas en systemfråga första gången. Välj ”Tillåt”.";
+
+/* Settings */
+"settings.proDescription" = "Obegränsad historik · Favoriter · Widgetar";
+"settings.howToUse" = "Så här använder du appen";
+"settings.writeReview" = "Skriv en recension";
+"settings.contact" = "Kontakta oss";
+"settings.trash" = "Papperskorg";
+"settings.iCloudSync" = "iCloud-synkning";
+"settings.iCloudSyncPicker" = "Synka";
+"settings.iCloudSyncFooter" = "Ändringarna börjar gälla nästa gång appen öppnas.";
+"settings.iCloudSyncLastSynced" = "Senast synkad: %@";
+"settings.iCloudSyncNeverSynced" = "Ingen synkning från andra enheter ännu";
+"cloudKitSync.disabled" = "Synka inte";
+"cloudKitSync.all" = "Synka";
+"settings.appInfo" = "Appinformation";
+"settings.version" = "Version";
+"settings.debug" = "Felsökning";
+"settings.screenshotPreview" = "Förhandsvisning av skärmbilder";
+"settings.keyboardLog" = "Tangentbordslogg";
+"settings.keyboardLogFooter" = "Tangentbordsloggar samlas in i realtid via App Groups";
+
+/* Feedback */
+"feedback.category" = "Orsak till kontakt";
+"feedback.content" = "Meddelande (obligatoriskt)";
+"feedback.email" = "E-postadress för svar (valfritt)";
+"feedback.emailPlaceholder" = "t.ex. namn@exempel.se";
+"feedback.send" = "Skicka";
+"feedback.success" = "Meddelandet har tagits emot";
+"feedback.successMessage" = "Tack för att du hörde av dig. Ditt meddelande hjälper oss att undersöka problem och förbättra ClipKit.";
+"feedback.failure" = "Det gick inte att skicka";
+"feedbackCategory.bug" = "Rapportera ett fel";
+"feedbackCategory.feature" = "Föreslå en funktion";
+"feedbackCategory.other" = "Annat";
+
+/* Satisfaction */
+"satisfaction.title" = "Tack för att du använder ClipKit!";
+"satisfaction.question" = "Är du nöjd med appens kvalitet?";
+"satisfaction.satisfied" = "Nöjd";
+"satisfaction.improve" = "Det finns utrymme för förbättring";
+
+/* Export */
+"export.title" = "Exportera";
+"export.action" = "Exportera historik";
+"export.formatPicker" = "Välj format";
+
+/* Snippets */
+"snippets.title" = "Textsnuttar";
+"snippets.empty" = "Inga textsnuttar";
+"snippets.emptyDescription" = "Spara text du använder ofta och klistra in den med ett tryck från tangentbordet";
+"snippets.add" = "Lägg till textsnutt";
+"snippets.edit" = "Redigera textsnutt";
+"snippets.titleField" = "Titel";
+"snippets.titlePlaceholder" = "t.ex. Hälsning";
+"snippets.contentField" = "Innehåll";
+"snippets.placeholderHint" = "{日付} {時刻} ({date} {time}) ersätts med aktuellt datum och klockslag när texten klistras in";
+"snippets.save" = "Spara";
+"snippets.cancel" = "Avbryt";
+"snippets.freeLimit %lld" = "Gratisplanen tillåter upp till %lld textsnuttar (obegränsat med Pro)";
+
+/* Text Transform */
+"transform.menu.copy" = "Ändra och kopiera";
+"transform.menu.paste" = "Ändra och klistra in";
+"transform.uppercase" = "Gör till versaler";
+"transform.lowercase" = "Gör till gemener";
+"transform.removeLineBreaks" = "Ta bort radbrytningar";
+"transform.trimWhitespace" = "Ta bort inledande och avslutande blanksteg";
+"transform.snakeCase" = "Konvertera till snake_case";
+"transform.camelCase" = "Konvertera till camelCase";
+"transform.fullWidth" = "Konvertera till full bredd";
+"transform.halfWidth" = "Konvertera till halv bredd";
+"transform.removeMarkdown" = "Ta bort Markdown";
+"transform.urlEncode" = "Koda URL";
+"transform.urlDecode" = "Avkoda URL";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Lås upp alla funktioner";
+"paywall.feature.history.title" = "Obegränsad historik";
+"paywall.feature.history.description" = "Gratisplanen sparar de senaste 3 dagarna, upp till 20 objekt";
+"paywall.feature.favorites.title" = "Obegränsade favoriter";
+"paywall.feature.favorites.description" = "Gratisplanen tillåter upp till 10";
+"paywall.feature.widget.title" = "Widgetar på hemskärmen";
+"paywall.feature.widget.description" = "Tre widgetstorlekar";
+"paywall.feature.keyboard.title" = "Fullständig historik på tangentbordet";
+"paywall.feature.keyboard.description" = "Visa 10 objekt på tangentbordet (3 med gratisplanen)";
+"paywall.feature.icloud.title" = "iCloud-synkning";
+"paywall.feature.icloud.description" = "Kom åt historiken på alla dina enheter";
+"paywall.feature.export.title" = "Exportera historik";
+"paywall.feature.export.description" = "Exportera som CSV eller Markdown";
+"paywall.feature.transform.title" = "Avancerade textändringar";
+"paywall.feature.transform.description" = "Versaler, bredd, URL-kodning och mer";
+"paywall.loadingPlans" = "Läser in abonnemang…";
+"paywall.loadFailed" = "Det gick inte att läsa in abonnemangen";
+"paywall.retry" = "Försök igen";
+"paywall.purchase" = "Köp";
+"paywall.startNow" = "Kom igång";
+"paywall.restore" = "Återställ köp";
+"paywall.note.lifetime" = "• Ett köp, för alltid";
+"paywall.note.billedToAppleID" = "• Debiteras på ditt Apple-konto";
+"paywall.note.autoRenew" = "• Förnyas automatiskt varje %@";
+"paywall.note.cancelAnytime" = "• Avsluta när du vill";
+"paywall.terms" = "Användarvillkor";
+"paywall.privacyPolicy" = "Integritetspolicy";
+"paywall.close" = "Stäng";
+"paywall.errorTitle" = "Fel";
+"paywall.successTitle" = "Köpet är klart";
+"paywall.successMessage" = "Välkommen till ClipKit Pro!\nNu är alla funktioner tillgängliga.";
+"paywall.monthlyEquivalentLabel" = "%@ / månad";
+"paywall.monthlyEquivalent" = "cirka %@";
+"paywall.error.unknown" = "Något gick fel";
+"paywall.error.noRestorable" = "Det finns inga köp att återställa";
+"paywall.package.monthly" = "Månadsvis";
+"paywall.package.annual" = "Årsvis";
+"paywall.package.lifetime" = "Livstid";
+"paywall.renewal.lifetime" = "Ett köp, för alltid";
+"paywall.renewal.monthly" = "Förnyas varje månad";
+"paywall.renewal.annual" = "Förnyas varje år";
+"paywall.renewal.days" = "Förnyas var %d:e dag";
+"paywall.renewal.weeks" = "Förnyas var %d:e vecka";
+"paywall.renewal.months" = "Förnyas var %d:e månad";
+"paywall.renewal.years" = "Förnyas var %d:e år";
+"paywall.trial.days" = "%d dagar";
+"paywall.trial.weeks" = "%d veckor";
+"paywall.trial.months" = "%d månader";
+"paywall.trial.years" = "%d år";
+"paywall.period.oneMonth" = "månad";
+"paywall.period.oneYear" = "år";
+"paywall.period.days" = "%d dagar";
+"paywall.period.weeks" = "%d veckor";
+"paywall.period.months" = "%d månader";
+"paywall.period.years" = "%d år";
+"paywall.discount.format" = "Spara %d%%";
+"paywall.trialThenPrice" = "%1$@ gratis, sedan %2$@";
+"paywall.note.trialAutoRenew" = "• När den kostnadsfria provperioden (%1$@) tar slut förnyas prenumerationen automatiskt till %2$@";
+"paywall.note.trialCancel" = "• Avsluta minst 24 timmar innan provperioden tar slut för att undvika debitering";
+"paywall.tryFreeCTA" = "Prova gratis";
+"paywall.perPeriod.month" = "månad";
+"paywall.perPeriod.year" = "år";
+"export.failed" = "Exporten misslyckades";
+"button.ok" = "OK";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Välkommen till ClipKit";
+"onboarding.welcome.description" = "Text, länkar och bilder du kopierar sparas automatiskt.\nHitta dem i historiken när du behöver dem.";
+"onboarding.monitoring.title" = "Spara allt automatiskt";
+"onboarding.monitoring.description" = "Starta övervakningen på fliken Alltid på så sparar ClipKit allt du kopierar.";
+"onboarding.paste.title" = "Tillåt inklistring";
+"onboarding.paste.description" = "Ge tillstånd en gång i iOS-inställningarna\nså slipper du en fråga varje gång.";
+"onboarding.paste.path" = "Inställningar → Integritet och säkerhet → Klistra in från andra appar → ClipKit";
+"onboarding.paste.instruction" = "Ställ in ”Klistra in från andra appar” på **Tillåt**";
+"onboarding.paste.openSettings" = "Öppna inställningar";
+"onboarding.ready.title" = "Allt är klart!";
+"onboarding.ready.description" = "Nu kan du prova ClipKit.";
+"onboarding.next" = "Nästa";
+"onboarding.start" = "Kom igång";
+
+/* Tab bar */
+"tab.monitoring" = "Alltid på";
+"tab.history" = "Historik";
+"tab.favorites" = "Favoriter";
+"tab.settings" = "Inställningar";
+
+/* Trash */
+"trash.deletedAt %@" = "Raderad: %@";
+"trash.swipeHint" = "Svep åt vänster för att återställa eller åt höger för att radera permanent";
+
+/* Picture in Picture */
+"pip.hint" = "Urklippshistorik";
+"pip.empty" = "Ingen historik";
+
+/* Widget */
+"widget.proOnly" = "Pro-funktion";
+"widget.proOnlyDescription" = "Widgetar ingår i Pro-planen";
+"widget.upgradeInApp" = "Uppgradera i appen";
+"widget.empty" = "Ingen historik ännu";
+"widget.itemCount %lld" = "%lld objekt";
+"widget.description" = "Se urklippshistoriken med en snabb blick.";
+"widget.clipboardTitle" = "Urklipp";
+"widget.noItems" = "Inga objekt";
+"widget.noClipboardItems" = "Inga objekt i urklippet";
+"widget.sample.first" = "Exempeltext";
+"widget.sample.second" = "En annan textsnutt";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "Historik";
+"keyboard.tab.snippets" = "Textsnuttar";
+"keyboard.history.empty" = "Ingen historik";
+"keyboard.snippets.empty" = "Inga textsnuttar";
+"keyboard.upgrade.unlimited" = "Visa fler\nObegränsat med Pro";
+"keyboard.upgrade.tenItems" = "Visa fler\n10 objekt med Pro";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Köp väntar på godkännande";
+"paywall.pendingMessage" = "Pro låses upp automatiskt när köpet har godkänts.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Endast Pro";
+"settings.iCloudSyncAll" = "iCloud-synkning (alla objekt)";
+
+"monitoring.pipSizeHelp" = "Kompakt läge döljer rubriken och begär ett kortare fönster. iOS bestämmer den faktiska storleken. Nyp för att ändra storlek eller dra fönstret utanför vänster eller höger kant för att dölja det. Fönstrets genomskinlighet kan inte ändras.";
+
+"feedback.introduction" = "Berätta vad du behöver hjälp med eller vad du skulle vilja se i ClipKit.";
+
+"feedback.guidance.bug" = "Vad försökte du göra och vad hände? Beskriv gärna stegen, vad du förväntade dig och vad som faktiskt hände.";
+
+"feedback.guidance.feature" = "Vad skulle du vilja göra och när vore det användbart? Berätta vilka svårigheter du har i dag.";
+
+"feedback.guidance.other" = "Beskriv din fråga eller synpunkt så detaljerat du kan.";
+
+"feedback.emailHelp" = "Ange din e-postadress om du vill ha svar. Du kan också skicka utan att ange den.";
+
+"feedback.deviceInfo" = "Appversion, iOS-version och enhetsmodell skickas automatiskt för att hjälpa oss utreda problem. Ta inte med lösenord eller annan känslig information.";
+
+"feedback.failureMessage" = "Ditt meddelande finns kvar. Kontrollera anslutningen och försök igen om en liten stund.";
+
+"shortcut.openPiP" = "Öppna PiP";
+
+"shortcut.openPiPDescription" = "Öppna ClipKit och starta övervakningen av urklippet med Bild-i-bild.";
+
+"monitoring.compactPiP" = "Kompakt PiP";
+
+"monitoring.shortcutHelp" = "Lägg till ClipKits Öppna PiP-åtgärd i Genvägar. På iPhone-modeller som stöds kan du tilldela genvägen till åtgärdsknappen. När du kör den öppnas ClipKit.";
+
+"pip.startFailure" = "Det gick inte att starta PiP";
+
+"pip.startFailureHelp" = "Låt ClipKit vara öppet på skärmen och försök öppna PiP igen från övervakningsfliken.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Välj språk";
+"debug.keyboardLog.empty" = "Inga loggar";
+"debug.keyboardLog.emptyDescription" = "Loggar visas här när du startar tangentbordstillägget.";

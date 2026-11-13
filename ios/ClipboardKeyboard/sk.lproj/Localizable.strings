@@ -1,0 +1,32 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "História";
+"keyboard.tab.snippets" = "Úryvky";
+"keyboard.history.empty" = "Žiadna história";
+"keyboard.snippets.empty" = "Žiadne úryvky";
+"keyboard.upgrade.unlimited" = "Zobraziť viac\nNeobmedzene s Pro";
+"item.image" = "Obrázok";
+"item.file" = "Súbor";
+"transform.menu.paste" = "Upraviť a vložiť";
+"keyboard.upgrade.tenItems" = "Zobraziť viac\n10 položiek s Pro";
+"transform.uppercase" = "Zmeniť na veľké písmená";
+"transform.lowercase" = "Zmeniť na malé písmená";
+"transform.removeLineBreaks" = "Odstrániť zalomenia riadkov";
+"transform.trimWhitespace" = "Odstrániť medzery na začiatku a konci";
+"transform.snakeCase" = "Previesť na snake_case";
+"transform.camelCase" = "Previesť na camelCase";
+"transform.fullWidth" = "Previesť na plnú šírku";
+"transform.halfWidth" = "Previesť na polovičnú šírku";
+"transform.removeMarkdown" = "Odstrániť Markdown";
+"transform.urlEncode" = "Zakódovať URL";
+"transform.urlDecode" = "Dekódovať URL";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefón";
+"category.code" = "Kód";
+"category.address" = "Adresa";
+"category.text" = "Text";
+
+/* Pro-only transforms in the long-press menu (issue #117) */
+"keyboard.transform.proOnly" = "Iba s Pro · Ťuknutím prejdete na vyšší plán";

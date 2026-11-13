@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "Histórico";
+"detail.title" = "Detalhes";
+"settings.title" = "Ajustes";
+"favorites.title" = "Favoritos";
+"trash.title" = "Lixeira";
+"image.preview.title" = "Prévia da imagem";
+"monitoring.title" = "Sempre ativo";
+"feedback.title" = "Fale conosco";
+
+/* Buttons */
+"button.close" = "Fechar";
+"button.cancel" = "Cancelar";
+"item.delete" = "Excluir";
+"item.restore" = "Restaurar";
+"item.deletePermanently" = "Excluir permanentemente";
+"item.favorite" = "Adicionar aos favoritos";
+"item.unfavorite" = "Remover dos favoritos";
+"copy.action" = "Copiar";
+"copy.done" = "Copiado";
+
+/* Search */
+"search.placeholder" = "Buscar no histórico…";
+"search.clear" = "Limpar";
+"search.results %lld" = "%lld resultados";
+
+/* Category filter */
+"category.all" = "Tudo";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefone";
+"category.code" = "Código";
+"category.address" = "Endereço";
+"category.text" = "Texto";
+
+/* Clipboard items */
+"item.image" = "Imagem";
+"item.file" = "Arquivo";
+"item.text.empty" = "(Sem conteúdo)";
+
+/* Time */
+"time.justnow" = "Agora mesmo";
+"time.minutes %lld" = "Há %lld min";
+"time.hours %lld" = "Há %lld h";
+"time.days %lld" = "Há %lld dias";
+
+/* Trash */
+"trash.empty" = "A lixeira está vazia";
+"trash.description" = "Os itens excluídos ficam guardados aqui por 30 dias";
+"trash.deleteAll" = "Excluir tudo";
+
+/* Favorites */
+"favorites.empty" = "Nenhum favorito";
+"favorites.emptyDescription" = "Deslize um item do histórico para a esquerda para adicioná-lo aos favoritos";
+"favorites.unfavorite" = "Remover dos favoritos";
+"favorites.proUpgrade %lld" = "Adicione favoritos ilimitados com o Pro (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Assine o ClipKit Pro";
+"upgrade.description" = "Busque e veja o histórico de mais de 3 dias";
+
+/* Image */
+"image.loadError" = "Não foi possível carregar a imagem";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Monitoramento em segundo plano";
+"monitoring.pipDescription" = "Abra a janela PiP para monitorar o histórico da área de transferência enquanto usa outros apps.";
+"monitoring.active" = "Monitoramento em segundo plano ativo";
+"monitoring.inactive" = "Monitoramento";
+"monitoring.controlSection" = "Controles do monitoramento";
+"monitoring.statusActive" = "Ativo";
+"monitoring.statusStopped" = "Parado";
+"monitoring.openPiP" = "Abrir janela PiP";
+"permission.title" = "Permissão de acesso à área de transferência";
+"permission.allow" = "Permitir";
+"permission.later" = "Mais tarde";
+"permission.message" = "O ClipKit precisa acessar a área de transferência para salvar o histórico.\n\nNo iOS 16 ou posterior, uma solicitação do sistema aparece no primeiro acesso. Selecione “Permitir”.";
+
+/* Settings */
+"settings.proDescription" = "Histórico ilimitado · Favoritos · Widget";
+"settings.howToUse" = "Como usar";
+"settings.writeReview" = "Escrever uma avaliação";
+"settings.contact" = "Fale conosco";
+"settings.trash" = "Lixeira";
+"settings.iCloudSync" = "Sincronização do iCloud";
+"settings.iCloudSyncPicker" = "Sincronizar";
+"settings.iCloudSyncFooter" = "As alterações serão aplicadas na próxima vez que o app for aberto.";
+"settings.iCloudSyncLastSynced" = "Última sincronização: %@";
+"settings.iCloudSyncNeverSynced" = "Ainda não houve sincronização de outros dispositivos";
+"cloudKitSync.disabled" = "Não sincronizar";
+"cloudKitSync.all" = "Sincronizar";
+"settings.appInfo" = "Informações do app";
+"settings.version" = "Versão";
+"settings.debug" = "Depuração";
+"settings.screenshotPreview" = "Prévia das capturas de tela";
+"settings.keyboardLog" = "Registro do teclado";
+"settings.keyboardLogFooter" = "Os registros do teclado são coletados em tempo real pelos App Groups";
+
+/* Feedback */
+"feedback.category" = "Motivo do contato";
+"feedback.content" = "Mensagem (obrigatória)";
+"feedback.email" = "E-mail para resposta (opcional)";
+"feedback.emailPlaceholder" = "ex.: nome@exemplo.com";
+"feedback.send" = "Enviar";
+"feedback.success" = "Mensagem recebida";
+"feedback.successMessage" = "Agradecemos o contato. Sua mensagem nos ajudará a investigar problemas e melhorar o ClipKit.";
+"feedback.failure" = "Falha ao enviar";
+"feedbackCategory.bug" = "Relatar um problema";
+"feedbackCategory.feature" = "Sugerir um recurso";
+"feedbackCategory.other" = "Outro";
+
+/* Satisfaction */
+"satisfaction.title" = "Agradecemos por usar o ClipKit!";
+"satisfaction.question" = "Você está satisfeito com a qualidade do app?";
+"satisfaction.satisfied" = "Satisfeito";
+"satisfaction.improve" = "Ainda podemos melhorar";
+
+/* Export */
+"export.title" = "Exportar";
+"export.action" = "Exportar histórico";
+"export.formatPicker" = "Escolher formato";
+
+/* Snippets */
+"snippets.title" = "Trechos de texto";
+"snippets.empty" = "Nenhum trecho de texto";
+"snippets.emptyDescription" = "Salve textos que você usa com frequência e cole-os com um toque pelo teclado";
+"snippets.add" = "Adicionar trecho";
+"snippets.edit" = "Editar trecho";
+"snippets.titleField" = "Título";
+"snippets.titlePlaceholder" = "ex.: Saudação";
+"snippets.contentField" = "Conteúdo";
+"snippets.placeholderHint" = "{日付} {時刻} ({date} {time}) são substituídos pela data e hora atuais ao colar";
+"snippets.save" = "Salvar";
+"snippets.cancel" = "Cancelar";
+"snippets.freeLimit %lld" = "O plano gratuito permite até %lld trechos (ilimitados no Pro)";
+
+/* Text Transform */
+"transform.menu.copy" = "Transformar e copiar";
+"transform.menu.paste" = "Transformar e colar";
+"transform.uppercase" = "Converter para maiúsculas";
+"transform.lowercase" = "Converter para minúsculas";
+"transform.removeLineBreaks" = "Remover quebras de linha";
+"transform.trimWhitespace" = "Remover espaços no início e no fim";
+"transform.snakeCase" = "Converter para snake_case";
+"transform.camelCase" = "Converter para camelCase";
+"transform.fullWidth" = "Converter para largura completa";
+"transform.halfWidth" = "Converter para meia largura";
+"transform.removeMarkdown" = "Remover Markdown";
+"transform.urlEncode" = "Codificar URL";
+"transform.urlDecode" = "Decodificar URL";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Desbloqueie todos os recursos";
+"paywall.feature.history.title" = "Histórico ilimitado";
+"paywall.feature.history.description" = "O plano gratuito mantém os últimos 3 dias, até 20 itens";
+"paywall.feature.favorites.title" = "Favoritos ilimitados";
+"paywall.feature.favorites.description" = "O plano gratuito permite até 10";
+"paywall.feature.widget.title" = "Widgets para a tela inicial";
+"paywall.feature.widget.description" = "Três tamanhos de widget";
+"paywall.feature.keyboard.title" = "Histórico completo no teclado";
+"paywall.feature.keyboard.description" = "Mostra 10 itens no teclado (3 no plano gratuito)";
+"paywall.feature.icloud.title" = "Sincronização do iCloud";
+"paywall.feature.icloud.description" = "Acesse seu histórico em todos os dispositivos";
+"paywall.feature.export.title" = "Exportar histórico";
+"paywall.feature.export.description" = "Exporte como CSV ou Markdown";
+"paywall.feature.transform.title" = "Transformações avançadas de texto";
+"paywall.feature.transform.description" = "Maiúsculas, largura completa ou meia, codificação de URL e mais";
+"paywall.loadingPlans" = "Carregando planos…";
+"paywall.loadFailed" = "Não foi possível carregar os planos";
+"paywall.retry" = "Tentar novamente";
+"paywall.purchase" = "Comprar";
+"paywall.startNow" = "Começar";
+"paywall.restore" = "Restaurar compras";
+"paywall.note.lifetime" = "• Uma compra, para sempre";
+"paywall.note.billedToAppleID" = "• Cobrado na sua conta Apple";
+"paywall.note.autoRenew" = "• Renova automaticamente a cada %@";
+"paywall.note.cancelAnytime" = "• Cancele quando quiser";
+"paywall.terms" = "Termos de uso";
+"paywall.privacyPolicy" = "Política de privacidade";
+"paywall.close" = "Fechar";
+"paywall.errorTitle" = "Erro";
+"paywall.successTitle" = "Compra concluída";
+"paywall.successMessage" = "Boas-vindas ao ClipKit Pro!\nTodos os recursos estão disponíveis.";
+"paywall.monthlyEquivalentLabel" = "%@ / mês";
+"paywall.monthlyEquivalent" = "cerca de %@";
+"paywall.error.unknown" = "Algo deu errado";
+"paywall.error.noRestorable" = "Não há compras para restaurar";
+"paywall.package.monthly" = "Mensal";
+"paywall.package.annual" = "Anual";
+"paywall.package.lifetime" = "Vitalício";
+"paywall.renewal.lifetime" = "Uma compra, para sempre";
+"paywall.renewal.monthly" = "Renova todos os meses";
+"paywall.renewal.annual" = "Renova todos os anos";
+"paywall.renewal.days" = "Renova a cada %d dias";
+"paywall.renewal.weeks" = "Renova a cada %d semanas";
+"paywall.renewal.months" = "Renova a cada %d meses";
+"paywall.renewal.years" = "Renova a cada %d anos";
+"paywall.trial.days" = "%d dias";
+"paywall.trial.weeks" = "%d semanas";
+"paywall.trial.months" = "%d meses";
+"paywall.trial.years" = "%d anos";
+"paywall.period.oneMonth" = "mês";
+"paywall.period.oneYear" = "ano";
+"paywall.period.days" = "%d dias";
+"paywall.period.weeks" = "%d semanas";
+"paywall.period.months" = "%d meses";
+"paywall.period.years" = "%d anos";
+"paywall.discount.format" = "Economize %d%%";
+"paywall.trialThenPrice" = "%1$@ grátis, depois %2$@";
+"paywall.note.trialAutoRenew" = "• Após o fim do período de teste grátis (%1$@), a assinatura será renovada automaticamente por %2$@";
+"paywall.note.trialCancel" = "• Cancele pelo menos 24 horas antes do fim do período de teste para evitar a cobrança";
+"paywall.tryFreeCTA" = "Experimente grátis";
+"paywall.perPeriod.month" = "mês";
+"paywall.perPeriod.year" = "ano";
+"export.failed" = "Falha ao exportar";
+"button.ok" = "OK";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Boas-vindas ao ClipKit";
+"onboarding.welcome.description" = "Textos, links e imagens que você copia são salvos automaticamente.\nEncontre-os no histórico sempre que precisar.";
+"onboarding.monitoring.title" = "Capture tudo automaticamente";
+"onboarding.monitoring.description" = "Inicie o monitoramento na aba Sempre ativo e o ClipKit salvará tudo o que você copiar.";
+"onboarding.paste.title" = "Permitir colagem";
+"onboarding.paste.description" = "Autorize uma vez nos Ajustes do iOS\npara não ver uma solicitação toda vez.";
+"onboarding.paste.path" = "Ajustes → Privacidade e Segurança → Colar de Outros Apps → ClipKit";
+"onboarding.paste.instruction" = "Defina “Colar de Outros Apps” como **Permitir**";
+"onboarding.paste.openSettings" = "Abrir Ajustes";
+"onboarding.ready.title" = "Tudo pronto!";
+"onboarding.ready.description" = "Agora você já pode experimentar.";
+"onboarding.next" = "Avançar";
+"onboarding.start" = "Começar";
+
+/* Tab bar */
+"tab.monitoring" = "Sempre ativo";
+"tab.history" = "Histórico";
+"tab.favorites" = "Favoritos";
+"tab.settings" = "Ajustes";
+
+/* Trash */
+"trash.deletedAt %@" = "Excluído: %@";
+"trash.swipeHint" = "Deslize para a esquerda para restaurar ou para a direita para excluir definitivamente";
+
+/* Picture in Picture */
+"pip.hint" = "Histórico da área de transferência";
+"pip.empty" = "Nenhum histórico";
+
+/* Widget */
+"widget.proOnly" = "Recurso Pro";
+"widget.proOnlyDescription" = "Widgets estão disponíveis no plano Pro";
+"widget.upgradeInApp" = "Assine o Pro no app";
+"widget.empty" = "Ainda não há histórico";
+"widget.itemCount %lld" = "%lld itens";
+"widget.description" = "Consulte rapidamente o histórico da área de transferência.";
+"widget.clipboardTitle" = "Área de transferência";
+"widget.noItems" = "Nenhum item";
+"widget.noClipboardItems" = "Nenhum item na área de transferência";
+"widget.sample.first" = "Texto de exemplo";
+"widget.sample.second" = "Outro trecho";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "Histórico";
+"keyboard.tab.snippets" = "Trechos";
+"keyboard.history.empty" = "Nenhum histórico";
+"keyboard.snippets.empty" = "Nenhum trecho";
+"keyboard.upgrade.unlimited" = "Ver mais\nIlimitado com Pro";
+"keyboard.upgrade.tenItems" = "Ver mais\n10 itens com Pro";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Compra pendente";
+"paywall.pendingMessage" = "O Pro será desbloqueado automaticamente após a aprovação da compra.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Somente Pro";
+"settings.iCloudSyncAll" = "Sincronização do iCloud (todos os itens)";
+
+"monitoring.pipSizeHelp" = "O modo compacto oculta o cabeçalho e solicita uma janela menor. O iOS define o tamanho final. Junte ou afaste os dedos para redimensionar ou arraste a janela para fora da borda esquerda ou direita para ocultá-la. Não é possível alterar a transparência da janela.";
+
+"feedback.introduction" = "Conte o que você precisa ou o que gostaria de ver no ClipKit.";
+
+"feedback.guidance.bug" = "O que você estava tentando fazer e o que aconteceu? Se possível, inclua as etapas, o que esperava e o que aconteceu de fato.";
+
+"feedback.guidance.feature" = "O que você gostaria de fazer e quando isso seria útil? Conte quais dificuldades você enfrenta hoje.";
+
+"feedback.guidance.other" = "Descreva sua dúvida ou comentário com o máximo de detalhes possível.";
+
+"feedback.emailHelp" = "Informe seu e-mail se quiser receber uma resposta. Você também pode enviar sem informar um endereço.";
+
+"feedback.deviceInfo" = "A versão do app, do iOS e o modelo do dispositivo são enviados automaticamente para ajudar a investigar problemas. Não inclua senhas ou outras informações confidenciais.";
+
+"feedback.failureMessage" = "Sua mensagem continua aqui. Verifique a conexão e tente enviar novamente em instantes.";
+
+"shortcut.openPiP" = "Abrir PiP";
+
+"shortcut.openPiPDescription" = "Abra o ClipKit e inicie o monitoramento da área de transferência com Picture in Picture.";
+
+"monitoring.compactPiP" = "PiP compacto";
+
+"monitoring.shortcutHelp" = "Adicione a ação Abrir PiP do ClipKit no app Atalhos. Em iPhones compatíveis, atribua o atalho ao botão de ação. Ao executá-lo, o ClipKit será aberto.";
+
+"pip.startFailure" = "Não foi possível iniciar o PiP";
+
+"pip.startFailureHelp" = "Mantenha o ClipKit na tela e tente abrir o PiP novamente na aba de monitoramento.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Selecionar idioma";
+"debug.keyboardLog.empty" = "Nenhum registro";
+"debug.keyboardLog.emptyDescription" = "Os registros aparecerão aqui quando você iniciar a extensão do teclado.";

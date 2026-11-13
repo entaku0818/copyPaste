@@ -89,7 +89,7 @@ struct SmallWidgetView: View {
             HStack {
                 Image(systemName: "doc.on.clipboard")
                     .foregroundColor(.blue)
-                Text("Clipboard")
+                Text("widget.clipboardTitle")
                     .font(.caption)
                     .fontWeight(.semibold)
             }
@@ -115,7 +115,7 @@ struct SmallWidgetView: View {
                         .foregroundColor(.secondary)
                 }
             } else {
-                Text("No items")
+                Text("widget.noItems")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -212,7 +212,7 @@ struct MediumWidgetView: View {
             }
 
             if entry.items.isEmpty {
-                Text("No clipboard items")
+                Text("widget.noClipboardItems")
                     .font(.caption)
                     .foregroundColor(.secondary)
             } else {
@@ -341,7 +341,7 @@ struct LargeWidgetView: View {
             if entry.items.isEmpty {
                 VStack {
                     Spacer()
-                    Text("No clipboard items")
+                    Text("widget.noClipboardItems")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Spacer()

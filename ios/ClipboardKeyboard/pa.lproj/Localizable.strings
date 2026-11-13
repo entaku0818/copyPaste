@@ -1,0 +1,32 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "ਇਤਿਹਾਸ";
+"keyboard.tab.snippets" = "ਟੁਕੜੇ";
+"keyboard.history.empty" = "ਕੋਈ ਇਤਿਹਾਸ ਨਹੀਂ";
+"keyboard.snippets.empty" = "ਕੋਈ ਟੁਕੜੇ ਨਹੀਂ";
+"keyboard.upgrade.unlimited" = "ਹੋਰ ਵੇਖੋ\nPro ਨਾਲ ਬੇਅੰਤ";
+"item.image" = "ਤਸਵੀਰ";
+"item.file" = "ਫ਼ਾਈਲ";
+"transform.menu.paste" = "ਬਦਲੋ ਅਤੇ ਪੇਸਟ ਕਰੋ";
+"keyboard.upgrade.tenItems" = "ਹੋਰ ਵੇਖੋ\nPro ਨਾਲ 10 ਆਈਟਮਾਂ";
+"transform.uppercase" = "ਵੱਡੇ ਅੱਖਰਾਂ ਵਿੱਚ ਬਦਲੋ";
+"transform.lowercase" = "ਛੋਟੇ ਅੱਖਰਾਂ ਵਿੱਚ ਬਦਲੋ";
+"transform.removeLineBreaks" = "ਲਾਈਨ ਬ੍ਰੇਕ ਹਟਾਓ";
+"transform.trimWhitespace" = "ਸ਼ੁਰੂ ਅਤੇ ਅੰਤ ਦੇ ਖਾਲੀ ਥਾਂ ਹਟਾਓ";
+"transform.snakeCase" = "snake_case ਵਿੱਚ ਬਦਲੋ";
+"transform.camelCase" = "camelCase ਵਿੱਚ ਬਦਲੋ";
+"transform.fullWidth" = "ਪੂਰੀ ਚੌੜਾਈ ਵਿੱਚ ਬਦਲੋ";
+"transform.halfWidth" = "ਅੱਧੀ ਚੌੜਾਈ ਵਿੱਚ ਬਦਲੋ";
+"transform.removeMarkdown" = "Markdown ਹਟਾਓ";
+"transform.urlEncode" = "URL ਇਨਕੋਡ ਕਰੋ";
+"transform.urlDecode" = "URL ਡੀਕੋਡ ਕਰੋ";
+"category.url" = "URL";
+"category.email" = "ਈਮੇਲ";
+"category.phone" = "ਫ਼ੋਨ";
+"category.code" = "ਕੋਡ";
+"category.address" = "ਪਤਾ";
+"category.text" = "ਲਿਖਤ";
+
+/* Pro-only transforms in the long-press menu (issue #117) */
+"keyboard.transform.proOnly" = "ਸਿਰਫ਼ Pro · ਅੱਪਗ੍ਰੇਡ ਲਈ ਟੈਪ ਕਰੋ";

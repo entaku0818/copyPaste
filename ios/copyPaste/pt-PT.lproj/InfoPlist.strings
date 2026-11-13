@@ -1,0 +1,2 @@
+/* Descrição do acesso à área de transferência */
+"NSPasteboardUsageDescription" = "O ClipKit precisa de aceder à área de transferência para guardar o histórico.";

@@ -1,0 +1,2 @@
+/* Beskrivning av åtkomst till urklipp */
+"NSPasteboardUsageDescription" = "ClipKit behöver åtkomst till urklipp för att spara urklippshistoriken.";

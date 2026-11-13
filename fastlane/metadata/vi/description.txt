@@ -1,0 +1,29 @@
+Tự động lưu nội dung bạn sao chép để tìm lại văn bản, liên kết và hình ảnh khi cần. Xem lịch sử qua tiện ích hoặc bàn phím tùy chỉnh.
+
+TÍNH NĂNG MIỄN PHÍ
+• Tự động lưu tối đa 20 mục (xem được 3 ngày gần nhất)
+• Hỗ trợ văn bản, hình ảnh và URL
+• Tìm trong lịch sử, kể cả văn bản trong hình ảnh
+• Tự động phân loại URL, email, điện thoại, mã, địa chỉ và văn bản
+• Tối đa 10 mục yêu thích và 3 mẫu văn bản
+• Chuyển chữ hoa/thường, xóa ngắt dòng và khoảng trắng thừa
+• Đồng bộ tối đa 20 mục qua iCloud
+• Xem lịch sử và mẫu văn bản bằng bàn phím tùy chỉnh
+
+CLIPKIT PRO
+• Lịch sử và mục yêu thích không giới hạn
+• Tìm và xem lịch sử cũ hơn 3 ngày
+• Mẫu văn bản không giới hạn
+• Tiện ích màn hình chính với 3 kích thước
+• Xem thêm lịch sử và mọi mẫu văn bản trên bàn phím
+• Đồng bộ mọi mục qua iCloud
+• Khôi phục mục đã xóa trong 30 ngày
+• Xuất lịch sử sang CSV hoặc Markdown
+• Chuyển đổi nâng cao: snake_case, camelCase, toàn/nửa chiều rộng, xóa Markdown, mã hóa và giải mã URL
+
+ClipKit dùng Picture in Picture để tiếp tục giám sát bảng nhớ tạm khi bạn sử dụng ứng dụng khác. Bật giám sát trong tab Giám sát nền và cho phép dán từ ứng dụng khác trong Cài đặt iOS.
+
+Gói tháng và năm có 7 ngày dùng thử miễn phí cho người đăng ký lần đầu. Gói tự động gia hạn sau thời gian dùng thử và có thể hủy bất cứ lúc nào.
+
+Điều khoản sử dụng: https://clipkit-entaku.web.app/terms.html
+Chính sách quyền riêng tư: https://clipkit-entaku.web.app/privacy-policy.html

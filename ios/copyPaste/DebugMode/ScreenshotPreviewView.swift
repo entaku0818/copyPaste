@@ -24,7 +24,7 @@ struct ScreenshotPreviewView: View {
                     }
                 }
             }
-            .navigationTitle("Select Language")
+            .navigationTitle("debug.selectLanguage")
             .navigationBarTitleDisplayMode(.inline)
             .fullScreenCover(item: $selectedLanguage) { language in
                 FullscreenScreenshotView(language: language, onDismiss: {

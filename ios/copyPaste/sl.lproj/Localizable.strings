@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "Zgodovina";
+"detail.title" = "Podrobnosti";
+"settings.title" = "Nastavitve";
+"favorites.title" = "Priljubljene";
+"trash.title" = "Koš";
+"image.preview.title" = "Predogled slike";
+"monitoring.title" = "Vedno vklopljeno";
+"feedback.title" = "Pišite nam";
+
+/* Buttons */
+"button.close" = "Zapri";
+"button.cancel" = "Prekliči";
+"item.delete" = "Izbriši";
+"item.restore" = "Obnovi";
+"item.deletePermanently" = "Trajno izbriši";
+"item.favorite" = "Dodaj med priljubljene";
+"item.unfavorite" = "Odstrani iz priljubljenih";
+"copy.action" = "Kopiraj";
+"copy.done" = "Kopirano";
+
+/* Search */
+"search.placeholder" = "Iskanje po zgodovini…";
+"search.clear" = "Počisti";
+"search.results %lld" = "Število zadetkov: %lld";
+
+/* Category filter */
+"category.all" = "Vse";
+"category.url" = "URL";
+"category.email" = "E-pošta";
+"category.phone" = "Telefon";
+"category.code" = "Koda";
+"category.address" = "Naslov";
+"category.text" = "Besedilo";
+
+/* Clipboard items */
+"item.image" = "Slika";
+"item.file" = "Datoteka";
+"item.text.empty" = "(Brez vsebine)";
+
+/* Time */
+"time.justnow" = "Pravkar";
+"time.minutes %lld" = "Pred %lld min";
+"time.hours %lld" = "Pred %lld h";
+"time.days %lld" = "Pred %lld dnevi";
+
+/* Trash */
+"trash.empty" = "Koš je prazen";
+"trash.description" = "Izbrisani elementi so tukaj shranjeni 30 dni";
+"trash.deleteAll" = "Izbriši vse";
+
+/* Favorites */
+"favorites.empty" = "Ni priljubljenih";
+"favorites.emptyDescription" = "Element v zgodovini podrsajte v levo, da ga dodate med priljubljene";
+"favorites.unfavorite" = "Odstrani iz priljubljenih";
+"favorites.proUpgrade %lld" = "S Pro dodajte neomejeno priljubljenih (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Nadgradite na ClipKit Pro";
+"upgrade.description" = "Poiščite in si oglejte zgodovino, starejšo od 3 dni";
+
+/* Image */
+"image.loadError" = "Slike ni mogoče naložiti";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Spremljanje v ozadju";
+"monitoring.pipDescription" = "Odprite okno PiP za spremljanje zgodovine odložišča med uporabo drugih aplikacij.";
+"monitoring.active" = "Spremljanje v ozadju je aktivno";
+"monitoring.inactive" = "Spremljanje";
+"monitoring.controlSection" = "Upravljanje spremljanja";
+"monitoring.statusActive" = "Aktivno";
+"monitoring.statusStopped" = "Ustavljeno";
+"monitoring.openPiP" = "Odpri okno PiP";
+"permission.title" = "Dovolite dostop do odložišča";
+"permission.allow" = "Dovoli";
+"permission.later" = "Pozneje";
+"permission.message" = "ClipKit potrebuje dostop do odložišča za shranjevanje zgodovine.\n\nV sistemu iOS 16 in novejšem se ob prvem dostopu prikaže sistemsko obvestilo. Izberite »Dovoli«.";
+
+/* Settings */
+"settings.proDescription" = "Neomejena zgodovina · Priljubljene · Pripomočki";
+"settings.howToUse" = "Navodila za uporabo";
+"settings.writeReview" = "Napišite oceno";
+"settings.contact" = "Pišite nam";
+"settings.trash" = "Koš";
+"settings.iCloudSync" = "Sinhronizacija z iCloudom";
+"settings.iCloudSyncPicker" = "Sinhroniziraj";
+"settings.iCloudSyncFooter" = "Spremembe bodo uveljavljene ob naslednjem zagonu aplikacije.";
+"settings.iCloudSyncLastSynced" = "Zadnja sinhronizacija: %@";
+"settings.iCloudSyncNeverSynced" = "Sinhronizacija iz drugih naprav še ni bila izvedena";
+"cloudKitSync.disabled" = "Ne sinhroniziraj";
+"cloudKitSync.all" = "Sinhroniziraj";
+"settings.appInfo" = "Informacije o aplikaciji";
+"settings.version" = "Različica";
+"settings.debug" = "Diagnostika";
+"settings.screenshotPreview" = "Predogled posnetkov zaslona";
+"settings.keyboardLog" = "Dnevnik tipkovnice";
+"settings.keyboardLogFooter" = "Dnevniki tipkovnice se sproti zbirajo prek App Groups";
+
+/* Feedback */
+"feedback.category" = "Razlog za stik";
+"feedback.content" = "Sporočilo (obvezno)";
+"feedback.email" = "E-poštni naslov za odgovor (neobvezno)";
+"feedback.emailPlaceholder" = "npr. ime@primer.si";
+"feedback.send" = "Pošlji";
+"feedback.success" = "Sporočilo je bilo prejeto";
+"feedback.successMessage" = "Hvala, ker ste nam pisali. Vaše sporočilo nam bo pomagalo raziskati težave in izboljšati ClipKit.";
+"feedback.failure" = "Pošiljanje ni uspelo";
+"feedbackCategory.bug" = "Prijavite težavo";
+"feedbackCategory.feature" = "Predlagajte funkcijo";
+"feedbackCategory.other" = "Drugo";
+
+/* Satisfaction */
+"satisfaction.title" = "Hvala, ker uporabljate ClipKit!";
+"satisfaction.question" = "Ali ste zadovoljni s kakovostjo aplikacije?";
+"satisfaction.satisfied" = "Zadovoljen/-na";
+"satisfaction.improve" = "Prostor za izboljšave";
+
+/* Export */
+"export.title" = "Izvozi";
+"export.action" = "Izvozi zgodovino";
+"export.formatPicker" = "Izberite obliko";
+
+/* Snippets */
+"snippets.title" = "Besedilni izseki";
+"snippets.empty" = "Ni besedilnih izsekov";
+"snippets.emptyDescription" = "Shranite pogosto uporabljena besedila in jih z enim dotikom prilepite s tipkovnice";
+"snippets.add" = "Dodaj izsek";
+"snippets.edit" = "Uredi izsek";
+"snippets.titleField" = "Naslov";
+"snippets.titlePlaceholder" = "npr. Pozdrav";
+"snippets.contentField" = "Vsebina";
+"snippets.placeholderHint" = "{日付} {時刻} ({date} {time}) se ob lepljenju zamenjata s trenutnim datumom in uro";
+"snippets.save" = "Shrani";
+"snippets.cancel" = "Prekliči";
+"snippets.freeLimit %lld" = "Brezplačni paket omogoča do %lld izsekov (s Pro neomejeno)";
+
+/* Text Transform */
+"transform.menu.copy" = "Pretvori in kopiraj";
+"transform.menu.paste" = "Pretvori in prilepi";
+"transform.uppercase" = "Pretvori v velike črke";
+"transform.lowercase" = "Pretvori v male črke";
+"transform.removeLineBreaks" = "Odstrani prelome vrstic";
+"transform.trimWhitespace" = "Odstrani presledke na začetku in koncu";
+"transform.snakeCase" = "Pretvori v snake_case";
+"transform.camelCase" = "Pretvori v camelCase";
+"transform.fullWidth" = "Pretvori v polno širino";
+"transform.halfWidth" = "Pretvori v polovično širino";
+"transform.removeMarkdown" = "Odstrani Markdown";
+"transform.urlEncode" = "Kodiraj URL";
+"transform.urlDecode" = "Dekodiraj URL";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Odklenite vse funkcije";
+"paywall.feature.history.title" = "Neomejena zgodovina";
+"paywall.feature.history.description" = "Brezplačni paket hrani zadnje 3 dni, do 20 elementov";
+"paywall.feature.favorites.title" = "Neomejeno priljubljenih";
+"paywall.feature.favorites.description" = "Brezplačni paket omogoča do 10";
+"paywall.feature.widget.title" = "Pripomočki za začetni zaslon";
+"paywall.feature.widget.description" = "Tri velikosti pripomočkov";
+"paywall.feature.keyboard.title" = "Celotna zgodovina na tipkovnici";
+"paywall.feature.keyboard.description" = "Na tipkovnici prikažite 10 elementov (v brezplačnem paketu 3)";
+"paywall.feature.icloud.title" = "Sinhronizacija z iCloudom";
+"paywall.feature.icloud.description" = "Dostopajte do zgodovine v vseh svojih napravah";
+"paywall.feature.export.title" = "Izvoz zgodovine";
+"paywall.feature.export.description" = "Izvoz v obliki CSV ali Markdown";
+"paywall.feature.transform.title" = "Napredne pretvorbe besedila";
+"paywall.feature.transform.description" = "Velike in male črke, širina, kodiranje URL in drugo";
+"paywall.loadingPlans" = "Nalaganje paketov…";
+"paywall.loadFailed" = "Paketov ni bilo mogoče naložiti";
+"paywall.retry" = "Poskusi znova";
+"paywall.purchase" = "Kupi";
+"paywall.startNow" = "Začnite";
+"paywall.restore" = "Obnovi nakupe";
+"paywall.note.lifetime" = "• Enkratni nakup za vedno";
+"paywall.note.billedToAppleID" = "• Zaračunano prek vašega računa Apple";
+"paywall.note.autoRenew" = "• Samodejno podaljšanje vsakih %@";
+"paywall.note.cancelAnytime" = "• Prekličete lahko kadar koli";
+"paywall.terms" = "Pogoji uporabe";
+"paywall.privacyPolicy" = "Pravilnik o zasebnosti";
+"paywall.close" = "Zapri";
+"paywall.errorTitle" = "Napaka";
+"paywall.successTitle" = "Nakup je zaključen";
+"paywall.successMessage" = "Dobrodošli v ClipKit Pro!\nZdaj so na voljo vse funkcije.";
+"paywall.monthlyEquivalentLabel" = "%@ / mesec";
+"paywall.monthlyEquivalent" = "pribl. %@";
+"paywall.error.unknown" = "Prišlo je do napake";
+"paywall.error.noRestorable" = "Ni nakupov za obnovitev";
+"paywall.package.monthly" = "Mesečno";
+"paywall.package.annual" = "Letno";
+"paywall.package.lifetime" = "Doživljenjsko";
+"paywall.renewal.lifetime" = "Enkratni nakup za vedno";
+"paywall.renewal.monthly" = "Podaljša se vsak mesec";
+"paywall.renewal.annual" = "Podaljša se vsako leto";
+"paywall.renewal.days" = "Podaljša se vsakih %d dni";
+"paywall.renewal.weeks" = "Podaljša se vsakih %d tednov";
+"paywall.renewal.months" = "Podaljša se vsakih %d mesecev";
+"paywall.renewal.years" = "Podaljša se vsakih %d let";
+"paywall.trial.days" = "%d dni";
+"paywall.trial.weeks" = "%d tednov";
+"paywall.trial.months" = "%d mesecev";
+"paywall.trial.years" = "%d let";
+"paywall.period.oneMonth" = "mesec";
+"paywall.period.oneYear" = "leto";
+"paywall.period.days" = "%d dni";
+"paywall.period.weeks" = "%d tednov";
+"paywall.period.months" = "%d mesecev";
+"paywall.period.years" = "%d let";
+"paywall.discount.format" = "Prihranite %d%%";
+"paywall.trialThenPrice" = "%1$@ brezplačno, nato %2$@";
+"paywall.note.trialAutoRenew" = "• Po izteku brezplačnega preizkusa (%1$@) se bo naročnina samodejno podaljšala za %2$@";
+"paywall.note.trialCancel" = "• Za preprečitev zaračunavanja prekličite vsaj 24 ur pred koncem preizkusa";
+"paywall.tryFreeCTA" = "Preizkusite brezplačno";
+"paywall.perPeriod.month" = "mesec";
+"paywall.perPeriod.year" = "leto";
+"export.failed" = "Izvoz ni uspel";
+"button.ok" = "V redu";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Dobrodošli v ClipKit";
+"onboarding.welcome.description" = "Besedilo, povezave in slike, ki jih kopirate, se samodejno shranijo.\nV zgodovini jih najdete, ko jih potrebujete.";
+"onboarding.monitoring.title" = "Samodejno zajemite vse";
+"onboarding.monitoring.description" = "Spremljanje zaženite na zavihku Vedno vklopljeno. ClipKit bo shranil vse, kar kopirate.";
+"onboarding.paste.title" = "Dovolite lepljenje";
+"onboarding.paste.description" = "Dovoljenje enkrat odobrite v nastavitvah sistema iOS,\nda se poziv ne bo prikazal vsakič.";
+"onboarding.paste.path" = "Nastavitve → Zasebnost in varnost → Lepljenje iz drugih aplikacij → ClipKit";
+"onboarding.paste.instruction" = "Nastavite »Lepljenje iz drugih aplikacij« na **Dovoli**";
+"onboarding.paste.openSettings" = "Odpri nastavitve";
+"onboarding.ready.title" = "Vse je pripravljeno!";
+"onboarding.ready.description" = "Preizkusite ClipKit.";
+"onboarding.next" = "Naprej";
+"onboarding.start" = "Začnite";
+
+/* Tab bar */
+"tab.monitoring" = "Vedno vklopljeno";
+"tab.history" = "Zgodovina";
+"tab.favorites" = "Priljubljene";
+"tab.settings" = "Nastavitve";
+
+/* Trash */
+"trash.deletedAt %@" = "Izbrisano: %@";
+"trash.swipeHint" = "Podrsajte levo za obnovitev ali desno za trajni izbris";
+
+/* Picture in Picture */
+"pip.hint" = "Zgodovina odložišča";
+"pip.empty" = "Ni zgodovine";
+
+/* Widget */
+"widget.proOnly" = "Funkcija Pro";
+"widget.proOnlyDescription" = "Pripomočki so na voljo v paketu Pro";
+"widget.upgradeInApp" = "Nadgradite v aplikaciji";
+"widget.empty" = "Za zdaj ni zgodovine";
+"widget.itemCount %lld" = "%lld elementov";
+"widget.description" = "Zgodovino odložišča si oglejte na hitro.";
+"widget.clipboardTitle" = "Odložišče";
+"widget.noItems" = "Ni elementov";
+"widget.noClipboardItems" = "V odložišču ni elementov";
+"widget.sample.first" = "Primer besedila";
+"widget.sample.second" = "Še en izsek";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "Zgodovina";
+"keyboard.tab.snippets" = "Izseki";
+"keyboard.history.empty" = "Ni zgodovine";
+"keyboard.snippets.empty" = "Ni izsekov";
+"keyboard.upgrade.unlimited" = "Prikaži več\nNeomejeno s Pro";
+"keyboard.upgrade.tenItems" = "Prikaži več\n10 elementov s Pro";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Nakup čaka na odobritev";
+"paywall.pendingMessage" = "Pro se bo samodejno odklenil, ko bo nakup odobren.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Samo Pro";
+"settings.iCloudSyncAll" = "Sinhronizacija z iCloudom (vsi elementi)";
+
+"monitoring.pipSizeHelp" = "Kompaktni način skrije glavo in zahteva nižje okno. Dejanska velikost je odvisna od sistema iOS. Stisnite ali razprite prste za spremembo velikosti oziroma povlecite okno čez levi ali desni rob, da ga skrijete. Prosojnosti okna ni mogoče spremeniti.";
+
+"feedback.introduction" = "Povejte nam, pri čem potrebujete pomoč ali kaj bi si želeli v ClipKitu.";
+
+"feedback.guidance.bug" = "Kaj ste želeli narediti in kaj se je zgodilo? Če lahko, opišite korake, pričakovani rezultat in dejanski rezultat.";
+
+"feedback.guidance.feature" = "Kaj bi želeli početi in kdaj bi vam to koristilo? Opišite težave, na katere naletite zdaj.";
+
+"feedback.guidance.other" = "Čim podrobneje opišite svoje vprašanje ali mnenje.";
+
+"feedback.emailHelp" = "Vnesite e-poštni naslov, če želite prejeti odgovor. Sporočilo lahko pošljete tudi brez njega.";
+
+"feedback.deviceInfo" = "Za pomoč pri raziskovanju težav se samodejno pošljejo različica aplikacije, različica sistema iOS in model naprave. Ne vključujte gesel ali drugih občutljivih podatkov.";
+
+"feedback.failureMessage" = "Sporočilo je še vedno tukaj. Preverite povezavo in poskusite znova čez nekaj trenutkov.";
+
+"shortcut.openPiP" = "Odpri PiP";
+
+"shortcut.openPiPDescription" = "Odprite ClipKit in zaženite spremljanje odložišča s funkcijo Slika v sliki.";
+
+"monitoring.compactPiP" = "Kompaktni PiP";
+
+"monitoring.shortcutHelp" = "V aplikaciji Bližnjice dodajte dejanje ClipKit Odpri PiP. Na podprtih telefonih iPhone lahko bližnjico dodelite akcijskemu gumbu. Ko jo zaženete, se odpre ClipKit.";
+
+"pip.startFailure" = "PiP ni bilo mogoče zagnati";
+
+"pip.startFailureHelp" = "ClipKit pustite na zaslonu in poskusite znova odpreti PiP na zavihku za spremljanje.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Izberite jezik";
+"debug.keyboardLog.empty" = "Ni dnevnikov";
+"debug.keyboardLog.emptyDescription" = "Dnevniki se prikažejo tukaj, ko zaženete razširitev tipkovnice.";

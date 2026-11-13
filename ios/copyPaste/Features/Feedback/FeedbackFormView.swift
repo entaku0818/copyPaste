@@ -93,12 +93,12 @@ struct FeedbackFormView: View {
                 }
             }
             .alert("feedback.success", isPresented: $showSuccessAlert) {
-                Button("OK") { dismiss() }
+                Button("button.ok") { dismiss() }
             } message: {
                 Text("feedback.successMessage")
             }
             .alert("feedback.failure", isPresented: $showErrorAlert) {
-                Button("OK") {}
+                Button("button.ok") {}
             } message: {
                 Text("feedback.failureMessage")
             }

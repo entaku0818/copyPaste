@@ -1,0 +1,29 @@
+Simpan otomatis semua yang Anda salin dan temukan kembali teks, tautan, serta gambar saat diperlukan. Buka riwayat melalui widget atau keyboard khusus.
+
+FITUR GRATIS
+• Simpan otomatis hingga 20 item (riwayat 3 hari terakhir)
+• Mendukung teks, gambar, dan URL
+• Cari riwayat, termasuk teks di dalam gambar
+• Kategorisasi otomatis untuk URL, email, telepon, kode, alamat, dan teks
+• Hingga 10 favorit dan 3 potongan teks
+• Ubah huruf besar/kecil, hapus baris baru, dan rapikan spasi
+• Sinkronkan hingga 20 item melalui iCloud
+• Buka riwayat dan potongan teks dari keyboard khusus
+
+CLIPKIT PRO
+• Riwayat dan favorit tanpa batas
+• Cari dan lihat riwayat yang lebih lama dari 3 hari
+• Potongan teks tanpa batas
+• Widget layar utama dalam 3 ukuran
+• Tampilkan lebih banyak riwayat dan semua potongan dari keyboard
+• Sinkronkan semua item melalui iCloud
+• Pulihkan item yang dihapus selama 30 hari
+• Ekspor riwayat sebagai CSV atau Markdown
+• Konversi lanjutan: snake_case, camelCase, lebar penuh/setengah, hapus Markdown, enkode/dekode URL
+
+ClipKit menggunakan Picture in Picture agar pemantauan papan klip berlanjut saat Anda memakai aplikasi lain. Aktifkan pemantauan dari tab Latar Belakang dan izinkan penempelan dari aplikasi lain di Pengaturan iOS.
+
+Paket bulanan dan tahunan menawarkan uji coba gratis 7 hari bagi pelanggan baru. Langganan diperpanjang otomatis setelah uji coba dan dapat dibatalkan kapan saja.
+
+Ketentuan Penggunaan: https://clipkit-entaku.web.app/terms.html
+Kebijakan Privasi: https://clipkit-entaku.web.app/privacy-policy.html

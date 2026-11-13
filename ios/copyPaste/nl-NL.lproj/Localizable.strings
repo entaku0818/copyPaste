@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "Geschiedenis";
+"detail.title" = "Details";
+"settings.title" = "Instellingen";
+"favorites.title" = "Favorieten";
+"trash.title" = "Prullenmand";
+"image.preview.title" = "Afbeeldingsvoorbeeld";
+"monitoring.title" = "Altijd aan";
+"feedback.title" = "Contact opnemen";
+
+/* Buttons */
+"button.close" = "Sluiten";
+"button.cancel" = "Annuleren";
+"item.delete" = "Verwijderen";
+"item.restore" = "Herstellen";
+"item.deletePermanently" = "Definitief verwijderen";
+"item.favorite" = "Toevoegen aan favorieten";
+"item.unfavorite" = "Verwijderen uit favorieten";
+"copy.action" = "Kopiëren";
+"copy.done" = "Gekopieerd";
+
+/* Search */
+"search.placeholder" = "Zoek in geschiedenis…";
+"search.clear" = "Wissen";
+"search.results %lld" = "%lld resultaten";
+
+/* Category filter */
+"category.all" = "Alles";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefoon";
+"category.code" = "Code";
+"category.address" = "Adres";
+"category.text" = "Tekst";
+
+/* Clipboard items */
+"item.image" = "Afbeelding";
+"item.file" = "Bestand";
+"item.text.empty" = "(Geen inhoud)";
+
+/* Time */
+"time.justnow" = "Zojuist";
+"time.minutes %lld" = "%lld min geleden";
+"time.hours %lld" = "%lld u geleden";
+"time.days %lld" = "%lld dagen geleden";
+
+/* Trash */
+"trash.empty" = "De prullenmand is leeg";
+"trash.description" = "Verwijderde onderdelen worden hier 30 dagen bewaard";
+"trash.deleteAll" = "Alles verwijderen";
+
+/* Favorites */
+"favorites.empty" = "Geen favorieten";
+"favorites.emptyDescription" = "Veeg een onderdeel in de geschiedenis naar links om het aan favorieten toe te voegen";
+"favorites.unfavorite" = "Verwijderen uit favorieten";
+"favorites.proUpgrade %lld" = "Voeg onbeperkt favorieten toe met Pro (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Upgrade naar ClipKit Pro";
+"upgrade.description" = "Zoek en bekijk geschiedenis van meer dan 3 dagen oud";
+
+/* Image */
+"image.loadError" = "Kan afbeelding niet laden";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Bewaking op de achtergrond";
+"monitoring.pipDescription" = "Open het PiP-venster om de klembordgeschiedenis te bewaren terwijl je andere apps gebruikt.";
+"monitoring.active" = "Bewaking op de achtergrond actief";
+"monitoring.inactive" = "Bewaking";
+"monitoring.controlSection" = "Bewaking beheren";
+"monitoring.statusActive" = "Actief";
+"monitoring.statusStopped" = "Gestopt";
+"monitoring.openPiP" = "PiP-venster openen";
+"permission.title" = "Toegang tot klembord toestaan";
+"permission.allow" = "Toestaan";
+"permission.later" = "Straks";
+"permission.message" = "ClipKit heeft toegang tot het klembord nodig om de klembordgeschiedenis te bewaren.\n\nVanaf iOS 16 verschijnt bij het eerste gebruik een systeemmelding. Kies ‘Sta toe’.";
+
+/* Settings */
+"settings.proDescription" = "Onbeperkte geschiedenis · Favorieten · Widget";
+"settings.howToUse" = "Gebruiksaanwijzing";
+"settings.writeReview" = "Schrijf een beoordeling";
+"settings.contact" = "Contact opnemen";
+"settings.trash" = "Prullenmand";
+"settings.iCloudSync" = "iCloud-synchronisatie";
+"settings.iCloudSyncPicker" = "Synchroniseren";
+"settings.iCloudSyncFooter" = "Wijzigingen zijn zichtbaar wanneer je de app opnieuw opent.";
+"settings.iCloudSyncLastSynced" = "Laatst gesynchroniseerd: %@";
+"settings.iCloudSyncNeverSynced" = "Nog geen synchronisatie vanaf andere apparaten";
+"cloudKitSync.disabled" = "Niet synchroniseren";
+"cloudKitSync.all" = "Synchroniseren";
+"settings.appInfo" = "Appinformatie";
+"settings.version" = "Versie";
+"settings.debug" = "Foutopsporing";
+"settings.screenshotPreview" = "Voorbeeld van schermafbeeldingen";
+"settings.keyboardLog" = "Toetsenbordlogboek";
+"settings.keyboardLogFooter" = "Toetsenbordlogboeken worden in realtime verzameld via appgroepen";
+
+/* Feedback */
+"feedback.category" = "Reden van contact";
+"feedback.content" = "Bericht (verplicht)";
+"feedback.email" = "E-mailadres voor antwoord (optioneel)";
+"feedback.emailPlaceholder" = "bijv. naam@voorbeeld.nl";
+"feedback.send" = "Verzenden";
+"feedback.success" = "Bericht ontvangen";
+"feedback.successMessage" = "Bedankt voor je bericht. Het helpt ons problemen te onderzoeken en ClipKit te verbeteren.";
+"feedback.failure" = "Verzenden mislukt";
+"feedbackCategory.bug" = "Probleem melden";
+"feedbackCategory.feature" = "Functie voorstellen";
+"feedbackCategory.other" = "Anders";
+
+/* Satisfaction */
+"satisfaction.title" = "Bedankt dat je ClipKit gebruikt!";
+"satisfaction.question" = "Ben je tevreden over de kwaliteit van de app?";
+"satisfaction.satisfied" = "Tevreden";
+"satisfaction.improve" = "Er is ruimte voor verbetering";
+
+/* Export */
+"export.title" = "Exporteren";
+"export.action" = "Geschiedenis exporteren";
+"export.formatPicker" = "Kies een bestandsindeling";
+
+/* Snippets */
+"snippets.title" = "Tekstfragmenten";
+"snippets.empty" = "Geen tekstfragmenten";
+"snippets.emptyDescription" = "Bewaar tekst die je vaak gebruikt en plak die met één tik vanaf het toetsenbord";
+"snippets.add" = "Fragment toevoegen";
+"snippets.edit" = "Fragment bewerken";
+"snippets.titleField" = "Titel";
+"snippets.titlePlaceholder" = "bijv. Begroeting";
+"snippets.contentField" = "Inhoud";
+"snippets.placeholderHint" = "{日付} {時刻} ({date} {time}) worden bij het plakken vervangen door de huidige datum en tijd";
+"snippets.save" = "Bewaren";
+"snippets.cancel" = "Annuleren";
+"snippets.freeLimit %lld" = "Met het gratis abonnement kun je maximaal %lld fragmenten bewaren (onbeperkt met Pro)";
+
+/* Text Transform */
+"transform.menu.copy" = "Omzetten en kopiëren";
+"transform.menu.paste" = "Omzetten en plakken";
+"transform.uppercase" = "Omzetten naar hoofdletters";
+"transform.lowercase" = "Omzetten naar kleine letters";
+"transform.removeLineBreaks" = "Regeleinden verwijderen";
+"transform.trimWhitespace" = "Witruimte aan begin en einde verwijderen";
+"transform.snakeCase" = "Omzetten naar snake_case";
+"transform.camelCase" = "Omzetten naar camelCase";
+"transform.fullWidth" = "Omzetten naar volledige breedte";
+"transform.halfWidth" = "Omzetten naar halve breedte";
+"transform.removeMarkdown" = "Markdown verwijderen";
+"transform.urlEncode" = "URL coderen";
+"transform.urlDecode" = "URL decoderen";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Ontgrendel alle functies";
+"paywall.feature.history.title" = "Onbeperkte geschiedenis";
+"paywall.feature.history.description" = "Het gratis abonnement bewaart de laatste 3 dagen, tot 20 onderdelen";
+"paywall.feature.favorites.title" = "Onbeperkte favorieten";
+"paywall.feature.favorites.description" = "Met het gratis abonnement kun je maximaal 10 bewaren";
+"paywall.feature.widget.title" = "Widgets voor het beginscherm";
+"paywall.feature.widget.description" = "Drie widgetformaten";
+"paywall.feature.keyboard.title" = "Volledige geschiedenis op het toetsenbord";
+"paywall.feature.keyboard.description" = "Toon 10 onderdelen op het toetsenbord (3 met het gratis abonnement)";
+"paywall.feature.icloud.title" = "iCloud-synchronisatie";
+"paywall.feature.icloud.description" = "Bekijk je geschiedenis op al je apparaten";
+"paywall.feature.export.title" = "Geschiedenis exporteren";
+"paywall.feature.export.description" = "Exporteer als CSV of Markdown";
+"paywall.feature.transform.title" = "Geavanceerde tekstbewerking";
+"paywall.feature.transform.description" = "Hoofdletters, breedte, URL-codering en meer";
+"paywall.loadingPlans" = "Abonnementen laden…";
+"paywall.loadFailed" = "Abonnementen laden is mislukt";
+"paywall.retry" = "Opnieuw proberen";
+"paywall.purchase" = "Kopen";
+"paywall.startNow" = "Aan de slag";
+"paywall.restore" = "Aankopen herstellen";
+"paywall.note.lifetime" = "• Eenmalig betalen, altijd van jou";
+"paywall.note.billedToAppleID" = "• In rekening gebracht via je Apple ID";
+"paywall.note.autoRenew" = "• Wordt automatisch verlengd per %@";
+"paywall.note.cancelAnytime" = "• Op elk moment opzegbaar";
+"paywall.terms" = "Gebruiksvoorwaarden";
+"paywall.privacyPolicy" = "Privacybeleid";
+"paywall.close" = "Sluiten";
+"paywall.errorTitle" = "Fout";
+"paywall.successTitle" = "Aankoop voltooid";
+"paywall.successMessage" = "Welkom bij ClipKit Pro!\nAlle functies zijn nu beschikbaar.";
+"paywall.monthlyEquivalentLabel" = "%@ / maand";
+"paywall.monthlyEquivalent" = "ongeveer %@";
+"paywall.error.unknown" = "Er is iets misgegaan";
+"paywall.error.noRestorable" = "Geen aankopen om te herstellen";
+"paywall.package.monthly" = "Maandelijks";
+"paywall.package.annual" = "Jaarlijks";
+"paywall.package.lifetime" = "Levenslang";
+"paywall.renewal.lifetime" = "Eenmalig betalen, altijd van jou";
+"paywall.renewal.monthly" = "Wordt elke maand verlengd";
+"paywall.renewal.annual" = "Wordt elk jaar verlengd";
+"paywall.renewal.days" = "Wordt elke %d dagen verlengd";
+"paywall.renewal.weeks" = "Wordt elke %d weken verlengd";
+"paywall.renewal.months" = "Wordt elke %d maanden verlengd";
+"paywall.renewal.years" = "Wordt elke %d jaar verlengd";
+"paywall.trial.days" = "%d dagen";
+"paywall.trial.weeks" = "%d weken";
+"paywall.trial.months" = "%d maanden";
+"paywall.trial.years" = "%d jaar";
+"paywall.period.oneMonth" = "maand";
+"paywall.period.oneYear" = "jaar";
+"paywall.period.days" = "%d dagen";
+"paywall.period.weeks" = "%d weken";
+"paywall.period.months" = "%d maanden";
+"paywall.period.years" = "%d jaar";
+"paywall.discount.format" = "Bespaar %d%%";
+"paywall.trialThenPrice" = "%1$@ gratis, daarna %2$@";
+"paywall.note.trialAutoRenew" = "• Na afloop van de gratis proefperiode (%1$@) wordt je abonnement automatisch verlengd voor %2$@";
+"paywall.note.trialCancel" = "• Zeg minstens 24 uur voor het einde van de proefperiode op om kosten te voorkomen";
+"paywall.tryFreeCTA" = "Gratis proberen";
+"paywall.perPeriod.month" = "maand";
+"paywall.perPeriod.year" = "jaar";
+"export.failed" = "Exporteren mislukt";
+"button.ok" = "OK";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Welkom bij ClipKit";
+"onboarding.welcome.description" = "Tekst, links en afbeeldingen die je kopieert, worden automatisch bewaard.\nJe kunt ze op elk moment terugvinden in je geschiedenis.";
+"onboarding.monitoring.title" = "Leg alles automatisch vast";
+"onboarding.monitoring.description" = "Start de bewaking via het tabblad Altijd aan. ClipKit bewaart dan alles wat je kopieert.";
+"onboarding.paste.title" = "Plakken toestaan";
+"onboarding.paste.description" = "Geef één keer toestemming in Instellingen van iOS\nzodat je niet telkens een melding krijgt.";
+"onboarding.paste.path" = "Instellingen → Privacy en beveiliging → Plakken vanuit andere apps → ClipKit";
+"onboarding.paste.instruction" = "Stel ‘Plakken vanuit andere apps’ in op **Sta toe**";
+"onboarding.paste.openSettings" = "Instellingen openen";
+"onboarding.ready.title" = "Je bent klaar!";
+"onboarding.ready.description" = "Probeer ClipKit gerust uit.";
+"onboarding.next" = "Volgende";
+"onboarding.start" = "Aan de slag";
+
+/* Tab bar */
+"tab.monitoring" = "Altijd aan";
+"tab.history" = "Geschiedenis";
+"tab.favorites" = "Favorieten";
+"tab.settings" = "Instellingen";
+
+/* Trash */
+"trash.deletedAt %@" = "Verwijderd: %@";
+"trash.swipeHint" = "Veeg naar links om te herstellen en naar rechts om definitief te verwijderen";
+
+/* Picture in Picture */
+"pip.hint" = "Klembordgeschiedenis";
+"pip.empty" = "Geen geschiedenis";
+
+/* Widget */
+"widget.proOnly" = "Pro-functie";
+"widget.proOnlyDescription" = "Widgets zijn beschikbaar met het Pro-abonnement";
+"widget.upgradeInApp" = "Upgrade in de app";
+"widget.empty" = "Nog geen geschiedenis";
+"widget.itemCount %lld" = "%lld onderdelen";
+"widget.description" = "Bekijk in één oogopslag je klembordgeschiedenis.";
+"widget.clipboardTitle" = "Klembord";
+"widget.noItems" = "Geen onderdelen";
+"widget.noClipboardItems" = "Geen klembordonderdelen";
+"widget.sample.first" = "Voorbeeldtekst";
+"widget.sample.second" = "Nog een fragment";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "Geschiedenis";
+"keyboard.tab.snippets" = "Fragmenten";
+"keyboard.history.empty" = "Geen geschiedenis";
+"keyboard.snippets.empty" = "Geen fragmenten";
+"keyboard.upgrade.unlimited" = "Meer bekijken\nOnbeperkt met Pro";
+"keyboard.upgrade.tenItems" = "Meer bekijken\n10 onderdelen met Pro";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Aankoop in afwachting";
+"paywall.pendingMessage" = "Pro wordt automatisch ontgrendeld zodra de aankoop is goedgekeurd.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Alleen Pro";
+"settings.iCloudSyncAll" = "iCloud-synchronisatie (alle onderdelen)";
+
+"monitoring.pipSizeHelp" = "In de compacte modus wordt de kop verborgen en een kleiner venster aangevraagd. iOS bepaalt de uiteindelijke grootte. Knijp om het formaat te wijzigen of sleep het venster over de linker- of rechterrand om het te verbergen. De transparantie van het venster kan niet worden aangepast.";
+
+"feedback.introduction" = "Vertel ons waar je hulp bij nodig hebt of wat je graag in ClipKit zou zien.";
+
+"feedback.guidance.bug" = "Wat probeerde je te doen en wat gebeurde er? Beschrijf zo mogelijk de stappen, wat je verwachtte en wat er werkelijk gebeurde.";
+
+"feedback.guidance.feature" = "Wat zou je willen doen en wanneer is dat handig? Vertel welke problemen je nu ervaart.";
+
+"feedback.guidance.other" = "Beschrijf je vraag of opmerking zo duidelijk mogelijk.";
+
+"feedback.emailHelp" = "Vul je e-mailadres in als je antwoord wilt. Je kunt het bericht ook zonder e-mailadres verzenden.";
+
+"feedback.deviceInfo" = "Je appversie, iOS-versie en apparaatmodel worden automatisch meegestuurd om problemen te onderzoeken. Vermeld geen wachtwoorden of andere gevoelige informatie.";
+
+"feedback.failureMessage" = "Je bericht staat er nog. Controleer je verbinding en probeer het over een paar minuten opnieuw.";
+
+"shortcut.openPiP" = "PiP openen";
+
+"shortcut.openPiPDescription" = "Open ClipKit en start de klembordbewaking met Picture in Picture.";
+
+"monitoring.compactPiP" = "Compacte PiP";
+
+"monitoring.shortcutHelp" = "Voeg de actie PiP openen van ClipKit toe in Opdrachten. Op ondersteunde iPhones kun je deze aan de actieknop koppelen. Als je de opdracht uitvoert, opent ClipKit.";
+
+"pip.startFailure" = "PiP starten is mislukt";
+
+"pip.startFailureHelp" = "Houd ClipKit op het scherm en probeer PiP opnieuw te openen via het tabblad Bewaking.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Kies een taal";
+"debug.keyboardLog.empty" = "Geen logboeken";
+"debug.keyboardLog.emptyDescription" = "Hier verschijnen logboeken zodra je de toetsenbordextensie opent.";

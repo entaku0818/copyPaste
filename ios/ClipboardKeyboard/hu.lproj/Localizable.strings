@@ -1,0 +1,32 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "Előzmények";
+"keyboard.tab.snippets" = "Részletek";
+"keyboard.history.empty" = "Nincsenek előzmények";
+"keyboard.snippets.empty" = "Nincsenek részletek";
+"keyboard.upgrade.unlimited" = "Továbbiak\nKorlátlan a Próval";
+"item.image" = "Kép";
+"item.file" = "Fájl";
+"transform.menu.paste" = "Átalakítás és beillesztés";
+"keyboard.upgrade.tenItems" = "Továbbiak\n10 elem a Próval";
+"transform.uppercase" = "Nagybetűssé alakítás";
+"transform.lowercase" = "Kisbetűssé alakítás";
+"transform.removeLineBreaks" = "Sortörések eltávolítása";
+"transform.trimWhitespace" = "Kezdő és záró szóközök eltávolítása";
+"transform.snakeCase" = "Átalakítás snake_case formátumba";
+"transform.camelCase" = "Átalakítás camelCase formátumba";
+"transform.fullWidth" = "Átalakítás teljes szélességűre";
+"transform.halfWidth" = "Átalakítás fél szélességűre";
+"transform.removeMarkdown" = "Markdown eltávolítása";
+"transform.urlEncode" = "URL kódolása";
+"transform.urlDecode" = "URL dekódolása";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefonszám";
+"category.code" = "Kód";
+"category.address" = "Cím";
+"category.text" = "Szöveg";
+
+/* Pro-only transforms in the long-press menu (issue #117) */
+"keyboard.transform.proOnly" = "Csak Próval · Koppints a váltáshoz";

@@ -1,0 +1,29 @@
+Overvåg automatisk udklipsholderen i baggrunden. ClipKit gemmer det, du kopierer, så du hurtigt kan finde tekster, links og billeder i historikken – fra en widget eller et brugerdefineret tastatur.
+
+GRATIS FUNKTIONER
+• Gem automatisk op til 20 elementer (historik fra de seneste 3 dage)
+• Understøtter tekst, billeder og URL'er
+• Søg i historikken, også efter tekst i billeder
+• Automatisk kategorisering af URL, e-mail, telefon, kode, adresse og tekst
+• Op til 10 favoritter og 3 tekststykker
+• Skift mellem store og små bogstaver, og fjern linjeskift og mellemrum
+• Synkronisér op til 20 elementer via iCloud
+• Brugerdefineret tastatur til historik og tekststykker
+
+CLIPKIT PRO
+• Ubegrænset historik og favoritter
+• Søg i og se historik, der er ældre end 3 dage
+• Ubegrænset antal tekststykker
+• Widgets til hjemmeskærmen i tre størrelser
+• Flere historikelementer og alle tekststykker på tastaturet
+• Synkronisér alle elementer via iCloud
+• Gendan slettede elementer i op til 30 dage
+• Eksportér historik som CSV eller Markdown
+• Konvertér snake_case og camelCase, tegnbredde, fjern Markdown, og kod eller afkod URL'er
+
+ClipKit bruger billede i billede til at fortsætte overvågningen, mens du bruger andre apps. Start overvågningen på fanen „Altid aktiv“, og tillad indsættelse fra andre apps i iOS-indstillingerne.
+
+Måneds- og årsabonnementer inkluderer en gratis prøveperiode på 7 dage for nye abonnenter. Abonnementet fornyes automatisk bagefter, og du kan opsige når som helst.
+
+Brugsvilkår: https://clipkit-entaku.web.app/terms.html
+Anonymitetspolitik: https://clipkit-entaku.web.app/privacy-policy.html

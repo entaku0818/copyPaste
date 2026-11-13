@@ -1,0 +1,4 @@
+Öffnen Sie das PiP-Fenster über Kurzbefehle und weisen Sie den Kurzbefehl auf unterstützten iPhones der Aktionstaste zu.
+Neuer kompakter PiP-Modus, der die Kopfzeile ausblendet und ein kürzeres Fenster anfordert.
+Kontaktformular mit themenspezifischen Hinweisen und klareren Angaben zur Antwortadresse verbessert.
+App, Tastatur und Widgets unterstützen jetzt weitere Sprachen.

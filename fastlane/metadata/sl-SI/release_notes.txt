@@ -1,0 +1,4 @@
+Odprite okno PiP v aplikaciji Bližnjice in na podprtih telefonih iPhone dejanje dodelite akcijskemu gumbu.
+Nov kompaktni način PiP skrije glavo in zahteva manjše okno.
+Izboljšan obrazec za stik z navodili glede na temo in jasnejšimi informacijami o e-poštnem naslovu za odgovor.
+Aplikacija, tipkovnica in pripomočki zdaj podpirajo več jezikov.

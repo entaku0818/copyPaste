@@ -1,0 +1,2 @@
+/* Descripció de l’accés al porta-retalls */
+"NSPasteboardUsageDescription" = "ClipKit necessita accedir al porta-retalls per desar-ne l’historial.";

@@ -1,0 +1,29 @@
+Guarda automáticamente lo que copias y recupera textos, enlaces e imágenes cuando los necesites. Consulta el historial desde un widget o un teclado personalizado.
+
+FUNCIONES GRATIS
+• Guarda automáticamente hasta 20 elementos (consulta los últimos 3 días)
+• Compatible con texto, imágenes y URL
+• Busca en el historial, incluido el texto de las imágenes
+• Clasifica automáticamente URL, correos, teléfonos, código, direcciones y texto
+• Guarda hasta 10 favoritos y 3 fragmentos de texto
+• Convierte mayúsculas, minúsculas, saltos de línea y espacios
+• Sincroniza hasta 20 elementos con iCloud
+• Usa el teclado personalizado para consultar el historial y tus fragmentos
+
+CLIPKIT PRO
+• Historial y favoritos ilimitados
+• Busca y consulta el historial de más de 3 días
+• Guarda fragmentos de texto ilimitados
+• Widgets para la pantalla de inicio en 3 tamaños
+• Consulta más elementos del historial y todos tus fragmentos desde el teclado
+• Sincroniza todos tus elementos con iCloud
+• Recupera elementos eliminados durante 30 días
+• Exporta el historial como CSV o Markdown
+• Convierte snake_case y camelCase, ancho completo y medio, elimina Markdown y codifica o decodifica URL
+
+ClipKit utiliza Picture in Picture para mantener la supervisión del portapapeles mientras usas otras apps. La función requiere que actives la supervisión desde la pestaña «Siempre activo» y que permitas pegar desde otras apps en los ajustes de iOS.
+
+Las suscripciones mensuales y anuales incluyen una prueba gratis de 7 días para nuevos suscriptores. Al terminar la prueba, la suscripción se renueva automáticamente. Puedes cancelarla en cualquier momento.
+
+Términos de uso: https://clipkit-entaku.web.app/terms.html
+Política de privacidad: https://clipkit-entaku.web.app/privacy-policy.html

@@ -1,0 +1,4 @@
+Deschide fereastra PiP din Scurtături și atribuie scurtătura butonului de acțiune pe iPhone-urile compatibile.
+Am adăugat un mod PiP compact, care ascunde antetul și solicită o fereastră mai scurtă.
+Formularul de contact include acum îndrumări în funcție de categorie și explicații despre adresa de răspuns.
+Aplicația, tastatura și widgeturile acceptă acum mai multe limbi.

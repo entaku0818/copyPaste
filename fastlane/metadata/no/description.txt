@@ -1,0 +1,30 @@
+ClipKit lagrer automatisk det du kopierer, slik at du enkelt finner tilbake til tekst, lenker og bilder når du trenger dem. Se historikken fra en widget eller det egendefinerte tastaturet.
+
+GRATIS FUNKSJONER
+• Lagre opptil 20 elementer automatisk (de siste 3 dagene er tilgjengelige)
+• Støtte for tekst, bilder og URL-er
+• Søk i historikken, også etter tekst i bilder
+• Automatisk kategorisering av URL-er, e-postadresser, telefonnumre, kode, adresser og tekst
+• Opptil 10 favoritter og 3 tekstutdrag
+• Endre tekst: store og små bokstaver, fjern linjeskift og mellomrom
+• Synkroniser opptil 20 elementer med iCloud
+• Egendefinert tastatur med tilgang til historikk og tekstutdrag
+• Kom i gang-veiledning
+
+CLIPKIT PRO
+• Ubegrenset historikk og favoritter
+• Søk i og vis historikk som er eldre enn 3 dager
+• Ubegrenset antall tekstutdrag
+• Widgeter på Hjem-skjermen i 3 størrelser
+• Vis 10 historikkelementer og alle tekstutdrag på tastaturet (3 av hver med gratisabonnementet)
+• Synkroniser alle elementer med iCloud
+• Gjenopprett slettede elementer i opptil 30 dager
+• Eksporter historikken som CSV eller Markdown
+• Pro-endringer: snake_case, camelCase, full og halv bredde, fjern Markdown, kod og dekod URL-er
+
+Picture in Picture lar ClipKit overvåke utklippstavlen mens du bruker andre apper. Slå på overvåking på fanen «Alltid på», og tillat innliming fra andre apper i iOS-innstillingene.
+
+Måneds- og årsabonnement inkluderer en gratis prøveperiode på 7 dager for nye abonnenter. Etter prøveperioden fornyes abonnementet automatisk. Du kan avslutte når som helst.
+
+Bruksvilkår: https://clipkit-entaku.web.app/terms.html
+Personvernerklæring: https://clipkit-entaku.web.app/privacy-policy.html

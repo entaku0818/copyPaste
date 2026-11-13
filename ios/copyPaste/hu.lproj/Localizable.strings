@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "Előzmények";
+"detail.title" = "Részletek";
+"settings.title" = "Beállítások";
+"favorites.title" = "Kedvencek";
+"trash.title" = "Kuka";
+"image.preview.title" = "Képelőnézet";
+"monitoring.title" = "Folyamatos";
+"feedback.title" = "Kapcsolat";
+
+/* Buttons */
+"button.close" = "Bezárás";
+"button.cancel" = "Mégse";
+"item.delete" = "Törlés";
+"item.restore" = "Visszaállítás";
+"item.deletePermanently" = "Végleges törlés";
+"item.favorite" = "Hozzáadás a kedvencekhez";
+"item.unfavorite" = "Eltávolítás a kedvencekből";
+"copy.action" = "Másolás";
+"copy.done" = "Másolva";
+
+/* Search */
+"search.placeholder" = "Keresés az előzményekben…";
+"search.clear" = "Törlés";
+"search.results %lld" = "%lld találat";
+
+/* Category filter */
+"category.all" = "Összes";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefonszám";
+"category.code" = "Kód";
+"category.address" = "Cím";
+"category.text" = "Szöveg";
+
+/* Clipboard items */
+"item.image" = "Kép";
+"item.file" = "Fájl";
+"item.text.empty" = "(Nincs tartalom)";
+
+/* Time */
+"time.justnow" = "Most";
+"time.minutes %lld" = "%lld perce";
+"time.hours %lld" = "%lld órája";
+"time.days %lld" = "%lld napja";
+
+/* Trash */
+"trash.empty" = "A kuka üres";
+"trash.description" = "A törölt elemek 30 napig itt maradnak";
+"trash.deleteAll" = "Összes törlése";
+
+/* Favorites */
+"favorites.empty" = "Nincsenek kedvencek";
+"favorites.emptyDescription" = "Húzd balra az előzmények egyik elemét, hogy hozzáadd a kedvencekhez";
+"favorites.unfavorite" = "Eltávolítás a kedvencekből";
+"favorites.proUpgrade %lld" = "Korlátlan kedvenc a Próval (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Váltás ClipKit Próra";
+"upgrade.description" = "A 3 napnál régebbi előzmények keresése és megtekintése";
+
+/* Image */
+"image.loadError" = "A kép nem tölthető be";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Háttérfigyelés";
+"monitoring.pipDescription" = "Nyisd meg a PiP-ablakot, hogy más appok használata közben is figyeld a vágólap előzményeit.";
+"monitoring.active" = "Háttérfigyelés aktív";
+"monitoring.inactive" = "Figyelés";
+"monitoring.controlSection" = "Figyelés vezérlése";
+"monitoring.statusActive" = "Aktív";
+"monitoring.statusStopped" = "Leállítva";
+"monitoring.openPiP" = "PiP-ablak megnyitása";
+"permission.title" = "Vágólap-hozzáférés engedélyezése";
+"permission.allow" = "Engedélyezés";
+"permission.later" = "Később";
+"permission.message" = "A ClipKitnek hozzá kell férnie a vágólaphoz az előzmények mentéséhez.\n\niOS 16-tól az első hozzáféréskor rendszerüzenet jelenik meg. Válaszd az „Engedélyezés” lehetőséget.";
+
+/* Settings */
+"settings.proDescription" = "Korlátlan előzmények · Kedvencek · Widgetek";
+"settings.howToUse" = "Használati útmutató";
+"settings.writeReview" = "Értékelés írása";
+"settings.contact" = "Kapcsolat";
+"settings.trash" = "Kuka";
+"settings.iCloudSync" = "iCloud-szinkronizálás";
+"settings.iCloudSyncPicker" = "Szinkronizálás";
+"settings.iCloudSyncFooter" = "A módosítások az app következő megnyitásakor lépnek életbe.";
+"settings.iCloudSyncLastSynced" = "Utolsó szinkronizálás: %@";
+"settings.iCloudSyncNeverSynced" = "Még nem érkezett szinkronizálás másik eszközről";
+"cloudKitSync.disabled" = "Nincs szinkronizálás";
+"cloudKitSync.all" = "Szinkronizálás";
+"settings.appInfo" = "Az appról";
+"settings.version" = "Verzió";
+"settings.debug" = "Diagnosztika";
+"settings.screenshotPreview" = "Képernyőképek előnézete";
+"settings.keyboardLog" = "Billentyűzetnapló";
+"settings.keyboardLogFooter" = "A billentyűzet naplói valós időben, az App Groups használatával gyűlnek";
+
+/* Feedback */
+"feedback.category" = "Kapcsolatfelvétel oka";
+"feedback.content" = "Üzenet (kötelező)";
+"feedback.email" = "Válaszcím (nem kötelező)";
+"feedback.emailPlaceholder" = "pl. nev@pelda.hu";
+"feedback.send" = "Küldés";
+"feedback.success" = "Üzenet megérkezett";
+"feedback.successMessage" = "Köszönjük, hogy írtál. Üzeneted segít a problémák kivizsgálásában és a ClipKit fejlesztésében.";
+"feedback.failure" = "Nem sikerült elküldeni";
+"feedbackCategory.bug" = "Hiba jelentése";
+"feedbackCategory.feature" = "Funkcióötlet";
+"feedbackCategory.other" = "Egyéb";
+
+/* Satisfaction */
+"satisfaction.title" = "Köszönjük, hogy a ClipKitet használod!";
+"satisfaction.question" = "Elégedett vagy az app minőségével?";
+"satisfaction.satisfied" = "Elégedett vagyok";
+"satisfaction.improve" = "Van még mit javítani";
+
+/* Export */
+"export.title" = "Exportálás";
+"export.action" = "Előzmények exportálása";
+"export.formatPicker" = "Formátum kiválasztása";
+
+/* Snippets */
+"snippets.title" = "Szövegrészletek";
+"snippets.empty" = "Nincsenek szövegrészletek";
+"snippets.emptyDescription" = "Mentsd el a gyakran használt szövegeket, és illeszd be őket egy koppintással a billentyűzetről";
+"snippets.add" = "Szövegrészlet hozzáadása";
+"snippets.edit" = "Szövegrészlet szerkesztése";
+"snippets.titleField" = "Cím";
+"snippets.titlePlaceholder" = "pl. Üdvözlés";
+"snippets.contentField" = "Tartalom";
+"snippets.placeholderHint" = "A {日付} {時刻} ({date} {time}) helyére beillesztéskor az aktuális dátum és idő kerül";
+"snippets.save" = "Mentés";
+"snippets.cancel" = "Mégse";
+"snippets.freeLimit %lld" = "Az ingyenes csomag legfeljebb %lld szövegrészletet enged (Próval korlátlan)";
+
+/* Text Transform */
+"transform.menu.copy" = "Átalakítás és másolás";
+"transform.menu.paste" = "Átalakítás és beillesztés";
+"transform.uppercase" = "Nagybetűssé alakítás";
+"transform.lowercase" = "Kisbetűssé alakítás";
+"transform.removeLineBreaks" = "Sortörések eltávolítása";
+"transform.trimWhitespace" = "Kezdő és záró szóközök eltávolítása";
+"transform.snakeCase" = "Átalakítás snake_case formátumba";
+"transform.camelCase" = "Átalakítás camelCase formátumba";
+"transform.fullWidth" = "Átalakítás teljes szélességűre";
+"transform.halfWidth" = "Átalakítás fél szélességűre";
+"transform.removeMarkdown" = "Markdown eltávolítása";
+"transform.urlEncode" = "URL kódolása";
+"transform.urlDecode" = "URL dekódolása";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Oldd fel az összes funkciót";
+"paywall.feature.history.title" = "Korlátlan előzmények";
+"paywall.feature.history.description" = "Az ingyenes csomag az utolsó 3 napból legfeljebb 20 elemet őriz meg";
+"paywall.feature.favorites.title" = "Korlátlan kedvencek";
+"paywall.feature.favorites.description" = "Az ingyenes csomag legfeljebb 10-et enged";
+"paywall.feature.widget.title" = "Widgetek a Főképernyőn";
+"paywall.feature.widget.description" = "Három widgetméret";
+"paywall.feature.keyboard.title" = "Teljes előzmények a billentyűzeten";
+"paywall.feature.keyboard.description" = "10 elem megjelenítése a billentyűzeten (az ingyenes csomagban 3)";
+"paywall.feature.icloud.title" = "iCloud-szinkronizálás";
+"paywall.feature.icloud.description" = "Érd el az előzményeket az összes eszközödön";
+"paywall.feature.export.title" = "Előzmények exportálása";
+"paywall.feature.export.description" = "Exportálás CSV- vagy Markdown-formátumba";
+"paywall.feature.transform.title" = "Speciális szövegátalakítások";
+"paywall.feature.transform.description" = "Kis- és nagybetűk, szélesség, URL-kódolás és más lehetőségek";
+"paywall.loadingPlans" = "Csomagok betöltése…";
+"paywall.loadFailed" = "Nem sikerült betölteni a csomagokat";
+"paywall.retry" = "Újra";
+"paywall.purchase" = "Vásárlás";
+"paywall.startNow" = "Kezdés";
+"paywall.restore" = "Vásárlások visszaállítása";
+"paywall.note.lifetime" = "• Egyszeri vásárlás, örökre a tiéd";
+"paywall.note.billedToAppleID" = "• Terhelés az Apple-fiókodra";
+"paywall.note.autoRenew" = "• Automatikus megújítás: %@";
+"paywall.note.cancelAnytime" = "• Bármikor lemondhatod";
+"paywall.terms" = "Felhasználási feltételek";
+"paywall.privacyPolicy" = "Adatvédelmi szabályzat";
+"paywall.close" = "Bezárás";
+"paywall.errorTitle" = "Hiba";
+"paywall.successTitle" = "Sikeres vásárlás";
+"paywall.successMessage" = "Üdv a ClipKit Próban!\nMost már minden funkció elérhető.";
+"paywall.monthlyEquivalentLabel" = "%@ / hó";
+"paywall.monthlyEquivalent" = "kb. %@";
+"paywall.error.unknown" = "Hiba történt";
+"paywall.error.noRestorable" = "Nincs visszaállítható vásárlás";
+"paywall.package.monthly" = "Havi";
+"paywall.package.annual" = "Éves";
+"paywall.package.lifetime" = "Örökös";
+"paywall.renewal.lifetime" = "Egyszeri vásárlás, örökre a tiéd";
+"paywall.renewal.monthly" = "Havonta megújul";
+"paywall.renewal.annual" = "Évente megújul";
+"paywall.renewal.days" = "%d naponta újul meg";
+"paywall.renewal.weeks" = "%d hetente újul meg";
+"paywall.renewal.months" = "%d havonta újul meg";
+"paywall.renewal.years" = "%d évente újul meg";
+"paywall.trial.days" = "%d nap";
+"paywall.trial.weeks" = "%d hét";
+"paywall.trial.months" = "%d hónap";
+"paywall.trial.years" = "%d év";
+"paywall.period.oneMonth" = "hónap";
+"paywall.period.oneYear" = "év";
+"paywall.period.days" = "%d nap";
+"paywall.period.weeks" = "%d hét";
+"paywall.period.months" = "%d hónap";
+"paywall.period.years" = "%d év";
+"paywall.discount.format" = "%d%% megtakarítás";
+"paywall.trialThenPrice" = "%1$@ ingyenes, utána %2$@";
+"paywall.note.trialAutoRenew" = "• A próbaidőszak (%1$@) lejárta után az előfizetés automatikusan megújul %2$@ díjjal";
+"paywall.note.trialCancel" = "• A díj elkerüléséhez a próbaidőszak vége előtt legalább 24 órával mondd le";
+"paywall.tryFreeCTA" = "Próbáld ki ingyen";
+"paywall.perPeriod.month" = "hónap";
+"paywall.perPeriod.year" = "év";
+"export.failed" = "Az exportálás nem sikerült";
+"button.ok" = "OK";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Üdv a ClipKitben";
+"onboarding.welcome.description" = "A másolt szövegek, linkek és képek automatikusan mentésre kerülnek.\nBármikor előkeresheted őket az előzményekből.";
+"onboarding.monitoring.title" = "Ments el mindent automatikusan";
+"onboarding.monitoring.description" = "Indítsd el a figyelést a Folyamatos lapon, és a ClipKit elment mindent, amit másolsz.";
+"onboarding.paste.title" = "Beillesztés engedélyezése";
+"onboarding.paste.description" = "Engedélyezd egyszer a Beállításokban,\nígy nem jelenik meg minden alkalommal kérés.";
+"onboarding.paste.path" = "Beállítások → Adatvédelem és biztonság → Beillesztés más appokból → ClipKit";
+"onboarding.paste.instruction" = "A „Beillesztés más appokból” beállítása **Engedélyezés** értékre";
+"onboarding.paste.openSettings" = "Beállítások megnyitása";
+"onboarding.ready.title" = "Minden készen áll!";
+"onboarding.ready.description" = "Próbáld ki a ClipKitet.";
+"onboarding.next" = "Tovább";
+"onboarding.start" = "Kezdés";
+
+/* Tab bar */
+"tab.monitoring" = "Folyamatos";
+"tab.history" = "Előzmények";
+"tab.favorites" = "Kedvencek";
+"tab.settings" = "Beállítások";
+
+/* Trash */
+"trash.deletedAt %@" = "Törölve: %@";
+"trash.swipeHint" = "Húzd balra a visszaállításhoz, jobbra a végleges törléshez";
+
+/* Picture in Picture */
+"pip.hint" = "Vágólapelőzmények";
+"pip.empty" = "Nincsenek előzmények";
+
+/* Widget */
+"widget.proOnly" = "Pro-funkció";
+"widget.proOnlyDescription" = "A widgetek a Pro-csomagban érhetők el";
+"widget.upgradeInApp" = "Váltás Próra az appban";
+"widget.empty" = "Még nincsenek előzmények";
+"widget.itemCount %lld" = "%lld elem";
+"widget.description" = "A vágólapelőzmények gyors áttekintése.";
+"widget.clipboardTitle" = "Vágólap";
+"widget.noItems" = "Nincsenek elemek";
+"widget.noClipboardItems" = "Nincsenek elemek a vágólapon";
+"widget.sample.first" = "Példaszöveg";
+"widget.sample.second" = "Másik szövegrészlet";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "Előzmények";
+"keyboard.tab.snippets" = "Részletek";
+"keyboard.history.empty" = "Nincsenek előzmények";
+"keyboard.snippets.empty" = "Nincsenek részletek";
+"keyboard.upgrade.unlimited" = "Továbbiak\nKorlátlan a Próval";
+"keyboard.upgrade.tenItems" = "Továbbiak\n10 elem a Próval";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Függőben lévő vásárlás";
+"paywall.pendingMessage" = "A Pro a vásárlás jóváhagyásakor automatikusan feloldódik.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Csak Próval";
+"settings.iCloudSyncAll" = "iCloud-szinkronizálás (minden elem)";
+
+"monitoring.pipSizeHelp" = "A kompakt mód elrejti a fejlécet, és kisebb ablakot kér. A tényleges méretet az iOS határozza meg. Csippents a méretezéshez, vagy húzd az ablakot a bal vagy jobb képernyőszélen túlra az elrejtéshez. Az ablak átlátszósága nem módosítható.";
+
+"feedback.introduction" = "Írd meg, miben segíthetünk, vagy milyen funkciót látnál szívesen a ClipKitben.";
+
+"feedback.guidance.bug" = "Mit próbáltál tenni, és mi történt? Ha lehet, írd le a lépéseket, az elvárt és a tényleges eredményt.";
+
+"feedback.guidance.feature" = "Mit szeretnél csinálni, és mikor lenne hasznos? Írd le, milyen nehézségekkel találkozol most.";
+
+"feedback.guidance.other" = "Írd le minél részletesebben a kérdésedet vagy visszajelzésedet.";
+
+"feedback.emailHelp" = "Add meg az e-mail-címedet, ha választ szeretnél kapni. Anélkül is elküldheted az üzenetet.";
+
+"feedback.deviceInfo" = "A hibák kivizsgálásához az app verziója, az iOS verziója és az eszközmodell automatikusan elküldésre kerül. Ne írj be jelszót vagy más bizalmas adatot.";
+
+"feedback.failureMessage" = "Az üzeneted megmaradt. Ellenőrizd a kapcsolatot, és próbáld újra néhány perc múlva.";
+
+"shortcut.openPiP" = "PiP megnyitása";
+
+"shortcut.openPiPDescription" = "Nyisd meg a ClipKitet, és indítsd el a vágólap figyelését a Picture in Picture használatával.";
+
+"monitoring.compactPiP" = "Kompakt PiP";
+
+"monitoring.shortcutHelp" = "Add hozzá a ClipKit PiP megnyitása műveletét a Parancsok apphoz. Támogatott iPhone-okon rendeld a műveletgombhoz. A parancs futtatásakor megnyílik a ClipKit.";
+
+"pip.startFailure" = "Nem sikerült elindítani a PiP-t";
+
+"pip.startFailureHelp" = "Tartsd a ClipKitet a képernyőn, és próbáld újra megnyitni a PiP-t a Folyamatos lapon.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Nyelv kiválasztása";
+"debug.keyboardLog.empty" = "Nincsenek naplók";
+"debug.keyboardLog.emptyDescription" = "A billentyűzetbővítmény indítása után itt jelennek meg a naplók.";

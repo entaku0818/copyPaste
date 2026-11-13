@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "ਇਤਿਹਾਸ";
+"detail.title" = "ਵੇਰਵੇ";
+"settings.title" = "ਸੈਟਿੰਗਾਂ";
+"favorites.title" = "ਮਨਪਸੰਦ";
+"trash.title" = "ਰੱਦੀ";
+"image.preview.title" = "ਤਸਵੀਰ ਦੀ ਝਲਕ";
+"monitoring.title" = "ਹਮੇਸ਼ਾ ਚਾਲੂ";
+"feedback.title" = "ਸੰਪਰਕ";
+
+/* Buttons */
+"button.close" = "ਬੰਦ ਕਰੋ";
+"button.cancel" = "ਰੱਦ ਕਰੋ";
+"item.delete" = "ਮਿਟਾਓ";
+"item.restore" = "ਮੁੜ-ਪ੍ਰਾਪਤ ਕਰੋ";
+"item.deletePermanently" = "ਪੱਕੇ ਤੌਰ 'ਤੇ ਮਿਟਾਓ";
+"item.favorite" = "ਮਨਪਸੰਦ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ";
+"item.unfavorite" = "ਮਨਪਸੰਦ ਵਿੱਚੋਂ ਹਟਾਓ";
+"copy.action" = "ਕਾਪੀ ਕਰੋ";
+"copy.done" = "ਕਾਪੀ ਹੋ ਗਿਆ";
+
+/* Search */
+"search.placeholder" = "ਇਤਿਹਾਸ ਵਿੱਚ ਖੋਜੋ…";
+"search.clear" = "ਸਾਫ਼ ਕਰੋ";
+"search.results %lld" = "%lld ਨਤੀਜੇ";
+
+/* Category filter */
+"category.all" = "ਸਾਰੇ";
+"category.url" = "URL";
+"category.email" = "ਈਮੇਲ";
+"category.phone" = "ਫ਼ੋਨ";
+"category.code" = "ਕੋਡ";
+"category.address" = "ਪਤਾ";
+"category.text" = "ਲਿਖਤ";
+
+/* Clipboard items */
+"item.image" = "ਤਸਵੀਰ";
+"item.file" = "ਫ਼ਾਈਲ";
+"item.text.empty" = "(ਕੋਈ ਸਮੱਗਰੀ ਨਹੀਂ)";
+
+/* Time */
+"time.justnow" = "ਹੁਣੇ";
+"time.minutes %lld" = "%lld ਮਿੰਟ ਪਹਿਲਾਂ";
+"time.hours %lld" = "%lld ਘੰਟੇ ਪਹਿਲਾਂ";
+"time.days %lld" = "%lld ਦਿਨ ਪਹਿਲਾਂ";
+
+/* Trash */
+"trash.empty" = "ਰੱਦੀ ਖਾਲੀ ਹੈ";
+"trash.description" = "ਮਿਟਾਈਆਂ ਚੀਜ਼ਾਂ ਇੱਥੇ 30 ਦਿਨਾਂ ਤੱਕ ਸੰਭਾਲੀਆਂ ਜਾਂਦੀਆਂ ਹਨ";
+"trash.deleteAll" = "ਸਭ ਮਿਟਾਓ";
+
+/* Favorites */
+"favorites.empty" = "ਕੋਈ ਮਨਪਸੰਦ ਨਹੀਂ";
+"favorites.emptyDescription" = "ਇਤਿਹਾਸ ਦੀ ਕਿਸੇ ਚੀਜ਼ ਨੂੰ ਮਨਪਸੰਦ ਵਿੱਚ ਜੋੜਨ ਲਈ ਖੱਬੇ ਪਾਸੇ ਸਵਾਈਪ ਕਰੋ";
+"favorites.unfavorite" = "ਮਨਪਸੰਦ ਵਿੱਚੋਂ ਹਟਾਓ";
+"favorites.proUpgrade %lld" = "Pro ਨਾਲ ਮਨਪਸੰਦ ਦੀ ਕੋਈ ਹੱਦ ਨਹੀਂ (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "ClipKit Pro ਲਵੋ";
+"upgrade.description" = "3 ਦਿਨਾਂ ਤੋਂ ਪੁਰਾਣਾ ਇਤਿਹਾਸ ਖੋਜੋ ਅਤੇ ਵੇਖੋ";
+
+/* Image */
+"image.loadError" = "ਤਸਵੀਰ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "ਪਿਛੋਕੜ ਵਿੱਚ ਨਿਗਰਾਨੀ";
+"monitoring.pipDescription" = "ਹੋਰ ਐਪਾਂ ਵਰਤਦਿਆਂ ਕਲਿੱਪਬੋਰਡ ਇਤਿਹਾਸ ਦੀ ਨਿਗਰਾਨੀ ਲਈ PiP ਵਿੰਡੋ ਖੋਲ੍ਹੋ।";
+"monitoring.active" = "ਪਿਛੋਕੜ ਵਿੱਚ ਨਿਗਰਾਨੀ ਚਾਲੂ ਹੈ";
+"monitoring.inactive" = "ਨਿਗਰਾਨੀ";
+"monitoring.controlSection" = "ਨਿਗਰਾਨੀ ਕੰਟਰੋਲ";
+"monitoring.statusActive" = "ਚਾਲੂ";
+"monitoring.statusStopped" = "ਰੁਕੀ ਹੋਈ";
+"monitoring.openPiP" = "PiP ਵਿੰਡੋ ਖੋਲ੍ਹੋ";
+"permission.title" = "ਕਲਿੱਪਬੋਰਡ ਦੀ ਪਹੁੰਚ ਦੀ ਇਜਾਜ਼ਤ";
+"permission.allow" = "ਇਜਾਜ਼ਤ ਦਿਓ";
+"permission.later" = "ਬਾਅਦ ਵਿੱਚ";
+"permission.message" = "ਇਤਿਹਾਸ ਸੰਭਾਲਣ ਲਈ ClipKit ਨੂੰ ਕਲਿੱਪਬੋਰਡ ਦੀ ਪਹੁੰਚ ਚਾਹੀਦੀ ਹੈ।\n\niOS 16 ਜਾਂ ਇਸ ਤੋਂ ਬਾਅਦ ਪਹਿਲੀ ਵਾਰ ਪਹੁੰਚ ਕਰਨ 'ਤੇ ਸਿਸਟਮ ਸੁਨੇਹਾ ਵਿਖਾਈ ਦੇਵੇਗਾ। “ਇਜਾਜ਼ਤ ਦਿਓ” ਚੁਣੋ।";
+
+/* Settings */
+"settings.proDescription" = "ਬੇਅੰਤ ਇਤਿਹਾਸ · ਮਨਪਸੰਦ · ਵਿਜੇਟ";
+"settings.howToUse" = "ਵਰਤਣ ਦਾ ਤਰੀਕਾ";
+"settings.writeReview" = "ਸਮੀਖਿਆ ਲਿਖੋ";
+"settings.contact" = "ਸੰਪਰਕ";
+"settings.trash" = "ਰੱਦੀ";
+"settings.iCloudSync" = "iCloud ਸਿੰਕ";
+"settings.iCloudSyncPicker" = "ਸਿੰਕ ਕਰੋ";
+"settings.iCloudSyncFooter" = "ਬਦਲਾਅ ਐਪ ਅਗਲੀ ਵਾਰ ਖੋਲ੍ਹਣ 'ਤੇ ਲਾਗੂ ਹੋਣਗੇ।";
+"settings.iCloudSyncLastSynced" = "ਆਖ਼ਰੀ ਸਿੰਕ: %@";
+"settings.iCloudSyncNeverSynced" = "ਹਾਲੇ ਹੋਰ ਡਿਵਾਈਸਾਂ ਤੋਂ ਸਿੰਕ ਨਹੀਂ ਹੋਇਆ";
+"cloudKitSync.disabled" = "ਸਿੰਕ ਨਾ ਕਰੋ";
+"cloudKitSync.all" = "ਸਿੰਕ ਕਰੋ";
+"settings.appInfo" = "ਐਪ ਬਾਰੇ";
+"settings.version" = "ਵਰਜਨ";
+"settings.debug" = "ਸਮੱਸਿਆ-ਜਾਂਚ";
+"settings.screenshotPreview" = "ਸਕ੍ਰੀਨਸ਼ਾਟ ਝਲਕ";
+"settings.keyboardLog" = "ਕੀਬੋਰਡ ਲੌਗ";
+"settings.keyboardLogFooter" = "ਕੀਬੋਰਡ ਲੌਗ App Groups ਰਾਹੀਂ ਰੀਅਲ ਟਾਈਮ ਵਿੱਚ ਇਕੱਠੇ ਕੀਤੇ ਜਾਂਦੇ ਹਨ";
+
+/* Feedback */
+"feedback.category" = "ਸੰਪਰਕ ਦਾ ਕਾਰਨ";
+"feedback.content" = "ਸੁਨੇਹਾ (ਲਾਜ਼ਮੀ)";
+"feedback.email" = "ਜਵਾਬ ਲਈ ਈਮੇਲ (ਵਿਕਲਪਿਕ)";
+"feedback.emailPlaceholder" = "ਜਿਵੇਂ naam@example.com";
+"feedback.send" = "ਭੇਜੋ";
+"feedback.success" = "ਸੁਨੇਹਾ ਮਿਲ ਗਿਆ";
+"feedback.successMessage" = "ਸੰਪਰਕ ਕਰਨ ਲਈ ਧੰਨਵਾਦ। ਤੁਹਾਡਾ ਸੁਨੇਹਾ ਸਮੱਸਿਆਵਾਂ ਦੀ ਜਾਂਚ ਅਤੇ ClipKit ਨੂੰ ਬਿਹਤਰ ਬਣਾਉਣ ਵਿੱਚ ਸਾਡੀ ਮਦਦ ਕਰੇਗਾ।";
+"feedback.failure" = "ਭੇਜਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ";
+"feedbackCategory.bug" = "ਸਮੱਸਿਆ ਦੀ ਰਿਪੋਰਟ ਕਰੋ";
+"feedbackCategory.feature" = "ਨਵੀਂ ਵਿਸ਼ੇਸ਼ਤਾ ਸੁਝਾਓ";
+"feedbackCategory.other" = "ਹੋਰ";
+
+/* Satisfaction */
+"satisfaction.title" = "ClipKit ਵਰਤਣ ਲਈ ਧੰਨਵਾਦ!";
+"satisfaction.question" = "ਕੀ ਤੁਸੀਂ ਐਪ ਦੀ ਗੁਣਵੱਤਾ ਤੋਂ ਸੰਤੁਸ਼ਟ ਹੋ?";
+"satisfaction.satisfied" = "ਸੰਤੁਸ਼ਟ";
+"satisfaction.improve" = "ਹੋਰ ਸੁਧਾਰ ਦੀ ਗੁੰਜਾਇਸ਼ ਹੈ";
+
+/* Export */
+"export.title" = "ਐਕਸਪੋਰਟ";
+"export.action" = "ਇਤਿਹਾਸ ਐਕਸਪੋਰਟ ਕਰੋ";
+"export.formatPicker" = "ਫ਼ਾਰਮੈਟ ਚੁਣੋ";
+
+/* Snippets */
+"snippets.title" = "ਲਿਖਤ ਦੇ ਟੁਕੜੇ";
+"snippets.empty" = "ਲਿਖਤ ਦੇ ਕੋਈ ਟੁਕੜੇ ਨਹੀਂ";
+"snippets.emptyDescription" = "ਅਕਸਰ ਵਰਤੀ ਜਾਂਦੀ ਲਿਖਤ ਸੰਭਾਲੋ ਅਤੇ ਕੀਬੋਰਡ ਤੋਂ ਇੱਕ ਟੈਪ ਨਾਲ ਪੇਸਟ ਕਰੋ";
+"snippets.add" = "ਲਿਖਤ ਦਾ ਟੁਕੜਾ ਜੋੜੋ";
+"snippets.edit" = "ਲਿਖਤ ਦਾ ਟੁਕੜਾ ਸੋਧੋ";
+"snippets.titleField" = "ਸਿਰਲੇਖ";
+"snippets.titlePlaceholder" = "ਜਿਵੇਂ ਸਵਾਗਤ";
+"snippets.contentField" = "ਸਮੱਗਰੀ";
+"snippets.placeholderHint" = "ਪੇਸਟ ਕਰਨ ਵੇਲੇ {日付} {時刻} ({date} {time}) ਦੀ ਥਾਂ ਮੌਜੂਦਾ ਮਿਤੀ ਅਤੇ ਸਮਾਂ ਆ ਜਾਵੇਗਾ";
+"snippets.save" = "ਸੰਭਾਲੋ";
+"snippets.cancel" = "ਰੱਦ ਕਰੋ";
+"snippets.freeLimit %lld" = "ਮੁਫ਼ਤ ਪਲਾਨ ਵਿੱਚ %lld ਤੱਕ ਟੁਕੜੇ (Pro ਨਾਲ ਬੇਅੰਤ)";
+
+/* Text Transform */
+"transform.menu.copy" = "ਬਦਲੋ ਅਤੇ ਕਾਪੀ ਕਰੋ";
+"transform.menu.paste" = "ਬਦਲੋ ਅਤੇ ਪੇਸਟ ਕਰੋ";
+"transform.uppercase" = "ਵੱਡੇ ਅੱਖਰਾਂ ਵਿੱਚ ਬਦਲੋ";
+"transform.lowercase" = "ਛੋਟੇ ਅੱਖਰਾਂ ਵਿੱਚ ਬਦਲੋ";
+"transform.removeLineBreaks" = "ਲਾਈਨ ਬ੍ਰੇਕ ਹਟਾਓ";
+"transform.trimWhitespace" = "ਸ਼ੁਰੂ ਅਤੇ ਅੰਤ ਦੇ ਖਾਲੀ ਥਾਂ ਹਟਾਓ";
+"transform.snakeCase" = "snake_case ਵਿੱਚ ਬਦਲੋ";
+"transform.camelCase" = "camelCase ਵਿੱਚ ਬਦਲੋ";
+"transform.fullWidth" = "ਪੂਰੀ ਚੌੜਾਈ ਵਿੱਚ ਬਦਲੋ";
+"transform.halfWidth" = "ਅੱਧੀ ਚੌੜਾਈ ਵਿੱਚ ਬਦਲੋ";
+"transform.removeMarkdown" = "Markdown ਹਟਾਓ";
+"transform.urlEncode" = "URL ਇਨਕੋਡ ਕਰੋ";
+"transform.urlDecode" = "URL ਡੀਕੋਡ ਕਰੋ";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "ਸਾਰੀਆਂ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਖੋਲ੍ਹੋ";
+"paywall.feature.history.title" = "ਬੇਅੰਤ ਇਤਿਹਾਸ";
+"paywall.feature.history.description" = "ਮੁਫ਼ਤ ਪਲਾਨ ਵਿੱਚ ਪਿਛਲੇ 3 ਦਿਨਾਂ ਦੇ 20 ਤੱਕ ਆਈਟਮਾਂ ਸੰਭਾਲੀਆਂ ਜਾਂਦੀਆਂ ਹਨ";
+"paywall.feature.favorites.title" = "ਬੇਅੰਤ ਮਨਪਸੰਦ";
+"paywall.feature.favorites.description" = "ਮੁਫ਼ਤ ਪਲਾਨ ਵਿੱਚ 10 ਤੱਕ";
+"paywall.feature.widget.title" = "ਹੋਮ ਸਕ੍ਰੀਨ ਵਿਜੇਟ";
+"paywall.feature.widget.description" = "ਵਿਜੇਟ ਦੇ ਤਿੰਨ ਆਕਾਰ";
+"paywall.feature.keyboard.title" = "ਕੀਬੋਰਡ 'ਤੇ ਪੂਰਾ ਇਤਿਹਾਸ";
+"paywall.feature.keyboard.description" = "ਕੀਬੋਰਡ 'ਤੇ 10 ਆਈਟਮਾਂ ਵਿਖਾਓ (ਮੁਫ਼ਤ ਪਲਾਨ ਵਿੱਚ 3)";
+"paywall.feature.icloud.title" = "iCloud ਸਿੰਕ";
+"paywall.feature.icloud.description" = "ਆਪਣੀਆਂ ਸਾਰੀਆਂ ਡਿਵਾਈਸਾਂ 'ਤੇ ਇਤਿਹਾਸ ਵੇਖੋ";
+"paywall.feature.export.title" = "ਇਤਿਹਾਸ ਐਕਸਪੋਰਟ";
+"paywall.feature.export.description" = "CSV ਜਾਂ Markdown ਵਜੋਂ ਐਕਸਪੋਰਟ ਕਰੋ";
+"paywall.feature.transform.title" = "ਲਿਖਤ ਵਿੱਚ ਉੱਨਤ ਬਦਲਾਅ";
+"paywall.feature.transform.description" = "ਵੱਡੇ-ਛੋਟੇ ਅੱਖਰ, ਚੌੜਾਈ, URL ਇਨਕੋਡਿੰਗ ਅਤੇ ਹੋਰ";
+"paywall.loadingPlans" = "ਪਲਾਨ ਲੋਡ ਹੋ ਰਹੇ ਹਨ…";
+"paywall.loadFailed" = "ਪਲਾਨ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ";
+"paywall.retry" = "ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ";
+"paywall.purchase" = "ਖਰੀਦੋ";
+"paywall.startNow" = "ਸ਼ੁਰੂ ਕਰੋ";
+"paywall.restore" = "ਖਰੀਦਾਂ ਮੁੜ ਪ੍ਰਾਪਤ ਕਰੋ";
+"paywall.note.lifetime" = "• ਇੱਕ ਵਾਰ ਖਰੀਦੋ, ਹਮੇਸ਼ਾ ਲਈ";
+"paywall.note.billedToAppleID" = "• ਤੁਹਾਡੇ Apple ਖਾਤੇ ਰਾਹੀਂ ਬਿਲ";
+"paywall.note.autoRenew" = "• ਹਰ %@ ਬਾਅਦ ਆਪਣੇ-ਆਪ ਨਵੀਨੀਕਰਨ";
+"paywall.note.cancelAnytime" = "• ਕਿਸੇ ਵੀ ਵੇਲੇ ਰੱਦ ਕਰੋ";
+"paywall.terms" = "ਵਰਤੋਂ ਦੀਆਂ ਸ਼ਰਤਾਂ";
+"paywall.privacyPolicy" = "ਪਰਦੇਦਾਰੀ ਨੀਤੀ";
+"paywall.close" = "ਬੰਦ ਕਰੋ";
+"paywall.errorTitle" = "ਗਲਤੀ";
+"paywall.successTitle" = "ਖਰੀਦ ਪੂਰੀ ਹੋ ਗਈ";
+"paywall.successMessage" = "ClipKit Pro ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ!\nਹੁਣ ਸਾਰੀਆਂ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਉਪਲਬਧ ਹਨ।";
+"paywall.monthlyEquivalentLabel" = "%@ / ਮਹੀਨਾ";
+"paywall.monthlyEquivalent" = "ਲਗਭਗ %@";
+"paywall.error.unknown" = "ਕੁਝ ਗੜਬੜ ਹੋ ਗਈ";
+"paywall.error.noRestorable" = "ਮੁੜ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਕੋਈ ਖਰੀਦ ਨਹੀਂ";
+"paywall.package.monthly" = "ਮਹੀਨਾਵਾਰ";
+"paywall.package.annual" = "ਸਾਲਾਨਾ";
+"paywall.package.lifetime" = "ਜੀਵਨ ਭਰ ਲਈ";
+"paywall.renewal.lifetime" = "ਇੱਕ ਵਾਰ ਖਰੀਦੋ, ਹਮੇਸ਼ਾ ਲਈ";
+"paywall.renewal.monthly" = "ਹਰ ਮਹੀਨੇ ਨਵੀਨੀਕਰਨ";
+"paywall.renewal.annual" = "ਹਰ ਸਾਲ ਨਵੀਨੀਕਰਨ";
+"paywall.renewal.days" = "ਹਰ %d ਦਿਨਾਂ ਬਾਅਦ ਨਵੀਨੀਕਰਨ";
+"paywall.renewal.weeks" = "ਹਰ %d ਹਫ਼ਤਿਆਂ ਬਾਅਦ ਨਵੀਨੀਕਰਨ";
+"paywall.renewal.months" = "ਹਰ %d ਮਹੀਨਿਆਂ ਬਾਅਦ ਨਵੀਨੀਕਰਨ";
+"paywall.renewal.years" = "ਹਰ %d ਸਾਲਾਂ ਬਾਅਦ ਨਵੀਨੀਕਰਨ";
+"paywall.trial.days" = "%d ਦਿਨ";
+"paywall.trial.weeks" = "%d ਹਫ਼ਤੇ";
+"paywall.trial.months" = "%d ਮਹੀਨੇ";
+"paywall.trial.years" = "%d ਸਾਲ";
+"paywall.period.oneMonth" = "ਮਹੀਨਾ";
+"paywall.period.oneYear" = "ਸਾਲ";
+"paywall.period.days" = "%d ਦਿਨ";
+"paywall.period.weeks" = "%d ਹਫ਼ਤੇ";
+"paywall.period.months" = "%d ਮਹੀਨੇ";
+"paywall.period.years" = "%d ਸਾਲ";
+"paywall.discount.format" = "%d%% ਬਚਾਓ";
+"paywall.trialThenPrice" = "%1$@ ਮੁਫ਼ਤ, ਫਿਰ %2$@";
+"paywall.note.trialAutoRenew" = "• ਮੁਫ਼ਤ ਅਜ਼ਮਾਇਸ਼ (%1$@) ਖ਼ਤਮ ਹੋਣ 'ਤੇ ਤੁਹਾਡੀ ਮੈਂਬਰਸ਼ਿਪ %2$@ 'ਤੇ ਆਪਣੇ-ਆਪ ਨਵੀਨੀਕਰਨ ਹੋਵੇਗੀ";
+"paywall.note.trialCancel" = "• ਖਰਚੇ ਤੋਂ ਬਚਣ ਲਈ ਅਜ਼ਮਾਇਸ਼ ਖ਼ਤਮ ਹੋਣ ਤੋਂ ਘੱਟੋ-ਘੱਟ 24 ਘੰਟੇ ਪਹਿਲਾਂ ਰੱਦ ਕਰੋ";
+"paywall.tryFreeCTA" = "ਮੁਫ਼ਤ ਅਜ਼ਮਾਓ";
+"paywall.perPeriod.month" = "ਮਹੀਨਾ";
+"paywall.perPeriod.year" = "ਸਾਲ";
+"export.failed" = "ਐਕਸਪੋਰਟ ਅਸਫਲ";
+"button.ok" = "ਠੀਕ ਹੈ";
+
+/* Onboarding */
+"onboarding.welcome.title" = "ClipKit ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ";
+"onboarding.welcome.description" = "ਤੁਹਾਡੇ ਕਾਪੀ ਕੀਤੇ ਟੈਕਸਟ, ਲਿੰਕ ਅਤੇ ਤਸਵੀਰਾਂ ਆਪਣੇ-ਆਪ ਸੰਭਾਲੇ ਜਾਂਦੇ ਹਨ।\nਜਦੋਂ ਲੋੜ ਹੋਵੇ, ਉਹ ਇਤਿਹਾਸ ਵਿੱਚੋਂ ਲੱਭੋ।";
+"onboarding.monitoring.title" = "ਸਭ ਕੁਝ ਆਪਣੇ-ਆਪ ਸੰਭਾਲੋ";
+"onboarding.monitoring.description" = "ਹਮੇਸ਼ਾ ਚਾਲੂ ਟੈਬ ਤੋਂ ਨਿਗਰਾਨੀ ਸ਼ੁਰੂ ਕਰੋ ਅਤੇ ClipKit ਤੁਹਾਡੀ ਕਾਪੀ ਕੀਤੀ ਹਰ ਚੀਜ਼ ਸੰਭਾਲੇਗਾ।";
+"onboarding.paste.title" = "ਪੇਸਟ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਦਿਓ";
+"onboarding.paste.description" = "iOS ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਇੱਕ ਵਾਰ ਇਜਾਜ਼ਤ ਦਿਓ\nਤਾਂ ਜੋ ਹਰ ਵਾਰ ਸੁਨੇਹਾ ਨਾ ਆਵੇ।";
+"onboarding.paste.path" = "ਸੈਟਿੰਗਾਂ → ਪਰਦੇਦਾਰੀ ਅਤੇ ਸੁਰੱਖਿਆ → ਹੋਰ ਐਪਾਂ ਤੋਂ ਪੇਸਟ ਕਰੋ → ClipKit";
+"onboarding.paste.instruction" = "“ਹੋਰ ਐਪਾਂ ਤੋਂ ਪੇਸਟ ਕਰੋ” ਨੂੰ **ਇਜਾਜ਼ਤ ਦਿਓ** ਕਰੋ";
+"onboarding.paste.openSettings" = "ਸੈਟਿੰਗਾਂ ਖੋਲ੍ਹੋ";
+"onboarding.ready.title" = "ਸਭ ਤਿਆਰ ਹੈ!";
+"onboarding.ready.description" = "ਹੁਣ ClipKit ਅਜ਼ਮਾਓ।";
+"onboarding.next" = "ਅੱਗੇ";
+"onboarding.start" = "ਸ਼ੁਰੂ ਕਰੋ";
+
+/* Tab bar */
+"tab.monitoring" = "ਹਮੇਸ਼ਾ ਚਾਲੂ";
+"tab.history" = "ਇਤਿਹਾਸ";
+"tab.favorites" = "ਮਨਪਸੰਦ";
+"tab.settings" = "ਸੈਟਿੰਗਾਂ";
+
+/* Trash */
+"trash.deletedAt %@" = "ਮਿਟਾਇਆ: %@";
+"trash.swipeHint" = "ਮੁੜ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਖੱਬੇ ਅਤੇ ਪੱਕੇ ਤੌਰ 'ਤੇ ਮਿਟਾਉਣ ਲਈ ਸੱਜੇ ਸਵਾਈਪ ਕਰੋ";
+
+/* Picture in Picture */
+"pip.hint" = "ਕਲਿੱਪਬੋਰਡ ਇਤਿਹਾਸ";
+"pip.empty" = "ਕੋਈ ਇਤਿਹਾਸ ਨਹੀਂ";
+
+/* Widget */
+"widget.proOnly" = "Pro ਵਿਸ਼ੇਸ਼ਤਾ";
+"widget.proOnlyDescription" = "ਵਿਜੇਟ Pro ਪਲਾਨ ਵਿੱਚ ਉਪਲਬਧ ਹਨ";
+"widget.upgradeInApp" = "ਐਪ ਵਿੱਚ Pro ਲਵੋ";
+"widget.empty" = "ਹਾਲੇ ਕੋਈ ਇਤਿਹਾਸ ਨਹੀਂ";
+"widget.itemCount %lld" = "%lld ਆਈਟਮਾਂ";
+"widget.description" = "ਕਲਿੱਪਬੋਰਡ ਇਤਿਹਾਸ ਤੁਰੰਤ ਵੇਖੋ।";
+"widget.clipboardTitle" = "ਕਲਿੱਪਬੋਰਡ";
+"widget.noItems" = "ਕੋਈ ਆਈਟਮ ਨਹੀਂ";
+"widget.noClipboardItems" = "ਕਲਿੱਪਬੋਰਡ ਵਿੱਚ ਕੋਈ ਆਈਟਮ ਨਹੀਂ";
+"widget.sample.first" = "ਨਮੂਨਾ ਟੈਕਸਟ";
+"widget.sample.second" = "ਇੱਕ ਹੋਰ ਟੁਕੜਾ";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "ਇਤਿਹਾਸ";
+"keyboard.tab.snippets" = "ਟੁਕੜੇ";
+"keyboard.history.empty" = "ਕੋਈ ਇਤਿਹਾਸ ਨਹੀਂ";
+"keyboard.snippets.empty" = "ਕੋਈ ਟੁਕੜੇ ਨਹੀਂ";
+"keyboard.upgrade.unlimited" = "ਹੋਰ ਵੇਖੋ\nPro ਨਾਲ ਬੇਅੰਤ";
+"keyboard.upgrade.tenItems" = "ਹੋਰ ਵੇਖੋ\nPro ਨਾਲ 10 ਆਈਟਮਾਂ";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "ਖਰੀਦ ਦੀ ਮਨਜ਼ੂਰੀ ਬਾਕੀ";
+"paywall.pendingMessage" = "ਖਰੀਦ ਮਨਜ਼ੂਰ ਹੋਣ 'ਤੇ Pro ਆਪਣੇ-ਆਪ ਖੁੱਲ੍ਹ ਜਾਵੇਗਾ।";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "ਸਿਰਫ਼ Pro";
+"settings.iCloudSyncAll" = "iCloud ਸਿੰਕ (ਸਾਰੀਆਂ ਆਈਟਮਾਂ)";
+
+"monitoring.pipSizeHelp" = "ਕੰਪੈਕਟ ਮੋਡ ਸਿਰਲੇਖ ਲੁਕਾ ਕੇ ਛੋਟੀ ਵਿੰਡੋ ਦੀ ਬੇਨਤੀ ਕਰਦਾ ਹੈ। ਅਸਲ ਆਕਾਰ iOS ਤੈਅ ਕਰਦਾ ਹੈ। ਆਕਾਰ ਬਦਲਣ ਲਈ ਚੁੱਟਕੀ ਕਰੋ ਜਾਂ ਵਿੰਡੋ ਲੁਕਾਉਣ ਲਈ ਇਸਨੂੰ ਖੱਬੇ ਜਾਂ ਸੱਜੇ ਕਿਨਾਰੇ ਤੋਂ ਬਾਹਰ ਖਿੱਚੋ। ਵਿੰਡੋ ਦੀ ਪਾਰਦਰਸ਼ਤਾ ਨਹੀਂ ਬਦਲੀ ਜਾ ਸਕਦੀ।";
+
+"feedback.introduction" = "ਦੱਸੋ ਕਿ ਤੁਹਾਨੂੰ ਕਿਸ ਮਦਦ ਦੀ ਲੋੜ ਹੈ ਜਾਂ ClipKit ਵਿੱਚ ਕੀ ਦੇਖਣਾ ਚਾਹੋਗੇ।";
+
+"feedback.guidance.bug" = "ਤੁਸੀਂ ਕੀ ਕਰਨ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰ ਰਹੇ ਸੀ ਅਤੇ ਕੀ ਹੋਇਆ? ਹੋ ਸਕੇ ਤਾਂ ਕਦਮ, ਉਮੀਦ ਕੀਤਾ ਨਤੀਜਾ ਅਤੇ ਅਸਲ ਨਤੀਜਾ ਦੱਸੋ।";
+
+"feedback.guidance.feature" = "ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੋਗੇ ਅਤੇ ਇਹ ਕਦੋਂ ਲਾਭਦਾਇਕ ਹੋਵੇਗਾ? ਦੱਸੋ ਕਿ ਇਸ ਵੇਲੇ ਕਿਹੜੀਆਂ ਮੁਸ਼ਕਲਾਂ ਆਉਂਦੀਆਂ ਹਨ।";
+
+"feedback.guidance.other" = "ਆਪਣਾ ਸਵਾਲ ਜਾਂ ਸੁਝਾਅ ਜਿੰਨਾ ਹੋ ਸਕੇ ਵੇਰਵੇ ਨਾਲ ਲਿਖੋ।";
+
+"feedback.emailHelp" = "ਜਵਾਬ ਚਾਹੀਦਾ ਹੋਵੇ ਤਾਂ ਆਪਣਾ ਈਮੇਲ ਦਿਓ। ਤੁਸੀਂ ਬਿਨਾਂ ਈਮੇਲ ਦੇ ਵੀ ਸੁਨੇਹਾ ਭੇਜ ਸਕਦੇ ਹੋ।";
+
+"feedback.deviceInfo" = "ਸਮੱਸਿਆ ਦੀ ਜਾਂਚ ਲਈ ਐਪ ਵਰਜਨ, iOS ਵਰਜਨ ਅਤੇ ਡਿਵਾਈਸ ਮਾਡਲ ਆਪਣੇ-ਆਪ ਭੇਜੇ ਜਾਂਦੇ ਹਨ। ਪਾਸਵਰਡ ਜਾਂ ਹੋਰ ਸੰਵੇਦਨਸ਼ੀਲ ਜਾਣਕਾਰੀ ਨਾ ਲਿਖੋ।";
+
+"feedback.failureMessage" = "ਤੁਹਾਡਾ ਸੁਨੇਹਾ ਇੱਥੇ ਹੀ ਹੈ। ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ ਅਤੇ ਕੁਝ ਦੇਰ ਬਾਅਦ ਮੁੜ ਭੇਜੋ।";
+
+"shortcut.openPiP" = "PiP ਖੋਲ੍ਹੋ";
+
+"shortcut.openPiPDescription" = "ClipKit ਖੋਲ੍ਹੋ ਅਤੇ Picture in Picture ਰਾਹੀਂ ਕਲਿੱਪਬੋਰਡ ਦੀ ਨਿਗਰਾਨੀ ਸ਼ੁਰੂ ਕਰੋ।";
+
+"monitoring.compactPiP" = "ਕੰਪੈਕਟ PiP";
+
+"monitoring.shortcutHelp" = "Shortcuts ਵਿੱਚ ClipKit ਦੀ PiP ਖੋਲ੍ਹੋ ਕਾਰਵਾਈ ਜੋੜੋ। ਸਮਰਥਿਤ iPhone 'ਤੇ ਇਸਨੂੰ Action ਬਟਨ ਨਾਲ ਜੋੜੋ। ਚਲਾਉਣ 'ਤੇ ClipKit ਖੁੱਲ੍ਹੇਗਾ।";
+
+"pip.startFailure" = "PiP ਸ਼ੁਰੂ ਨਹੀਂ ਹੋ ਸਕਿਆ";
+
+"pip.startFailureHelp" = "ClipKit ਨੂੰ ਸਕ੍ਰੀਨ 'ਤੇ ਰੱਖੋ ਅਤੇ ਨਿਗਰਾਨੀ ਟੈਬ ਤੋਂ PiP ਮੁੜ ਖੋਲ੍ਹੋ।";
+
+/* Debug tools */
+"debug.selectLanguage" = "ਭਾਸ਼ਾ ਚੁਣੋ";
+"debug.keyboardLog.empty" = "ਕੋਈ ਲੌਗ ਨਹੀਂ";
+"debug.keyboardLog.emptyDescription" = "ਕੀਬੋਰਡ ਐਕਸਟੈਂਸ਼ਨ ਸ਼ੁਰੂ ਕਰਨ 'ਤੇ ਲੌਗ ਇੱਥੇ ਵਿਖਾਈ ਦੇਣਗੇ।";

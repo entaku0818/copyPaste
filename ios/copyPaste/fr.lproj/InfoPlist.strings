@@ -1,0 +1,2 @@
+/* Clipboard access explanation */
+"NSPasteboardUsageDescription" = "ClipKit a besoin d’accéder au presse-papiers pour enregistrer l’historique de vos copies.";

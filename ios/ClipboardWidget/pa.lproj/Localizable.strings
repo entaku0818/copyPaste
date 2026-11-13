@@ -1,0 +1,25 @@
+/* ClipboardWidget extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"item.image" = "ਤਸਵੀਰ";
+"item.file" = "ਫ਼ਾਈਲ";
+"widget.sample.first" = "ਨਮੂਨਾ ਟੈਕਸਟ";
+"widget.sample.second" = "ਇੱਕ ਹੋਰ ਟੁਕੜਾ";
+"widget.proOnly" = "Pro ਵਿਸ਼ੇਸ਼ਤਾ";
+"widget.upgradeInApp" = "ਐਪ ਵਿੱਚ Pro ਲਵੋ";
+"widget.empty" = "ਹਾਲੇ ਕੋਈ ਇਤਿਹਾਸ ਨਹੀਂ";
+"widget.itemCount %lld" = "%lld ਆਈਟਮਾਂ";
+"time.days %lld" = "%lld ਦਿਨ ਪਹਿਲਾਂ";
+"time.hours %lld" = "%lld ਘੰਟੇ ਪਹਿਲਾਂ";
+"time.minutes %lld" = "%lld ਮਿੰਟ ਪਹਿਲਾਂ";
+"time.justnow" = "ਹੁਣੇ";
+"widget.description" = "ਕਲਿੱਪਬੋਰਡ ਇਤਿਹਾਸ ਤੁਰੰਤ ਵੇਖੋ।";
+"widget.clipboardTitle" = "ਕਲਿੱਪਬੋਰਡ";
+"widget.noItems" = "ਕੋਈ ਆਈਟਮ ਨਹੀਂ";
+"widget.noClipboardItems" = "ਕਲਿੱਪਬੋਰਡ ਵਿੱਚ ਕੋਈ ਆਈਟਮ ਨਹੀਂ";
+
+/* Live Activity */
+"liveActivity.greeting" = "ਸਤ ਸ੍ਰੀ ਅਕਾਲ";
+"liveActivity.leading" = "ਖੱਬੇ";
+"liveActivity.trailing" = "ਸੱਜੇ";
+"liveActivity.bottom" = "ਹੇਠਾਂ";

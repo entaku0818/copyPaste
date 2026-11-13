@@ -1,0 +1,2 @@
+/* Descrizione dell’accesso agli appunti */
+"NSPasteboardUsageDescription" = "ClipKit deve accedere agli appunti per salvare la cronologia.";

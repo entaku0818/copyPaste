@@ -1,0 +1,29 @@
+Automatski pratite međuspremnik u pozadini. ClipKit sprema sve što kopirate kako biste tekstove, poveznice i slike mogli brzo pronaći u povijesti — putem widgeta ili prilagođene tipkovnice.
+
+BESPLATNE ZNAČAJKE
+• Automatsko spremanje do 20 stavki uz pregled povijesti zadnja 3 dana
+• Podrška za tekst, slike i URL-ove
+• Pretraživanje povijesti, uključujući tekst na slikama
+• Automatska kategorizacija URL-ova, e-pošte, telefona, koda, adresa i teksta
+• Do 10 favorita i 3 tekstna isječka
+• Pretvorba velikih i malih slova te uklanjanje prijeloma redaka i razmaka
+• Sinkronizacija do 20 stavki putem iClouda
+• Prilagođena tipkovnica za povijest i tekstne isječke
+
+CLIPKIT PRO
+• Neograničena povijest i favoriti
+• Pretraživanje i pregled povijesti starije od 3 dana
+• Neograničeni tekstni isječci
+• Widgeti početnog zaslona u tri veličine
+• Više stavki povijesti i svi isječci na tipkovnici
+• Sinkronizacija svih stavki putem iClouda
+• Vraćanje izbrisanih stavki u roku od 30 dana
+• Izvoz povijesti u CSV ili Markdown
+• Pretvorbe snake_case i camelCase, znakova pune/polovične širine, uklanjanje Markdowna te kodiranje i dekodiranje URL-ova
+
+ClipKit koristi sliku u slici za nastavak praćenja međuspremnika dok koristite druge aplikacije. Pokrenite praćenje na kartici „Uvijek uključeno” i dopustite lijepljenje iz drugih aplikacija u postavkama iOS-a.
+
+Mjesečni i godišnji planovi uključuju 7-dnevno besplatno probno razdoblje za nove pretplatnike. Nakon isteka pretplata se automatski obnavlja, a možete je otkazati u bilo kojem trenutku.
+
+Uvjeti korištenja: https://clipkit-entaku.web.app/terms.html
+Pravila privatnosti: https://clipkit-entaku.web.app/privacy-policy.html

@@ -1,0 +1,30 @@
+ClipKit salva automaticamente ciò che copi, così puoi ritrovare testi, link e immagini quando ti servono. Consulta la cronologia da un widget o dalla tastiera personalizzata.
+
+FUNZIONI GRATUITE
+• Salva automaticamente fino a 20 elementi (consulta gli ultimi 3 giorni)
+• Supporto per testo, immagini e URL
+• Cerca nella cronologia, anche il testo contenuto nelle immagini
+• Classificazione automatica di URL, e-mail, telefoni, codice, indirizzi e testo
+• Fino a 10 preferiti e 3 frasi salvate
+• Trasforma il testo: maiuscole, minuscole, rimozione delle interruzioni di riga e degli spazi
+• Sincronizza fino a 20 elementi con iCloud
+• Tastiera personalizzata con accesso alla cronologia e alle frasi salvate
+• Guida alla prima configurazione
+
+CLIPKIT PRO
+• Cronologia e preferiti illimitati
+• Cerca e consulta la cronologia oltre i 3 giorni
+• Frasi salvate illimitate
+• Widget per la schermata Home in 3 dimensioni
+• Mostra 10 elementi della cronologia e tutte le frasi nella tastiera (3 per tipo con il piano gratuito)
+• Sincronizza tutti gli elementi con iCloud
+• Ripristina gli elementi eliminati per 30 giorni
+• Esporta la cronologia in CSV o Markdown
+• Trasformazioni Pro: snake_case, camelCase, larghezza intera e mezza, rimozione del Markdown, codifica e decodifica URL
+
+Picture in Picture consente a ClipKit di monitorare gli appunti mentre usi altre app. Attiva il monitoraggio dalla scheda «Sempre attivo» e consenti di incollare da altre app nelle impostazioni di iOS.
+
+I piani mensili e annuali includono una prova gratuita di 7 giorni per i nuovi abbonati. Al termine, l’abbonamento si rinnova automaticamente. Puoi annullarlo in qualsiasi momento.
+
+Termini di utilizzo: https://clipkit-entaku.web.app/terms.html
+Informativa sulla privacy: https://clipkit-entaku.web.app/privacy-policy.html

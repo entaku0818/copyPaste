@@ -1,0 +1,4 @@
+Otevřete okno PiP ze Zkratek a přiřaďte akci akčnímu tlačítku na podporovaných iPhonech.
+Přidali jsme kompaktní režim PiP, který skryje záhlaví a požádá o nižší okno.
+Kontaktní formulář nyní nabízí pokyny podle kategorie a vysvětlení e-mailu pro odpověď.
+Aplikace, klávesnice a widgety nyní podporují více jazyků.

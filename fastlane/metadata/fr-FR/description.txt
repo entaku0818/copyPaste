@@ -1,0 +1,30 @@
+ClipKit enregistre automatiquement ce que vous copiez et vous permet de retrouver vos textes, liens et images quand vous en avez besoin. Consultez votre historique depuis un widget ou un clavier personnalisé.
+
+FONCTIONNALITÉS GRATUITES
+• Enregistrement automatique de 20 éléments maximum (les 3 derniers jours sont consultables)
+• Prise en charge du texte, des images et des URL
+• Recherche dans l’historique, y compris le texte contenu dans les images
+• Classement automatique des URL, e-mails, numéros de téléphone, extraits de code, adresses et textes
+• Jusqu’à 10 favoris et 3 extraits de texte
+• Transformations du texte : majuscules, minuscules, suppression des sauts de ligne et des espaces superflus
+• Synchronisation iCloud de 20 éléments maximum
+• Clavier personnalisé avec accès à l’historique et aux extraits
+• Guide de première configuration
+
+CLIPKIT PRO
+• Historique et favoris sans limite
+• Recherche et consultation de l’historique au-delà de 3 jours
+• Nombre illimité d’extraits de texte
+• Widgets d’écran d’accueil en 3 tailles
+• Affichage de 10 éléments de l’historique et de tous les extraits dans le clavier (3 de chaque avec l’offre gratuite)
+• Synchronisation iCloud de tous les éléments
+• Corbeille permettant de restaurer les éléments supprimés pendant 30 jours
+• Export de l’historique au format CSV ou Markdown
+• Transformations Pro : snake_case, camelCase, pleine et demi-chasse, suppression du Markdown, encodage et décodage d’URL
+
+Picture in Picture permet à ClipKit de surveiller le presse-papiers pendant que vous utilisez d’autres apps. Activez la surveillance dans l’onglet « Toujours actif » et autorisez le collage depuis d’autres apps dans les réglages d’iOS.
+
+Les abonnements mensuels et annuels comprennent un essai gratuit de 7 jours pour les nouveaux abonnés. À la fin de l’essai, l’abonnement est renouvelé automatiquement. Vous pouvez le résilier à tout moment.
+
+Conditions d’utilisation : https://clipkit-entaku.web.app/terms.html
+Politique de confidentialité : https://clipkit-entaku.web.app/privacy-policy.html

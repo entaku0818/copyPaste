@@ -1,0 +1,4 @@
+Buka jendela PiP dari Pintasan dan tetapkan ke Tombol Tindakan pada iPhone yang didukung.
+Tambahkan mode PiP ringkas untuk menyembunyikan header dan meminta jendela yang lebih kecil.
+Tingkatkan formulir kontak dengan panduan kategori dan keterangan email balasan.
+Aplikasi, papan ketik, dan widget kini mendukung lebih banyak bahasa.

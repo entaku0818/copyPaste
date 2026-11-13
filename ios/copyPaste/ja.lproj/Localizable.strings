@@ -189,6 +189,9 @@
 "widget.empty" = "履歴がありません";
 "widget.itemCount %lld" = "%lld件";
 "widget.description" = "クリップボードの履歴をすぐ確認。";
+"widget.clipboardTitle" = "クリップボード";
+"widget.noItems" = "項目はありません";
+"widget.noClipboardItems" = "クリップボードの項目はありません";
 "widget.sample.first" = "サンプルテキスト";
 "widget.sample.second" = "別のテキスト";
 
@@ -299,3 +302,8 @@
 "pip.startFailure" = "PiPを開始できませんでした";
 
 "pip.startFailureHelp" = "ClipKitを画面に表示した状態で、「常時起動」タブの「PiPウィンドウを開く」からもう一度お試しください。";
+
+/* Debug tools */
+"debug.selectLanguage" = "言語を選択";
+"debug.keyboardLog.empty" = "ログなし";
+"debug.keyboardLog.emptyDescription" = "キーボード拡張を起動すると、ここにログが表示されます。";

@@ -1,0 +1,29 @@
+Monitorizează automat clipboardul în fundal. ClipKit salvează tot ce copiezi, astfel încât să poți găsi rapid textele, linkurile și imaginile din istoric, dintr-un widget sau de pe tastatura personalizată.
+
+FUNCȚII GRATUITE
+• Salvarea automată a până la 20 de elemente, cu istoricul ultimelor 3 zile
+• Acceptă text, imagini și URL-uri
+• Caută în istoric, inclusiv textul din imagini
+• Clasifică automat URL-uri, e-mailuri, numere de telefon, cod, adrese și text
+• Până la 10 favorite și 3 fragmente de text
+• Transformă majuscule/minuscule și elimină rândurile noi și spațiile de la margini
+• Sincronizează până la 20 de elemente prin iCloud
+• Tastatură personalizată pentru istoric și fragmente
+
+CLIPKIT PRO
+• Istoric și favorite nelimitate
+• Caută și consultă istoricul mai vechi de 3 zile
+• Fragmente de text nelimitate
+• Widgeturi pentru ecranul principal în trei dimensiuni
+• Mai multe elemente din istoric și toate fragmentele pe tastatură
+• Sincronizarea tuturor elementelor prin iCloud
+• Restaurează elementele șterse timp de 30 de zile
+• Exportă istoricul în format CSV sau Markdown
+• Transformări snake_case și camelCase, lățime completă/jumătate, eliminarea Markdown și codificarea/decodificarea URL-urilor
+
+ClipKit folosește modul Imagine în imagine pentru a monitoriza clipboardul în timp ce utilizezi alte aplicații. Pornește monitorizarea din fila „Mereu activ” și permite lipirea din alte aplicații în configurările iOS.
+
+Planurile lunare și anuale includ o perioadă de probă gratuită de 7 zile pentru abonații noi. După încheierea perioadei, abonamentul se reînnoiește automat. Îl poți anula oricând.
+
+Termeni de utilizare: https://clipkit-entaku.web.app/terms.html
+Politica de confidențialitate: https://clipkit-entaku.web.app/privacy-policy.html

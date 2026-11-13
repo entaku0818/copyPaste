@@ -14,3 +14,12 @@
 "time.minutes %lld" = "%lld min ago";
 "time.justnow" = "Just now";
 "widget.description" = "Check your clipboard history at a glance.";
+"widget.clipboardTitle" = "Clipboard";
+"widget.noItems" = "No items";
+"widget.noClipboardItems" = "No clipboard items";
+
+/* Live Activity */
+"liveActivity.greeting" = "Hello";
+"liveActivity.leading" = "Leading";
+"liveActivity.trailing" = "Trailing";
+"liveActivity.bottom" = "Bottom";

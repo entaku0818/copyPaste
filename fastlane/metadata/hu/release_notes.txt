@@ -1,0 +1,4 @@
+Nyisd meg a PiP-ablakot a Parancsok appból, és rendeld a műveletgombhoz a támogatott iPhone-okon.
+Új kompakt PiP-mód, amely elrejti a fejlécet és kisebb ablakot kér.
+Továbbfejlesztett kapcsolatfelvételi űrlap témánkénti útmutatóval és egyértelműbb válaszcím-információval.
+Az app, a billentyűzet és a widgetek mostantól több nyelvet támogatnak.

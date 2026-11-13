@@ -1,0 +1,29 @@
+Panonuzu arka planda otomatik izleyin. ClipKit, kopyaladığınız içerikleri kaydeder; metinleri, bağlantıları ve görselleri bir araç takımından veya özel klavyeden kolayca bulup yeniden kullanmanızı sağlar.
+
+ÜCRETSİZ ÖZELLİKLER
+• Son 3 gün görüntülenebilir olmak üzere 20 öğeye kadar otomatik kaydetme
+• Metin, görsel ve URL desteği
+• Görsellerdeki metinler dahil geçmişte arama
+• URL, e-posta, telefon, kod, adres ve metni otomatik sınıflandırma
+• 10 adede kadar favori ve 3 metin şablonu
+• Büyük/küçük harf dönüştürme, satır sonlarını ve kenar boşluklarını kaldırma
+• iCloud ile 20 öğeye kadar eşzamanlama
+• Geçmiş ve şablonlar için özel klavye
+
+CLIPKIT PRO
+• Sınırsız geçmiş ve favori
+• 3 günden eski geçmişte arama ve görüntüleme
+• Sınırsız metin şablonu
+• Üç boyutta Ana Ekran araç takımları
+• Klavyede daha fazla geçmiş öğesi ve tüm şablonlar
+• Tüm öğeleri iCloud ile eşzamanlama
+• Silinen öğeleri 30 gün içinde geri yükleme
+• Geçmişi CSV veya Markdown olarak dışa aktarma
+• snake_case ve camelCase, tam/yarım genişlik dönüştürme, Markdown kaldırma ve URL kodlama/çözme
+
+ClipKit, diğer uygulamaları kullanırken pano izlemeyi sürdürmek için Resim İçinde Resim'i kullanır. İzlemeyi «Sürekli Açık» sekmesinden başlatın ve iOS ayarlarında diğer uygulamalardan yapıştırmaya izin verin.
+
+Aylık ve yıllık planlarda yeni aboneler için 7 günlük ücretsiz deneme vardır. Deneme sonunda abonelik otomatik yenilenir; istediğiniz zaman iptal edebilirsiniz.
+
+Kullanım Koşulları: https://clipkit-entaku.web.app/terms.html
+Gizlilik Politikası: https://clipkit-entaku.web.app/privacy-policy.html

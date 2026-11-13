@@ -1,0 +1,4 @@
+Avaa PiP-ikkuna Oikoteistä ja liitä oikotie toimintopainikkeeseen tuetuissa iPhoneissa.
+Lisäsimme kompaktin PiP-tilan, joka piilottaa otsakkeen ja pyytää matalampaa ikkunaa.
+Yhteydenottolomakkeessa on nyt aihekohtaiset ohjeet ja tarkempi kuvaus vastaussähköpostista.
+Sovellus, näppäimistö ja widgetit tukevat nyt useampia kieliä.

@@ -1,0 +1,4 @@
+Åbn PiP-vinduet fra Genveje, og knyt genvejen til handlingsknappen på understøttede iPhones.
+Vi har tilføjet kompakt PiP, som skjuler overskriften og anmoder om et lavere vindue.
+Kontaktformularen har fået kategorivejledning og en tydeligere forklaring af svarmail.
+Appen, tastaturet og widgets understøtter nu flere sprog.

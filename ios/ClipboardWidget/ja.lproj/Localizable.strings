@@ -14,3 +14,12 @@
 "time.minutes %lld" = "%lld分前";
 "time.justnow" = "たった今";
 "widget.description" = "クリップボードの履歴をすぐ確認。";
+"widget.clipboardTitle" = "クリップボード";
+"widget.noItems" = "項目はありません";
+"widget.noClipboardItems" = "クリップボードの項目はありません";
+
+/* Live Activity */
+"liveActivity.greeting" = "こんにちは";
+"liveActivity.leading" = "左";
+"liveActivity.trailing" = "右";
+"liveActivity.bottom" = "下";

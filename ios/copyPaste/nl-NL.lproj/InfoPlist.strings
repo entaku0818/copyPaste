@@ -1,0 +1,2 @@
+/* Beschrijving van klembordtoegang */
+"NSPasteboardUsageDescription" = "ClipKit heeft toegang tot het klembord nodig om je klembordgeschiedenis te bewaren.";

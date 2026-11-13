@@ -1,0 +1,4 @@
+Mở cửa sổ PiP từ Phím tắt và gán cho nút Tác vụ trên iPhone được hỗ trợ.
+Thêm chế độ PiP thu gọn để ẩn tiêu đề và yêu cầu cửa sổ ngắn hơn.
+Cải thiện biểu mẫu liên hệ với hướng dẫn theo danh mục và giải thích email phản hồi.
+Ứng dụng, bàn phím và tiện ích hiện hỗ trợ thêm nhiều ngôn ngữ.

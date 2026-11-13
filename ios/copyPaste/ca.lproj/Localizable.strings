@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "Historial";
+"detail.title" = "Detalls";
+"settings.title" = "Configuració";
+"favorites.title" = "Preferits";
+"trash.title" = "Paperera";
+"image.preview.title" = "Vista prèvia de la imatge";
+"monitoring.title" = "Sempre en marxa";
+"feedback.title" = "Contacte";
+
+/* Buttons */
+"button.close" = "Tancar";
+"button.cancel" = "Cancel·lar";
+"item.delete" = "Eliminar";
+"item.restore" = "Restaurar";
+"item.deletePermanently" = "Eliminar definitivament";
+"item.favorite" = "Afegir als preferits";
+"item.unfavorite" = "Treure dels preferits";
+"copy.action" = "Copiar";
+"copy.done" = "Copiat";
+
+/* Search */
+"search.placeholder" = "Cerca a l’historial…";
+"search.clear" = "Esborrar";
+"search.results %lld" = "%lld resultats";
+
+/* Category filter */
+"category.all" = "Tot";
+"category.url" = "URL";
+"category.email" = "Correu electrònic";
+"category.phone" = "Telèfon";
+"category.code" = "Codi";
+"category.address" = "Adreça";
+"category.text" = "Text pla";
+
+/* Clipboard items */
+"item.image" = "Imatge";
+"item.file" = "Fitxer";
+"item.text.empty" = "(Sense contingut)";
+
+/* Time */
+"time.justnow" = "Ara mateix";
+"time.minutes %lld" = "Fa %lld min";
+"time.hours %lld" = "Fa %lld h";
+"time.days %lld" = "Fa %lld dies";
+
+/* Trash */
+"trash.empty" = "La paperera és buida";
+"trash.description" = "Els elements eliminats es conserven aquí durant 30 dies";
+"trash.deleteAll" = "Eliminar-ho tot";
+
+/* Favorites */
+"favorites.empty" = "No hi ha preferits";
+"favorites.emptyDescription" = "Llisca un element de l’historial cap a l’esquerra per afegir-lo als preferits";
+"favorites.unfavorite" = "Treure dels preferits";
+"favorites.proUpgrade %lld" = "Afegeix preferits il·limitats amb Pro (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Actualitza a ClipKit Pro";
+"upgrade.description" = "Cerca i consulta l’historial de fa més de 3 dies";
+
+/* Image */
+"image.loadError" = "No es pot carregar la imatge";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Supervisió en segon pla";
+"monitoring.pipDescription" = "Obre la finestra PiP per supervisar l’historial del porta-retalls mentre fas servir altres apps.";
+"monitoring.active" = "Supervisió en segon pla activa";
+"monitoring.inactive" = "Supervisió";
+"monitoring.controlSection" = "Control de la supervisió";
+"monitoring.statusActive" = "Activa";
+"monitoring.statusStopped" = "Aturada";
+"monitoring.openPiP" = "Obrir la finestra PiP";
+"permission.title" = "Permís d’accés al porta-retalls";
+"permission.allow" = "Permetre";
+"permission.later" = "Més tard";
+"permission.message" = "Aquesta app necessita accedir al porta-retalls per desar-ne l’historial.\n\niOS 16 i versions posteriors mostraran un avís del sistema en el primer accés. Selecciona «Permetre».";
+
+/* Settings */
+"settings.proDescription" = "Historial il·limitat · Preferits · Widget";
+"settings.howToUse" = "Com s’utilitza";
+"settings.writeReview" = "Escriure una ressenya";
+"settings.contact" = "Contacte";
+"settings.trash" = "Paperera";
+"settings.iCloudSync" = "Sincronització amb iCloud";
+"settings.iCloudSyncPicker" = "Sincronitzar";
+"settings.iCloudSyncFooter" = "Els canvis s’aplicaran la propera vegada que obris l’app.";
+"settings.iCloudSyncLastSynced" = "Darrera sincronització: %@";
+"settings.iCloudSyncNeverSynced" = "Encara no s’ha sincronitzat des d’altres dispositius";
+"cloudKitSync.disabled" = "No sincronitzar";
+"cloudKitSync.all" = "Sincronitzar";
+"settings.appInfo" = "Informació de l’app";
+"settings.version" = "Versió";
+"settings.debug" = "Depuració";
+"settings.screenshotPreview" = "Vista prèvia de captures";
+"settings.keyboardLog" = "Registre del teclat";
+"settings.keyboardLogFooter" = "Els registres del teclat es recopilen en temps real mitjançant App Groups";
+
+/* Feedback */
+"feedback.category" = "Motiu del contacte";
+"feedback.content" = "Missatge (obligatori)";
+"feedback.email" = "Adreça electrònica de resposta (opcional)";
+"feedback.emailPlaceholder" = "p. ex. nom@exemple.cat";
+"feedback.send" = "Enviar";
+"feedback.success" = "Missatge rebut";
+"feedback.successMessage" = "Gràcies per contactar amb nosaltres. El teu missatge ens ajudarà a investigar els problemes i a millorar ClipKit.";
+"feedback.failure" = "No s’ha pogut enviar";
+"feedbackCategory.bug" = "Informar d’un error";
+"feedbackCategory.feature" = "Proposar una funció";
+"feedbackCategory.other" = "Altres";
+
+/* Satisfaction */
+"satisfaction.title" = "Gràcies per fer servir ClipKit!";
+"satisfaction.question" = "Estàs satisfet amb la qualitat de l’app?";
+"satisfaction.satisfied" = "Satisfet";
+"satisfaction.improve" = "Encara es pot millorar";
+
+/* Export */
+"export.title" = "Exportar";
+"export.action" = "Exportar l’historial";
+"export.formatPicker" = "Tria el format";
+
+/* Snippets */
+"snippets.title" = "Fragments de text";
+"snippets.empty" = "No hi ha fragments";
+"snippets.emptyDescription" = "Desa els textos que fas servir sovint i enganxa’ls amb un sol toc des del teclat";
+"snippets.add" = "Afegir un fragment";
+"snippets.edit" = "Editar el fragment";
+"snippets.titleField" = "Títol";
+"snippets.titlePlaceholder" = "p. ex. Salutació";
+"snippets.contentField" = "Contingut";
+"snippets.placeholderHint" = "{日付} {時刻} ({date} {time}) se substituiran per la data i l’hora actuals en enganxar el text";
+"snippets.save" = "Desar";
+"snippets.cancel" = "Cancel·lar";
+"snippets.freeLimit %lld" = "El pla gratuït permet fins a %lld fragments (il·limitats amb Pro)";
+
+/* Text Transform */
+"transform.menu.copy" = "Transformar i copiar";
+"transform.menu.paste" = "Transformar i enganxar";
+"transform.uppercase" = "Convertir a majúscules";
+"transform.lowercase" = "Convertir a minúscules";
+"transform.removeLineBreaks" = "Eliminar els salts de línia";
+"transform.trimWhitespace" = "Eliminar els espais sobrants";
+"transform.snakeCase" = "Convertir a snake_case";
+"transform.camelCase" = "Convertir a camelCase";
+"transform.fullWidth" = "Convertir a amplada completa";
+"transform.halfWidth" = "Convertir a mitja amplada";
+"transform.removeMarkdown" = "Eliminar el Markdown";
+"transform.urlEncode" = "Codificar l’URL";
+"transform.urlDecode" = "Descodificar l’URL";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Desbloqueja totes les funcions";
+"paywall.feature.history.title" = "Historial il·limitat";
+"paywall.feature.history.description" = "El pla gratuït conserva els darrers 3 dies, fins a 20 elements";
+"paywall.feature.favorites.title" = "Preferits il·limitats";
+"paywall.feature.favorites.description" = "El pla gratuït en permet fins a 10";
+"paywall.feature.widget.title" = "Widgets per a la pantalla d’inici";
+"paywall.feature.widget.description" = "Tres mides de widget";
+"paywall.feature.keyboard.title" = "Historial complet al teclat";
+"paywall.feature.keyboard.description" = "Mostra 10 elements al teclat (3 amb el pla gratuït)";
+"paywall.feature.icloud.title" = "Sincronització amb iCloud";
+"paywall.feature.icloud.description" = "Comparteix l’historial entre els teus dispositius";
+"paywall.feature.export.title" = "Exportar l’historial";
+"paywall.feature.export.description" = "Exporta’l com a CSV o Markdown";
+"paywall.feature.transform.title" = "Transformacions de text avançades";
+"paywall.feature.transform.description" = "Majúscules, amplada completa o mitja, codificació d’URL i més";
+"paywall.loadingPlans" = "Carregant els plans…";
+"paywall.loadFailed" = "No s’han pogut carregar els plans";
+"paywall.retry" = "Torna-ho a provar";
+"paywall.purchase" = "Comprar";
+"paywall.startNow" = "Començar";
+"paywall.restore" = "Restaurar les compres";
+"paywall.note.lifetime" = "• Una sola compra, per sempre";
+"paywall.note.billedToAppleID" = "• Es carregarà al teu compte d’Apple";
+"paywall.note.autoRenew" = "• Es renova automàticament cada %@";
+"paywall.note.cancelAnytime" = "• Cancel·la quan vulguis";
+"paywall.terms" = "Condicions d’ús";
+"paywall.privacyPolicy" = "Política de privadesa";
+"paywall.close" = "Tancar";
+"paywall.errorTitle" = "Problema";
+"paywall.successTitle" = "Compra completada";
+"paywall.successMessage" = "T’hem donat la benvinguda a ClipKit Pro!\nAra tens totes les funcions disponibles.";
+"paywall.monthlyEquivalentLabel" = "%@ / mes";
+"paywall.monthlyEquivalent" = "aprox. %@";
+"paywall.error.unknown" = "S’ha produït un error";
+"paywall.error.noRestorable" = "No hi ha cap compra per restaurar";
+"paywall.package.monthly" = "Mensual";
+"paywall.package.annual" = "Anual";
+"paywall.package.lifetime" = "De per vida";
+"paywall.renewal.lifetime" = "Una sola compra, per sempre";
+"paywall.renewal.monthly" = "Es renova cada mes";
+"paywall.renewal.annual" = "Es renova cada any";
+"paywall.renewal.days" = "Es renova cada %d dies";
+"paywall.renewal.weeks" = "Es renova cada %d setmanes";
+"paywall.renewal.months" = "Es renova cada %d mesos";
+"paywall.renewal.years" = "Es renova cada %d anys";
+"paywall.trial.days" = "%d dies";
+"paywall.trial.weeks" = "%d setmanes";
+"paywall.trial.months" = "%d mesos";
+"paywall.trial.years" = "%d anys";
+"paywall.period.oneMonth" = "mes";
+"paywall.period.oneYear" = "any";
+"paywall.period.days" = "%d dies";
+"paywall.period.weeks" = "%d setmanes";
+"paywall.period.months" = "%d mesos";
+"paywall.period.years" = "%d anys";
+"paywall.discount.format" = "Estalvia un %d%%";
+"paywall.trialThenPrice" = "%1$@ gratis i després %2$@";
+"paywall.note.trialAutoRenew" = "• Quan acabi la prova gratuïta (%1$@), la subscripció es renovarà automàticament per %2$@";
+"paywall.note.trialCancel" = "• Cancel·la com a mínim 24 hores abans que acabi la prova per evitar el càrrec";
+"paywall.tryFreeCTA" = "Prova-ho gratis";
+"paywall.perPeriod.month" = "mes";
+"paywall.perPeriod.year" = "any";
+"export.failed" = "No s’ha pogut exportar";
+"button.ok" = "D’acord";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Et donem la benvinguda a ClipKit";
+"onboarding.welcome.description" = "Els textos, enllaços i imatges que copiïs es desaran automàticament.\nEls podràs recuperar de l’historial sempre que els necessitis.";
+"onboarding.monitoring.title" = "Desa-ho tot automàticament";
+"onboarding.monitoring.description" = "Inicia la supervisió des de la pestanya Sempre en marxa i ClipKit desarà tot el que copiïs.";
+"onboarding.paste.title" = "Permetre enganxar";
+"onboarding.paste.description" = "Concedeix el permís una sola vegada a la configuració de l’iOS\nper no veure un avís cada cop.";
+"onboarding.paste.path" = "Configuració → Privadesa i seguretat → Enganxar des d’altres apps → ClipKit";
+"onboarding.paste.instruction" = "Configura «Enganxar des d’altres apps» com a **Permetre**";
+"onboarding.paste.openSettings" = "Obrir la configuració";
+"onboarding.ready.title" = "Ja ho tens!";
+"onboarding.ready.description" = "Ja pots començar a provar ClipKit.";
+"onboarding.next" = "Següent";
+"onboarding.start" = "Començar";
+
+/* Tab bar */
+"tab.monitoring" = "Sempre en marxa";
+"tab.history" = "Historial";
+"tab.favorites" = "Preferits";
+"tab.settings" = "Configuració";
+
+/* Trash */
+"trash.deletedAt %@" = "Eliminat: %@";
+"trash.swipeHint" = "Llisca cap a l’esquerra per restaurar o cap a la dreta per eliminar definitivament";
+
+/* Picture in Picture */
+"pip.hint" = "Historial del porta-retalls";
+"pip.empty" = "Encara no hi ha historial";
+
+/* Widget */
+"widget.proOnly" = "Funció Pro";
+"widget.proOnlyDescription" = "Els widgets estan disponibles amb el pla Pro";
+"widget.upgradeInApp" = "Actualitza des de l’app";
+"widget.empty" = "Encara no hi ha historial";
+"widget.itemCount %lld" = "%lld elements";
+"widget.description" = "Consulta l’historial del porta-retalls d’un cop d’ull.";
+"widget.clipboardTitle" = "Porta-retalls";
+"widget.noItems" = "No hi ha elements";
+"widget.noClipboardItems" = "No hi ha elements al porta-retalls";
+"widget.sample.first" = "Text d’exemple";
+"widget.sample.second" = "Un altre fragment";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "Historial";
+"keyboard.tab.snippets" = "Fragments";
+"keyboard.history.empty" = "No hi ha historial";
+"keyboard.snippets.empty" = "No hi ha fragments";
+"keyboard.upgrade.unlimited" = "Mostra’n més\nIl·limitats amb Pro";
+"keyboard.upgrade.tenItems" = "Mostra’n més\n10 elements amb Pro";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Compra pendent";
+"paywall.pendingMessage" = "Pro es desbloquejarà automàticament quan s’aprovi la compra.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Només amb Pro";
+"settings.iCloudSyncAll" = "Sincronització amb iCloud (tots els elements)";
+
+"monitoring.pipSizeHelp" = "El mode compacte amaga la capçalera i demana una finestra més petita. iOS en determina la mida real. Pessiga per canviar-la o arrossega la finestra fora de la vora esquerra o dreta per amagar-la. No es pot modificar la transparència.";
+
+"feedback.introduction" = "Explica’ns què necessites o què t’agradaria veure a ClipKit.";
+
+"feedback.guidance.bug" = "Què volies fer i què ha passat? Si pots, indica els passos, què esperaves i què ha passat realment.";
+
+"feedback.guidance.feature" = "Què t’agradaria poder fer i quan et seria útil? Explica’ns les dificultats que tens ara.";
+
+"feedback.guidance.other" = "Descriu la pregunta o el comentari amb tant detall com puguis.";
+
+"feedback.emailHelp" = "Introdueix el correu electrònic si vols rebre una resposta. També pots enviar el missatge sense indicar-lo.";
+
+"feedback.deviceInfo" = "S’envien automàticament la versió de l’app, la versió d’iOS i el model del dispositiu per ajudar a investigar els problemes. No incloguis contrasenyes ni altra informació sensible.";
+
+"feedback.failureMessage" = "El missatge continua aquí. Comprova la connexió i torna-ho a provar d’aquí a una estona.";
+
+"shortcut.openPiP" = "Obrir PiP";
+
+"shortcut.openPiPDescription" = "Obre ClipKit i inicia la supervisió del porta-retalls amb Picture in Picture.";
+
+"monitoring.compactPiP" = "PiP compacte";
+
+"monitoring.shortcutHelp" = "Afegeix l’acció Obrir PiP de ClipKit a Dreceres. Als iPhone compatibles, assigna-la al botó d’acció. En executar-la, s’obrirà ClipKit.";
+
+"pip.startFailure" = "No s’ha pogut iniciar PiP";
+
+"pip.startFailureHelp" = "Mantén ClipKit en pantalla i torna a obrir PiP des de la pestanya de supervisió.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Selecciona la llengua";
+"debug.keyboardLog.empty" = "No hi ha registres";
+"debug.keyboardLog.emptyDescription" = "Els registres apareixeran aquí quan iniciïs l’extensió del teclat.";

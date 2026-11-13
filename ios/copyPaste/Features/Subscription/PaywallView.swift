@@ -221,21 +221,21 @@ struct PaywallView: View {
             }
             .preferredColorScheme(.dark)
             .alert(NSLocalizedString("paywall.errorTitle", value: "エラー", comment: ""), isPresented: $showError) {
-                Button("OK") {
+                Button("button.ok") {
                     showError = false
                 }
             } message: {
                 Text(errorMessage ?? NSLocalizedString("paywall.error.unknown", value: "不明なエラーが発生しました", comment: ""))
             }
             .alert(NSLocalizedString("paywall.successTitle", value: "購入完了", comment: ""), isPresented: $showSuccess) {
-                Button("OK") {
+                Button("button.ok") {
                     dismiss()
                 }
             } message: {
                 Text(NSLocalizedString("paywall.successMessage", value: "ClipKit Proへようこそ！\nすべての機能が使えるようになりました。", comment: ""))
             }
             .alert(NSLocalizedString("paywall.pendingTitle", value: "購入の承認待ちです", comment: ""), isPresented: $showPending) {
-                Button("OK") {
+                Button("button.ok") {
                     dismiss()
                 }
             } message: {

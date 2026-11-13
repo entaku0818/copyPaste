@@ -1,0 +1,32 @@
+/* ClipboardKeyboard extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"keyboard.tab.history" = "Geschiedenis";
+"keyboard.tab.snippets" = "Fragmenten";
+"keyboard.history.empty" = "Geen geschiedenis";
+"keyboard.snippets.empty" = "Geen fragmenten";
+"keyboard.upgrade.unlimited" = "Meer bekijken\nOnbeperkt met Pro";
+"item.image" = "Afbeelding";
+"item.file" = "Bestand";
+"transform.menu.paste" = "Omzetten en plakken";
+"keyboard.upgrade.tenItems" = "Meer bekijken\n10 onderdelen met Pro";
+"transform.uppercase" = "Omzetten naar hoofdletters";
+"transform.lowercase" = "Omzetten naar kleine letters";
+"transform.removeLineBreaks" = "Regeleinden verwijderen";
+"transform.trimWhitespace" = "Witruimte aan begin en einde verwijderen";
+"transform.snakeCase" = "Omzetten naar snake_case";
+"transform.camelCase" = "Omzetten naar camelCase";
+"transform.fullWidth" = "Omzetten naar volledige breedte";
+"transform.halfWidth" = "Omzetten naar halve breedte";
+"transform.removeMarkdown" = "Markdown verwijderen";
+"transform.urlEncode" = "URL coderen";
+"transform.urlDecode" = "URL decoderen";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefoon";
+"category.code" = "Code";
+"category.address" = "Adres";
+"category.text" = "Tekst";
+
+/* Pro-only transforms in the long-press menu (issue #117) */
+"keyboard.transform.proOnly" = "Alleen Pro · Tik om te upgraden";

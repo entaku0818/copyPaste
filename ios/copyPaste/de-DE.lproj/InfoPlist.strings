@@ -1,0 +1,2 @@
+/* Beschreibung des Zugriffs auf die Zwischenablage */
+"NSPasteboardUsageDescription" = "ClipKit benötigt Zugriff auf die Zwischenablage, um den Verlauf zu speichern.";

@@ -1,0 +1,4 @@
+Ouvrez la fenêtre PiP depuis Raccourcis et assignez l’action au bouton Action sur les iPhone compatibles.
+Ajout d’un mode PiP compact qui masque l’en-tête et demande une fenêtre plus petite.
+Amélioration du formulaire de contact avec des conseils selon le motif et une explication de l’adresse de réponse.
+L’app, le clavier et les widgets prennent désormais en charge davantage de langues.

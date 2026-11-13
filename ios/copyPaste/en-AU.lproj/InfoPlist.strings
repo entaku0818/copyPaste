@@ -1,0 +1,2 @@
+/* Clipboard access alert shown by iOS. */
+"NSPasteboardUsageDescription" = "ClipKit needs clipboard access to save your clipboard history.";

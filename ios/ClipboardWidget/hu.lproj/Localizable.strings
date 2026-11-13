@@ -1,0 +1,25 @@
+/* ClipboardWidget extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"item.image" = "Kép";
+"item.file" = "Fájl";
+"widget.sample.first" = "Példaszöveg";
+"widget.sample.second" = "Másik szövegrészlet";
+"widget.proOnly" = "Pro-funkció";
+"widget.upgradeInApp" = "Váltás Próra az appban";
+"widget.empty" = "Még nincsenek előzmények";
+"widget.itemCount %lld" = "%lld elem";
+"time.days %lld" = "%lld napja";
+"time.hours %lld" = "%lld órája";
+"time.minutes %lld" = "%lld perce";
+"time.justnow" = "Most";
+"widget.description" = "A vágólapelőzmények gyors áttekintése.";
+"widget.clipboardTitle" = "Vágólap";
+"widget.noItems" = "Nincsenek elemek";
+"widget.noClipboardItems" = "Nincsenek elemek a vágólapon";
+
+/* Live Activity */
+"liveActivity.greeting" = "Szia";
+"liveActivity.leading" = "Balra";
+"liveActivity.trailing" = "Jobbra";
+"liveActivity.bottom" = "Lent";

@@ -1,0 +1,4 @@
+Otvorte okno PiP v aplikácii Skratky a na podporovaných iPhonoch priraďte akciu k akčnému tlačidlu.
+Nový kompaktný režim PiP skryje hlavičku a vyžiada menšie okno.
+Vylepšený kontaktný formulár s pokynmi podľa témy a jasnejšími informáciami o e-maile na odpoveď.
+Aplikácia, klávesnica a widgety teraz podporujú viac jazykov.

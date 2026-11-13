@@ -1,0 +1,29 @@
+Seuraa leikepöytää automaattisesti taustalla. ClipKit tallentaa kopioimasi sisällön, jotta löydät tekstit, linkit ja kuvat historiasta nopeasti widgetin tai oman näppäimistön avulla.
+
+MAKSUTTOMAT OMINAISUUDET
+• Tallenna automaattisesti enintään 20 kohdetta (näkyvissä viimeisten 3 päivän historia)
+• Teksti-, kuva- ja URL-tuki
+• Hae historiasta, myös kuvien sisältämää tekstiä
+• Luokittele automaattisesti URL-osoitteet, sähköpostit, puhelinnumerot, koodi, osoitteet ja teksti
+• Enintään 10 suosikkia ja 3 tekstikatkelmaa
+• Muuta kirjainkokoa ja poista rivinvaihdot sekä reunavälit
+• Synkronoi iCloudin kautta enintään 20 kohdetta
+• Oma näppäimistö historian ja katkelmien käyttöön
+
+CLIPKIT PRO
+• Rajaton historia ja suosikit
+• Hae ja katsele yli 3 päivää vanhaa historiaa
+• Rajattomasti tekstikatkelmia
+• Koti-ikkunan widgetit kolmessa koossa
+• Lisää historiakohteita ja kaikki katkelmat näppäimistössä
+• Synkronoi kaikki kohteet iCloudin kautta
+• Palauta poistetut kohteet 30 päivän ajan
+• Vie historia CSV- tai Markdown-muodossa
+• Muunna snake_case ja camelCase, täys- ja puolileveät merkit, poista Markdown sekä koodaa tai pura URL-osoitteet
+
+ClipKit käyttää kuva kuvassa -toimintoa seuratakseen leikepöytää myös muita appeja käyttäessäsi. Aloita seuranta Aina päällä -välilehdeltä ja salli liittäminen muista apeista iOS-asetuksissa.
+
+Kuukausi- ja vuositilaukset sisältävät uusille tilaajille 7 päivän maksuttoman kokeilun. Tilaus uusiutuu automaattisesti kokeilun jälkeen. Voit peruuttaa milloin tahansa.
+
+Käyttöehdot: https://clipkit-entaku.web.app/terms.html
+Tietosuojakäytäntö: https://clipkit-entaku.web.app/privacy-policy.html

@@ -253,6 +253,9 @@
 "widget.empty" = "No history yet";
 "widget.itemCount %lld" = "%lld items";
 "widget.description" = "Check your clipboard history at a glance.";
+"widget.clipboardTitle" = "Clipboard";
+"widget.noItems" = "No items";
+"widget.noClipboardItems" = "No clipboard items";
 "widget.sample.first" = "Sample text";
 "widget.sample.second" = "Another snippet";
 
@@ -299,3 +302,8 @@
 "pip.startFailure" = "Could not start PiP";
 
 "pip.startFailureHelp" = "Keep ClipKit on screen and try Open PiP again from the monitoring tab.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Select Language";
+"debug.keyboardLog.empty" = "No Logs";
+"debug.keyboardLog.emptyDescription" = "Logs will appear here after you launch the keyboard extension.";

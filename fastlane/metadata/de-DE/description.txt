@@ -1,0 +1,30 @@
+ClipKit speichert automatisch, was Sie kopieren. So finden Sie Texte, Links und Bilder wieder, wenn Sie sie brauchen. Rufen Sie Ihren Verlauf über ein Widget oder eine eigene Tastatur ab.
+
+KOSTENLOSE FUNKTIONEN
+• Bis zu 20 Elemente automatisch speichern (die letzten 3 Tage sind verfügbar)
+• Unterstützung für Text, Bilder und URLs
+• Verlauf durchsuchen, auch Text in Bildern
+• URLs, E-Mail-Adressen, Telefonnummern, Code, Adressen und Text automatisch kategorisieren
+• Bis zu 10 Favoriten und 3 Textbausteine
+• Text umwandeln: Groß- und Kleinschreibung ändern, Zeilenumbrüche und Leerzeichen entfernen
+• Bis zu 20 Elemente mit iCloud synchronisieren
+• Eigene Tastatur mit Zugriff auf Verlauf und Textbausteine
+• Anleitung für die erste Einrichtung
+
+CLIPKIT PRO
+• Unbegrenzter Verlauf und unbegrenzte Favoriten
+• Verlauf durchsuchen und ansehen, der älter als 3 Tage ist
+• Unbegrenzt viele Textbausteine
+• Widgets für den Home-Bildschirm in 3 Größen
+• 10 Verlaufseinträge und alle Textbausteine auf der Tastatur (kostenlos: jeweils 3)
+• Alle Elemente mit iCloud synchronisieren
+• Gelöschte Elemente bis zu 30 Tage lang wiederherstellen
+• Verlauf als CSV oder Markdown exportieren
+• Pro-Umwandlungen: snake_case, camelCase, Voll- und Halbbreite, Markdown entfernen sowie URLs codieren und decodieren
+
+Mit Picture in Picture überwacht ClipKit die Zwischenablage auch dann, wenn Sie andere Apps verwenden. Aktivieren Sie die Überwachung im Tab „Immer aktiv“ und erlauben Sie das Einfügen aus anderen Apps in den iOS-Einstellungen.
+
+Monats- und Jahresabos enthalten für neue Abonnenten einen 7-tägigen kostenlosen Testzeitraum. Danach verlängert sich das Abo automatisch. Sie können jederzeit kündigen.
+
+Nutzungsbedingungen: https://clipkit-entaku.web.app/terms.html
+Datenschutzerklärung: https://clipkit-entaku.web.app/privacy-policy.html

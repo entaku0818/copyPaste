@@ -66,7 +66,7 @@ public struct ContentView: View {
             pipManager.startPiP()
         }
         .alert("pip.startFailure", isPresented: $pipManager.showStartError) {
-            Button("OK", role: .cancel) {}
+            Button("button.ok", role: .cancel) {}
         } message: {
             Text("pip.startFailureHelp")
         }

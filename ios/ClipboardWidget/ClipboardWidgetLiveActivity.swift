@@ -24,7 +24,7 @@ struct ClipboardWidgetLiveActivity: Widget {
         ActivityConfiguration(for: ClipboardWidgetAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
-                Text("Hello \(context.state.emoji)")
+                Text("liveActivity.greeting") + Text(" \(context.state.emoji)")
             }
             .activityBackgroundTint(Color.cyan)
             .activitySystemActionForegroundColor(Color.black)
@@ -34,13 +34,13 @@ struct ClipboardWidgetLiveActivity: Widget {
                 // Expanded UI goes here.  Compose the expanded UI through
                 // various regions, like leading/trailing/center/bottom
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    Text("liveActivity.leading")
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    Text("liveActivity.trailing")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
+                    Text("liveActivity.bottom") + Text(" \(context.state.emoji)")
                     // more content
                 }
             } compactLeading: {

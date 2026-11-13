@@ -1,0 +1,4 @@
+Otvorite PiP prozor iz aplikacije Prečaci i dodijelite radnju akcijskom gumbu na podržanim iPhone uređajima.
+Dodali smo kompaktni PiP način koji skriva zaglavlje i traži niži prozor.
+Obrazac za kontakt sada uključuje upute prema kategoriji i objašnjenje adrese za odgovor.
+Aplikacija, tipkovnica i widgeti sada podržavaju više jezika.

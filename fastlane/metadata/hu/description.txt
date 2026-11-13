@@ -1,0 +1,30 @@
+A ClipKit automatikusan elmenti, amit másolsz, így bármikor megtalálhatod a szövegeket, linkeket és képeket. Az előzményeket widgetről vagy egyéni billentyűzetről is elérheted.
+
+INGYENES FUNKCIÓK
+• Legfeljebb 20 elem automatikus mentése (az utolsó 3 nap megtekinthető)
+• Szöveg, kép és URL támogatása
+• Keresés az előzményekben, a képeken belüli szövegekben is
+• URL-ek, e-mail-címek, telefonszámok, kódok, címek és szövegek automatikus kategorizálása
+• Legfeljebb 10 kedvenc és 3 szövegrészlet
+• Szövegátalakítás: kis- és nagybetűk, sortörések és szóközök kezelése
+• Legfeljebb 20 elem szinkronizálása az iClouddal
+• Egyéni billentyűzet az előzmények és szövegrészletek eléréséhez
+• Útmutató az első beállításhoz
+
+CLIPKIT PRO
+• Korlátlan előzmények és kedvencek
+• 3 napnál régebbi előzmények keresése és megtekintése
+• Korlátlan számú szövegrészlet
+• Főképernyő-widgetek 3 méretben
+• 10 előzményelem és az összes szövegrészlet megjelenítése a billentyűzeten (az ingyenes csomagban 3-3)
+• Minden elem szinkronizálása az iClouddal
+• Törölt elemek visszaállítása 30 napig
+• Előzmények exportálása CSV- vagy Markdown-formátumba
+• Pro-átalakítások: snake_case, camelCase, teljes és fél szélesség, Markdown eltávolítása, URL kódolása és dekódolása
+
+A Picture in Picture segítségével a ClipKit más appok használata közben is figyeli a vágólapot. Kapcsold be a figyelést a Folyamatos lapon, és engedélyezd a beillesztést más appokból az iOS Beállításokban.
+
+A havi és éves előfizetés új előfizetőknek 7 napos ingyenes próbaidőszakot kínál. A próbaidőszak után az előfizetés automatikusan megújul. Bármikor lemondhatod.
+
+Felhasználási feltételek: https://clipkit-entaku.web.app/terms.html
+Adatvédelmi szabályzat: https://clipkit-entaku.web.app/privacy-policy.html

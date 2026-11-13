@@ -1,0 +1,30 @@
+ClipKit desa automàticament el que copies perquè puguis recuperar textos, enllaços i imatges quan els necessitis. Consulta l’historial des d’un widget o un teclat personalitzat.
+
+FUNCIONS GRATUÏTES
+• Desa automàticament fins a 20 elements (consulta els darrers 3 dies)
+• Compatible amb text, imatges i URL
+• Cerca a l’historial, inclòs el text de les imatges
+• Classificació automàtica d’URL, correus, telèfons, codi, adreces i text
+• Fins a 10 preferits i 3 fragments de text
+• Transforma el text: majúscules, minúscules, elimina salts de línia i espais sobrants
+• Sincronitza fins a 20 elements amb iCloud
+• Teclat personalitzat amb accés a l’historial i als fragments
+• Guia de configuració inicial
+
+CLIPKIT PRO
+• Historial i preferits il·limitats
+• Cerca i consulta l’historial de més de 3 dies
+• Fragments de text il·limitats
+• Widgets per a la pantalla d’inici en 3 mides
+• Mostra 10 elements de l’historial i tots els fragments al teclat (3 de cada amb el pla gratuït)
+• Sincronització amb iCloud de tots els elements
+• Recupera els elements eliminats durant 30 dies
+• Exporta l’historial en CSV o Markdown
+• Transformacions Pro: snake_case, camelCase, amplada completa i mitja, elimina Markdown i codifica o descodifica URL
+
+ClipKit utilitza Picture in Picture per continuar supervisant el porta-retalls mentre fas servir altres apps. Activa la supervisió a la pestanya «Sempre en marxa» i permet enganxar des d’altres apps a la configuració de l’iOS.
+
+Les subscripcions mensuals i anuals inclouen una prova gratuïta de 7 dies per a nous subscriptors. Després, la subscripció es renova automàticament. Pots cancel·lar-la quan vulguis.
+
+Condicions d’ús: https://clipkit-entaku.web.app/terms.html
+Política de privadesa: https://clipkit-entaku.web.app/privacy-policy.html

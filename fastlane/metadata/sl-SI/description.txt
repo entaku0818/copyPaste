@@ -1,0 +1,30 @@
+ClipKit samodejno shrani vse, kar kopirate, zato lahko besedila, povezave in slike najdete, ko jih potrebujete. Do zgodovine dostopajte prek pripomočka ali tipkovnice po meri.
+
+BREZPLAČNE FUNKCIJE
+• Samodejno shranjevanje do 20 elementov (na voljo je zgodovina zadnjih 3 dni)
+• Podpora za besedilo, slike in URL-je
+• Iskanje po zgodovini, tudi po besedilu na slikah
+• Samodejna razvrstitev URL-jev, e-pošte, telefonskih številk, kode, naslovov in besedila
+• Do 10 priljubljenih elementov in 3 besedilni izseki
+• Pretvorba besedila: velike in male črke, odstranjevanje prelomov vrstic in presledkov
+• Sinhronizacija do 20 elementov z iCloudom
+• Tipkovnica po meri z dostopom do zgodovine in izsekov
+• Vodnik za prvo nastavitev
+
+CLIPKIT PRO
+• Neomejena zgodovina in priljubljeni elementi
+• Iskanje in ogled zgodovine, starejše od 3 dni
+• Neomejeno število besedilnih izsekov
+• Pripomočki za začetni zaslon v 3 velikostih
+• Prikaz 10 elementov zgodovine in vseh izsekov na tipkovnici (v brezplačnem paketu po 3)
+• Sinhronizacija vseh elementov z iCloudom
+• Obnovitev izbrisanih elementov v 30 dneh
+• Izvoz zgodovine v CSV ali Markdown
+• Pretvorbe Pro: snake_case, camelCase, polna in polovična širina, odstranjevanje Markdowna ter kodiranje in dekodiranje URL-jev
+
+Funkcija Slika v sliki omogoča ClipKitu spremljanje odložišča med uporabo drugih aplikacij. Spremljanje vklopite na zavihku »Vedno vklopljeno«, lepljenje iz drugih aplikacij pa dovolite v nastavitvah sistema iOS.
+
+Mesečne in letne naročnine za nove naročnike vključujejo 7-dnevno brezplačno preizkusno obdobje. Po njem se naročnina samodejno podaljša. Prekličete jo lahko kadar koli.
+
+Pogoji uporabe: https://clipkit-entaku.web.app/terms.html
+Pravilnik o zasebnosti: https://clipkit-entaku.web.app/privacy-policy.html

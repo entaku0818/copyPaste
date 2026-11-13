@@ -1,0 +1,25 @@
+/* ClipboardWidget extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"item.image" = "Image";
+"item.file" = "Fichier";
+"widget.sample.first" = "Texte d’exemple";
+"widget.sample.second" = "Un autre extrait";
+"widget.proOnly" = "Fonctionnalité Pro";
+"widget.upgradeInApp" = "Passer à Pro dans l’app";
+"widget.empty" = "Aucun historique pour le moment";
+"widget.itemCount %lld" = "%lld éléments";
+"time.days %lld" = "Il y a %lld jours";
+"time.hours %lld" = "Il y a %lld h";
+"time.minutes %lld" = "Il y a %lld min";
+"time.justnow" = "À l’instant";
+"widget.description" = "Consultez l’historique du presse-papiers en un coup d’œil.";
+"widget.clipboardTitle" = "Presse-papiers";
+"widget.noItems" = "Aucun élément";
+"widget.noClipboardItems" = "Aucun élément dans le presse-papiers";
+
+/* Live Activity */
+"liveActivity.greeting" = "Bonjour";
+"liveActivity.leading" = "À gauche";
+"liveActivity.trailing" = "À droite";
+"liveActivity.bottom" = "En bas";

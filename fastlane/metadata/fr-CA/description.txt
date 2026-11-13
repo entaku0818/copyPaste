@@ -1,0 +1,30 @@
+ClipKit enregistre automatiquement le contenu que vous copiez pour vous permettre de retrouver vos textes, liens et images au bon moment. Consultez votre historique à partir d’un widget ou du clavier personnalisé.
+
+FONCTIONNALITÉS GRATUITES
+• Enregistrement automatique de 20 éléments maximum (consultation des 3 derniers jours)
+• Texte, images et URL
+• Recherche dans l’historique, y compris le texte présent dans les images
+• Classement automatique des URL, courriels, numéros de téléphone, code, adresses et textes
+• Jusqu’à 10 favoris et 3 modèles de texte
+• Transformations : majuscules, minuscules, suppression des sauts de ligne et des espaces superflus
+• Synchronisation iCloud de 20 éléments maximum
+• Clavier personnalisé avec accès à l’historique et aux modèles
+• Guide de démarrage
+
+CLIPKIT PRO
+• Historique et favoris illimités
+• Recherche et consultation de l’historique de plus de 3 jours
+• Modèles de texte illimités
+• Widgets pour l’écran d’accueil en 3 formats
+• Affichage de 10 éléments de l’historique et de tous les modèles dans le clavier (3 de chaque avec l’offre gratuite)
+• Synchronisation iCloud de tous les éléments
+• Corbeille pour récupérer les éléments supprimés pendant 30 jours
+• Exportation de l’historique en CSV ou Markdown
+• Transformations Pro : snake_case, camelCase, pleine et demi-chasse, suppression du Markdown, encodage et décodage d’URL
+
+La fonction Image dans l’image permet à ClipKit de surveiller le presse-papiers pendant que vous utilisez d’autres apps. Activez la surveillance dans l’onglet « Toujours actif » et autorisez le collage à partir d’autres apps dans les réglages d’iOS.
+
+Les abonnements mensuels et annuels comprennent un essai gratuit de 7 jours pour les nouveaux abonnés. L’abonnement est ensuite renouvelé automatiquement. Vous pouvez l’annuler en tout temps.
+
+Conditions d’utilisation : https://clipkit-entaku.web.app/terms.html
+Politique de confidentialité : https://clipkit-entaku.web.app/privacy-policy.html

@@ -1,0 +1,2 @@
+/* Vágólap-hozzáférési leírás */
+"NSPasteboardUsageDescription" = "A ClipKitnek hozzá kell férnie a vágólaphoz az előzmények mentéséhez.";

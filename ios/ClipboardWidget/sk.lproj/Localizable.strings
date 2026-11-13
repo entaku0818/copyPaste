@@ -1,0 +1,25 @@
+/* ClipboardWidget extension — mirrored from copyPaste/en.lproj.
+   App extensions resolve String(localized:) against their own bundle,
+   so the keys they use have to ship inside the .appex too. */
+"item.image" = "Obrázok";
+"item.file" = "Súbor";
+"widget.sample.first" = "Ukážkový text";
+"widget.sample.second" = "Ďalší úryvok";
+"widget.proOnly" = "Funkcia Pro";
+"widget.upgradeInApp" = "Prejsť na Pro v aplikácii";
+"widget.empty" = "Zatiaľ žiadna história";
+"widget.itemCount %lld" = "%lld položiek";
+"time.days %lld" = "Pred %lld dňami";
+"time.hours %lld" = "Pred %lld h";
+"time.minutes %lld" = "Pred %lld min";
+"time.justnow" = "Práve teraz";
+"widget.description" = "Majte históriu schránky vždy poruke.";
+"widget.clipboardTitle" = "Schránka";
+"widget.noItems" = "Žiadne položky";
+"widget.noClipboardItems" = "V schránke nie sú žiadne položky";
+
+/* Live Activity */
+"liveActivity.greeting" = "Ahoj";
+"liveActivity.leading" = "Vľavo";
+"liveActivity.trailing" = "Vpravo";
+"liveActivity.bottom" = "Dole";

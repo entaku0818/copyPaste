@@ -11,9 +11,9 @@ struct KeyboardLogView: View {
         Group {
             if entries.isEmpty {
                 ContentUnavailableView(
-                    "ログなし",
+                    "debug.keyboardLog.empty",
                     systemImage: "keyboard",
-                    description: Text("キーボード拡張を起動すると\nここにログが表示されます")
+                    description: Text("debug.keyboardLog.emptyDescription")
                 )
             } else {
                 List {
@@ -26,7 +26,7 @@ struct KeyboardLogView: View {
                 .listStyle(.plain)
             }
         }
-        .navigationTitle("キーボードログ")
+        .navigationTitle("settings.keyboardLog")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {

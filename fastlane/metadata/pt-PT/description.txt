@@ -1,0 +1,30 @@
+O ClipKit guarda automaticamente o que copia para que possa encontrar textos, ligações e imagens quando precisar. Consulte o histórico através de um widget ou do teclado personalizado.
+
+FUNCIONALIDADES GRATUITAS
+• Guarde automaticamente até 20 itens (consulte os últimos 3 dias)
+• Compatível com texto, imagens e URL
+• Pesquise no histórico, incluindo o texto dentro das imagens
+• Classificação automática de URL, e-mail, telefone, código, moradas e texto
+• Até 10 favoritos e 3 fragmentos de texto
+• Transforme texto: maiúsculas, minúsculas, remoção de quebras de linha e espaços
+• Sincronize até 20 itens com o iCloud
+• Teclado personalizado com acesso ao histórico e aos fragmentos
+• Guia de configuração inicial
+
+CLIPKIT PRO
+• Histórico e favoritos ilimitados
+• Pesquise e consulte o histórico com mais de 3 dias
+• Fragmentos de texto ilimitados
+• Widgets para o ecrã principal em 3 tamanhos
+• Mostre 10 itens do histórico e todos os fragmentos no teclado (3 de cada no plano gratuito)
+• Sincronize todos os itens com o iCloud
+• Recupere itens eliminados durante 30 dias
+• Exporte o histórico em CSV ou Markdown
+• Transformações Pro: snake_case, camelCase, largura completa e meia, remoção de Markdown e codificação ou descodificação de URL
+
+O Picture in Picture permite que o ClipKit monitorize a área de transferência enquanto utiliza outras aplicações. Ative a monitorização no separador «Sempre ativo» e permita colar a partir de outras aplicações nas Definições do iOS.
+
+Os planos mensal e anual incluem um período experimental gratuito de 7 dias para novos subscritores. Depois, a subscrição renova-se automaticamente. Pode cancelar quando quiser.
+
+Termos de utilização: https://clipkit-entaku.web.app/terms.html
+Política de privacidade: https://clipkit-entaku.web.app/privacy-policy.html

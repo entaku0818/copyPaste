@@ -1,0 +1,2 @@
+/* Description d’accès au presse-papiers */
+"NSPasteboardUsageDescription" = "ClipKit a besoin d’accéder au presse-papiers pour enregistrer votre historique.";

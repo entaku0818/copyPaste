@@ -1,0 +1,309 @@
+/* Navigation */
+"history.title" = "História";
+"detail.title" = "Podrobnosti";
+"settings.title" = "Nastavenia";
+"favorites.title" = "Obľúbené";
+"trash.title" = "Kôš";
+"image.preview.title" = "Náhľad obrázka";
+"monitoring.title" = "Vždy zapnuté";
+"feedback.title" = "Kontaktujte nás";
+
+/* Buttons */
+"button.close" = "Zavrieť";
+"button.cancel" = "Zrušiť";
+"item.delete" = "Odstrániť";
+"item.restore" = "Obnoviť";
+"item.deletePermanently" = "Odstrániť natrvalo";
+"item.favorite" = "Pridať medzi obľúbené";
+"item.unfavorite" = "Odstrániť z obľúbených";
+"copy.action" = "Kopírovať";
+"copy.done" = "Skopírované";
+
+/* Search */
+"search.placeholder" = "Hľadať v histórii…";
+"search.clear" = "Vymazať";
+"search.results %lld" = "Počet výsledkov: %lld";
+
+/* Category filter */
+"category.all" = "Všetko";
+"category.url" = "URL";
+"category.email" = "E-mail";
+"category.phone" = "Telefón";
+"category.code" = "Kód";
+"category.address" = "Adresa";
+"category.text" = "Text";
+
+/* Clipboard items */
+"item.image" = "Obrázok";
+"item.file" = "Súbor";
+"item.text.empty" = "(Žiadny obsah)";
+
+/* Time */
+"time.justnow" = "Práve teraz";
+"time.minutes %lld" = "Pred %lld min";
+"time.hours %lld" = "Pred %lld h";
+"time.days %lld" = "Pred %lld dňami";
+
+/* Trash */
+"trash.empty" = "Kôš je prázdny";
+"trash.description" = "Odstránené položky sa tu uchovávajú 30 dní";
+"trash.deleteAll" = "Odstrániť všetko";
+
+/* Favorites */
+"favorites.empty" = "Žiadne obľúbené položky";
+"favorites.emptyDescription" = "Potiahnutím položky histórie doľava ju pridáte medzi obľúbené";
+"favorites.unfavorite" = "Odstrániť z obľúbených";
+"favorites.proUpgrade %lld" = "Pridajte si neobmedzený počet obľúbených s Pro (%lld/10)";
+
+/* Upgrade */
+"upgrade.title" = "Prejdite na ClipKit Pro";
+"upgrade.description" = "Vyhľadávajte a zobrazujte históriu staršiu ako 3 dni";
+
+/* Image */
+"image.loadError" = "Obrázok sa nepodarilo načítať";
+
+/* Monitoring */
+"monitoring.backgroundSection" = "Monitorovanie na pozadí";
+"monitoring.pipDescription" = "Otvorte okno PiP a sledujte históriu schránky aj pri používaní iných aplikácií.";
+"monitoring.active" = "Monitorovanie na pozadí je aktívne";
+"monitoring.inactive" = "Monitorovanie";
+"monitoring.controlSection" = "Ovládanie monitorovania";
+"monitoring.statusActive" = "Aktívne";
+"monitoring.statusStopped" = "Zastavené";
+"monitoring.openPiP" = "Otvoriť okno PiP";
+"permission.title" = "Povoliť prístup k schránke";
+"permission.allow" = "Povoliť";
+"permission.later" = "Neskôr";
+"permission.message" = "Aplikácia ClipKit potrebuje prístup k schránke, aby mohla ukladať jej históriu.\n\nV systéme iOS 16 a novšom sa pri prvom prístupe zobrazí systémová výzva. Vyberte možnosť „Povoliť“.";
+
+/* Settings */
+"settings.proDescription" = "Neobmedzená história · Obľúbené · Widgety";
+"settings.howToUse" = "Ako používať";
+"settings.writeReview" = "Napísať hodnotenie";
+"settings.contact" = "Kontaktujte nás";
+"settings.trash" = "Kôš";
+"settings.iCloudSync" = "Synchronizácia s iCloudom";
+"settings.iCloudSyncPicker" = "Synchronizovať";
+"settings.iCloudSyncFooter" = "Zmeny sa prejavia pri ďalšom spustení aplikácie.";
+"settings.iCloudSyncLastSynced" = "Naposledy synchronizované: %@";
+"settings.iCloudSyncNeverSynced" = "Zatiaľ sa nesynchronizovalo z iných zariadení";
+"cloudKitSync.disabled" = "Nesynchronizovať";
+"cloudKitSync.all" = "Synchronizovať";
+"settings.appInfo" = "Informácie o aplikácii";
+"settings.version" = "Verzia";
+"settings.debug" = "Diagnostika";
+"settings.screenshotPreview" = "Náhľad snímok obrazovky";
+"settings.keyboardLog" = "Záznam klávesnice";
+"settings.keyboardLogFooter" = "Záznamy klávesnice sa zhromažďujú v reálnom čase cez App Groups";
+
+/* Feedback */
+"feedback.category" = "Dôvod kontaktovania";
+"feedback.content" = "Správa (povinné)";
+"feedback.email" = "E-mail na odpoveď (nepovinné)";
+"feedback.emailPlaceholder" = "napr. meno@priklad.sk";
+"feedback.send" = "Odoslať";
+"feedback.success" = "Správa bola prijatá";
+"feedback.successMessage" = "Ďakujeme, že ste nás kontaktovali. Vaša správa nám pomôže preskúmať problémy a vylepšiť ClipKit.";
+"feedback.failure" = "Odoslanie zlyhalo";
+"feedbackCategory.bug" = "Nahlásiť problém";
+"feedbackCategory.feature" = "Navrhnúť funkciu";
+"feedbackCategory.other" = "Iné";
+
+/* Satisfaction */
+"satisfaction.title" = "Ďakujeme, že používate ClipKit!";
+"satisfaction.question" = "Ste spokojní s kvalitou aplikácie?";
+"satisfaction.satisfied" = "Spokojný/á";
+"satisfaction.improve" = "Je čo zlepšovať";
+
+/* Export */
+"export.title" = "Exportovať";
+"export.action" = "Exportovať históriu";
+"export.formatPicker" = "Vybrať formát";
+
+/* Snippets */
+"snippets.title" = "Textové úryvky";
+"snippets.empty" = "Žiadne textové úryvky";
+"snippets.emptyDescription" = "Uložte si často používané texty a vložte ich z klávesnice jedným ťuknutím";
+"snippets.add" = "Pridať úryvok";
+"snippets.edit" = "Upraviť úryvok";
+"snippets.titleField" = "Názov";
+"snippets.titlePlaceholder" = "napr. Pozdrav";
+"snippets.contentField" = "Obsah";
+"snippets.placeholderHint" = "{日付} {時刻} ({date} {time}) sa pri vložení nahradia aktuálnym dátumom a časom";
+"snippets.save" = "Uložiť";
+"snippets.cancel" = "Zrušiť";
+"snippets.freeLimit %lld" = "Bezplatný plán umožňuje až %lld úryvkov (s Pro neobmedzene)";
+
+/* Text Transform */
+"transform.menu.copy" = "Upraviť a kopírovať";
+"transform.menu.paste" = "Upraviť a vložiť";
+"transform.uppercase" = "Zmeniť na veľké písmená";
+"transform.lowercase" = "Zmeniť na malé písmená";
+"transform.removeLineBreaks" = "Odstrániť zalomenia riadkov";
+"transform.trimWhitespace" = "Odstrániť medzery na začiatku a konci";
+"transform.snakeCase" = "Previesť na snake_case";
+"transform.camelCase" = "Previesť na camelCase";
+"transform.fullWidth" = "Previesť na plnú šírku";
+"transform.halfWidth" = "Previesť na polovičnú šírku";
+"transform.removeMarkdown" = "Odstrániť Markdown";
+"transform.urlEncode" = "Zakódovať URL";
+"transform.urlDecode" = "Dekódovať URL";
+
+/* Paywall (issue #77)
+   これらのキーは以前コード側の NSLocalizedString(value:) にだけ存在し、
+   .strings に1件も無かったため、英語環境でも日本語が表示されていた。 */
+"paywall.subtitle" = "Odomknite všetky funkcie";
+"paywall.feature.history.title" = "Neobmedzená história";
+"paywall.feature.history.description" = "Bezplatný plán uchováva posledné 3 dni, najviac 20 položiek";
+"paywall.feature.favorites.title" = "Neobmedzené obľúbené položky";
+"paywall.feature.favorites.description" = "Bezplatný plán umožňuje až 10 položiek";
+"paywall.feature.widget.title" = "Widgety na ploche";
+"paywall.feature.widget.description" = "Tri veľkosti widgetov";
+"paywall.feature.keyboard.title" = "Úplná história na klávesnici";
+"paywall.feature.keyboard.description" = "Zobrazte na klávesnici 10 položiek (v bezplatnom pláne 3)";
+"paywall.feature.icloud.title" = "Synchronizácia s iCloudom";
+"paywall.feature.icloud.description" = "Majte históriu dostupnú vo všetkých zariadeniach";
+"paywall.feature.export.title" = "Export histórie";
+"paywall.feature.export.description" = "Exportujte do formátu CSV alebo Markdown";
+"paywall.feature.transform.title" = "Pokročilé úpravy textu";
+"paywall.feature.transform.description" = "Veľkosť písmen, šírka, kódovanie URL a ďalšie";
+"paywall.loadingPlans" = "Načítavajú sa plány…";
+"paywall.loadFailed" = "Plány sa nepodarilo načítať";
+"paywall.retry" = "Skúsiť znova";
+"paywall.purchase" = "Kúpiť";
+"paywall.startNow" = "Začať";
+"paywall.restore" = "Obnoviť nákupy";
+"paywall.note.lifetime" = "• Jednorazový nákup, navždy váš";
+"paywall.note.billedToAppleID" = "• Účtuje sa cez váš účet Apple";
+"paywall.note.autoRenew" = "• Automaticky sa obnovuje každé %@";
+"paywall.note.cancelAnytime" = "• Zrušiť môžete kedykoľvek";
+"paywall.terms" = "Podmienky používania";
+"paywall.privacyPolicy" = "Zásady ochrany súkromia";
+"paywall.close" = "Zavrieť";
+"paywall.errorTitle" = "Chyba";
+"paywall.successTitle" = "Nákup je dokončený";
+"paywall.successMessage" = "Vitajte v ClipKit Pro!\nTeraz máte k dispozícii všetky funkcie.";
+"paywall.monthlyEquivalentLabel" = "%@ / mesiac";
+"paywall.monthlyEquivalent" = "približne %@";
+"paywall.error.unknown" = "Vyskytla sa chyba";
+"paywall.error.noRestorable" = "Nie sú k dispozícii nákupy na obnovenie";
+"paywall.package.monthly" = "Mesačne";
+"paywall.package.annual" = "Ročne";
+"paywall.package.lifetime" = "Doživotne";
+"paywall.renewal.lifetime" = "Jednorazový nákup, navždy váš";
+"paywall.renewal.monthly" = "Obnovuje sa každý mesiac";
+"paywall.renewal.annual" = "Obnovuje sa každý rok";
+"paywall.renewal.days" = "Obnovuje sa každých %d dní";
+"paywall.renewal.weeks" = "Obnovuje sa každých %d týždňov";
+"paywall.renewal.months" = "Obnovuje sa každých %d mesiacov";
+"paywall.renewal.years" = "Obnovuje sa každých %d rokov";
+"paywall.trial.days" = "%d dní";
+"paywall.trial.weeks" = "%d týždňov";
+"paywall.trial.months" = "%d mesiacov";
+"paywall.trial.years" = "%d rokov";
+"paywall.period.oneMonth" = "mesiac";
+"paywall.period.oneYear" = "rok";
+"paywall.period.days" = "%d dní";
+"paywall.period.weeks" = "%d týždňov";
+"paywall.period.months" = "%d mesiacov";
+"paywall.period.years" = "%d rokov";
+"paywall.discount.format" = "Ušetrite %d%%";
+"paywall.trialThenPrice" = "%1$@ zadarmo, potom %2$@";
+"paywall.note.trialAutoRenew" = "• Po skončení bezplatného skúšobného obdobia (%1$@) sa predplatné automaticky obnoví za %2$@";
+"paywall.note.trialCancel" = "• Ak sa chcete vyhnúť poplatku, zrušte predplatné aspoň 24 hodín pred koncom skúšobného obdobia";
+"paywall.tryFreeCTA" = "Vyskúšať zadarmo";
+"paywall.perPeriod.month" = "mesiac";
+"paywall.perPeriod.year" = "rok";
+"export.failed" = "Export zlyhal";
+"button.ok" = "OK";
+
+/* Onboarding */
+"onboarding.welcome.title" = "Vitajte v ClipKit";
+"onboarding.welcome.description" = "Skopírovaný text, odkazy a obrázky sa automaticky ukladajú.\nV histórii ich nájdete vždy, keď ich potrebujete.";
+"onboarding.monitoring.title" = "Všetko sa ukladá automaticky";
+"onboarding.monitoring.description" = "Spustite monitorovanie na karte Vždy zapnuté a ClipKit uloží všetko, čo skopírujete.";
+"onboarding.paste.title" = "Povoliť vkladanie";
+"onboarding.paste.description" = "Povoľte prístup raz v Nastaveniach iOS,\naby sa výzva nezobrazovala zakaždým.";
+"onboarding.paste.path" = "Nastavenia → Súkromie a bezpečnosť → Vkladanie z iných aplikácií → ClipKit";
+"onboarding.paste.instruction" = "Nastavte „Vkladanie z iných aplikácií“ na **Povoliť**";
+"onboarding.paste.openSettings" = "Otvoriť Nastavenia";
+"onboarding.ready.title" = "Všetko je pripravené!";
+"onboarding.ready.description" = "Vyskúšajte ClipKit.";
+"onboarding.next" = "Ďalej";
+"onboarding.start" = "Začať";
+
+/* Tab bar */
+"tab.monitoring" = "Vždy zapnuté";
+"tab.history" = "História";
+"tab.favorites" = "Obľúbené";
+"tab.settings" = "Nastavenia";
+
+/* Trash */
+"trash.deletedAt %@" = "Odstránené: %@";
+"trash.swipeHint" = "Potiahnutím doľava obnovíte, potiahnutím doprava natrvalo odstránite";
+
+/* Picture in Picture */
+"pip.hint" = "História schránky";
+"pip.empty" = "Žiadna história";
+
+/* Widget */
+"widget.proOnly" = "Funkcia Pro";
+"widget.proOnlyDescription" = "Widgety sú dostupné v pláne Pro";
+"widget.upgradeInApp" = "Prejsť na Pro v aplikácii";
+"widget.empty" = "Zatiaľ žiadna história";
+"widget.itemCount %lld" = "%lld položiek";
+"widget.description" = "Majte históriu schránky vždy poruke.";
+"widget.clipboardTitle" = "Schránka";
+"widget.noItems" = "Žiadne položky";
+"widget.noClipboardItems" = "V schránke nie sú žiadne položky";
+"widget.sample.first" = "Ukážkový text";
+"widget.sample.second" = "Ďalší úryvok";
+
+/* Keyboard extension */
+"keyboard.tab.history" = "História";
+"keyboard.tab.snippets" = "Úryvky";
+"keyboard.history.empty" = "Žiadna história";
+"keyboard.snippets.empty" = "Žiadne úryvky";
+"keyboard.upgrade.unlimited" = "Zobraziť viac\nNeobmedzene s Pro";
+"keyboard.upgrade.tenItems" = "Zobraziť viac\n10 položiek s Pro";
+
+/* Purchase pending approval (issue #113) */
+"paywall.pendingTitle" = "Čaká sa na schválenie nákupu";
+"paywall.pendingMessage" = "Pro sa automaticky odomkne po schválení nákupu.";
+
+/* Pro-only settings rows (issue #116) */
+"settings.proOnly" = "Iba s Pro";
+"settings.iCloudSyncAll" = "Synchronizácia s iCloudom (všetky položky)";
+
+"monitoring.pipSizeHelp" = "Kompaktný režim skryje hlavičku a požiada o menšie okno. Jeho skutočnú veľkosť určuje iOS. Zovretím zmeňte veľkosť alebo potiahnite okno za ľavý či pravý okraj obrazovky, aby sa skrylo. Priehľadnosť okna sa nedá zmeniť.";
+
+"feedback.introduction" = "Napíšte nám, s čím potrebujete pomôcť alebo čo by ste chceli v ClipKit vidieť.";
+
+"feedback.guidance.bug" = "Čo ste chceli urobiť a čo sa stalo? Ak môžete, uveďte postup, očakávaný výsledok a skutočný výsledok.";
+
+"feedback.guidance.feature" = "Čo by ste chceli robiť a kedy by sa vám to hodilo? Opíšte, s akými ťažkosťami sa stretávate.";
+
+"feedback.guidance.other" = "Svoju otázku alebo pripomienku opíšte čo najpodrobnejšie.";
+
+"feedback.emailHelp" = "Ak chcete odpoveď, uveďte svoj e-mail. Správu môžete odoslať aj bez neho.";
+
+"feedback.deviceInfo" = "Na pomoc pri vyšetrovaní problémov sa automaticky odošle verzia aplikácie, iOS a model zariadenia. Neuvádzajte heslá ani iné citlivé údaje.";
+
+"feedback.failureMessage" = "Správa je stále uložená. Skontrolujte pripojenie a o chvíľu to skúste znova.";
+
+"shortcut.openPiP" = "Otvoriť PiP";
+
+"shortcut.openPiPDescription" = "Otvorte ClipKit a spustite monitorovanie schránky pomocou funkcie Obraz v obraze.";
+
+"monitoring.compactPiP" = "Kompaktný PiP";
+
+"monitoring.shortcutHelp" = "Pridajte akciu ClipKit Otvoriť PiP do aplikácie Skratky. Na podporovaných iPhonoch ju môžete priradiť k akčnému tlačidlu. Po spustení sa otvorí ClipKit.";
+
+"pip.startFailure" = "PiP sa nepodarilo spustiť";
+
+"pip.startFailureHelp" = "Nechajte ClipKit na obrazovke a skúste PiP znova otvoriť na karte monitorovania.";
+
+/* Debug tools */
+"debug.selectLanguage" = "Vybrať jazyk";
+"debug.keyboardLog.empty" = "Žiadne záznamy";
+"debug.keyboardLog.emptyDescription" = "Záznamy sa zobrazia po spustení rozšírenia klávesnice.";

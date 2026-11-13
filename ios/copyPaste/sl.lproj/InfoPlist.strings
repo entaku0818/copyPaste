@@ -1,0 +1,2 @@
+/* Opis dostopa do odložišča */
+"NSPasteboardUsageDescription" = "ClipKit potrebuje dostop do odložišča za shranjevanje zgodovine.";

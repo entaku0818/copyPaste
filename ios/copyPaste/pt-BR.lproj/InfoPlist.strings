@@ -1,0 +1,2 @@
+/* Descrição do acesso à área de transferência */
+"NSPasteboardUsageDescription" = "ClipKit precisa acessar a área de transferência para salvar seu histórico.";

@@ -1,0 +1,4 @@
+Otwieraj okno PiP ze Skrótów i przypisz skrót do przycisku czynności na obsługiwanych iPhone'ach.
+Dodaliśmy kompaktowy tryb PiP, który ukrywa nagłówek i prosi o niższe okno.
+Formularz kontaktowy zawiera teraz wskazówki zależne od kategorii i objaśnienie adresu e-mail do odpowiedzi.
+Aplikacja, klawiatura i widżety obsługują teraz więcej języków.

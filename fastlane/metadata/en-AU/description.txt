@@ -1,0 +1,31 @@
+Automatically monitor your clipboard in the background. ClipKit saves everything you copy and lets you instantly recall it from a widget or custom keyboard — with a first-time setup guide to get you started right away.
+
+[Free Features]
+• Background clipboard monitoring (using PiP technology)
+• Auto-save up to 20 items (last 3 days viewable)
+• Text, image & URL support
+• Search your history (including text inside images)
+• Auto-categorization (URL, Email, Phone, Code, Address, Text)
+• Up to 10 favourites
+• Text transforms (uppercase, lowercase, remove line breaks, trim whitespace)
+• Up to 3 snippets
+• Custom keyboard (shows 3 history items and 3 snippets)
+• iCloud sync (up to 20 items)
+• First-time onboarding guide
+
+[Pro Features (monthly, yearly or lifetime)]
+• Unlimited history (free plan: last 3 days, up to 20 items)
+• Unlimited favourites (free plan: 10)
+• Pro transforms: snake_case, camelCase, full-width/half-width, remove Markdown, URL encode/decode (also from a long press on the keyboard)
+• Unlimited snippets (free plan: 3)
+• Home screen widgets (3 sizes)
+• Show 10 history items and all snippets on the keyboard (3 each on the free plan)
+• iCloud sync (all items)
+• Trash (restore deleted items for 30 days)
+• Export history (CSV / Markdown)
+• 7-day free trial on monthly and yearly plans (first time only; renews automatically afterward, cancel anytime)
+
+ClipKit works around iOS 16+ clipboard restrictions using Picture-in-Picture, so monitoring continues even while you use other apps.
+
+Terms of Use (EULA): https://clipkit-entaku.web.app/terms.html
+Privacy Policy: https://clipkit-entaku.web.app/privacy-policy.html

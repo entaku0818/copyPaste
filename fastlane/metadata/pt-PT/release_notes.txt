@@ -1,0 +1,4 @@
+Abra a janela PiP através da app Atalhos e atribua a ação ao botão de ação nos iPhones compatíveis.
+Novo modo PiP compacto que oculta o cabeçalho e pede uma janela mais pequena.
+Formulário de contacto melhorado com indicações por assunto e informação mais clara sobre o e-mail de resposta.
+A app, o teclado e os widgets suportam agora mais idiomas.

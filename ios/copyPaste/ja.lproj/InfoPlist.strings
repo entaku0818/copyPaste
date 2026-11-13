@@ -1,0 +1,2 @@
+/* iOSが表示するクリップボードアクセスの説明。 */
+"NSPasteboardUsageDescription" = "クリップボードの履歴を保存するために、ClipKitはクリップボードへのアクセスを必要とします。";

@@ -1,0 +1,2 @@
+/* Clipboard access explanation */
+"NSPasteboardUsageDescription" = "ClipKit necesita acceder al portapapeles para guardar el historial de copias.";
