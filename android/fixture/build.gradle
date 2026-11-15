@@ -1,0 +1,7 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.clipkit.fixture'
+    compileSdk 36
+    defaultConfig { applicationId 'com.clipkit.fixture'; minSdk 29; targetSdk 36; versionCode 1; versionName '0.1'; testInstrumentationRunner 'com.clipkit.fixture.PrototypeRunner' }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}

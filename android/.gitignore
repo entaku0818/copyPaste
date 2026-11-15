@@ -1,0 +1,12 @@
+.gradle/
+**/build/
+local.properties
+
+__pycache__/
+
+# IDE/tool caches and local installable artifacts
+.idea/
+.kotlin/
+.cxx/
+*.apk
+*.aab
