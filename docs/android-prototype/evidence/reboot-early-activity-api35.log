@@ -1,0 +1,22 @@
+PASS: device read prunes >3-day and future-dated records (seeded clock-boundary fixture)
+PASS: IME shown true -> false via dumpsys; copy while hidden saved
+Default IME after reboot: com.clipkit.prototype/.ClipKitIme
+PASS: persisted history survives full emulator reboot
+Error type 3
+Error: Activity class {com.clipkit.fixture/com.clipkit.fixture.EditorActivity} does not exist.
+Restored emulator IME: com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME
+Traceback (most recent call last):
+  File "<repo>/android/scripts/verify-reboot-retention.py", line 81, in <module>
+    shell('am', 'start', '-n', 'com.clipkit.fixture/.EditorActivity', '-f', '0x10008000', '--es', 'text', 'after-reboot', '--ez', 'autoCopy', 'true')
+  File "<repo>/android/scripts/verify-reboot-retention.py", line 16, in shell
+    return adb('shell', *args)
+           ^^^^^^^^^^^^^^^^^^^
+  File "<repo>/android/scripts/verify-reboot-retention.py", line 13, in adb
+    return subprocess.check_output(['adb', '-s', serial, *args], text=True).strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['adb', '-s', 'emulator-5556', 'shell', 'am', 'start', '-n', 'com.clipkit.fixture/.EditorActivity', '-f', '0x10008000', '--es', 'text', 'after-reboot', '--ez', 'autoCopy', 'true']' returned non-zero exit status 1.

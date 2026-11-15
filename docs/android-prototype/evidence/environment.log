@@ -1,0 +1,37 @@
+Sat Nov 14 15:26:45 UTC 2026
+openjdk version "17.0.14" 2025-01-21
+OpenJDK Runtime Environment JBR-17.0.14+1-1367.22-nomod (build 17.0.14+1-b1367.22)
+OpenJDK 64-Bit Server VM JBR-17.0.14+1-1367.22-nomod (build 17.0.14+1-b1367.22, mixed mode, sharing)
+Android Debug Bridge version 1.0.41
+Version 36.0.0-13206524
+Installed as <user-home>/Library/Android/sdk/platform-tools/adb
+Running on Darwin 27.0.0 (arm64)
+List of devices attached
+emulator-5554          device product:sdk_gphone64_arm64 model:sdk_gphone64_arm64 device:emu64a transport_id:1
+emulator-5556          device product:sdk_gphone64_arm64 model:sdk_gphone64_arm64 device:emu64a transport_id:2
+
+Pixel_6_API_33
+Pixel_7_API_35_Play
+[unrelated AVD names omitted]
+android-29
+android-30
+android-31
+android-32
+android-33
+android-34
+android-35
+android-36
+
+------------------------------------------------------------
+Gradle 8.13
+------------------------------------------------------------
+
+Build time:    2025-02-25 09:22:14 UTC
+Revision:      073314332697ba45c16c0a0ce1891fa6794179ff
+
+Kotlin:        2.0.21
+Groovy:        3.0.22
+Ant:           Apache Ant(TM) version 1.10.15 compiled on August 25 2024
+Launcher JVM:  17.0.14 (JetBrains s.r.o. 17.0.14+1-b1367.22)
+Daemon JVM:    <user-home>/Library/Java/JavaVirtualMachines/jbr-17.0.14/Contents/Home (no JDK specified, using current Java home)
+OS:            Mac OS X 27.0 aarch64

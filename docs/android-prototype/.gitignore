@@ -1,0 +1,8 @@
+# Local installable artifacts; retain on disk, never commit.
+/artifacts/
+*.apk
+*.aab
+# Redundant setup/intermediate outputs; final results are versioned.
+/evidence/wrapper.log
+/evidence/build.log
+/evidence/integration-build.log

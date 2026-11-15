@@ -1,0 +1,22 @@
+PASS: other-app copy saved with IME visible
+PASS: history tap commitText reached independent editor
+PASS: minimum key commitText
+PASS: duplicate external recopy suppressed
+PASS: IME hidden copy saved while service alive
+PASS: sensitive clip excluded
+PASS: persistent history before process stop
+PASS: stopped process misses callbacks
+PASS: history survives process recreation
+FAIL: java.lang.AssertionError: recreated default IME catches current clip
+Restored emulator IME: com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME
+PASS: other-app copy saved with IME visible
+PASS: history tap commitText reached independent editor
+PASS: minimum key commitText
+PASS: duplicate external recopy suppressed
+PASS: IME hidden copy saved while service alive
+PASS: sensitive clip excluded
+PASS: persistent history before process stop
+PASS: stopped process misses callbacks
+PASS: history survives process recreation
+FAIL: java.lang.AssertionError: recreated default IME catches current clip
+Restored emulator IME: com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME

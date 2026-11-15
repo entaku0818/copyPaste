@@ -1,0 +1,1 @@
+26d1961a045373d3ef2b567ef3b6ff32bc6baa9859a254ceefa59cdad9001714  docs/android-prototype/artifacts/clipkit-prototype-debug.apk

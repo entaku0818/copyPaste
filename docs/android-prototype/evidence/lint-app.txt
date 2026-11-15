@@ -1,0 +1,38 @@
+<repo>/android/app/src/main/java/com/clipkit/prototype/ClipKitIme.java:54: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+            if (store.add(text, false)) prefs.edit().putString("lastSeen", fingerprint).commit();
+                                                                                        ~~~~~~~~
+
+   Explanation for issues of type "ApplySharedPref":
+   Consider using apply() instead of commit on shared preferences. Whereas
+   commit blocks and writes its data to persistent storage immediately, apply
+   will handle it in the background.
+
+<repo>/android/gradle/wrapper/gradle-wrapper.properties:3: Warning: A newer version of Gradle than 8.13 is available: 8.14.7 [AndroidGradlePluginVersion]
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "AndroidGradlePluginVersion":
+   This detector looks for usage of the Android Gradle Plugin where the
+   version you are using is not the current stable release. Using older
+   versions is fine, and there are cases where you deliberately want to stick
+   with an older version. However, you may simply not be aware that a more
+   recent version is available, and that is what this lint check helps find.
+
+<repo>/android/app/src/main/java/com/clipkit/prototype/ClipKitIme.java:77: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        TextView label = new TextView(this); label.setText("ClipKit • テキスト履歴（20件 / 3日）"); root.addView(label);
+                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 3 warnings

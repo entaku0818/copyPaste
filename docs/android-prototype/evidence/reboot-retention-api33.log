@@ -1,0 +1,6 @@
+PASS: device read prunes >3-day and future-dated records (seeded clock-boundary fixture)
+PASS: IME shown true -> false via dumpsys; copy while hidden saved
+Default IME after reboot: com.clipkit.prototype/.ClipKitIme
+PASS: persisted history survives full emulator reboot
+PASS: copy captured after reboot and editor focus
+Restored emulator IME: com.google.android.inputmethod.latin/com.android.inputmethod.latin.LatinIME

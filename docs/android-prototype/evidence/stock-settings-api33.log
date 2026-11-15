@@ -1,0 +1,4 @@
+PASS: native Settings copy -> ClipKit history -> cleared Settings search -> history tap commitText
+destination package: com.google.android.settings.intelligence
+destination class: android.widget.EditText
+destination text: clipkit-stock-roundtrip

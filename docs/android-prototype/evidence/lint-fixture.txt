@@ -1,0 +1,41 @@
+<repo>/android/fixture/src/main/AndroidManifest.xml:1: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"><application android:theme="@android:style/Theme.Material.Light.NoActionBar" android:label="ClipKit Test Editor" android:allowBackup="false" android:fullBackupContent="false" android:supportsRtl="true"><activity android:name=".EditorActivity" android:exported="true" android:windowSoftInputMode="stateAlwaysVisible"/></application></manifest>
+                                                                                                                                                                                                           ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+<repo>/android/fixture/src/main/java/com/clipkit/fixture/EditorActivity.java:19: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        TextView title = new TextView(this); title.setText("Independent test editor"); root.addView(title);
+                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~
+<repo>/android/fixture/src/main/java/com/clipkit/fixture/EditorActivity.java:21: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        Button copy = new Button(this); copy.setText("Copy test text"); copy.setAllCaps(false); root.addView(copy);
+                                                     ~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 3 warnings
