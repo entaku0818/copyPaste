@@ -65,6 +65,9 @@ public struct ContentView: View {
             store.send(.startMonitoring)
             pipManager.startPiP()
         }
+        .onReceive(SaveToClipKitIntent.savedItems) { result in
+            store.send(.sharedItemSaved(result.item, removedIDs: result.removedIDs))
+        }
         .alert("pip.startFailure", isPresented: $pipManager.showStartError) {
             Button("button.ok", role: .cancel) {}
         } message: {

@@ -24,6 +24,35 @@ class ClipboardStorageManager {
         logger.info("Upserted \(items.count) items")
     }
 
+    @MainActor
+    func saveSharedItem(_ item: ClipboardItem, limit: Int?) async throws -> Set<UUID> {
+        try await PersistenceController.shared.performSharedItemWrite { ctx in
+            let matchingID = ClipboardItemEntity.fetchRequest()
+            matchingID.predicate = NSPredicate(format: "id == %@", item.id as CVarArg)
+            matchingID.fetchLimit = 1
+            guard try ctx.fetch(matchingID).isEmpty else { return [] }
+
+            var removedIDs: Set<UUID> = []
+            if let limit {
+                let history = ClipboardItemEntity.fetchRequest()
+                history.predicate = NSPredicate(format: "isInTrash == NO")
+                history.sortDescriptors = [
+                    NSSortDescriptor(key: "isFavorite", ascending: false),
+                    NSSortDescriptor(key: "timestamp", ascending: false),
+                    NSSortDescriptor(key: "id", ascending: true)
+                ]
+                history.fetchOffset = max(0, limit - 1)
+                for existing in try ctx.fetch(history) {
+                    if let id = existing.id { removedIDs.insert(id) }
+                    ctx.delete(existing)
+                }
+            }
+            ClipboardItemEntity(context: ctx).configure(from: item)
+            try ctx.save()
+            return removedIDs
+        }
+    }
+
     // MARK: - Load
 
     func load() async throws -> [ClipboardItem] {

@@ -22,6 +22,7 @@ final class PersistenceController {
 
     private let logger = Logger(subsystem: "com.clipkit", category: "Persistence")
     private let container: NSPersistentContainer
+    @MainActor private lazy var sharedItemWriter = newBackgroundContext()
     // ストア読み込みにかかった時間を計測するための基準時刻（診断ログ用）
     private let createdAt = ProcessInfo.processInfo.systemUptime
 
@@ -207,6 +208,27 @@ final class PersistenceController {
     func performBackgroundTask<T: Sendable>(
         _ body: @escaping (NSManagedObjectContext) throws -> T
     ) async throws -> T {
+        try await ensureStoreAvailable()
+        let ctx = newBackgroundContext()
+        return try await ctx.perform {
+            try body(ctx)
+        }
+    }
+
+    /// 共有ショートカットの追加と履歴上限の判定を同じキューで順に行う。
+    @MainActor
+    func performSharedItemWrite<T: Sendable>(
+        _ body: @escaping (NSManagedObjectContext) throws -> T
+    ) async throws -> T {
+        try await ensureStoreAvailable()
+        let ctx = sharedItemWriter
+        return try await ctx.perform(schedule: .enqueued) {
+            defer { ctx.reset() }
+            return try body(ctx)
+        }
+    }
+
+    private func ensureStoreAvailable() async throws {
         await waitUntilLoaded()
         guard !container.persistentStoreCoordinator.persistentStores.isEmpty else {
             let elapsed = ProcessInfo.processInfo.systemUptime - createdAt
@@ -216,10 +238,6 @@ final class PersistenceController {
                 + "isUsingCloudKit=\(isUsingCloudKit), descriptions=\(descriptions))"
             logger.error("\(message)")
             throw PersistenceError.storeNotAvailable
-        }
-        let ctx = newBackgroundContext()
-        return try await ctx.perform {
-            try body(ctx)
         }
     }
 

@@ -42,8 +42,9 @@ struct ClipboardHistoryFeature {
         var launchCount: Int = 0
 
         // 履歴件数制限（無料: 20件、Pro: 無制限）
+        static let freeHistoryLimit = 20
         var maxHistoryCount: Int {
-            return isProUser ? Int.max : 20
+            return isProUser ? Int.max : Self.freeHistoryLimit
         }
 
         // スニペット件数制限（無料: 3件、Pro: 無制限）
@@ -93,6 +94,7 @@ struct ClipboardHistoryFeature {
 
     enum Action {
         case addItem(ClipboardItem)
+        case sharedItemSaved(ClipboardItem, removedIDs: Set<UUID>)
         case removeItems(IndexSet)
         case clearAll
         case pasteItem(ClipboardItem)
@@ -199,6 +201,11 @@ struct ClipboardHistoryFeature {
         }
     }
 
+    private static func isEarlierInHistory(_ lhs: ClipboardItem, _ rhs: ClipboardItem) -> Bool {
+        if lhs.isFavorite != rhs.isFavorite { return lhs.isFavorite }
+        return lhs.timestamp > rhs.timestamp
+    }
+
     // 画像からClipboardItemを作成（サムネイル付き）
     private static func createImageItem(from image: UIImage) async -> ClipboardItem {
         let thumbnailSize = CGSize(width: 200, height: 200)
@@ -263,6 +270,15 @@ struct ClipboardHistoryFeature {
                     deleteOverflowEffect,
                     pipEffect
                 )
+
+            case let .sharedItemSaved(item, removedIDs):
+                state.items.removeAll { removedIDs.contains($0.id) }
+                if !state.items.contains(where: { $0.id == item.id }) {
+                    state.items.append(item)
+                }
+                state.items.sort(by: Self.isEarlierInHistory)
+                let latestItems = Array(state.items.prefix(5))
+                return .run { _ in await pip.updateItems(latestItems) }
 
             case let .removeItems(indexSet):
                 if state.isProUser {
@@ -680,10 +696,7 @@ struct ClipboardHistoryFeature {
                 var overflowItems: [ClipboardItem] = []
                 if !newOnes.isEmpty {
                     state.items.insert(contentsOf: newOnes, at: 0)
-                    state.items.sort { lhs, rhs in
-                        if lhs.isFavorite != rhs.isFavorite { return lhs.isFavorite }
-                        return lhs.timestamp > rhs.timestamp
-                    }
+                    state.items.sort(by: Self.isEarlierInHistory)
                     let limit = min(state.maxHistoryCount, state.maxItems)
                     if state.items.count > limit {
                         let overflowCount = state.items.count - limit
@@ -733,10 +746,7 @@ struct ClipboardHistoryFeature {
 
 
             case let .itemsLoaded(items):
-                state.items = items.sorted { lhs, rhs in
-                    if lhs.isFavorite != rhs.isFavorite { return lhs.isFavorite }
-                    return lhs.timestamp > rhs.timestamp
-                }
+                state.items = items.sorted(by: Self.isEarlierInHistory)
                 Self.logger.info("Loaded \(items.count) items from storage")
 
                 if !state.hasRequestedPermission {
@@ -991,4 +1001,4 @@ struct ClipboardHistoryFeature {
             }
         }
     }
-} 
+}
