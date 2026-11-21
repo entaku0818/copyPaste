@@ -1,4 +1,1 @@
-Apri la finestra PiP da Comandi Rapidi e assegna l’azione al tasto Azione sugli iPhone compatibili.
-Aggiunta una modalità PiP compatta che nasconde l’intestazione e richiede una finestra più bassa.
-Migliorato il modulo di contatto con indicazioni specifiche e informazioni più chiare sull’e-mail di risposta.
-L’app, la tastiera e i widget ora supportano più lingue.
+Ora puoi salvare testo e link web nella cronologia di ClipKit direttamente dal menu di condivisione. In Comandi Rapidi, aggiungi l’azione «Save to ClipKit» e attiva l’opzione per mostrarla nel foglio di condivisione.

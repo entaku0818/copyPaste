@@ -1,4 +1,1 @@
-Åpne PiP-vinduet fra Snarveier og tilordne handlingen til handlingsknappen på støttede iPhone-modeller.
-Ny kompakt PiP-modus som skjuler overskriften og ber om et mindre vindu.
-Kontaktskjemaet er forbedret med veiledning etter kategori og tydeligere informasjon om svaradresse.
-Appen, tastaturet og widgetene støtter nå flere språk.
+Du kan nå lagre tekst og nettlenker direkte i ClipKit-loggen fra delingsmenyen. Legg til handlingen «Save to ClipKit» i Snarveier, og slå på visning i delingsarket.

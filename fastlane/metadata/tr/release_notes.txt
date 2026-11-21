@@ -1,4 +1,1 @@
-PiP penceresini Kestirmeler'den açın ve desteklenen iPhone'larda Eylem düğmesine atayın.
-Başlığı gizleyen ve daha kısa pencere isteyen kompakt PiP modu eklendi.
-İletişim formuna kategoriye göre yönergeler ve yanıt e-postası hakkında açıklama eklendi.
-Uygulama, klavye ve araç takımları artık daha fazla dili destekliyor.
+Artık metinleri ve web bağlantılarını paylaşım menüsünden doğrudan ClipKit geçmişine kaydedebilirsiniz. Kestirmeler uygulamasında “Save to ClipKit” eylemini ekleyin ve paylaşım sayfasında gösterilmesini etkinleştirin.

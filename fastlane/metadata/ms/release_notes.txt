@@ -1,4 +1,1 @@
-Buka jendela PiP dari Pintasan dan tetapkan ke Tombol Tindakan pada iPhone yang didukung.
-Tambahkan mode PiP ringkas untuk menyembunyikan header dan meminta jendela yang lebih kecil.
-Naik taraf formulir kontak dengan panduan kategori dan keterangan e-mel balasan.
-Aplikasi, papan kekunci dan widget kini menyokong lebih banyak bahasa.
+Kini anda boleh menyimpan teks dan pautan web terus ke sejarah ClipKit daripada menu kongsi. Dalam app Pintasan, tambah tindakan “Save to ClipKit” dan aktifkan pilihan untuk memaparkannya dalam helaian kongsi.

@@ -1,4 +1,1 @@
-Open Picture in Picture from Shortcuts, and assign the shortcut to the Action button on supported iPhones.
-Added a compact PiP mode that hides the header and requests a shorter window.
-Improved the contact form with category-specific guidance and clearer reply email instructions.
-The app, keyboard, and widgets now support more languages.
+You can now save text and web links directly to your ClipKit history from the share menu. In Shortcuts, add the “Save to ClipKit” action and turn on “Show in Share Sheet”.

@@ -1,4 +1,1 @@
-Abra a janela PiP pelo app Atalhos e atribua a ação ao botão de ação nos iPhones compatíveis.
-Novo modo PiP compacto que oculta o cabeçalho e solicita uma janela menor.
-Formulário de contato aprimorado com orientações por assunto e informações mais claras sobre o e-mail de resposta.
-O app, o teclado e os widgets agora oferecem suporte a mais idiomas.
+Agora você pode salvar textos e links da web no histórico do ClipKit diretamente pelo menu de compartilhamento. No app Atalhos, adicione a ação “Save to ClipKit” e ative a opção para exibi-la na folha de compartilhamento.

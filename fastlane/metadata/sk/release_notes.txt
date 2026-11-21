@@ -1,4 +1,1 @@
-Otvorte okno PiP v aplikácii Skratky a na podporovaných iPhonoch priraďte akciu k akčnému tlačidlu.
-Nový kompaktný režim PiP skryje hlavičku a vyžiada menšie okno.
-Vylepšený kontaktný formulár s pokynmi podľa témy a jasnejšími informáciami o e-maile na odpoveď.
-Aplikácia, klávesnica a widgety teraz podporujú viac jazykov.
+Text a webové odkazy teraz môžete ukladať priamo do histórie ClipKitu z ponuky zdieľania. V apke Skratky pridajte akciu „Save to ClipKit“ a zapnite jej zobrazenie v hárku zdieľania.

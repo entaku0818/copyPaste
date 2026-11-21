@@ -1,4 +1,1 @@
-Öppna PiP-fönstret från Genvägar och tilldela åtgärden till åtgärdsknappen på iPhone-modeller som stöds.
-Nytt kompakt PiP-läge som döljer rubriken och begär ett mindre fönster.
-Kontaktformuläret har förbättrats med ämnesspecifik vägledning och tydligare information om svar via e-post.
-Appen, tangentbordet och widgetarna har nu stöd för fler språk.
+Nu kan du spara text och webblänkar direkt i ClipKits historik från delningsmenyn. Lägg till åtgärden ”Save to ClipKit” i Genvägar och aktivera visning på delningsbladet.

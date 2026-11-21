@@ -1,4 +1,1 @@
-Otvorite PiP prozor iz aplikacije Prečaci i dodijelite radnju akcijskom gumbu na podržanim iPhone uređajima.
-Dodali smo kompaktni PiP način koji skriva zaglavlje i traži niži prozor.
-Obrazac za kontakt sada uključuje upute prema kategoriji i objašnjenje adrese za odgovor.
-Aplikacija, tipkovnica i widgeti sada podržavaju više jezika.
+Sada možete spremati tekst i web-veze izravno u povijest ClipKita putem izbornika za dijeljenje. U aplikaciji Prečaci dodajte radnju „Save to ClipKit” i uključite njezin prikaz na listu za dijeljenje.

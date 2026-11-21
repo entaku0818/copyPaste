@@ -1,4 +1,1 @@
-Deschide fereastra PiP din Scurtături și atribuie scurtătura butonului de acțiune pe iPhone-urile compatibile.
-Am adăugat un mod PiP compact, care ascunde antetul și solicită o fereastră mai scurtă.
-Formularul de contact include acum îndrumări în funcție de categorie și explicații despre adresa de răspuns.
-Aplicația, tastatura și widgeturile acceptă acum mai multe limbi.
+Acum poți salva texte și linkuri web în istoricul ClipKit direct din meniul de partajare. În aplicația Scurtături, adaugă acțiunea „Save to ClipKit” și activează afișarea acesteia în foaia de partajare.

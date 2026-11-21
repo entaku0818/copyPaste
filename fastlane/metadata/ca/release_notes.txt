@@ -1,4 +1,1 @@
-Obre la finestra PiP des de Dreceres i assigna-la al botó d’acció als iPhone compatibles.
-Afegit un mode PiP compacte que amaga la capçalera i demana una finestra més petita.
-Millores al formulari de contacte amb indicacions segons el motiu i informació sobre el correu de resposta.
-Ara l’app, el teclat i els ginys admeten més idiomes.
+Ara pots desar text i enllaços web directament a l’historial de ClipKit des del menú per compartir. A Dreceres, afegeix l’acció «Save to ClipKit» i activa’n la visualització al full per compartir.

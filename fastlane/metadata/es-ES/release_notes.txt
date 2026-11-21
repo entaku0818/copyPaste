@@ -1,4 +1,1 @@
-Abre la ventana PiP desde Atajos y asígnala al botón de acción en los iPhone compatibles.
-Añadimos un modo PiP compacto que oculta el encabezado y solicita una ventana más pequeña.
-Mejoramos el formulario de contacto con indicaciones según el motivo y una explicación del correo de respuesta.
-La app, el teclado y los widgets ahora son compatibles con más idiomas.
+Ahora puedes guardar texto y enlaces web directamente en el historial de ClipKit desde el menú para compartir. En Atajos, añade la acción «Save to ClipKit» y activa su visualización en la hoja para compartir.

@@ -1,4 +1,1 @@
-Ouvrez la fenêtre PiP à partir de Raccourcis et assignez l’action au bouton Action sur les iPhone compatibles.
-Ajout d’un mode PiP compact qui masque l’en-tête et demande une fenêtre plus petite.
-Amélioration du formulaire de contact avec des conseils selon le motif et une explication du courriel de réponse.
-L’app, le clavier et les widgets prennent maintenant en charge plus de langues.
+Vous pouvez désormais enregistrer du texte et des liens Web dans l’historique de ClipKit depuis le menu de partage. Dans Raccourcis, ajoutez l’action « Save to ClipKit » et activez son affichage dans la feuille de partage.

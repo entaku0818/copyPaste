@@ -1,4 +1,1 @@
-Mở cửa sổ PiP từ Phím tắt và gán cho nút Tác vụ trên iPhone được hỗ trợ.
-Thêm chế độ PiP thu gọn để ẩn tiêu đề và yêu cầu cửa sổ ngắn hơn.
-Cải thiện biểu mẫu liên hệ với hướng dẫn theo danh mục và giải thích email phản hồi.
-Ứng dụng, bàn phím và tiện ích hiện hỗ trợ thêm nhiều ngôn ngữ.
+Giờ đây, bạn có thể lưu văn bản và liên kết web trực tiếp vào lịch sử ClipKit từ menu chia sẻ. Trong ứng dụng Phím tắt, hãy thêm tác vụ “Save to ClipKit” và bật tùy chọn hiển thị trong bảng chia sẻ.
